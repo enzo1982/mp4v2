@@ -1,0 +1,49 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetTrackType\fR \- Get the track type
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+const char* \fBMP4GetTrackType\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track for which the type is desired. 
+
+.SH "RETURN VALUES"
+.LP 
+Upon success, a string that indicates the track type. Upon an error, NULL.
+
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetTrackType\fR gets the type of the track with the specified track id. 
+.LP 
+Note: the library does not provide a MP4SetTrackType function, the track type needs to be specified when the track is created, e.g. MP4AddSystemsTrack(MP4_OCI_TRACK_TYPE).
+.LP 
+Known track types are:
+.LP 
+	MP4_OD_TRACK_TYPE		"odsm"
+	MP4_SCENE_TRACK_TYPE	"sdsm"
+	MP4_AUDIO_TRACK_TYPE	"soun"
+	MP4_VIDEO_TRACK_TYPE	"vide"
+	MP4_HINT_TRACK_TYPE		"hint"
+	MP4_CLOCK_TRACK_TYPE	"crsm"
+	MP4_MPEG7_CLOCK_TYPE	"m7sm"
+	MP4_OCI_TRACK_TYPE		"ocsm"
+	MP4_IPMP_TRACK_TYPE		"ipsm"
+	MP4_MPEGJ_TRACK_TYPE	"mjsm"
+.SH "SEE ALSO"
+.LP 
+MP4(3)

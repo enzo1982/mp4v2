@@ -1,0 +1,47 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4SetSampleRenderingOffset\fR \- Set the rendering offset of a track sample
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+bool \fBMP4SetSampleRenderingOffset\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP,
+.br 
+	MP4SampleId \fIsampleId\fP,
+.br 
+	MP4Duration \fIrenderingOffset\fP
+.br 
+);
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track to which the operation applies.
+.TP 
+\fIsampleId\fP
+Specifies the sample to which the operation applies. Caveat: the first sample has id 1 not 0.
+.TP 
+\fIrenderingOffset\fP
+Species the new value for the sample rendering offset in track time scale units.
+
+.SH "RETURN VALUES"
+.LP 
+Upon success, true (1). Upon an error, false (0).
+
+.SH "DESCRIPTION"
+.LP 
+\fBMP4SetSampleRenderingOffset\fR sets the rendering offset of the specified sample from the specified track in the track time scale units. See MP4ConvertToTrackDuration() for how to map this value from another time scale.
+.LP 
+See MP4GetSampleRenderingOffset() for a description of this sample property.
+
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4ConvertToTrackDuration(3) MP4GetSampleRenderingOffset(3)

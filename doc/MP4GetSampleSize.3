@@ -1,0 +1,38 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetSampleSize\fR \- Get the size of a track sample
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+u_int32_t \fBMP4GetSampleSize\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP,
+.br 
+	MP4SampleId \fIsampleId\fP
+.br 
+);
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track to which the operation applies.
+.TP 
+\fIsampleId\fP
+Specifies the sample to which the operation applies. Caveat: the first sample has id 1 not 0.
+
+.SH "RETURN VALUES"
+.LP 
+Upon success, the sample size in bytes. Upon an error, 0.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetSampleSize\fR returns the size in bytes of the specified sample from the specified track.
+.SH "SEE ALSO"
+.LP 
+MP4(3)

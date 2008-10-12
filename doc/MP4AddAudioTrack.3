@@ -1,0 +1,49 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4AddAudioTrack\fR \- Add an audio track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+MP4TrackId \fBMP4AddAudioTrack\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	u_int32_t \fItimeScale\fP,
+.br 
+	u_int32_t \fIsampleDuration\fP,
+.br 
+	u_int8_t \fIaudioType\fP = MP4_MPEG4_AUDIO_TYPE
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItimeScale\fP
+Specifies the time scale in ticks per second of the track.
+.TP 
+\fIsampleDuration\fP
+Specifies a fixed sample duration for all track samples. Caveat: The value should be in track time scale units
+.TP 
+\fIaudioType\fP
+Specifies the audio encoding type. See MP4GetTrackAudioType() for known values.
+.SH "RETURN VALUES"
+.LP 
+Upon success, the track id of the new track. Upon an error, MP4_INVALID_TRACK_ID.
+
+.SH "DESCRIPTION"
+.LP 
+\fBMP4AddAudioTrack\fR adds an audio track to the mp4 file. MP4WriteSample() can then be used to add the desired audio samples.
+.LP 
+It is recommended that the time scale be set to the sampling frequency (e.g. 44100 Hz) of the audio so as to preserve the timing information accurately.
+.LP 
+If the audio encoding uses a fixed duration for each sample that should be specified here. If not then the value MP4_INVALID_SAMPLE_DURATION should be given for the sampleDuration argument.
+
+
+.SH "SEE ALSO"
+.LP 
+MP4(3)

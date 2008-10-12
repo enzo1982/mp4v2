@@ -1,0 +1,38 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4AddHintTrack\fR \- Add a hint track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+MP4TrackId \fBMP4AddHintTrack\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fIrefTrackId\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fIrefTrackId\fP
+Specifies the reference media track for this hint track.
+.SH "RETURN VALUES"
+.LP 
+Upon success, the track id of the new track. Upon an error, MP4_INVALID_TRACK_ID.
+
+.SH "DESCRIPTION"
+.LP 
+\fBMP4AddHintTrack\fR adds a hint track to the mp4 file. A hint track is used to describe how to send the reference media track over a particular network transport. In the case of the IETF RTP protocol, the hint track describes how the media data should be placed into packets and any media specific protocol headers that should be added.
+.LP 
+Typically there is a one to one correspondence between reference media track samples and hint track samples. The start time, duration, and sync flags are typically the same, however provisions are made for deviations from this rule.
+.LP 
+The MP4 library provides extensive support for RTP hint tracks. This includes a easy to use API to create RTP hint tracks, and read out fully constructed RTP packets based on the hint track.
+
+.SH "SEE ALSO"
+.LP 
+MP4(3)

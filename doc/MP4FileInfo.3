@@ -1,0 +1,54 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4FileInfo\fR \- Return a textual summary of an mp4 file
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+char* \fBMP4FileInfo\fR(
+.br 
+	const char* \fImp4FileName\fP, 
+.br 
+	MP4TrackId \fItrackId\fP = MP4_INVALID_TRACK_ID
+.br 
+);
+
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+.br 
+Specifies the name of the mp4 file to which the operation applies. 
+.TP 
+\fItrackId\fP
+Specifies a track for which a summary is desired. If the value is MP4_INVALID_TRACK_ID, the summary info is created for all tracks in the mp4 file.
+
+.SH "RETURN VALUES"
+.LP 
+Upon success, a malloc'ed string containing the summary info. Upon an error, NULL.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4FileInfo\fR provides a string that contains a textual summary of the contents of an mp4 file. This includes the track id's, the track type, and track specific information. For example, for a video track, media encoding, image size, frame rate, and bitrate are summarized.
+.LP 
+Note that the returned string is malloc'ed, so it is the caller's responsibility to free() the string to prevent memory leaks. Also note that the returned string contains newlines and tabs which may or may not be desirable. 
+.LP 
+The following is an example of the output of MP4Info():
+.LP 
+Track   Type	Info
+.br 
+1       video	MPEG\-4 Simple @ L3, 119.625 secs, 1008 kbps, 352x288 @ 24.00 fps
+.br 
+2       audio	MPEG\-4, 119.327 secs, 128 kbps, 44100 Hz
+.br 
+3       hint	Payload MP4V\-ES for track 1
+.br 
+4       hint	Payload mpeg4\-generic for track 2
+.br 
+5       od	Object Descriptors
+.br 
+6       scene	BIFS
+
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4Info(3)

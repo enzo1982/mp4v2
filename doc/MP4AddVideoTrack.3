@@ -1,0 +1,59 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4AddVideoTrack\fR \- Add a video track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+MP4TrackId \fBMP4AddVideoTrack\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	u_int32_t \fItimeScale\fP,
+.br 
+	u_int32_t \fIsampleDuration\fP,
+.br 
+	u_int16_t \fIwidth\fP,
+.br 
+	u_int16_t \fIheight\fP,
+.br 
+	u_int8_t \fIvideoType\fP = MP4_MPEG4_VIDEO_TYPE
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItimeScale\fP
+Specifies the time scale in ticks per second of the track.
+.TP 
+\fIsampleDuration\fP
+Specifies a fixed sample duration for all track samples. Caveat: The value should be in track time scale units
+.TP 
+\fIwidth\fP
+Specifies the video frame width in pixels.
+.TP 
+\fIheight\fP
+Specifies the video frame height in pixels.
+.TP 
+\fIvideoType\fP
+Specifies the video encoding type. See MP4GetTrackVideoType() for known values.
+.SH "RETURN VALUES"
+.LP 
+Upon success, the track id of the new track. Upon an error, MP4_INVALID_TRACK_ID.
+
+.SH "DESCRIPTION"
+.LP 
+\fBMP4AddVideoTrack\fR adds a video track to the mp4 file. MP4WriteSample() can then be used to add the desired video samples.
+.LP 
+It is recommended that the time scale be set to 90000 so as to preserve the timing information accurately for the range of video frame rates commonly in use.
+.LP 
+If the video frame rate is to be fixed then the sampleDuration argument should be give the appropriate fixed value. If the video frame rate is to be variable then the value MP4_INVALID_SAMPLE_DURATION should be given for the sampleDuration argument.
+
+
+.SH "SEE ALSO"
+.LP 
+MP4(3)

@@ -1,0 +1,38 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetSampleTime\fR \- Get the start time of a track sample
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+MP4Timestamp \fBMP4GetSampleTime\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP,
+.br 
+	MP4SampleId \fIsampleId\fP
+.br 
+);
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track to which the operation applies.
+.TP 
+\fIsampleId\fP
+Specifies the sample to which the operation applies. Caveat: the first sample has id 1 not 0.
+
+.SH "RETURN VALUES"
+.LP 
+Upon success, the sample start time in track time scale units. Upon an error, MP4_INVALID_TIMESTAMP.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetSampleTime\fR returns the start time of the specified sample from the specified track in the track time scale units. See MP4ConvertFromTrackTimestamp() for how to map this value to another time scale.
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4ConvertFromTrackDuration(3)

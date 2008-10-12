@@ -1,0 +1,33 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetTrackMaxSampleSize\fR \- Get the maximum sample size of a track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+u_int32_t \fBMP4GetTrackMaxSampleSize\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP
+.br 
+);
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track to which the operation applies.
+
+.SH "RETURN VALUES"
+.LP 
+Upon success, the maximum sample size in bytes. Upon an error, 0.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetTrackMaxSampleSize\fR returns the maximum size in bytes of all the samples in the specified track.
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4GetSampleSize(3)

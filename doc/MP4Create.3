@@ -1,0 +1,45 @@
+.TH "MP4" "3" "Version 1.0" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4Create\fR \- Create a new mp4 file
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+MP4FileHandle \fBMP4Create\fR(
+.br 
+	const char* \fIfileName\fP, 
+.br 
+	u_int32_t \fIverbosity\fP = 0,
+.br 
+	u_int32_t \fIcreateFlags\fP = 0
+.br 
+);
+
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIfileName\fP
+Specifies the path name of the file to be created.
+.TP 
+\fIverbosity\fP
+Specifies a bitmask of diagnostic details the library should print to stdout during its functioning. See MP4SetVerbosity() for values.
+.TP 
+\fIcreateFlags\fP
+Bit mask that allows the user to set 64 bit values for file size or for time.  Values are:
+.br
+	MP4_CREATE_64BIT_DATA   create 64 bit data atoms
+.br
+	MP4_CREATE_64BIT_TIME   create 64 bit time atoms
+.SH "RETURN VALUES"
+.LP 
+Upon successful completion the function returns a handle to the newly create mp4 file. This is used in subsequent calls to the library to modify the file.
+Upon an error, MP4_INVALID_FILE_HANDLE is returned.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4Create\fR is the first call that should be used when you want to create a new, empty mp4 file. It is equivalent to opening a file for writing, but also involved the creation of the necessary mp4 framework structures. I.e. a MP4Create() followed by an MP4Close() will result in a file with a non\-zero size.
+.LP 
+Caveat: If MP4Create() is called with a file name that already exists the contents of the existing file will be lost, assuming the system permissions allow the calling process to truncate the existing file.
+.SH "SEE ALSO"
+.LP 
+MP4(3)

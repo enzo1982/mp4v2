@@ -1,0 +1,50 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetSampleIdFromTime\fR \- Get the sample id of a specified time
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+MP4SampleId \fBMP4GetSampleIdFromTime\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP,
+.br 
+	MP4Timestamp \fIwhen\fP,
+.br 
+	bool \fIwantSyncSample\fP = false
+.br 
+);
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track to which the operation applies.
+.TP 
+\fIwhen\fP
+Specifies the time in the track time scale that is desired.
+.TP 
+\fIwantSyncSample\fP
+Specifies if the returned sample id must correspond to a sample whose sync/random access flag is true.
+
+.SH "RETURN VALUES"
+.LP 
+Upon success, the sample id that occurs at the specified time. Upon an error, MP4_INVALID_SAMPLE_ID.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetSampleIdFromTime\fR returns the sample id of the track sample in which the specified time occurs. 
+.LP 
+The specified time should be in the track time scale. See MP4ConvertToTrackTimestamp() for how to map a time value to this time scale.
+.LP 
+It is wise to use MP4GetSampleTime() with the returned sample id so one can adjust for any difference between the specified time and the actual start time of the sample.
+.LP 
+If the calling application needs a sample that can be accessed randomly then the 'wantSyncSample' argument should be set to true. This could be the case for a player that is implementing a positioning function and needs to be able to start decoding a track from the returned sample id.
+
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4GetSampleIdFromEditTime(3)

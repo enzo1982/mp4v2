@@ -1,0 +1,43 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4Dump\fR \- Print a text version of an mp4 file
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+bool \fBMP4Dump\fR(
+.br 
+	MP4FileHandle \fIhFile\fP, 
+.br 
+	FILE* \fIpDumpFile\fP = NULL,
+.br 
+	bool dumpImplicits = false
+.br 
+);
+
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+.br 
+Specifies the mp4 file to be dumped. 
+.TP 
+\fIpDumpFile\fP
+Specifies where the text output is written. The default value of NULL implies stdout.
+.TP 
+\fIdumpImplicits\fP
+Prints those properties that would not actually be written to the mp4 file, but still exist in the mp4 control structures. I.e. they are implicit given the current values of other controlling properties.
+
+.SH "RETURN VALUES"
+.LP 
+Upon success, true (1). Upon an error, false (0).
+.SH "DESCRIPTION"
+.LP 
+\fBMP4Dump\fR is an invaluable debugging tool in that in can reveal all the details of the mp4 control structures. However, the output will not make much sense until you familiarize yourself with the mp4 specification (or the Quicktime File Format specification).
+.LP 
+Note that MP4Dump() will not print the individual values of control tables, such as the size of each sample, unless the current verbosity value includes the flag MP4_DETAILS_TABLE. See MP4SetVerbosity() for how to set this flag.
+
+.SH "SEE ALSO"
+.LP 
+MP4(3)

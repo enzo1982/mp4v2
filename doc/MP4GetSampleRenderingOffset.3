@@ -1,0 +1,40 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetSampleRenderingOffset\fR \- Get the rendering offset of a track sample
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+MP4Duration \fBMP4GetSampleRenderingOffset\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP,
+.br 
+	MP4SampleId \fIsampleId\fP
+.br 
+);
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track to which the operation applies.
+.TP 
+\fIsampleId\fP
+Specifies the sample to which the operation applies. Caveat: the first sample has id 1 not 0.
+
+.SH "RETURN VALUES"
+.LP 
+Upon success, the rendering offset in track time scale units. Upon an error, MP4_INVALID_DURATION.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetSampleRenderingOffset\fR returns the rendering offset of the specified sample from the specified track in the track time scale units. See MP4ConvertFromTrackDuration() for how to map this value to another time scale.
+.LP 
+The sample rendering offset is typically zero for all media types other than video. For video, encodings such as those defined by MPEG have three types of frames: I, P, and B. To increase coding efficiency B frames can depend on I or P frames that should be rendered after the B frame. However to decode the B frame the I or P frame must already have been decoded. This situation is addressed by placing the frames in decoding order in the video track, and then setting the rendering offset property to indicate when the video frame should actually be rendered to the screen. Hence the start time of a sample indicates when it should be decoded, the start time plus the rendering offset indicates when it should be rendered.
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4ConvertFromTrackDuration(3)

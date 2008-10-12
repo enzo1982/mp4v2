@@ -1,0 +1,45 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4AddSystemsTrack\fR \- Add an MPEG\-4 systems track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+MP4TrackId \fBMP4AddSystemsTrack\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	const char* \fItype\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItype\fP
+Specifies the type of track to be added. 
+.SH "RETURN VALUES"
+.LP 
+Upon success, the track id of the new track. Upon an error, MP4_INVALID_TRACK_ID.
+
+.SH "DESCRIPTION"
+.LP 
+\fBMP4AddSystemsTrack\fR adds an MPEG\-4 Systems track to the mp4 file. Note this should not be used to add OD or scene tracks, MP4AddODTrack() and MP4AddSceneTrack() should be used for those purposes. Other known MPEG\-4 System track types are:
+.LP 
+MP4_CLOCK_TRACK_TYPE
+.br 
+MP4_MPEG7_TRACK_TYPE
+.br 
+MP4_OCI_TRACK_TYPE
+.br 
+MP4_IPMP_TRACK_TYPE
+.br 
+MP4_MPEGJ_TRACK_TYPE
+
+
+.SH "SEE ALSO"
+.LP 
+MP4(3)

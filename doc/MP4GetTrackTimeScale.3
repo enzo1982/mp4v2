@@ -1,0 +1,32 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetTrackTimeScale\fR \- Get the time scale of a track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+u_int32_t \fBMP4GetTrackTimeScale\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track for which time scale is desired.
+.SH "RETURN VALUES"
+.LP 
+The time scale (ticks per second) of the track in the mp4 file.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetTrackTimeScale\fR returns the time scale of the specified track in the mp4 file. The time scale determines the number of clock ticks per second for this track. 
+.SH "SEE ALSO"
+.LP 
+MP4(3)

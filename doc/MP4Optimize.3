@@ -1,0 +1,49 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4Optimize\fR \- Optimize the layout of an mp4 file
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+bool \fBMP4Optimize\fR(
+.br 
+	const char* \fIexistingfileName\fP, 
+.br 
+	const char* \fInewfileName\fP = NULL, 
+.br 
+	u_int32_t \fIverbosity\fP = 0
+.br 
+);
+
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIexistingFileName\fP
+Specifies the path name of the existing file to be optimized.
+.TP 
+\fInewFileName\fP
+Specifies the path name of the new, optimized file. If NULL, then a temporary file is used, and the existing file is overwritten upon successful completion.
+.TP 
+\fIverbosity\fP
+Specifies a bitmask of diagnostic details the library should print to stdout during its functioning. See MP4SetVerbosity() for values.
+
+.SH "RETURN VALUES"
+.LP 
+Upon success, true (1). Upon an error, false (0).
+.SH "DESCRIPTION"
+.LP 
+\fBMP4Optimize\fR reads an existing mp4 file and writes a new version of the file with the two important changes:
+.LP 
+First, the mp4 control information is moved to the beginning of the file. (Frequenty it is at the end of the file due to it being constantly modified as track samples are added to an mp4 file.) This optimization is useful in that in allows the mp4 file to be HTTP streamed. 
+.LP 
+Second, the track samples are interleaved so that the samples for a particular instant in time are colocated within the file. This eliminates disk seeks during playback of the file which results in better performance.
+.LP 
+There are also two important side effects of MP4Optimize():
+.LP 
+First, any free blocks within the mp4 file are eliminated.
+.LP 
+Second, as a side effect of the sample interleaving process any media data chunks that are not actually referenced by the mp4 control structures are deleted. This is useful if you have called MP4DeleteTrack() which only deletes the control information for a track, and not the actual media data.
+.SH "SEE ALSO"
+.LP 
+MP4(3)

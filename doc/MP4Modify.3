@@ -1,0 +1,42 @@
+.TH "MP4" "3" "Version 1.0" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4Modify\fR \- Modify an existing mp4 file
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+MP4FileHandle \fBMP4Modify\fR(
+.br 
+	const char* \fIfileName\fP, 
+.br 
+	u_int32_t \fIverbosity\fP = 0,
+.br 
+	u_int32_t \fIflags\fP = 0
+.br 
+);
+
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIfileName\fP
+Specifies the path name of the file to be modified.
+.TP 
+\fIverbosity\fP
+Specifies a bitmask of diagnostic details the library should print to stdout during its functioning. See MP4SetVerbosity() for values.
+.TP 
+\fIflags\fP
+Currently ignored. 
+.SH "RETURN VALUES"
+.LP 
+Upon successful completion the function returns a handle to the mp4 file. This is used in subsequent calls to the library to modify the file.
+Upon an error, MP4_INVALID_FILE_HANDLE is returned.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4Modify\fR is the first call that should be used when you want to modify an existing mp4 file. It is roughly equivalent to opening a file in read/write mode.
+.LP 
+Since modifications to an existing mp4 file can result in a sub\-optimal file layout, you may want to use MP4Optimize() after you have modified and closed the mp4 file.
+
+.SH "SEE ALSO"
+.LP 
+MP4(3)

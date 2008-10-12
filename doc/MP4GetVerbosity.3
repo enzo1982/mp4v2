@@ -1,0 +1,27 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetVerbosity\fR \- Gets the current level of diagnostic information
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+u_int32_t \fBMP4GetVerbosity\fR(
+.br 
+        MP4FileHandle \fIhFile\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.SH "RETURN VALUES"
+.LP 
+The current bitmask of flags for diagnostic information. See MP4SetVerbosity() for values.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetVerbosity\fR returns the level of diagnostic information printed out by the library.
+.SH "SEE ALSO"
+.LP 
+MP4(3)

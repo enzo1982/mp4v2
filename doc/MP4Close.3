@@ -1,0 +1,28 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4Close\fR \- Close an mp4 file
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+bool \fBMP4Close\fR(
+.br 
+        MP4FileHandle \fIhFile\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to be closed. 
+
+.SH "RETURN VALUES"
+.LP 
+Upon success, true (1). Upon an error, false (0).
+.SH "DESCRIPTION"
+.LP 
+\fBMP4Close\fR closes a previously opened mp4 file. If the file is a writable file opened with MP4Create() or MP4Modify(), then MP4Close() will write out all remaining information to disk.
+.SH "SEE ALSO"
+.LP 
+MP4(3)
