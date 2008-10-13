@@ -1215,6 +1215,8 @@ MP4TrackId MP4File::AddSystemsTrack(const char* type)
 
 	(void)AddChildAtom(MakeTrackName(trackId, "mdia.minf.stbl.stsd"), "mp4s");
 
+        AddDescendantAtoms(MakeTrackName(trackId, NULL), "udta.name");
+
 	// stsd is a unique beast in that it has a count of the number 
 	// of child atoms that needs to be incremented after we add the mp4s atom
 	MP4Integer32Property* pStsdCountProperty;
@@ -1452,6 +1454,41 @@ MP4TrackId MP4File::AddAudioTrack(
 	SetTrackIntegerProperty(trackId, 
 		"mdia.minf.stbl.stsd.mp4a.esds.decConfigDescr.streamType", 
 		MP4AudioStreamType);
+
+	m_pTracks[FindTrackIndex(trackId)]->
+		SetFixedSampleDuration(sampleDuration);
+
+	return trackId;
+}
+
+/*
+ * Hacky initial attempt at AC3 in MP4 prior to the standard being published,
+ * this is to be rewritten.
+ */
+MP4TrackId MP4File::AddAC3AudioTrack(
+	u_int32_t timeScale, 
+	MP4Duration sampleDuration, 
+	u_int8_t audioType)
+{
+	MP4TrackId trackId = AddTrack(MP4_AUDIO_TRACK_TYPE, timeScale);
+
+	AddTrackToOd(trackId);
+
+	SetTrackFloatProperty(trackId, "tkhd.volume", 1.0);
+
+	InsertChildAtom(MakeTrackName(trackId, "mdia.minf"), "smhd", 0);
+
+	AddChildAtom(MakeTrackName(trackId, "mdia.minf.stbl.stsd"), "ac-3");
+
+        AddDescendantAtoms(MakeTrackName(trackId, NULL), "udta.name");
+
+	// stsd is a unique beast in that it has a count of the number 
+	// of child atoms that needs to be incremented after we add the mp4a atom
+	MP4Integer32Property* pStsdCountProperty;
+	FindIntegerProperty(
+		MakeTrackName(trackId, "mdia.minf.stbl.stsd.entryCount"),
+		(MP4Property**)&pStsdCountProperty);
+	pStsdCountProperty->IncrementValue();
 
 	m_pTracks[FindTrackIndex(trackId)]->
 		SetFixedSampleDuration(sampleDuration);

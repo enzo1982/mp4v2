@@ -146,6 +146,12 @@ public:
 	void Generate();
 };
 
+class MP4Ac3Atom : public MP4Atom {
+public:
+	MP4Ac3Atom();
+	void Generate();
+};
+
 class MP4Mp4sAtom : public MP4Atom {
 public:
 	MP4Mp4sAtom();
@@ -175,6 +181,7 @@ class MP4DataAtom : public MP4Atom {
 public:
     MP4DataAtom();
     void Read();
+    void Generate();
 };
 
 class MP4DrefAtom : public MP4Atom {
@@ -257,6 +264,13 @@ class MP4Meta2Atom : public MP4Atom {
  public:
   MP4Meta2Atom(const char *name);
   void Read();
+};
+
+class MP4NameAtom : public MP4Atom {
+public:
+    MP4NameAtom();
+    void Read();
+    void Generate();
 };
 	       
 class MP4MvhdAtom : public MP4Atom {

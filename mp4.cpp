@@ -677,6 +677,25 @@ extern "C" mp4v2_ismacrypParams *MP4DefaultISMACrypParams(mp4v2_ismacrypParams *
 }
 
 
+extern "C" MP4TrackId MP4AddAC3AudioTrack(
+	MP4FileHandle hFile, 
+	u_int32_t timeScale, 
+	MP4Duration sampleDuration, 
+	u_int8_t audioType)
+{
+	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+		try {
+			return ((MP4File*)hFile)->
+				AddAC3AudioTrack(timeScale, sampleDuration, audioType);
+		}
+		catch (MP4Error* e) {
+			PRINT_ERROR(e);
+			delete e;
+		}
+	}
+	return MP4_INVALID_TRACK_ID;
+}
+
 extern "C" MP4TrackId MP4AddEncAudioTrack(MP4FileHandle hFile, 
 					  uint32_t timeScale, 
 					  MP4Duration sampleDuration,

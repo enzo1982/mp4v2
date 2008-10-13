@@ -38,6 +38,7 @@ void MP4UdtaAtom::Read()
 {
 	if (ATOMID(m_pParentAtom->GetType()) == ATOMID("trak")) {
 		ExpectChildAtom("hinf", Optional, OnlyOne);
+                ExpectChildAtom("name", Optional, OnlyOne);
 	}
 
 	MP4Atom::Read();

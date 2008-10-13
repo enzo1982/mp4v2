@@ -80,6 +80,8 @@ MP4Atom* MP4Atom::CreateAtom(const char* type)
     case 'a':
       if (ATOMID(type) == ATOMID("avc1")) {
 	pAtom = new MP4Avc1Atom();
+      } else if (ATOMID(type) == ATOMID("ac-3")) {
+	pAtom = new MP4Ac3Atom();
       } else if (ATOMID(type) == ATOMID("avcC")) {
 	pAtom = new MP4AvcCAtom();
       } else if (ATOMID(type) == ATOMID("alis")) {

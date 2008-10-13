@@ -10,6 +10,7 @@ include_HEADERS = mp4.h
 
 libmp4v2_la_SOURCES = \
 	3gp.cpp \
+	atom_ac3.cpp \
 	atom_amr.cpp \
 	atom_avc1.cpp \
 	atom_avcC.cpp \

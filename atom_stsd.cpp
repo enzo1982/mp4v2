@@ -52,6 +52,7 @@ MP4StsdAtom::MP4StsdAtom()
 	ExpectChildAtom("alac", Optional, Many);
 	ExpectChildAtom("text", Optional, Many);
 	ExpectChildAtom("pasp", Optional, Many);
+        ExpectChildAtom("ac-3", Optional, Many);
 	ExpectChildAtom("colr", Optional, Many);
 }
 

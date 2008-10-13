@@ -467,6 +467,12 @@ MP4TrackId MP4AddAudioTrack(
 	MP4Duration sampleDuration,
 	uint8_t audioType DEFAULT(MP4_MPEG4_AUDIO_TYPE));
 
+MP4TrackId MP4AddAC3AudioTrack(
+	MP4FileHandle hFile, 
+	u_int32_t timeScale, 
+	MP4Duration sampleDuration,
+	u_int8_t audioType DEFAULT(MP4_MPEG4_AUDIO_TYPE));
+
 typedef struct mp4v2_ismacryp_session_params {
   uint32_t  scheme_type;
   uint16_t  scheme_version;
