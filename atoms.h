@@ -181,7 +181,6 @@ class MP4DataAtom : public MP4Atom {
 public:
     MP4DataAtom();
     void Read();
-    void Generate();
 };
 
 class MP4DrefAtom : public MP4Atom {
