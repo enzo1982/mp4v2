@@ -22,7 +22,7 @@
 #ifndef __MP4_ARRAY_INCLUDED__
 #define __MP4_ARRAY_INCLUDED__
 
-typedef u_int32_t MP4ArrayIndex;
+typedef uint32_t MP4ArrayIndex;
 
 class MP4Array {
 public:
@@ -113,13 +113,13 @@ protected:
 		type*	m_elements; \
 	};
 
-MP4ARRAY_DECL(MP4Integer8, u_int8_t)
+MP4ARRAY_DECL(MP4Integer8, uint8_t)
 
-MP4ARRAY_DECL(MP4Integer16, u_int16_t)
+MP4ARRAY_DECL(MP4Integer16, uint16_t)
 
-MP4ARRAY_DECL(MP4Integer32, u_int32_t)
+MP4ARRAY_DECL(MP4Integer32, uint32_t)
 
-MP4ARRAY_DECL(MP4Integer64, u_int64_t)
+MP4ARRAY_DECL(MP4Integer64, uint64_t)
 
 MP4ARRAY_DECL(MP4Float32, float)
 
@@ -127,6 +127,6 @@ MP4ARRAY_DECL(MP4Float64, double)
 
 MP4ARRAY_DECL(MP4String, char*)
 
-MP4ARRAY_DECL(MP4Bytes, u_int8_t*)
+MP4ARRAY_DECL(MP4Bytes, uint8_t*)
 
 #endif /* __MP4_ARRAY_INCLUDED__ */

@@ -24,20 +24,20 @@
 
 class MP4Descriptor {
 public:
-	MP4Descriptor(u_int8_t tag = 0);
+	MP4Descriptor(uint8_t tag = 0);
 
 	virtual ~MP4Descriptor();
 
-	u_int8_t GetTag() {
+	uint8_t GetTag() {
 		return m_tag;
 	}
-	void SetTag(u_int8_t tag) {
+	void SetTag(uint8_t tag) {
 		m_tag = tag;
 	}
 
 	void SetParentAtom(MP4Atom* pParentAtom) {
 		m_pParentAtom = pParentAtom;
-		for (u_int32_t i = 0; i < m_pProperties.Size(); i++) {
+		for (uint32_t i = 0; i < m_pProperties.Size(); i++) {
 			m_pProperties[i]->SetParentAtom(pParentAtom);
 		}
 	}
@@ -47,50 +47,50 @@ public:
 	virtual void Generate();
 	virtual void Read(MP4File* pFile);
 	virtual void Write(MP4File* pFile);
-	virtual void Dump(FILE* pFile, u_int8_t indent, bool dumpImplicits);
+	virtual void Dump(FILE* pFile, uint8_t indent, bool dumpImplicits);
 
-	MP4Property* GetProperty(u_int32_t index) {
+	MP4Property* GetProperty(uint32_t index) {
 		return m_pProperties[index];
 	}
 
 	// use with extreme caution
-	void SetProperty(u_int32_t index, MP4Property* pProperty) {
+	void SetProperty(uint32_t index, MP4Property* pProperty) {
 		m_pProperties[index] = pProperty;
 	}
 
 	bool FindProperty(const char* name, 
-	  MP4Property** ppProperty, u_int32_t* pIndex = NULL) {
+	  MP4Property** ppProperty, uint32_t* pIndex = NULL) {
 		return FindContainedProperty(name, ppProperty, pIndex);
 	}
 
 	void WriteToMemory(MP4File* pFile,
-		 u_int8_t** ppBytes, u_int64_t* pNumBytes);
+		 uint8_t** ppBytes, uint64_t* pNumBytes);
 
 protected:
-	void SetReadMutate(u_int32_t propIndex) {
+	void SetReadMutate(uint32_t propIndex) {
 		m_readMutatePoint = propIndex;
 	}
 
 	void ReadHeader(MP4File* pFile);
 	void ReadProperties(MP4File* pFile,
-		u_int32_t startIndex = 0, u_int32_t count = 0xFFFFFFFF);
+		uint32_t startIndex = 0, uint32_t count = 0xFFFFFFFF);
 
 	virtual void Mutate() {
 		// default is a no-op
 	};
 
 	bool FindContainedProperty(const char* name,
-		MP4Property** ppProperty, u_int32_t* pIndex);
+		MP4Property** ppProperty, uint32_t* pIndex);
 
-	u_int8_t GetDepth();
+	uint8_t GetDepth();
 
 protected:
 	MP4Atom*			m_pParentAtom;
-	u_int8_t			m_tag;
-	u_int64_t			m_start;
-	u_int32_t			m_size;
+	uint8_t			m_tag;
+	uint64_t			m_start;
+	uint32_t			m_size;
 	MP4PropertyArray	m_pProperties;
-	u_int32_t			m_readMutatePoint;
+	uint32_t			m_readMutatePoint;
 };
 
 #endif /* __MP4_DESCRIPTOR_INCLUDED__ */

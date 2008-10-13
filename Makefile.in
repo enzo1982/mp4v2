@@ -63,21 +63,22 @@ libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libmp4v2_la_LIBADD =
 am_libmp4v2_la_OBJECTS = 3gp.lo atom_amr.lo atom_avc1.lo atom_avcC.lo \
-	atom_d263.lo atom_damr.lo atom_dref.lo atom_elst.lo \
-	atom_enca.lo atom_encv.lo atom_free.lo atom_ftyp.lo \
-	atom_gmin.lo atom_hdlr.lo atom_hinf.lo atom_hnti.lo \
-	atom_href.lo atom_mdat.lo atom_mdhd.lo atom_meta.lo \
-	atom_mp4s.lo atom_mp4v.lo atom_mvhd.lo atom_ohdr.lo \
-	atom_root.lo atom_rtp.lo atom_s263.lo atom_sdp.lo atom_smi.lo \
-	atom_sound.lo atom_standard.lo atom_stbl.lo atom_stdp.lo \
-	atom_stsc.lo atom_stsd.lo atom_stsz.lo atom_stz2.lo \
-	atom_text.lo atom_tfhd.lo atom_tkhd.lo atom_treftype.lo \
-	atom_trun.lo atom_udta.lo atom_url.lo atom_urn.lo \
-	atom_video.lo atom_vmhd.lo descriptors.lo isma.lo mp4atom.lo \
-	mp4container.lo mp4.lo mp4descriptor.lo mp4file.lo \
-	mp4file_io.lo mp4info.lo mp4meta.lo mp4property.lo mp4track.lo \
-	mp4util.lo ocidescriptors.lo odcommands.lo qosqualifiers.lo \
-	rtphint.lo virtual_io.lo
+	atom_colr.lo atom_d263.lo atom_damr.lo atom_dref.lo \
+	atom_elst.lo atom_enca.lo atom_encv.lo atom_free.lo \
+	atom_ftyp.lo atom_gmin.lo atom_hdlr.lo atom_hinf.lo \
+	atom_hnti.lo atom_href.lo atom_mdat.lo atom_mdhd.lo \
+	atom_meta.lo atom_mp4s.lo atom_mp4v.lo atom_mvhd.lo \
+	atom_pasp.lo atom_ohdr.lo atom_root.lo atom_rtp.lo \
+	atom_s263.lo atom_sdp.lo atom_smi.lo atom_sound.lo \
+	atom_standard.lo atom_stbl.lo atom_stdp.lo atom_stsc.lo \
+	atom_stsd.lo atom_stsz.lo atom_stz2.lo atom_text.lo \
+	atom_tfhd.lo atom_tkhd.lo atom_treftype.lo atom_trun.lo \
+	atom_udta.lo atom_url.lo atom_urn.lo atom_video.lo \
+	atom_vmhd.lo descriptors.lo isma.lo mp4atom.lo mp4container.lo \
+	mp4.lo mp4descriptor.lo mp4file.lo mp4file_io.lo mp4info.lo \
+	mp4meta.lo mp4property.lo mp4track.lo mp4util.lo \
+	ocidescriptors.lo odcommands.lo qosqualifiers.lo rtphint.lo \
+	virtual_io.lo
 libmp4v2_la_OBJECTS = $(am_libmp4v2_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I.
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -236,6 +237,7 @@ libmp4v2_la_SOURCES = \
 	atom_amr.cpp \
 	atom_avc1.cpp \
 	atom_avcC.cpp \
+	atom_colr.cpp \
 	atom_d263.cpp \
 	atom_damr.cpp \
 	atom_dref.cpp \
@@ -255,6 +257,7 @@ libmp4v2_la_SOURCES = \
 	atom_mp4s.cpp \
 	atom_mp4v.cpp \
 	atom_mvhd.cpp \
+	atom_pasp.cpp \
 	atom_ohdr.cpp \
 	atom_root.cpp \
 	atom_rtp.cpp \
@@ -415,6 +418,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_amr.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_avc1.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_avcC.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_colr.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_d263.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_damr.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_dref.Plo@am__quote@
@@ -435,6 +439,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_mp4v.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_mvhd.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_ohdr.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_pasp.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_root.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_rtp.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_s263.Plo@am__quote@

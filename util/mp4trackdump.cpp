@@ -75,7 +75,7 @@ int main(int argc, char** argv)
     "[-l] [-t <track-id>] [-s <sample-id>] [-v [<level>]] <file-name>\n";
   MP4TrackId trackId = MP4_INVALID_TRACK_ID;
   MP4SampleId sampleId = MP4_INVALID_SAMPLE_ID;
-  u_int32_t verbosity = MP4_DETAILS_ERROR;
+  uint32_t verbosity = MP4_DETAILS_ERROR;
 
   /* begin processing command line */
   ProgName = argv[0];
@@ -115,7 +115,7 @@ int main(int argc, char** argv)
     case 'v':
       verbosity |= MP4_DETAILS_READ;
       if (optarg) {
-	u_int32_t level;
+	uint32_t level;
 	if (sscanf(optarg, "%u", &level) == 1) {
 	  if (level >= 2) {
 	    verbosity |= MP4_DETAILS_TABLE;
@@ -219,9 +219,9 @@ int main(int argc, char** argv)
     printf("\n");
   } else {
     if (trackId == 0) {
-      u_int32_t numTracks = MP4GetNumberOfTracks(mp4File);
+      uint32_t numTracks = MP4GetNumberOfTracks(mp4File);
       
-      for (u_int32_t i = 0; i < numTracks; i++) {
+      for (uint32_t i = 0; i < numTracks; i++) {
 	trackId = MP4FindTrackId(mp4File, i);
 	DumpTrack(mp4File, trackId);
       }

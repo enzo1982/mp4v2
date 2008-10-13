@@ -44,7 +44,7 @@ void MP4HinfAtom::Generate()
 	// are optional (on read), if we generate it for writing
 	// we really want all the children
 
-	for (u_int32_t i = 0; i < m_pChildAtomInfos.Size(); i++) {
+	for (uint32_t i = 0; i < m_pChildAtomInfos.Size(); i++) {
 		MP4Atom* pChildAtom = 
 			CreateAtom(m_pChildAtomInfos[i]->m_name);
 

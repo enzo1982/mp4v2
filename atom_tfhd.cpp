@@ -29,7 +29,7 @@ MP4TfhdAtom::MP4TfhdAtom()
 		new MP4Integer32Property("trackId"));
 }
 
-void MP4TfhdAtom::AddProperties(u_int32_t flags)
+void MP4TfhdAtom::AddProperties(uint32_t flags)
 {
 	if (flags & 0x01) {
 		// note this property is signed 64!

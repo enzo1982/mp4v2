@@ -23,13 +23,13 @@
 #define __ODCOMMANDS_INCLUDED__
 
 // OD stream command descriptors
-const u_int8_t MP4ODUpdateODCommandTag			= 0x01; 
-const u_int8_t MP4ODRemoveODCommandTag			= 0x02; 
-const u_int8_t MP4ESUpdateODCommandTag			= 0x03; 
-const u_int8_t MP4ESRemoveODCommandTag			= 0x04; 
-const u_int8_t MP4IPMPUpdateODCommandTag		= 0x05; 
-const u_int8_t MP4IPMPRemoveODCommandTag		= 0x06; 
-const u_int8_t MP4ESRemoveRefODCommandTag		= 0x07; 
+const uint8_t MP4ODUpdateODCommandTag			= 0x01; 
+const uint8_t MP4ODRemoveODCommandTag			= 0x02; 
+const uint8_t MP4ESUpdateODCommandTag			= 0x03; 
+const uint8_t MP4ESRemoveODCommandTag			= 0x04; 
+const uint8_t MP4IPMPUpdateODCommandTag		= 0x05; 
+const uint8_t MP4IPMPRemoveODCommandTag		= 0x06; 
+const uint8_t MP4ESRemoveRefODCommandTag		= 0x07; 
 
 class MP4ODUpdateDescriptor : public MP4Descriptor {
 public:
@@ -52,7 +52,7 @@ public:
 	MP4ESRemoveDescriptor();
 };
 
-MP4Descriptor* CreateODCommand(u_int8_t tag);
+MP4Descriptor* CreateODCommand(uint8_t tag);
 
 #endif /* __ODCOMMANDS_INCLUDED__ */
 

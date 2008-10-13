@@ -29,7 +29,7 @@
 
 #include "mp4common.h"
 
-static const u_int8_t BifsV2Config[3] = {
+static const uint8_t BifsV2Config[3] = {
 	0x00, 0x00, 0x60 // IsCommandStream = 1, PixelMetric = 1
 };
 
@@ -93,7 +93,7 @@ void MP4File::MakeIsmaCompliant(bool addIsmaComplianceSdp)
 
 	m_useIsma = true;
 
-	u_int64_t fileMsDuration = 0;
+	uint64_t fileMsDuration = 0;
 	fileMsDuration = 
 		ConvertFromMovieDuration(GetDuration(), MP4_MSECS_TIME_SCALE);
 
@@ -140,8 +140,8 @@ void MP4File::MakeIsmaCompliant(bool addIsmaComplianceSdp)
 	SetTrackESConfiguration(sceneTrackId, 
 		BifsV2Config, sizeof(BifsV2Config));
 
-	u_int8_t* pBytes = NULL;
-	u_int64_t numBytes = 0;
+	uint8_t* pBytes = NULL;
+	uint64_t numBytes = 0;
 
 	// write OD Update Command
 	CreateIsmaODUpdateCommandFromFileForFile(
@@ -224,8 +224,8 @@ void MP4File::CreateIsmaIodFromFile(
 	MP4TrackId sceneTrackId,
 	MP4TrackId audioTrackId, 
 	MP4TrackId videoTrackId,
-	u_int8_t** ppBytes,
-	u_int64_t* pNumBytes)
+	uint8_t** ppBytes,
+	uint64_t* pNumBytes)
 {
 	MP4Descriptor* pIod = new MP4IODescriptor();
 	pIod->SetTag(MP4IODescrTag);
@@ -266,8 +266,8 @@ void MP4File::CreateIsmaIodFromFile(
 				 (MP4Property**)&pSetProperty))
 	  pSetProperty->SetValue(1);
 
-	u_int8_t* pBytes;
-	u_int64_t numBytes;
+	uint8_t* pBytes;
+	uint64_t numBytes;
 
 	CreateIsmaODUpdateCommandFromFileForStream(
 		audioTrackId, 
@@ -412,20 +412,20 @@ void MP4File::CreateIsmaIodFromFile(
 }
 
 void MP4File::CreateIsmaIodFromParams(
-	u_int8_t videoProfile,
-	u_int32_t videoBitrate,
-	u_int8_t* videoConfig,
-	u_int32_t videoConfigLength,
-	u_int8_t audioProfile,
-	u_int32_t audioBitrate,
-	u_int8_t* audioConfig,
-	u_int32_t audioConfigLength,
-	u_int8_t** ppIodBytes,
-	u_int64_t* pIodNumBytes)
+	uint8_t videoProfile,
+	uint32_t videoBitrate,
+	uint8_t* videoConfig,
+	uint32_t videoConfigLength,
+	uint8_t audioProfile,
+	uint32_t audioBitrate,
+	uint8_t* audioConfig,
+	uint32_t audioConfigLength,
+	uint8_t** ppIodBytes,
+	uint64_t* pIodNumBytes)
 {
 	MP4IntegerProperty* pInt;
-	u_int8_t* pBytes = NULL;
-	u_int64_t numBytes;
+	uint8_t* pBytes = NULL;
+	uint64_t numBytes;
 
 	// Create the IOD
 	MP4Descriptor* pIod = new MP4IODescriptor();
@@ -579,13 +579,13 @@ void MP4File::CreateIsmaIodFromParams(
 
 void MP4File::CreateESD(
 	MP4DescriptorProperty* pEsProperty,
-	u_int32_t esid,
-	u_int8_t objectType,
-	u_int8_t streamType,
-	u_int32_t bufferSize,
-	u_int32_t bitrate,
-	const u_int8_t* pConfig,
-	u_int32_t configLength,
+	uint32_t esid,
+	uint8_t objectType,
+	uint8_t streamType,
+	uint32_t bufferSize,
+	uint32_t bitrate,
+	const uint8_t* pConfig,
+	uint32_t configLength,
 	char* url)
 {
 	MP4IntegerProperty* pInt;
@@ -660,15 +660,15 @@ void MP4File::CreateIsmaODUpdateCommandFromFileForFile(
 	MP4TrackId odTrackId,
 	MP4TrackId audioTrackId, 
 	MP4TrackId videoTrackId,
-	u_int8_t** ppBytes,
-	u_int64_t* pNumBytes)
+	uint8_t** ppBytes,
+	uint64_t* pNumBytes)
 {
 	MP4Descriptor* pCommand = CreateODCommand(MP4ODUpdateODCommandTag);
 	pCommand->Generate();
 
-	for (u_int8_t i = 0; i < 2; i++) {
+	for (uint8_t i = 0; i < 2; i++) {
 		MP4TrackId trackId;
-		u_int16_t odId;
+		uint16_t odId;
 
 		if (i == 0) {
 			trackId = audioTrackId;
@@ -713,7 +713,7 @@ void MP4File::CreateIsmaODUpdateCommandFromFileForFile(
 						    (MP4Property**)&pRefIndexProperty));
 		ASSERT(pRefIndexProperty);
 
-		u_int32_t mpodIndex = FindTrackReference(
+		uint32_t mpodIndex = FindTrackReference(
 			MakeTrackName(odTrackId, "tref.mpod"), trackId);
 		ASSERT(mpodIndex != 0);
 
@@ -728,8 +728,8 @@ void MP4File::CreateIsmaODUpdateCommandFromFileForFile(
 void MP4File::CreateIsmaODUpdateCommandFromFileForStream(
 	MP4TrackId audioTrackId, 
 	MP4TrackId videoTrackId,
-	u_int8_t** ppBytes,
-	u_int64_t* pNumBytes)
+	uint8_t** ppBytes,
+	uint64_t* pNumBytes)
 {
 	MP4DescriptorProperty* pAudioEsd = NULL;
 	MP4Integer8Property* pAudioSLConfigPredef = NULL;
@@ -829,8 +829,8 @@ void MP4File::CreateIsmaODUpdateCommandFromFileForStream(
 void MP4File::CreateIsmaODUpdateCommandForStream(
 	MP4DescriptorProperty* pAudioEsdProperty, 
 	MP4DescriptorProperty* pVideoEsdProperty,
-	u_int8_t** ppBytes,
-	u_int64_t* pNumBytes)
+	uint8_t** ppBytes,
+	uint64_t* pNumBytes)
 {
 	MP4Descriptor* pAudioOd = NULL;
 	MP4Descriptor* pVideoOd = NULL;
@@ -839,8 +839,8 @@ void MP4File::CreateIsmaODUpdateCommandForStream(
 		CreateODCommand(MP4ODUpdateODCommandTag);
 	pCommand->Generate();
 
-	for (u_int8_t i = 0; i < 2; i++) {
-		u_int16_t odId;
+	for (uint8_t i = 0; i < 2; i++) {
+		uint16_t odId;
 		MP4DescriptorProperty* pEsdProperty = NULL;
 
 		if (i == 0) {
@@ -898,22 +898,22 @@ void MP4File::CreateIsmaODUpdateCommandForStream(
 void MP4File::CreateIsmaSceneCommand(
 	bool hasAudio,
 	bool hasVideo,
-	u_int8_t** ppBytes,
-	u_int64_t* pNumBytes)
+	uint8_t** ppBytes,
+	uint64_t* pNumBytes)
 {
 	// from ISMA 1.0 Tech Spec Appendix E
-	static const u_int8_t bifsAudioOnly[] = {
+	static const uint8_t bifsAudioOnly[] = {
 		0xC0, 0x10, 0x12, 
 		0x81, 0x30, 0x2A, 0x05, 0x6D, 0xC0
 	};
-	static const u_int8_t bifsVideoOnly[] = {
+	static const uint8_t bifsVideoOnly[] = {
 		0xC0, 0x10, 0x12, 
 		0x61, 0x04, 
 			0x1F, 0xC0, 0x00, 0x00, 
 			0x1F, 0xC0, 0x00, 0x00,
 		0x44, 0x28, 0x22, 0x82, 0x9F, 0x80
 	};
-	static const u_int8_t bifsAudioVideo[] = {
+	static const uint8_t bifsAudioVideo[] = {
 		0xC0, 0x10, 0x12, 
 		0x81, 0x30, 0x2A, 0x05, 0x6D, 0x26,
 		0x10, 0x41, 0xFC, 0x00, 0x00, 0x01, 0xFC, 0x00, 0x00,
@@ -922,17 +922,17 @@ void MP4File::CreateIsmaSceneCommand(
 
 	if (hasAudio && hasVideo) {
 		*pNumBytes = sizeof(bifsAudioVideo);
-		*ppBytes = (u_int8_t*)MP4Malloc(*pNumBytes);
+		*ppBytes = (uint8_t*)MP4Malloc(*pNumBytes);
 		memcpy(*ppBytes, bifsAudioVideo, sizeof(bifsAudioVideo));
 
 	} else if (hasAudio) {
 		*pNumBytes = sizeof(bifsAudioOnly);
-		*ppBytes = (u_int8_t*)MP4Malloc(*pNumBytes);
+		*ppBytes = (uint8_t*)MP4Malloc(*pNumBytes);
 		memcpy(*ppBytes, bifsAudioOnly, sizeof(bifsAudioOnly));
 
 	} else if (hasVideo) {
 		*pNumBytes = sizeof(bifsVideoOnly);
-		*ppBytes = (u_int8_t*)MP4Malloc(*pNumBytes);
+		*ppBytes = (uint8_t*)MP4Malloc(*pNumBytes);
 		memcpy(*ppBytes, bifsVideoOnly, sizeof(bifsVideoOnly));
 	} else {
 		*pNumBytes = 0;

@@ -49,12 +49,12 @@ void MP4RootAtom::Write()
 void MP4RootAtom::FinishWrite(bool use64)
 {
 	// finish writing last mdat atom
-	u_int32_t mdatIndex = GetLastMdatIndex();
+	uint32_t mdatIndex = GetLastMdatIndex();
 	m_pChildAtoms[mdatIndex]->FinishWrite(m_pFile->Use64Bits("mdat"));
 
 	// write all atoms after last mdat
-	u_int32_t size = m_pChildAtoms.Size();
-	for (u_int32_t i = mdatIndex + 1; i < size; i++) {
+	uint32_t size = m_pChildAtoms.Size();
+	for (uint32_t i = mdatIndex + 1; i < size; i++) {
 		m_pChildAtoms[i]->Write();
 	}
 }
@@ -74,10 +74,10 @@ void MP4RootAtom::FinishOptimalWrite()
 	m_pChildAtoms[GetLastMdatIndex()]->FinishWrite(m_pFile->Use64Bits("mdat"));
 
 	// find moov atom
-	u_int32_t size = m_pChildAtoms.Size();
+	uint32_t size = m_pChildAtoms.Size();
 	MP4Atom* pMoovAtom = NULL;
 
-	u_int32_t i;
+	uint32_t i;
 	for (i = 0; i < size; i++) {
 		if (!strcmp("moov", m_pChildAtoms[i]->GetType())) {
 			pMoovAtom = m_pChildAtoms[i];
@@ -89,16 +89,16 @@ void MP4RootAtom::FinishOptimalWrite()
 
 	// rewrite moov so that updated chunkOffsets are written to disk
 	m_pFile->SetPosition(pMoovAtom->GetStart());
-	u_int64_t oldSize = pMoovAtom->GetSize();
+	uint64_t oldSize = pMoovAtom->GetSize();
 
 	pMoovAtom->Write();
 
 	// sanity check
-	u_int64_t newSize = pMoovAtom->GetSize();
+	uint64_t newSize = pMoovAtom->GetSize();
 	ASSERT(oldSize == newSize);
 }
 
-u_int32_t MP4RootAtom::GetLastMdatIndex()
+uint32_t MP4RootAtom::GetLastMdatIndex()
 {
 	for (int32_t i = m_pChildAtoms.Size() - 1; i >= 0; i--) {
 		if (!strcmp("mdat", m_pChildAtoms[i]->GetType())) {
@@ -106,14 +106,14 @@ u_int32_t MP4RootAtom::GetLastMdatIndex()
 		}
 	}
 	ASSERT(false);
-	return (u_int32_t)-1;
+	return (uint32_t)-1;
 }
 
 void MP4RootAtom::WriteAtomType(const char* type, bool onlyOne)
 {
-	u_int32_t size = m_pChildAtoms.Size();
+	uint32_t size = m_pChildAtoms.Size();
 
-	for (u_int32_t i = 0; i < size; i++) {
+	for (uint32_t i = 0; i < size; i++) {
 		if (!strcmp(type, m_pChildAtoms[i]->GetType())) {
 			m_pChildAtoms[i]->Write();
 			if (onlyOne) {

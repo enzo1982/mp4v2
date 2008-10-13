@@ -22,7 +22,7 @@
 #ifndef __QOSQUALIFIERS_INCLUDED__
 #define __QOSQUALIFIERS_INCLUDED__
 
-const u_int8_t MP4QosDescrTag			 	= 0x0C; 
+const uint8_t MP4QosDescrTag			 	= 0x0C; 
 
 #if 0
 class MP4QosDescriptor : public MP4Descriptor {
@@ -33,15 +33,15 @@ public:
 typedef MP4Descriptor MP4QosQualifier;
 #endif
 
-const u_int8_t MP4QosTagsStart				= 0x01; 
-const u_int8_t MP4MaxDelayQosTag			= 0x01; 
-const u_int8_t MP4PrefMaxDelayQosTag		= 0x02; 
-const u_int8_t MP4LossProbQosTag			= 0x03; 
-const u_int8_t MP4MaxGapLossQosTag			= 0x04; 
-const u_int8_t MP4MaxAUSizeQosTag			= 0x41; 
-const u_int8_t MP4AvgAUSizeQosTag			= 0x42; 
-const u_int8_t MP4MaxAURateQosTag			= 0x43; 
-const u_int8_t MP4QosTagsEnd				= 0xFF; 
+const uint8_t MP4QosTagsStart				= 0x01; 
+const uint8_t MP4MaxDelayQosTag			= 0x01; 
+const uint8_t MP4PrefMaxDelayQosTag		= 0x02; 
+const uint8_t MP4LossProbQosTag			= 0x03; 
+const uint8_t MP4MaxGapLossQosTag			= 0x04; 
+const uint8_t MP4MaxAUSizeQosTag			= 0x41; 
+const uint8_t MP4AvgAUSizeQosTag			= 0x42; 
+const uint8_t MP4MaxAURateQosTag			= 0x43; 
+const uint8_t MP4QosTagsEnd				= 0xFF; 
 
 #if 0
 class MP4MaxDelayQosQualifier : public MP4QosQualifier {

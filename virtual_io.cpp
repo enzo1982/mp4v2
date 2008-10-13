@@ -26,7 +26,7 @@
 
 /* --------- Virtual IO for FILE * --------- */
 
-u_int64_t FILE_GetFileLength(void *user)
+uint64_t FILE_GetFileLength(void *user)
 {
 	FILE *fp = (FILE *)user;
 	struct stat s;
@@ -36,7 +36,7 @@ u_int64_t FILE_GetFileLength(void *user)
 	return s.st_size;
 }
 
-int FILE_SetPosition(void *user, u_int64_t position)
+int FILE_SetPosition(void *user, uint64_t position)
 {
 	FILE *fp = (FILE *)user;
 	fpos_t fpos;
@@ -44,7 +44,7 @@ int FILE_SetPosition(void *user, u_int64_t position)
 	return fsetpos(fp, &fpos);
 }
 
-int FILE_GetPosition(void *user, u_int64_t *position)
+int FILE_GetPosition(void *user, uint64_t *position)
 {
 	FILE *fp = (FILE *)user;
 	fpos_t fpos;
@@ -52,7 +52,7 @@ int FILE_GetPosition(void *user, u_int64_t *position)
 		throw new MP4Error(errno, "MP4GetPosition");
 	}
 	
-	FPOS_TO_VAR(fpos, u_int64_t, *position);
+	FPOS_TO_VAR(fpos, uint64_t, *position);
 	return 0;
 }
 

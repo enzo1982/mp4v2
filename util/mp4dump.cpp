@@ -25,7 +25,7 @@
 int main(int argc, char** argv)
 {
 	char* usageString = "[-verbose=[<level>]] <file-name>\n";
-	u_int32_t verbosity = MP4_DETAILS_ERROR;
+	uint32_t verbosity = MP4_DETAILS_ERROR;
 	bool dumpImplicits = false;
 
 	/* begin processing command line */
@@ -49,7 +49,7 @@ int main(int argc, char** argv)
 		case 'v':
 			verbosity |= MP4_DETAILS_TABLE;
 			if (optarg) {
-				u_int32_t level;
+				uint32_t level;
 				if (sscanf(optarg, "%u", &level) == 1) {
 					if (level >= 2) {
 						dumpImplicits = true;

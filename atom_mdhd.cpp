@@ -27,7 +27,7 @@ MP4MdhdAtom::MP4MdhdAtom()
 	AddVersionAndFlags();
 }
 
-void MP4MdhdAtom::AddProperties(u_int8_t version) 
+void MP4MdhdAtom::AddProperties(uint8_t version) 
 {
 	if (version == 1) {
 		AddProperty(
@@ -59,7 +59,7 @@ void MP4MdhdAtom::AddProperties(u_int8_t version)
 
 void MP4MdhdAtom::Generate() 
 {
-	u_int8_t version = m_pFile->Use64Bits(GetType()) ? 1 : 0;
+	uint8_t version = m_pFile->Use64Bits(GetType()) ? 1 : 0;
 	SetVersion(version);
 	AddProperties(version);
 

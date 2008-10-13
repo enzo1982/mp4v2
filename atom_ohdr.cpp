@@ -31,10 +31,10 @@ public:
       \param pFile                input, file handle.
       \param index                input, index to read.
   */
-	void Read(MP4File* pFile, u_int32_t index = 0) {
+	void Read(MP4File* pFile, uint32_t index = 0) {
 	  MP4Free(m_values[index]);
 	  m_values[index] = (char*)MP4Calloc(m_fixedLength + 1);
-	  (void)pFile->ReadBytes((u_int8_t*)m_values[index], m_fixedLength);
+	  (void)pFile->ReadBytes((uint8_t*)m_values[index], m_fixedLength);
   }
 	
   /*! \brief Write property to file.
@@ -42,8 +42,8 @@ public:
       \param pFile                input, file handle.
       \param index                input, index to write.
   */
-	void Write(MP4File* pFile, u_int32_t index = 0) {
-    pFile->WriteBytes((u_int8_t*)m_values[index], m_fixedLength);
+	void Write(MP4File* pFile, uint32_t index = 0) {
+    pFile->WriteBytes((uint8_t*)m_values[index], m_fixedLength);
   }
 };
 

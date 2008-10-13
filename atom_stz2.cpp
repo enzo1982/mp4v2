@@ -34,10 +34,10 @@ public:
     MP4TableProperty(name, pCountProperty) {};
 
   // The count is half the actual size
-  u_int32_t GetCount() {
+  uint32_t GetCount() {
     return (m_pCountProperty->GetValue() + 1)/ 2;
   };
-  void SetCount(u_int32_t count) {
+  void SetCount(uint32_t count) {
     m_pCountProperty->SetValue(count * 2);
   };
 };

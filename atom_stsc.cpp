@@ -54,7 +54,7 @@ void MP4StscAtom::Read()
 	MP4Atom::Read();
 
 	// Compute the firstSample values for later use
-	u_int32_t count = 
+	uint32_t count = 
 		((MP4Integer32Property*)m_pProperties[2])->GetValue();
 
 	MP4Integer32Property* pFirstChunk = (MP4Integer32Property*)
@@ -66,7 +66,7 @@ void MP4StscAtom::Read()
 
 	MP4SampleId sampleId = 1;
 
-	for (u_int32_t i = 0; i < count; i++) {
+	for (uint32_t i = 0; i < count; i++) {
 		pFirstSample->SetValue(sampleId, i);
 
 		if (i < count - 1) {

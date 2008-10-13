@@ -47,7 +47,7 @@ void MP4HdlrAtom::Read()
 	if (pos == end) return;
 
 	// take a peek at the next byte
-	u_int8_t strLength;
+	uint8_t strLength;
 	m_pFile->PeekBytes(&strLength, 1);
 	// if the value matches the remaining atom length
 	if (pos + strLength + 1 == end) {

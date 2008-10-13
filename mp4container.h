@@ -35,47 +35,47 @@ public:
 
 	virtual void Write(MP4File* pFile);
 
-	virtual void Dump(FILE* pFile, u_int8_t indent, bool dumpImplicits);
+	virtual void Dump(FILE* pFile, uint8_t indent, bool dumpImplicits);
 
-	MP4Property* GetProperty(u_int32_t index) {
+	MP4Property* GetProperty(uint32_t index) {
 		return m_pProperties[index];
 	}
 
 	// LATER MP4Property* GetProperty(const char* name); throw on error
-	// LATER MP4Property* FindProperty(const char* name, u_int32_t* pIndex = NULL); returns NULL on error
+	// LATER MP4Property* FindProperty(const char* name, uint32_t* pIndex = NULL); returns NULL on error
 
 	bool FindProperty(const char* name, 
-	  MP4Property** ppProperty, u_int32_t* pIndex = NULL);
+	  MP4Property** ppProperty, uint32_t* pIndex = NULL);
 
 	void FindIntegerProperty(const char* name, 
-		MP4Property** ppProperty, u_int32_t* pIndex = NULL);
+		MP4Property** ppProperty, uint32_t* pIndex = NULL);
 
-	u_int64_t GetIntegerProperty(const char* name);
+	uint64_t GetIntegerProperty(const char* name);
 
-	void SetIntegerProperty(const char* name, u_int64_t value);
+	void SetIntegerProperty(const char* name, uint64_t value);
 
 	void FindFloatProperty(const char* name, 
-		MP4Property** ppProperty, u_int32_t* pIndex = NULL);
+		MP4Property** ppProperty, uint32_t* pIndex = NULL);
 
 	float GetFloatProperty(const char* name);
 
 	void SetFloatProperty(const char* name, float value);
 
 	void FindStringProperty(const char* name, 
-		MP4Property** ppProperty, u_int32_t* pIndex = NULL);
+		MP4Property** ppProperty, uint32_t* pIndex = NULL);
 
 	const char* GetStringProperty(const char* name);
 
 	void SetStringProperty(const char* name, const char* value);
 
 	void FindBytesProperty(const char* name, 
-		MP4Property** ppProperty, u_int32_t* pIndex = NULL);
+		MP4Property** ppProperty, uint32_t* pIndex = NULL);
 
 	void GetBytesProperty(const char* name,
-		u_int8_t** ppValue, u_int32_t* pValueSize);
+		uint8_t** ppValue, uint32_t* pValueSize);
 
 	void SetBytesProperty(const char* name, 
-		const u_int8_t* pValue, u_int32_t valueSize);
+		const uint8_t* pValue, uint32_t valueSize);
 
 protected:
 	MP4PropertyArray	m_pProperties;

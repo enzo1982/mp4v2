@@ -196,10 +196,10 @@ typedef unsigned int socklen_t;
 
 #ifdef sun
 #include <limits.h>
-#define u_int8_t uint8_t
-#define u_int16_t uint16_t
-#define u_int32_t uint32_t
-#define u_int64_t uint64_t
+#define uint8_t uint8_t
+#define uint16_t uint16_t
+#define uint32_t uint32_t
+#define uint64_t uint64_t
 #define __STRING(expr) #expr
 #endif
 

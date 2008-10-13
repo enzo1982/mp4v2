@@ -21,7 +21,7 @@
 
 #include "mp4common.h"
 
-MP4BaseDescriptor::MP4BaseDescriptor (u_int8_t tag) : MP4Descriptor(tag)
+MP4BaseDescriptor::MP4BaseDescriptor (uint8_t tag) : MP4Descriptor(tag)
 {
   switch (tag) {
   case MP4ESIDIncDescrTag:
@@ -71,7 +71,7 @@ MP4BaseDescriptor::MP4BaseDescriptor (u_int8_t tag) : MP4Descriptor(tag)
   }
 }
 
-MP4BytesDescriptor::MP4BytesDescriptor (u_int8_t tag) : MP4Descriptor(tag)
+MP4BytesDescriptor::MP4BytesDescriptor (uint8_t tag) : MP4Descriptor(tag)
 {
   m_size_offset = 0;
   m_bytes_index = 0;
@@ -164,7 +164,7 @@ void MP4IODescriptor::Generate()
 {
 	((MP4BitfieldProperty*)m_pProperties[0])->SetValue(1);
 	((MP4BitfieldProperty*)m_pProperties[3])->SetValue(0xF);
-	for (u_int32_t i = 5; i <= 9; i++) {
+	for (uint32_t i = 5; i <= 9; i++) {
 		((MP4Integer8Property*)m_pProperties[i])->SetValue(0xFF);
 	}
 }
@@ -174,7 +174,7 @@ void MP4IODescriptor::Mutate()
 	bool urlFlag = ((MP4BitfieldProperty*)m_pProperties[1])->GetValue();
 
 	m_pProperties[4]->SetImplicit(!urlFlag);
-	for (u_int32_t i = 5; i <= 12; i++) {
+	for (uint32_t i = 5; i <= 12; i++) {
 		m_pProperties[i]->SetImplicit(urlFlag);
 	}
 }
@@ -217,7 +217,7 @@ void MP4ODescriptor::Mutate()
 	bool urlFlag = ((MP4BitfieldProperty*)m_pProperties[1])->GetValue();
 
 	m_pProperties[3]->SetImplicit(!urlFlag);
-	for (u_int32_t i = 4; i <= 6; i++) {
+	for (uint32_t i = 4; i <= 6; i++) {
 		m_pProperties[i]->SetImplicit(urlFlag);
 	}
 }
@@ -411,8 +411,8 @@ void MP4SLConfigDescriptor::Read(MP4File* pFile)
 
 void MP4SLConfigDescriptor::Mutate()
 {
-	u_int32_t i;
-	u_int8_t predefined = 
+	uint32_t i;
+	uint8_t predefined = 
 		((MP4Integer8Property*)m_pProperties[0])->GetValue();
 
 	if (predefined) {
@@ -457,7 +457,7 @@ void MP4SLConfigDescriptor::Mutate()
 	for (i = 22; i <= 23; i++) {
 		m_pProperties[i]->SetImplicit(useTimeStampsFlag);
 
-		u_int8_t timeStampLength = MIN(64,
+		uint8_t timeStampLength = MIN(64,
 			((MP4Integer8Property*)m_pProperties[11])->GetValue());
 
 		((MP4BitfieldProperty*)m_pProperties[i])->SetNumBits(timeStampLength);
@@ -517,7 +517,7 @@ void MP4ContentIdDescriptor::Read(MP4File* pFile)
 
   if (contentIdFlag) {
 
-    u_int32_t cIdOffset = 2;
+    uint32_t cIdOffset = 2;
 
     if (contentTypeFlag) {
 
@@ -546,7 +546,7 @@ void MP4ContentIdDescriptor::Mutate()
 
 }
 
-MP4Descriptor* MP4DescriptorProperty::CreateDescriptor(u_int8_t tag) 
+MP4Descriptor* MP4DescriptorProperty::CreateDescriptor(uint8_t tag) 
 {
 	MP4Descriptor* pDescriptor = NULL;
 

@@ -71,7 +71,7 @@ static char* PrintAudioInfo(
 		"MPEG-4 SLS non-core", 
 	};
 
-	static const u_int8_t mpegAudioTypes[] = {
+	static const uint8_t mpegAudioTypes[] = {
 		MP4_MPEG2_AAC_MAIN_AUDIO_TYPE,	// 0x66
 		MP4_MPEG2_AAC_LC_AUDIO_TYPE,	// 0x67
 		MP4_MPEG2_AAC_SSR_AUDIO_TYPE,	// 0x68
@@ -99,12 +99,12 @@ static char* PrintAudioInfo(
 		"G.723.1",
 		"PCM16 (big endian)",
 	};
-	u_int8_t numMpegAudioTypes =
-		sizeof(mpegAudioTypes) / sizeof(u_int8_t);
+	uint8_t numMpegAudioTypes =
+		sizeof(mpegAudioTypes) / sizeof(uint8_t);
 
 	const char* typeName = "Unknown";
 	bool foundType = false;
-	u_int8_t type = 0;
+	uint8_t type = 0;
 	const char *media_data_name;
 
 	media_data_name = MP4GetTrackMediaDataName(mp4File, trackId);
@@ -140,7 +140,7 @@ static char* PrintAudioInfo(
 	  }
 	    // fall through
 	  default:
-	    for (u_int8_t i = 0; i < numMpegAudioTypes; i++) {
+	    for (uint8_t i = 0; i < numMpegAudioTypes; i++) {
 	      if (type == mpegAudioTypes[i]) {
 		typeName = mpegAudioNames[i];
 		foundType = true;
@@ -153,7 +153,7 @@ static char* PrintAudioInfo(
 	  foundType = true;
 	}
 
-	u_int32_t timeScale =
+	uint32_t timeScale =
 		MP4GetTrackTimeScale(mp4File, trackId);
 
 	MP4Duration trackDuration =
@@ -163,7 +163,7 @@ static char* PrintAudioInfo(
 		UINT64_TO_DOUBLE(MP4ConvertFromTrackDuration(mp4File, trackId,
 			trackDuration, MP4_MSECS_TIME_SCALE));
 
-	u_int32_t avgBitRate =
+	uint32_t avgBitRate =
 		MP4GetTrackBitRate(mp4File, trackId);
 
 	char *sInfo = (char*)MP4Malloc(256);
@@ -271,7 +271,7 @@ static char* PrintVideoInfo(
 	MP4TrackId trackId)
 {
 
-	static const u_int8_t mpegVideoTypes[] = {
+	static const uint8_t mpegVideoTypes[] = {
 		MP4_MPEG2_SIMPLE_VIDEO_TYPE,	// 0x60
 		MP4_MPEG2_MAIN_VIDEO_TYPE,		// 0x61
 		MP4_MPEG2_SNR_VIDEO_TYPE,		// 0x62
@@ -297,8 +297,8 @@ static char* PrintVideoInfo(
 		"H.263",
 		"H.261",
 	};
-	u_int8_t numMpegVideoTypes =
-		sizeof(mpegVideoTypes) / sizeof(u_int8_t);
+	uint8_t numMpegVideoTypes =
+		sizeof(mpegVideoTypes) / sizeof(uint8_t);
 	bool foundTypeName = false;
 	const char* typeName = "Unknown";
 
@@ -389,7 +389,7 @@ static char* PrintVideoInfo(
 	      foundTypeName = true;
 	    }
 	  } else {
-	    for (u_int8_t i = 0; i < numMpegVideoTypes; i++) {
+	    for (uint8_t i = 0; i < numMpegVideoTypes; i++) {
 	      if (type == mpegVideoTypes[i]) {
 		typeName = mpegVideoNames[i];
 		foundTypeName = true;
@@ -409,14 +409,14 @@ static char* PrintVideoInfo(
 		UINT64_TO_DOUBLE(MP4ConvertFromTrackDuration(mp4File, trackId,
 			trackDuration, MP4_MSECS_TIME_SCALE));
 
-	u_int32_t avgBitRate =
+	uint32_t avgBitRate =
 		MP4GetTrackBitRate(mp4File, trackId);
 
 	// Note not all mp4 implementations set width and height correctly
 	// The real answer can be buried inside the ES configuration info
-	u_int16_t width = MP4GetTrackVideoWidth(mp4File, trackId);
+	uint16_t width = MP4GetTrackVideoWidth(mp4File, trackId);
 
-	u_int16_t height = MP4GetTrackVideoHeight(mp4File, trackId);
+	uint16_t height = MP4GetTrackVideoHeight(mp4File, trackId);
 
 	double fps = MP4GetTrackVideoFrameRate(mp4File, trackId);
 
@@ -560,9 +560,9 @@ extern "C" char* MP4Info(
 				buflen -= snprintf(info, buflen,
 						"Track\tType\tInfo\n");
 
-				u_int32_t numTracks = MP4GetNumberOfTracks(mp4File);
+				uint32_t numTracks = MP4GetNumberOfTracks(mp4File);
 
-				for (u_int32_t i = 0; i < numTracks; i++) {
+				for (uint32_t i = 0; i < numTracks; i++) {
 					trackId = MP4FindTrackId(mp4File, i);
 					char* trackInfo = PrintTrackInfo(mp4File, trackId);
 					strncat(info, trackInfo, buflen);

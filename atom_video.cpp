@@ -58,7 +58,7 @@ void MP4VideoAtom::Generate()
 	((MP4Integer16Property*)m_pProperties[1])->SetValue(1);
 
 	// property reserved3 has non-zero fixed values
-	static u_int8_t reserved3[14] = {
+	static uint8_t reserved3[14] = {
 		0x00, 0x48, 0x00, 0x00, 
 		0x00, 0x48, 0x00, 0x00, 
 		0x00, 0x00, 0x00, 0x00, 

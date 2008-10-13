@@ -76,7 +76,7 @@ void MP4SoundAtom::Generate()
 
 	// property reserved2 has non-zero fixed values
 	((MP4Integer16Property*)m_pProperties[2])->SetValue(0);
-	static const u_int8_t reserved2[6] = {
+	static const uint8_t reserved2[6] = {
 		0x00, 0x00, 0x00, 0x00, 
 		0x00, 0x00, 
 	};

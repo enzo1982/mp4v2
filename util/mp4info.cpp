@@ -143,7 +143,7 @@ int main(int argc, char** argv)
 		      fprintf(stdout, " Part of Gapless Album: %s\n", 
 			      bytevalue ? "yes" : "no");
 		  }
-		  u_int32_t artcount = MP4GetMetadataCoverArtCount(mp4file);
+		  uint32_t artcount = MP4GetMetadataCoverArtCount(mp4file);
 		  if (artcount > 0) {
 		    fprintf(stdout, " Cover Art pieces: %u\n", 
 			    artcount);

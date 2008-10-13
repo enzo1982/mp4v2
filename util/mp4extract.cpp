@@ -44,7 +44,7 @@ int main(int argc, char** argv)
 	MP4TrackId trackId = MP4_INVALID_TRACK_ID;
 	MP4SampleId sampleId = MP4_INVALID_SAMPLE_ID;
 	char* dstFileName = NULL;
-	u_int32_t verbosity = MP4_DETAILS_ERROR;
+	uint32_t verbosity = MP4_DETAILS_ERROR;
 
 fprintf(stderr, "You don't want to use this utility - use mp4creator --extract instead\n");
 fprintf(stderr, "If you really want to use it, remove this warning and the exit call\n");
@@ -95,7 +95,7 @@ fprintf(stderr, "from the source file\n");
 		case 'v':
 			verbosity |= MP4_DETAILS_READ;
 			if (optarg) {
-				u_int32_t level;
+				uint32_t level;
 				if (sscanf(optarg, "%u", &level) == 1) {
 					if (level >= 2) {
 						verbosity |= MP4_DETAILS_TABLE;
@@ -171,9 +171,9 @@ fprintf(stderr, "from the source file\n");
 	}
 
 	if (trackId == 0) {
-		u_int32_t numTracks = MP4GetNumberOfTracks(mp4File);
+		uint32_t numTracks = MP4GetNumberOfTracks(mp4File);
 
-		for (u_int32_t i = 0; i < numTracks; i++) {
+		for (uint32_t i = 0; i < numTracks; i++) {
 			trackId = MP4FindTrackId(mp4File, i);
 			ExtractTrack(mp4File, trackId, doSamples, sampleId);
 		}
@@ -219,8 +219,8 @@ void ExtractTrack(MP4FileHandle mp4File, MP4TrackId trackId,
 		numSamples = MP4GetTrackNumberOfSamples(mp4File, trackId);
 	}
 
-	u_int8_t* pSample;
-	u_int32_t sampleSize;
+	uint8_t* pSample;
+	uint32_t sampleSize;
 
 	for ( ; sampleId <= numSamples; sampleId++) {
 		int rc;
@@ -250,7 +250,7 @@ void ExtractTrack(MP4FileHandle mp4File, MP4TrackId trackId,
 		}
 
 		rc = write(outFd, pSample, sampleSize);
-		if (rc == -1 || (u_int32_t)rc != sampleSize) {
+		if (rc == -1 || (uint32_t)rc != sampleSize) {
 			fprintf(stderr, "%s: write to %s failed: %s\n",
 				ProgName, outFileName, strerror(errno));
 			break;

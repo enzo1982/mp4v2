@@ -101,7 +101,7 @@ void MP4TextAtom::GenerateGmhdType()
 	MP4Atom::Generate();
 
 	// property 0 has non-zero fixed values
-	static u_int8_t textData[36] = {
+	static uint8_t textData[36] = {
 		0x00, 0x01, 
 		0x00, 0x00,
 		0x00, 0x00,

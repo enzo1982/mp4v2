@@ -49,7 +49,7 @@ public:
 	const char* m_name;
 	bool m_mandatory;
 	bool m_onlyOne;
-	u_int32_t m_count;
+	uint32_t m_count;
 };
 
 MP4ARRAY_DECL(MP4AtomInfo, MP4AtomInfo*);
@@ -70,24 +70,24 @@ public:
 		m_pFile = pFile;
 	};
 
-	u_int64_t GetStart() {
+	uint64_t GetStart() {
 		return m_start;
 	};
-	void SetStart(u_int64_t pos) {
+	void SetStart(uint64_t pos) {
 		m_start = pos;
 	};
 
-	u_int64_t GetEnd() {
+	uint64_t GetEnd() {
 		return m_end;
 	};
-	void SetEnd(u_int64_t pos) {
+	void SetEnd(uint64_t pos) {
 		m_end = pos;
 	};
 
-	u_int64_t GetSize() {
+	uint64_t GetSize() {
 		return m_size;
 	}
-	void SetSize(u_int64_t size) {
+	void SetSize(uint64_t size) {
 		m_size = size;
 	}
 
@@ -104,10 +104,10 @@ public:
 		}
 	}
 
-	void GetExtendedType(u_int8_t* pExtendedType) {
+	void GetExtendedType(uint8_t* pExtendedType) {
 		memcpy(pExtendedType, m_extendedType, sizeof(m_extendedType));
 	};
-	void SetExtendedType(u_int8_t* pExtendedType) {
+	void SetExtendedType(uint8_t* pExtendedType) {
 		memcpy(m_extendedType, pExtendedType, sizeof(m_extendedType));
 	};
 
@@ -135,7 +135,7 @@ public:
 		m_pChildAtoms.Add(pChildAtom);
 	}
 
-	void InsertChildAtom(MP4Atom* pChildAtom, u_int32_t index) {
+	void InsertChildAtom(MP4Atom* pChildAtom, uint32_t index) {
 		pChildAtom->SetFile(m_pFile);
 		pChildAtom->SetParentAtom(this);
 		m_pChildAtoms.Insert(pChildAtom, index);
@@ -150,25 +150,25 @@ public:
 		}
 	}
 
-	u_int32_t GetNumberOfChildAtoms() {
+	uint32_t GetNumberOfChildAtoms() {
 		return m_pChildAtoms.Size();
 	}
 
-	MP4Atom* GetChildAtom(u_int32_t index) {
+	MP4Atom* GetChildAtom(uint32_t index) {
 		return m_pChildAtoms[index];
 	}
 
-	MP4Property* GetProperty(u_int32_t index) {
+	MP4Property* GetProperty(uint32_t index) {
 		return m_pProperties[index];
 	}
 
-	u_int32_t GetCount() {
+	uint32_t GetCount() {
 		return m_pProperties.Size();
 	}
 
 #if 0
-	void SetProperty(u_int32_t index, MP4Property *property) {
-		u_int64_t t;
+	void SetProperty(uint32_t index, MP4Property *property) {
+		uint64_t t;
 		if (index > m_pProperties.Size())
 			return;
 
@@ -182,12 +182,12 @@ public:
 	MP4Atom* FindChildAtom(const char* name);
 
 	bool FindProperty(const char* name, 
-		MP4Property** ppProperty, u_int32_t* pIndex = NULL);
+		MP4Property** ppProperty, uint32_t* pIndex = NULL);
 
-	u_int32_t GetFlags();
-	void SetFlags(u_int32_t flags);
+	uint32_t GetFlags();
+	void SetFlags(uint32_t flags);
 
-	u_int8_t GetDepth();
+	uint8_t GetDepth();
 
 	void Skip();
 
@@ -197,14 +197,14 @@ public:
 	virtual void Write();
 	virtual void Rewrite();
 	virtual void FinishWrite(bool use64 = false);
-	virtual void Dump(FILE* pFile, u_int8_t indent, bool dumpImplicits);
+	virtual void Dump(FILE* pFile, uint8_t indent, bool dumpImplicits);
 
 protected:
 	void AddProperty(MP4Property* pProperty);
 
 	void AddVersionAndFlags();
 
-	void AddReserved(char* name, u_int32_t size);
+	void AddReserved(char* name, uint32_t size);
 
 	void ExpectChildAtom(const char* name, 
 		bool mandatory, bool onlyOne = true);
@@ -214,45 +214,45 @@ protected:
 	bool IsMe(const char* name);
 
 	bool FindContainedProperty(const char* name, 
-		MP4Property** ppProperty, u_int32_t* pIndex);
+		MP4Property** ppProperty, uint32_t* pIndex);
 
 	void ReadProperties(
-		u_int32_t startIndex = 0, u_int32_t count = 0xFFFFFFFF);
+		uint32_t startIndex = 0, uint32_t count = 0xFFFFFFFF);
 	void ReadChildAtoms();
 
 	void WriteProperties(
-		u_int32_t startIndex = 0, u_int32_t count = 0xFFFFFFFF);
+		uint32_t startIndex = 0, uint32_t count = 0xFFFFFFFF);
 	void WriteChildAtoms();
 
-	u_int8_t GetVersion();
-	void SetVersion(u_int8_t version);
+	uint8_t GetVersion();
+	void SetVersion(uint8_t version);
 
 	/* debugging aid */
-	u_int32_t GetVerbosity();
+	uint32_t GetVerbosity();
 
 protected:
 	MP4File*	m_pFile;
-	u_int64_t	m_start;
-	u_int64_t	m_end;
-	u_int64_t	m_size;
+	uint64_t	m_start;
+	uint64_t	m_end;
+	uint64_t	m_size;
 	char		m_type[5];
 	bool		m_unknownType;
-	u_int8_t	m_extendedType[16];
+	uint8_t	m_extendedType[16];
 
 	MP4Atom*	m_pParentAtom;
-	u_int8_t	m_depth;
+	uint8_t	m_depth;
 
 	MP4PropertyArray	m_pProperties;
 	MP4AtomInfoArray 	m_pChildAtomInfos;
 	MP4AtomArray		m_pChildAtoms;
 };
 
-inline u_int32_t ATOMID(const char* type) {
+inline uint32_t ATOMID(const char* type) {
 	return STRTOINT32(type);
 }
 
 // inverse ATOMID - 32 bit id to string
-inline void IDATOM(u_int32_t type, char *s) {
+inline void IDATOM(uint32_t type, char *s) {
 	INT32TOSTR(type, s);
 }
 

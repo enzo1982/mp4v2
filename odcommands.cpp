@@ -81,7 +81,7 @@ MP4ESRemoveDescriptor::MP4ESRemoveDescriptor()
 			MP4ESIDRefDescrTag, 0, Required, Many));
 }
 
-MP4Descriptor* CreateODCommand(u_int8_t tag) 
+MP4Descriptor* CreateODCommand(uint8_t tag) 
 {
 	MP4Descriptor* pDescriptor = NULL;
 

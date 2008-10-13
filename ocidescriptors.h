@@ -22,19 +22,19 @@
 #ifndef __OCIDESCRIPTORS_INCLUDED__
 #define __OCIDESCRIPTORS_INCLUDED__
 
-const u_int8_t MP4OCIDescrTagsStart	 		= 0x40; 
-const u_int8_t MP4ContentClassDescrTag 		= 0x40; 
-const u_int8_t MP4KeywordDescrTag 			= 0x41; 
-const u_int8_t MP4RatingDescrTag 			= 0x42; 
-const u_int8_t MP4LanguageDescrTag	 		= 0x43;
-const u_int8_t MP4ShortTextDescrTag	 		= 0x44;
-const u_int8_t MP4ExpandedTextDescrTag 		= 0x45;
-const u_int8_t MP4ContentCreatorDescrTag	= 0x46;
-const u_int8_t MP4ContentCreationDescrTag	= 0x47;
-const u_int8_t MP4OCICreatorDescrTag		= 0x48;
-const u_int8_t MP4OCICreationDescrTag		= 0x49;
-const u_int8_t MP4SmpteCameraDescrTag		= 0x4A;
-const u_int8_t MP4OCIDescrTagsEnd			= 0x5F; 
+const uint8_t MP4OCIDescrTagsStart	 		= 0x40; 
+const uint8_t MP4ContentClassDescrTag 		= 0x40; 
+const uint8_t MP4KeywordDescrTag 			= 0x41; 
+const uint8_t MP4RatingDescrTag 			= 0x42; 
+const uint8_t MP4LanguageDescrTag	 		= 0x43;
+const uint8_t MP4ShortTextDescrTag	 		= 0x44;
+const uint8_t MP4ExpandedTextDescrTag 		= 0x45;
+const uint8_t MP4ContentCreatorDescrTag	= 0x46;
+const uint8_t MP4ContentCreationDescrTag	= 0x47;
+const uint8_t MP4OCICreatorDescrTag		= 0x48;
+const uint8_t MP4OCICreationDescrTag		= 0x49;
+const uint8_t MP4SmpteCameraDescrTag		= 0x4A;
+const uint8_t MP4OCIDescrTagsEnd			= 0x5F; 
 
 class MP4ContentClassDescriptor : public MP4Descriptor {
 public:
@@ -76,12 +76,12 @@ protected:
 
 class MP4CreatorDescriptor : public MP4Descriptor {
 public:
-	MP4CreatorDescriptor(u_int8_t tag);
+	MP4CreatorDescriptor(uint8_t tag);
 };
 
 class MP4CreationDescriptor : public MP4Descriptor {
 public:
-	MP4CreationDescriptor(u_int8_t tag);
+	MP4CreationDescriptor(uint8_t tag);
 };
 
 class MP4SmpteCameraDescriptor : public MP4Descriptor {
@@ -96,6 +96,6 @@ public:
 };
 
 
-extern MP4Descriptor *CreateOCIDescriptor(u_int8_t tag);
+extern MP4Descriptor *CreateOCIDescriptor(uint8_t tag);
 
 #endif /* __OCIDESCRIPTORS_INCLUDED__ */

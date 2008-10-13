@@ -30,7 +30,7 @@
 #define _3GP_MAJOR_BRAND "3gp5"
 #define _3GP_MINOR_VERSION 0x0001
 
-void MP4File::Make3GPCompliant(const char* fileName,  char* majorBrand, u_int32_t minorVersion, char** supportedBrands, u_int32_t supportedBrandsCount, bool deleteIodsAtom)
+void MP4File::Make3GPCompliant(const char* fileName,  char* majorBrand, uint32_t minorVersion, char** supportedBrands, uint32_t supportedBrandsCount, bool deleteIodsAtom)
 {
 	char brand[5] = "3gp5";
 	char* _3gpSupportedBrands[1] = { (char*)&brand };
@@ -60,11 +60,11 @@ void MP4File::Make3GPCompliant(const char* fileName,  char* majorBrand, u_int32_
 
 }
 
-void MP4File::MakeFtypAtom(char* majorBrand, u_int32_t minorVersion, char** supportedBrands, u_int32_t supportedBrandsCount)
+void MP4File::MakeFtypAtom(char* majorBrand, uint32_t minorVersion, char** supportedBrands, uint32_t supportedBrandsCount)
 {
 	bool rewriteNeeded = false;
-	u_int32_t currentSupportedBrandsCount;
-	u_int32_t i;
+	uint32_t currentSupportedBrandsCount;
+	uint32_t i;
 
 		
 	MP4Atom* ftypAtom = m_pRootAtom->FindAtom("ftyp");

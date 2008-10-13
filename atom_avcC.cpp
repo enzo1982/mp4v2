@@ -32,7 +32,7 @@ class SizeTableProperty : public MP4TableProperty
   SizeTableProperty(char *name, MP4IntegerProperty *pCountProperty) :
     MP4TableProperty(name, pCountProperty) {};
  protected:
-  void ReadEntry(MP4File *pFile, u_int32_t index) {
+  void ReadEntry(MP4File *pFile, uint32_t index) {
     // Each table has a size, followed by the length field
     // first, read the length
     m_pProperties[0]->Read(pFile, index);
@@ -94,7 +94,7 @@ void MP4AvcCAtom::Generate()
 	m_pProperties[6]->SetReadOnly(true);
 #if 0
 	// property reserved4 has non-zero fixed values
-	static u_int8_t reserved4[4] = {
+	static uint8_t reserved4[4] = {
 		0x00, 0x18, 0xFF, 0xFF, 
 	};
 	m_pProperties[7]->SetReadOnly(false);
@@ -135,10 +135,10 @@ void MP4AvcCAtom::Clone(MP4AvcCAtom *dstAtom)
 
 	MP4Property *dstProperty;
   	MP4TableProperty *pTable;
-	u_int16_t i16;
-	u_int64_t i32;
-	u_int64_t i64;
-	u_int8_t *tmp;
+	uint16_t i16;
+	uint64_t i32;
+	uint64_t i64;
+	uint8_t *tmp;
 
 	// source pointer Property I16
 	MP4Integer16Property *spPI16;
@@ -207,7 +207,7 @@ void MP4AvcCAtom::Clone(MP4AvcCAtom *dstAtom)
 	// export byte array
 	i32 = i16;
 	// copy bytes to local buffer 
-	tmp = (u_int8_t *)MP4Malloc(i32);
+	tmp = (uint8_t *)MP4Malloc(i32);
 	ASSERT(tmp != NULL);
 	spPB->CopyValue(tmp, 0);	
 	// set element count
@@ -248,7 +248,7 @@ void MP4AvcCAtom::Clone(MP4AvcCAtom *dstAtom)
 	// export byte array
 	i32 = i16;
 	// copy bytes to local buffer 
-	tmp = (u_int8_t *)MP4Malloc(i32);
+	tmp = (uint8_t *)MP4Malloc(i32);
 	ASSERT(tmp != NULL);
 	spPB->CopyValue(tmp, 0);	
 	// set element count

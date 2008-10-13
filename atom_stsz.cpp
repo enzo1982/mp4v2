@@ -44,7 +44,7 @@ void MP4StszAtom::Read()
 {
 	ReadProperties(0, 4);
 
-	u_int32_t sampleSize = 
+	uint32_t sampleSize = 
 		((MP4Integer32Property*)m_pProperties[2])->GetValue();
 
 	// only attempt to read entries table if sampleSize is zero
@@ -58,7 +58,7 @@ void MP4StszAtom::Read()
 
 void MP4StszAtom::Write() 
 {
-	u_int32_t sampleSize = 
+	uint32_t sampleSize = 
 		((MP4Integer32Property*)m_pProperties[2])->GetValue();
 
 	// only attempt to write entries table if sampleSize is zero

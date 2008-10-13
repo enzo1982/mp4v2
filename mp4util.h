@@ -78,7 +78,7 @@
 #define VERBOSE_EDIT(verbosity, expr)		\
 	VERBOSE(MP4_DETAILS_EDIT, verbosity, expr)
 
-inline void Indent(FILE* pFile, u_int8_t depth) {
+inline void Indent(FILE* pFile, uint8_t depth) {
 	fprintf(pFile, "%*c", depth, ' ');
 }
 
@@ -159,8 +159,8 @@ public:
 };
 
 void MP4HexDump(
-	u_int8_t* pBytes, u_int32_t numBytes,
-	FILE* pFile = stdout, u_int8_t indent = 0);
+	uint8_t* pBytes, uint32_t numBytes,
+	FILE* pFile = stdout, uint8_t indent = 0);
 
 inline void* MP4Malloc(size_t size) {
   if (size == 0) return NULL;
@@ -190,7 +190,7 @@ inline wchar_t* MP4Stralloc(const wchar_t* s1) {
 }
 #endif
 
-inline void* MP4Realloc(void* p, u_int32_t newSize) {
+inline void* MP4Realloc(void* p, uint32_t newSize) {
 	// workaround library bug
 	if (p == NULL && newSize == 0) {
 		return NULL;
@@ -202,11 +202,11 @@ inline void* MP4Realloc(void* p, u_int32_t newSize) {
 	return p;
 }
 
-inline u_int32_t STRTOINT32(const char* s) {
+inline uint32_t STRTOINT32(const char* s) {
   return ntohl(*(uint32_t *)s);
 }
 
-inline void INT32TOSTR(u_int32_t i, char* s) {
+inline void INT32TOSTR(uint32_t i, char* s) {
   *(uint32_t *)s = htonl(i);
   s[4] = 0;
 }
@@ -221,20 +221,20 @@ inline MP4Timestamp MP4GetAbsTimestamp() {
 	// 208284480 is (((1970 - 1904) * 365) + 17) * 24 * 60 * 60
 }
 
-u_int64_t MP4ConvertTime(u_int64_t t, 
-	u_int32_t oldTimeScale, u_int32_t newTimeScale);
+uint64_t MP4ConvertTime(uint64_t t, 
+	uint32_t oldTimeScale, uint32_t newTimeScale);
 
 bool MP4NameFirstMatches(const char* s1, const char* s2);
 
-bool MP4NameFirstIndex(const char* s, u_int32_t* pIndex);
+bool MP4NameFirstIndex(const char* s, uint32_t* pIndex);
 
 char* MP4NameFirst(const char *s);
 
 const char* MP4NameAfterFirst(const char *s);
 
-char* MP4ToBase16(const u_int8_t* pData, u_int32_t dataSize);
+char* MP4ToBase16(const uint8_t* pData, uint32_t dataSize);
 
-char* MP4ToBase64(const u_int8_t* pData, u_int32_t dataSize);
+char* MP4ToBase64(const uint8_t* pData, uint32_t dataSize);
 
 const char* MP4NormalizeTrackType(const char* type,
 				  uint32_t verbosity);

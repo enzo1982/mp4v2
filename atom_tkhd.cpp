@@ -27,7 +27,7 @@ MP4TkhdAtom::MP4TkhdAtom()
 	AddVersionAndFlags();
 }
 
-void MP4TkhdAtom::AddProperties(u_int8_t version) 
+void MP4TkhdAtom::AddProperties(uint8_t version) 
 {
 	if (version == 1) {
 		AddProperty( /* 2 */
@@ -81,7 +81,7 @@ void MP4TkhdAtom::AddProperties(u_int8_t version)
 
 void MP4TkhdAtom::Generate() 
 {
-	u_int8_t version = m_pFile->Use64Bits(GetType()) ? 1 : 0;
+	uint8_t version = m_pFile->Use64Bits(GetType()) ? 1 : 0;
 	SetVersion(version);
 	AddProperties(version);
 
@@ -104,7 +104,7 @@ void MP4TkhdAtom::Generate()
 	// 0, 0, 1
 	// see http://developer.apple.com/documentation/QuickTime/QTFF/QTFFChap4/chapter_5_section_4.html
 
-	static u_int8_t matrix[36] = {
+	static uint8_t matrix[36] = {
 		0x00, 0x01, 0x00, 0x00, 
 		0x00, 0x00, 0x00, 0x00, 
 		0x00, 0x00, 0x00, 0x00, 

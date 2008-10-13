@@ -22,34 +22,34 @@
 #ifndef __DESCRIPTORS_INCLUDED__
 #define __DESCRIPTORS_INCLUDED__
 
-const u_int8_t MP4ODescrTag					= 0x01; 
-const u_int8_t MP4IODescrTag				= 0x02; 
-const u_int8_t MP4ESDescrTag				= 0x03; 
-const u_int8_t MP4DecConfigDescrTag			= 0x04; 
-const u_int8_t MP4DecSpecificDescrTag		= 0x05; 
-const u_int8_t MP4SLConfigDescrTag		 	= 0x06; 
-const u_int8_t MP4ContentIdDescrTag		 	= 0x07; 
-const u_int8_t MP4SupplContentIdDescrTag 	= 0x08; 
-const u_int8_t MP4IPIPtrDescrTag		 	= 0x09; 
-const u_int8_t MP4IPMPPtrDescrTag		 	= 0x0A; 
-const u_int8_t MP4IPMPDescrTag			 	= 0x0B; 
-const u_int8_t MP4RegistrationDescrTag	 	= 0x0D; 
-const u_int8_t MP4ESIDIncDescrTag			= 0x0E; 
-const u_int8_t MP4ESIDRefDescrTag			= 0x0F; 
-const u_int8_t MP4FileIODescrTag			= 0x10; 
-const u_int8_t MP4FileODescrTag				= 0x11; 
-const u_int8_t MP4ExtProfileLevelDescrTag 	= 0x13; 
-const u_int8_t MP4ExtDescrTagsStart			= 0x80; 
-const u_int8_t MP4ExtDescrTagsEnd			= 0xFE; 
+const uint8_t MP4ODescrTag					= 0x01; 
+const uint8_t MP4IODescrTag				= 0x02; 
+const uint8_t MP4ESDescrTag				= 0x03; 
+const uint8_t MP4DecConfigDescrTag			= 0x04; 
+const uint8_t MP4DecSpecificDescrTag		= 0x05; 
+const uint8_t MP4SLConfigDescrTag		 	= 0x06; 
+const uint8_t MP4ContentIdDescrTag		 	= 0x07; 
+const uint8_t MP4SupplContentIdDescrTag 	= 0x08; 
+const uint8_t MP4IPIPtrDescrTag		 	= 0x09; 
+const uint8_t MP4IPMPPtrDescrTag		 	= 0x0A; 
+const uint8_t MP4IPMPDescrTag			 	= 0x0B; 
+const uint8_t MP4RegistrationDescrTag	 	= 0x0D; 
+const uint8_t MP4ESIDIncDescrTag			= 0x0E; 
+const uint8_t MP4ESIDRefDescrTag			= 0x0F; 
+const uint8_t MP4FileIODescrTag			= 0x10; 
+const uint8_t MP4FileODescrTag				= 0x11; 
+const uint8_t MP4ExtProfileLevelDescrTag 	= 0x13; 
+const uint8_t MP4ExtDescrTagsStart			= 0x80; 
+const uint8_t MP4ExtDescrTagsEnd			= 0xFE; 
 
 class MP4BaseDescriptor : public MP4Descriptor {
  public:
-  MP4BaseDescriptor(u_int8_t tag);
+  MP4BaseDescriptor(uint8_t tag);
 };
 
 class MP4BytesDescriptor : public MP4Descriptor {
  public:
-  MP4BytesDescriptor(u_int8_t tag);
+  MP4BytesDescriptor(uint8_t tag);
   void Read(MP4File* pFile);
  protected:
   uint m_size_offset; // size to adjust the size for the bytes property
@@ -112,20 +112,20 @@ protected:
 // associated values in descriptors
 
 // ES objectTypeId
-const u_int8_t MP4SystemsV1ObjectType			= 0x01; 
-const u_int8_t MP4SystemsV2ObjectType			= 0x02; 
+const uint8_t MP4SystemsV1ObjectType			= 0x01; 
+const uint8_t MP4SystemsV2ObjectType			= 0x02; 
 
 // ES streamType
-const u_int8_t MP4ObjectDescriptionStreamType	= 0x01; 
-const u_int8_t MP4ClockReferenceStreamType		= 0x02; 
-const u_int8_t MP4SceneDescriptionStreamType	= 0x03; 
-const u_int8_t MP4VisualStreamType				= 0x04; 
-const u_int8_t MP4AudioStreamType				= 0x05; 
-const u_int8_t MP4Mpeg7StreamType				= 0x06; 
-const u_int8_t MP4IPMPStreamType				= 0x07; 
-const u_int8_t MP4OCIStreamType					= 0x08; 
-const u_int8_t MP4MPEGJStreamType				= 0x09; 
-const u_int8_t MP4UserPrivateStreamType			= 0x20; 
+const uint8_t MP4ObjectDescriptionStreamType	= 0x01; 
+const uint8_t MP4ClockReferenceStreamType		= 0x02; 
+const uint8_t MP4SceneDescriptionStreamType	= 0x03; 
+const uint8_t MP4VisualStreamType				= 0x04; 
+const uint8_t MP4AudioStreamType				= 0x05; 
+const uint8_t MP4Mpeg7StreamType				= 0x06; 
+const uint8_t MP4IPMPStreamType				= 0x07; 
+const uint8_t MP4OCIStreamType					= 0x08; 
+const uint8_t MP4MPEGJStreamType				= 0x09; 
+const uint8_t MP4UserPrivateStreamType			= 0x20; 
 
 #endif /* __DESCRIPTORS_INCLUDED__ */
 

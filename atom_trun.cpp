@@ -29,7 +29,7 @@ MP4TrunAtom::MP4TrunAtom()
 		new MP4Integer32Property("sampleCount"));
 }
 
-void MP4TrunAtom::AddProperties(u_int32_t flags)
+void MP4TrunAtom::AddProperties(uint32_t flags)
 {
 	if (flags & 0x01) {
 		// Note this is a signed 32 value

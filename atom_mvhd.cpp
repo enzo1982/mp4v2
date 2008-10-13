@@ -27,7 +27,7 @@ MP4MvhdAtom::MP4MvhdAtom()
 	AddVersionAndFlags();
 }
 
-void MP4MvhdAtom::AddProperties(u_int8_t version) 
+void MP4MvhdAtom::AddProperties(uint8_t version) 
 {
 	if (version == 1) {
 		AddProperty( /* 2 */
@@ -70,7 +70,7 @@ void MP4MvhdAtom::AddProperties(u_int8_t version)
 
 void MP4MvhdAtom::Generate() 
 {
-	u_int8_t version = m_pFile->Use64Bits(GetType()) ? 1 : 0;
+	uint8_t version = m_pFile->Use64Bits(GetType()) ? 1 : 0;
 	SetVersion(version);
 	AddProperties(version);
 
@@ -92,7 +92,7 @@ void MP4MvhdAtom::Generate()
 	((MP4Float32Property*)m_pProperties[7])->SetValue(1.0);
 
 	// property reserved has non-zero fixed values
-	static u_int8_t reserved[70] = {
+	static uint8_t reserved[70] = {
 		0x00, 0x00, 
 		0x00, 0x00, 0x00, 0x00, 
 		0x00, 0x00, 0x00, 0x00, 

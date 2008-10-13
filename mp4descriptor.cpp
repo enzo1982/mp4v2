@@ -21,7 +21,7 @@
 
 #include "mp4common.h"
 
-MP4Descriptor::MP4Descriptor(u_int8_t tag) {
+MP4Descriptor::MP4Descriptor(uint8_t tag) {
 	m_tag = tag;
 	m_pParentAtom = NULL;
 	m_start = 0;
@@ -31,7 +31,7 @@ MP4Descriptor::MP4Descriptor(u_int8_t tag) {
 
 MP4Descriptor::~MP4Descriptor() 
 {
-	for (u_int32_t i = 0; i < m_pProperties.Size(); i++) {
+	for (uint32_t i = 0; i < m_pProperties.Size(); i++) {
 		delete m_pProperties[i];
 	}
 }
@@ -44,11 +44,11 @@ void MP4Descriptor::AddProperty(MP4Property* pProperty)
 }
 
 bool MP4Descriptor::FindContainedProperty(const char *name,
-	MP4Property** ppProperty, u_int32_t* pIndex)
+	MP4Property** ppProperty, uint32_t* pIndex)
 {
-	u_int32_t numProperties = m_pProperties.Size();
+	uint32_t numProperties = m_pProperties.Size();
 
-	for (u_int32_t i = 0; i < numProperties; i++) {
+	for (uint32_t i = 0; i < numProperties; i++) {
 		if (m_pProperties[i]->FindProperty(name, ppProperty, pIndex)) { 
 			return true;
 		}
@@ -59,7 +59,7 @@ bool MP4Descriptor::FindContainedProperty(const char *name,
 void MP4Descriptor::Generate()
 {
 	// generate properties
-	for (u_int32_t i = 0; i < m_pProperties.Size(); i++) {
+	for (uint32_t i = 0; i < m_pProperties.Size(); i++) {
 		m_pProperties[i]->Generate();
 	}
 }
@@ -85,7 +85,7 @@ void MP4Descriptor::ReadHeader(MP4File* pFile)
 			pFile->GetPosition()));
 
 	// read tag and length
-	u_int8_t tag = pFile->ReadUInt8();
+	uint8_t tag = pFile->ReadUInt8();
 	if (m_tag) {
 		ASSERT(tag == m_tag);
 	} else {
@@ -100,12 +100,12 @@ void MP4Descriptor::ReadHeader(MP4File* pFile)
 }
 
 void MP4Descriptor::ReadProperties(MP4File* pFile, 
-	u_int32_t propStartIndex, u_int32_t propCount)
+	uint32_t propStartIndex, uint32_t propCount)
 {
-	u_int32_t numProperties = MIN(propCount, 
+	uint32_t numProperties = MIN(propCount, 
 		m_pProperties.Size() - propStartIndex);
 
-	for (u_int32_t i = propStartIndex; 
+	for (uint32_t i = propStartIndex; 
 	  i < propStartIndex + numProperties; i++) {
 
 		MP4Property* pProperty = m_pProperties[i];
@@ -146,7 +146,7 @@ void MP4Descriptor::Write(MP4File* pFile)
 	// call virtual function to adapt properties before writing
 	Mutate();
 
-	u_int32_t numProperties = m_pProperties.Size();
+	uint32_t numProperties = m_pProperties.Size();
 
 	if (numProperties == 0) {
 		WARNING(numProperties == 0);
@@ -155,11 +155,11 @@ void MP4Descriptor::Write(MP4File* pFile)
 
 	// write tag and length placeholder
 	pFile->WriteUInt8(m_tag);
-	u_int64_t lengthPos = pFile->GetPosition();
+	uint64_t lengthPos = pFile->GetPosition();
 	pFile->WriteMpegLength(0);
-	u_int64_t startPos = pFile->GetPosition();
+	uint64_t startPos = pFile->GetPosition();
 
-	for (u_int32_t i = 0; i < numProperties; i++) {
+	for (uint32_t i = 0; i < numProperties; i++) {
 		m_pProperties[i]->Write(pFile);
 	}
 
@@ -167,14 +167,14 @@ void MP4Descriptor::Write(MP4File* pFile)
 	pFile->PadWriteBits();
 
 	// go back and write correct length
-	u_int64_t endPos = pFile->GetPosition();
+	uint64_t endPos = pFile->GetPosition();
 	pFile->SetPosition(lengthPos);
 	pFile->WriteMpegLength(endPos - startPos);
 	pFile->SetPosition(endPos);
 }
 
 void MP4Descriptor::WriteToMemory(MP4File* pFile,
-	u_int8_t** ppBytes, u_int64_t* pNumBytes)
+	uint8_t** ppBytes, uint64_t* pNumBytes)
 {
 	// use memory buffer to save descriptor in memory
 	// instead of going directly to disk
@@ -186,23 +186,23 @@ void MP4Descriptor::WriteToMemory(MP4File* pFile,
 	pFile->DisableMemoryBuffer(ppBytes, pNumBytes);
 }
 
-void MP4Descriptor::Dump(FILE* pFile, u_int8_t indent, bool dumpImplicits)
+void MP4Descriptor::Dump(FILE* pFile, uint8_t indent, bool dumpImplicits)
 {
 	// call virtual function to adapt properties before dumping
 	Mutate();
 
-	u_int32_t numProperties = m_pProperties.Size();
+	uint32_t numProperties = m_pProperties.Size();
 
 	if (numProperties == 0) {
 		WARNING(numProperties == 0);
 		return;
 	}
-	for (u_int32_t i = 0; i < numProperties; i++) {
+	for (uint32_t i = 0; i < numProperties; i++) {
 		m_pProperties[i]->Dump(pFile, indent, dumpImplicits);
 	}
 }
 
-u_int8_t MP4Descriptor::GetDepth() 
+uint8_t MP4Descriptor::GetDepth() 
 {
 	if (m_pParentAtom) {
 		return m_pParentAtom->GetDepth();

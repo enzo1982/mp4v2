@@ -74,20 +74,20 @@ public:
 		m_implicit = value;
 	}
 
-	virtual u_int32_t GetCount() = 0;
-	virtual void SetCount(u_int32_t count) = 0;
+	virtual uint32_t GetCount() = 0;
+	virtual void SetCount(uint32_t count) = 0;
 
 	virtual void Generate() { /* default is a no-op */ };
 
-	virtual void Read(MP4File* pFile, u_int32_t index = 0) = 0;
+	virtual void Read(MP4File* pFile, uint32_t index = 0) = 0;
 
-	virtual void Write(MP4File* pFile, u_int32_t index = 0) = 0;
+	virtual void Write(MP4File* pFile, uint32_t index = 0) = 0;
 
-	virtual void Dump(FILE* pFile, u_int8_t indent,
-		bool dumpImplicits, u_int32_t index = 0) = 0;
+	virtual void Dump(FILE* pFile, uint8_t indent,
+		bool dumpImplicits, uint32_t index = 0) = 0;
 
 	virtual bool FindProperty(const char* name,
-		MP4Property** ppProperty, u_int32_t* pIndex = NULL);
+		MP4Property** ppProperty, uint32_t* pIndex = NULL);
 
 protected:
 	MP4Atom* m_pParentAtom;
@@ -104,15 +104,15 @@ protected:
 		: MP4Property(name) { };
 
 public:
-	u_int64_t GetValue(u_int32_t index = 0);
+	uint64_t GetValue(uint32_t index = 0);
 
-	void SetValue(u_int64_t value, u_int32_t index = 0);
+	void SetValue(uint64_t value, uint32_t index = 0);
 
-	void InsertValue(u_int64_t value, u_int32_t index = 0);
+	void InsertValue(uint64_t value, uint32_t index = 0);
 
-	void DeleteValue(u_int32_t index = 0);
+	void DeleteValue(uint32_t index = 0);
 
-	void IncrementValue(int32_t increment = 1, u_int32_t index = 0);
+	void IncrementValue(int32_t increment = 1, uint32_t index = 0);
 };
 
 #define MP4INTEGER_PROPERTY_DECL2(isize, xsize) \
@@ -128,50 +128,50 @@ public:
 			return Integer##xsize##Property; \
 		} \
 		\
-		u_int32_t GetCount() { \
+		uint32_t GetCount() { \
 			return m_values.Size(); \
 		} \
-		void SetCount(u_int32_t count) { \
+		void SetCount(uint32_t count) { \
 			m_values.Resize(count); \
 		} \
 		\
-		u_int##isize##_t GetValue(u_int32_t index = 0) { \
+		uint##isize##_t GetValue(uint32_t index = 0) { \
 			return m_values[index]; \
 		} \
 		\
-		void SetValue(u_int##isize##_t value, u_int32_t index = 0) { \
+		void SetValue(uint##isize##_t value, uint32_t index = 0) { \
 			if (m_readOnly) { \
 				throw new MP4Error(EACCES, "property is read-only", m_name); \
 			} \
 			m_values[index] = value; \
 		} \
-		void AddValue(u_int##isize##_t value) { \
+		void AddValue(uint##isize##_t value) { \
 			m_values.Add(value); \
 		} \
-		void InsertValue(u_int##isize##_t value, u_int32_t index) { \
+		void InsertValue(uint##isize##_t value, uint32_t index) { \
 			m_values.Insert(value, index); \
 		} \
-		void DeleteValue(u_int32_t index) { \
+		void DeleteValue(uint32_t index) { \
 			m_values.Delete(index); \
 		} \
-		void IncrementValue(int32_t increment = 1, u_int32_t index = 0) { \
+		void IncrementValue(int32_t increment = 1, uint32_t index = 0) { \
 			m_values[index] += increment; \
 		} \
-		void Read(MP4File* pFile, u_int32_t index = 0) { \
+		void Read(MP4File* pFile, uint32_t index = 0) { \
 			if (m_implicit) { \
 				return; \
 			} \
 			m_values[index] = pFile->ReadUInt##xsize(); \
 		} \
 		\
-		void Write(MP4File* pFile, u_int32_t index = 0) { \
+		void Write(MP4File* pFile, uint32_t index = 0) { \
 			if (m_implicit) { \
 				return; \
 			} \
 			pFile->WriteUInt##xsize(m_values[index]); \
 		} \
-		void Dump(FILE* pFile, u_int8_t indent, \
-			bool dumpImplicits, u_int32_t index = 0); \
+		void Dump(FILE* pFile, uint8_t indent, \
+			bool dumpImplicits, uint32_t index = 0); \
 	\
 	protected: \
 		MP4Integer##isize##Array m_values; \
@@ -188,27 +188,27 @@ MP4INTEGER_PROPERTY_DECL(64);
 
 class MP4BitfieldProperty : public MP4Integer64Property {
 public:
-	MP4BitfieldProperty(char* name, u_int8_t numBits)
+	MP4BitfieldProperty(char* name, uint8_t numBits)
 		: MP4Integer64Property(name) {
 		ASSERT(numBits != 0);
 		ASSERT(numBits <= 64);
 		m_numBits = numBits;
 	}
 
-	u_int8_t GetNumBits() {
+	uint8_t GetNumBits() {
 		return m_numBits;
 	}
-	void SetNumBits(u_int8_t numBits) {
+	void SetNumBits(uint8_t numBits) {
 		m_numBits = numBits;
 	}
 
-	void Read(MP4File* pFile, u_int32_t index = 0);
-	void Write(MP4File* pFile, u_int32_t index = 0);
-	void Dump(FILE* pFile, u_int8_t indent,
-		 bool dumpImplicits, u_int32_t index = 0);
+	void Read(MP4File* pFile, uint32_t index = 0);
+	void Write(MP4File* pFile, uint32_t index = 0);
+	void Dump(FILE* pFile, uint8_t indent,
+		 bool dumpImplicits, uint32_t index = 0);
 
 protected:
-	u_int8_t m_numBits;
+	uint8_t m_numBits;
 };
 
 class MP4Float32Property : public MP4Property {
@@ -225,18 +225,18 @@ public:
 		return Float32Property;
 	}
 
-	u_int32_t GetCount() {
+	uint32_t GetCount() {
 		return m_values.Size();
 	}
-	void SetCount(u_int32_t count) {
+	void SetCount(uint32_t count) {
 		m_values.Resize(count);
 	}
 
-	float GetValue(u_int32_t index = 0) {
+	float GetValue(uint32_t index = 0) {
 		return m_values[index];
 	}
 
-	void SetValue(float value, u_int32_t index = 0) {
+	void SetValue(float value, uint32_t index = 0) {
 		if (m_readOnly) {
 			throw new MP4Error(EACCES, "property is read-only", m_name);
 		}
@@ -247,7 +247,7 @@ public:
 		m_values.Add(value);
 	}
 
-	void InsertValue(float value, u_int32_t index) {
+	void InsertValue(float value, uint32_t index) {
 		m_values.Insert(value, index);
 	}
 
@@ -267,10 +267,10 @@ public:
 		m_useFixed32Format = useFixed32Format;
 	}
 
-	void Read(MP4File* pFile, u_int32_t index = 0);
-	void Write(MP4File* pFile, u_int32_t index = 0);
-	void Dump(FILE* pFile, u_int8_t indent,
-		 bool dumpImplicits, u_int32_t index = 0);
+	void Read(MP4File* pFile, uint32_t index = 0);
+	void Write(MP4File* pFile, uint32_t index = 0);
+	void Dump(FILE* pFile, uint8_t indent,
+		 bool dumpImplicits, uint32_t index = 0);
 
 protected:
 	bool m_useFixed16Format;
@@ -289,20 +289,20 @@ public:
 		return StringProperty;
 	}
 
-	u_int32_t GetCount() {
+	uint32_t GetCount() {
 		return m_values.Size();
 	}
 
-	void SetCount(u_int32_t count);
+	void SetCount(uint32_t count);
 
-	const char* GetValue(u_int32_t index = 0) {
+	const char* GetValue(uint32_t index = 0) {
 		return m_values[index];
 	}
 
-	void SetValue(const char* value, u_int32_t index = 0);
+	void SetValue(const char* value, uint32_t index = 0);
 
 	void AddValue(const char* value) {
-		u_int32_t count = GetCount();
+		uint32_t count = GetCount();
 		SetCount(count + 1); 
 		SetValue(value, count);
 	}
@@ -331,32 +331,32 @@ public:
 		m_useUnicode = useUnicode;
 	}
 
-	u_int32_t GetFixedLength() {
+	uint32_t GetFixedLength() {
 		return m_fixedLength;
 	}
 
-	void SetFixedLength(u_int32_t fixedLength) {
+	void SetFixedLength(uint32_t fixedLength) {
 		m_fixedLength = fixedLength;
 	}
 
-	void Read(MP4File* pFile, u_int32_t index = 0);
-	void Write(MP4File* pFile, u_int32_t index = 0);
-	void Dump(FILE* pFile, u_int8_t indent,
-		 bool dumpImplicits, u_int32_t index = 0);
+	void Read(MP4File* pFile, uint32_t index = 0);
+	void Write(MP4File* pFile, uint32_t index = 0);
+	void Dump(FILE* pFile, uint8_t indent,
+		 bool dumpImplicits, uint32_t index = 0);
 
 protected:
 	bool m_useCountedFormat;
 	bool m_useExpandedCount;
 	bool m_useUnicode;
-	u_int32_t m_fixedLength;
+	uint32_t m_fixedLength;
 
 	MP4StringArray m_values;
 };
 
 class MP4BytesProperty : public MP4Property {
 public:
-	MP4BytesProperty(char* name, u_int32_t valueSize = 0,
-                         u_int32_t defaultValueSize = 0);
+	MP4BytesProperty(char* name, uint32_t valueSize = 0,
+                         uint32_t defaultValueSize = 0);
 
 	~MP4BytesProperty();
 
@@ -364,55 +364,55 @@ public:
 		return BytesProperty;
 	}
 
-	u_int32_t GetCount() {
+	uint32_t GetCount() {
 		return m_values.Size();
 	}
 
-	void SetCount(u_int32_t count);
+	void SetCount(uint32_t count);
 
-	void GetValue(u_int8_t** ppValue, u_int32_t* pValueSize, 
-	  u_int32_t index = 0) {
+	void GetValue(uint8_t** ppValue, uint32_t* pValueSize, 
+	  uint32_t index = 0) {
 		// N.B. caller must free memory
-		*ppValue = (u_int8_t*)MP4Malloc(m_valueSizes[index]);
+		*ppValue = (uint8_t*)MP4Malloc(m_valueSizes[index]);
 		memcpy(*ppValue, m_values[index], m_valueSizes[index]);
 		*pValueSize = m_valueSizes[index];
 	}
 
-	void CopyValue(u_int8_t* pValue, u_int32_t index = 0) {
+	void CopyValue(uint8_t* pValue, uint32_t index = 0) {
 		// N.B. caller takes responsbility for valid pointer
 		// and sufficient memory at the destination
 		memcpy(pValue, m_values[index], m_valueSizes[index]);
 	}
 
-	void SetValue(const u_int8_t* pValue, u_int32_t valueSize, 
-		u_int32_t index = 0);
+	void SetValue(const uint8_t* pValue, uint32_t valueSize, 
+		uint32_t index = 0);
 
-	void AddValue(const u_int8_t* pValue, u_int32_t valueSize) {
-		u_int32_t count = GetCount();
+	void AddValue(const uint8_t* pValue, uint32_t valueSize) {
+		uint32_t count = GetCount();
 		SetCount(count + 1); 
 		SetValue(pValue, valueSize, count);
 	}
 
-	u_int32_t GetValueSize(u_int32_t valueSize, u_int32_t index = 0) {
+	uint32_t GetValueSize(uint32_t valueSize, uint32_t index = 0) {
 		return m_valueSizes[index];
 	}
 
-	void SetValueSize(u_int32_t valueSize, u_int32_t index = 0);
+	void SetValueSize(uint32_t valueSize, uint32_t index = 0);
 
-	u_int32_t GetFixedSize() {
+	uint32_t GetFixedSize() {
 		return m_fixedValueSize;
 	}
 
-	void SetFixedSize(u_int32_t fixedSize);
+	void SetFixedSize(uint32_t fixedSize);
 
-	void Read(MP4File* pFile, u_int32_t index = 0);
-	void Write(MP4File* pFile, u_int32_t index = 0);
-	void Dump(FILE* pFile, u_int8_t indent,
-		 bool dumpImplicits, u_int32_t index = 0);
+	void Read(MP4File* pFile, uint32_t index = 0);
+	void Write(MP4File* pFile, uint32_t index = 0);
+	void Dump(FILE* pFile, uint8_t indent,
+		 bool dumpImplicits, uint32_t index = 0);
 
 protected:
-	u_int32_t		m_fixedValueSize;
-	u_int32_t		m_defaultValueSize;
+	uint32_t		m_fixedValueSize;
+	uint32_t		m_defaultValueSize;
 	MP4Integer32Array	m_valueSizes;
 	MP4BytesArray		m_values;
 };
@@ -429,38 +429,38 @@ public:
 
 	void SetParentAtom(MP4Atom* pParentAtom) {
 		m_pParentAtom = pParentAtom;
-		for (u_int32_t i = 0; i < m_pProperties.Size(); i++) {
+		for (uint32_t i = 0; i < m_pProperties.Size(); i++) {
 			m_pProperties[i]->SetParentAtom(pParentAtom);
 		}
 	}
 
 	void AddProperty(MP4Property* pProperty);
 
-	MP4Property* GetProperty(u_int32_t index) {
+	MP4Property* GetProperty(uint32_t index) {
 		return m_pProperties[index];
 	}
 
-	virtual u_int32_t GetCount() {
+	virtual uint32_t GetCount() {
 	  return m_pCountProperty->GetValue();
 	}
-	virtual void SetCount(u_int32_t count) {
+	virtual void SetCount(uint32_t count) {
 	  m_pCountProperty->SetValue(count);
 	}
 
-	void Read(MP4File* pFile, u_int32_t index = 0);
-	void Write(MP4File* pFile, u_int32_t index = 0);
-	void Dump(FILE* pFile, u_int8_t indent,
-		 bool dumpImplicits, u_int32_t index = 0);
+	void Read(MP4File* pFile, uint32_t index = 0);
+	void Write(MP4File* pFile, uint32_t index = 0);
+	void Dump(FILE* pFile, uint8_t indent,
+		 bool dumpImplicits, uint32_t index = 0);
 
 	bool FindProperty(const char* name,
-		MP4Property** ppProperty, u_int32_t* pIndex = NULL);
+		MP4Property** ppProperty, uint32_t* pIndex = NULL);
 
 protected:
-	virtual void ReadEntry(MP4File* pFile, u_int32_t index);
-	virtual void WriteEntry(MP4File* pFile, u_int32_t index);
+	virtual void ReadEntry(MP4File* pFile, uint32_t index);
+	virtual void WriteEntry(MP4File* pFile, uint32_t index);
 
 	bool FindContainedProperty(const char* name,
-		MP4Property** ppProperty, u_int32_t* pIndex);
+		MP4Property** ppProperty, uint32_t* pIndex);
 
 protected:
 	MP4IntegerProperty*	m_pCountProperty;
@@ -470,7 +470,7 @@ protected:
 class MP4DescriptorProperty : public MP4Property {
 public:
 	MP4DescriptorProperty(char* name = NULL, 
-	  u_int8_t tagsStart = 0, u_int8_t tagsEnd = 0,
+	  uint8_t tagsStart = 0, uint8_t tagsEnd = 0,
 	  bool mandatory = false, bool onlyOne = false);
 
 	~MP4DescriptorProperty();
@@ -481,49 +481,49 @@ public:
 
 	void SetParentAtom(MP4Atom* pParentAtom);
 
-	void SetSizeLimit(u_int64_t sizeLimit) {
+	void SetSizeLimit(uint64_t sizeLimit) {
 		m_sizeLimit = sizeLimit;
 	}
 
-	u_int32_t GetCount() {
+	uint32_t GetCount() {
 		return m_pDescriptors.Size();
 	}
-	void SetCount(u_int32_t count) {
+	void SetCount(uint32_t count) {
 		m_pDescriptors.Resize(count);
 	}
 
-	void SetTags(u_int8_t tagsStart, u_int8_t tagsEnd = 0) {
+	void SetTags(uint8_t tagsStart, uint8_t tagsEnd = 0) {
 		m_tagsStart = tagsStart;
 		m_tagsEnd = tagsEnd ? tagsEnd : tagsStart;
 	}
 
-	MP4Descriptor* AddDescriptor(u_int8_t tag);
+	MP4Descriptor* AddDescriptor(uint8_t tag);
 
 	void AppendDescriptor(MP4Descriptor* pDescriptor) {
 		m_pDescriptors.Add(pDescriptor);
 	}
 
-	void DeleteDescriptor(u_int32_t index);
+	void DeleteDescriptor(uint32_t index);
 
 	void Generate();
-	void Read(MP4File* pFile, u_int32_t index = 0);
-	void Write(MP4File* pFile, u_int32_t index = 0);
-	void Dump(FILE* pFile, u_int8_t indent,
-		 bool dumpImplicits, u_int32_t index = 0);
+	void Read(MP4File* pFile, uint32_t index = 0);
+	void Write(MP4File* pFile, uint32_t index = 0);
+	void Dump(FILE* pFile, uint8_t indent,
+		 bool dumpImplicits, uint32_t index = 0);
 
 	bool FindProperty(const char* name,
-		MP4Property** ppProperty, u_int32_t* pIndex = NULL);
+		MP4Property** ppProperty, uint32_t* pIndex = NULL);
 
 protected:
-	virtual MP4Descriptor* CreateDescriptor(u_int8_t tag);
+	virtual MP4Descriptor* CreateDescriptor(uint8_t tag);
 
 	bool FindContainedProperty(const char* name,
-		MP4Property** ppProperty, u_int32_t* pIndex);
+		MP4Property** ppProperty, uint32_t* pIndex);
 
 protected:
-	u_int8_t			m_tagsStart;
-	u_int8_t			m_tagsEnd;
-	u_int64_t			m_sizeLimit;
+	uint8_t			m_tagsStart;
+	uint8_t			m_tagsEnd;
+	uint64_t			m_sizeLimit;
 	bool				m_mandatory;
 	bool				m_onlyOne;
 	MP4DescriptorArray	m_pDescriptors;
@@ -532,12 +532,12 @@ protected:
 class MP4QosQualifierProperty : public MP4DescriptorProperty {
 public:
 	MP4QosQualifierProperty(char* name = NULL, 
-	  u_int8_t tagsStart = 0, u_int8_t tagsEnd = 0,
+	  uint8_t tagsStart = 0, uint8_t tagsEnd = 0,
 	  bool mandatory = false, bool onlyOne = false) :
 	MP4DescriptorProperty(name, tagsStart, tagsEnd, mandatory, onlyOne) { }
 
 protected:
-	MP4Descriptor* CreateDescriptor(u_int8_t tag);
+	MP4Descriptor* CreateDescriptor(uint8_t tag);
 };
 
 #endif /* __MP4_PROPERTY_INCLUDED__ */

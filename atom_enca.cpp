@@ -48,7 +48,7 @@ void MP4EncaAtom::Generate()
 	((MP4Integer16Property*)m_pProperties[1])->SetValue(1);
 
 	// property reserved2 has non-zero fixed values
-	static u_int8_t reserved2[16] = {
+	static uint8_t reserved2[16] = {
 		0x00, 0x00, 0x00, 0x00, 
 		0x00, 0x00, 0x00, 0x00, 
 		0x00, 0x02, 0x00, 0x10,

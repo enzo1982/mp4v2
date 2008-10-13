@@ -34,7 +34,7 @@ MP4ElstAtom::MP4ElstAtom()
 	AddProperty(pTable);
 }
 
-void MP4ElstAtom::AddProperties(u_int8_t version) 
+void MP4ElstAtom::AddProperties(uint8_t version) 
 {
 	MP4TableProperty* pTable = (MP4TableProperty*)m_pProperties[3];
 

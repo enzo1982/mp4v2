@@ -23,7 +23,7 @@
 
 MP4Container::~MP4Container()
 {
-	for (u_int32_t i = 0; i < m_pProperties.Size(); i++) {
+	for (uint32_t i = 0; i < m_pProperties.Size(); i++) {
 		delete m_pProperties[i];
 	}
 }
@@ -35,15 +35,15 @@ void MP4Container::AddProperty(MP4Property* pProperty)
 }
 
 bool MP4Container::FindProperty(const char *name,
-	MP4Property** ppProperty, u_int32_t* pIndex)
+	MP4Property** ppProperty, uint32_t* pIndex)
 {
 	if (pIndex) {
 		*pIndex = 0;	// set the default answer for index
 	}
 
-	u_int32_t numProperties = m_pProperties.Size();
+	uint32_t numProperties = m_pProperties.Size();
 
-	for (u_int32_t i = 0; i < numProperties; i++) {
+	for (uint32_t i = 0; i < numProperties; i++) {
 		if (m_pProperties[i]->FindProperty(name, ppProperty, pIndex)) { 
 			return true;
 		}
@@ -52,7 +52,7 @@ bool MP4Container::FindProperty(const char *name,
 }
 
 void MP4Container::FindIntegerProperty(const char* name, 
-	MP4Property** ppProperty, u_int32_t* pIndex)
+	MP4Property** ppProperty, uint32_t* pIndex)
 {
 	if (!FindProperty(name, ppProperty, pIndex)) {
 		throw new MP4Error("no such property", 
@@ -72,20 +72,20 @@ void MP4Container::FindIntegerProperty(const char* name,
 	}
 }
 
-u_int64_t MP4Container::GetIntegerProperty(const char* name)
+uint64_t MP4Container::GetIntegerProperty(const char* name)
 {
 	MP4Property* pProperty;
-	u_int32_t index;
+	uint32_t index;
 
 	FindIntegerProperty(name, &pProperty, &index);
 
 	return ((MP4IntegerProperty*)pProperty)->GetValue(index);
 }
 
-void MP4Container::SetIntegerProperty(const char* name, u_int64_t value)
+void MP4Container::SetIntegerProperty(const char* name, uint64_t value)
 {
 	MP4Property* pProperty = NULL;
-	u_int32_t index = 0;
+	uint32_t index = 0;
 
 	FindIntegerProperty(name, &pProperty, &index);
 
@@ -93,7 +93,7 @@ void MP4Container::SetIntegerProperty(const char* name, u_int64_t value)
 }
 
 void MP4Container::FindFloatProperty(const char* name, 
-	MP4Property** ppProperty, u_int32_t* pIndex)
+	MP4Property** ppProperty, uint32_t* pIndex)
 {
 	if (!FindProperty(name, ppProperty, pIndex)) {
 		throw new MP4Error("no such property",
@@ -108,7 +108,7 @@ void MP4Container::FindFloatProperty(const char* name,
 float MP4Container::GetFloatProperty(const char* name)
 {
 	MP4Property* pProperty;
-	u_int32_t index;
+	uint32_t index;
 
 	FindFloatProperty(name, &pProperty, &index);
 
@@ -118,7 +118,7 @@ float MP4Container::GetFloatProperty(const char* name)
 void MP4Container::SetFloatProperty(const char* name, float value)
 {
 	MP4Property* pProperty;
-	u_int32_t index;
+	uint32_t index;
 
 	FindFloatProperty(name, &pProperty, &index);
 
@@ -126,7 +126,7 @@ void MP4Container::SetFloatProperty(const char* name, float value)
 }
 
 void MP4Container::FindStringProperty(const char* name, 
-	MP4Property** ppProperty, u_int32_t* pIndex)
+	MP4Property** ppProperty, uint32_t* pIndex)
 {
 	if (!FindProperty(name, ppProperty, pIndex)) {
 		throw new MP4Error("no such property",
@@ -141,7 +141,7 @@ void MP4Container::FindStringProperty(const char* name,
 const char* MP4Container::GetStringProperty(const char* name)
 {
 	MP4Property* pProperty;
-	u_int32_t index;
+	uint32_t index;
 
 	FindStringProperty(name, &pProperty, &index);
 
@@ -151,7 +151,7 @@ const char* MP4Container::GetStringProperty(const char* name)
 void MP4Container::SetStringProperty(const char* name, const char* value)
 {
 	MP4Property* pProperty;
-	u_int32_t index;
+	uint32_t index;
 
 	FindStringProperty(name, &pProperty, &index);
 
@@ -159,7 +159,7 @@ void MP4Container::SetStringProperty(const char* name, const char* value)
 }
 
 void MP4Container::FindBytesProperty(const char* name, 
-	MP4Property** ppProperty, u_int32_t* pIndex)
+	MP4Property** ppProperty, uint32_t* pIndex)
 {
 	if (!FindProperty(name, ppProperty, pIndex)) {
 		throw new MP4Error("no such property",
@@ -172,10 +172,10 @@ void MP4Container::FindBytesProperty(const char* name,
 }
 
 void MP4Container::GetBytesProperty(const char* name, 
-	u_int8_t** ppValue, u_int32_t* pValueSize)
+	uint8_t** ppValue, uint32_t* pValueSize)
 {
 	MP4Property* pProperty;
-	u_int32_t index;
+	uint32_t index;
 
 	FindBytesProperty(name, &pProperty, &index);
 
@@ -183,10 +183,10 @@ void MP4Container::GetBytesProperty(const char* name,
 }
 
 void MP4Container::SetBytesProperty(const char* name, 
-	const u_int8_t* pValue, u_int32_t valueSize)
+	const uint8_t* pValue, uint32_t valueSize)
 {
 	MP4Property* pProperty;
-	u_int32_t index;
+	uint32_t index;
 
 	FindBytesProperty(name, &pProperty, &index);
 
@@ -195,32 +195,32 @@ void MP4Container::SetBytesProperty(const char* name,
 
 void MP4Container::Read(MP4File* pFile)
 {
-	u_int32_t numProperties = m_pProperties.Size();
+	uint32_t numProperties = m_pProperties.Size();
 
-	for (u_int32_t i = 0; i < numProperties; i++) {
+	for (uint32_t i = 0; i < numProperties; i++) {
 		m_pProperties[i]->Read(pFile);
 	}
 }
 
 void MP4Container::Write(MP4File* pFile)
 {
-	u_int32_t numProperties = m_pProperties.Size();
+	uint32_t numProperties = m_pProperties.Size();
 
 	if (numProperties == 0) {
 		WARNING(numProperties == 0);
 		return;
 	}
 
-	for (u_int32_t i = 0; i < numProperties; i++) {
+	for (uint32_t i = 0; i < numProperties; i++) {
 		m_pProperties[i]->Write(pFile);
 	}
 }
 
-void MP4Container::Dump(FILE* pFile, u_int8_t indent, bool dumpImplicits)
+void MP4Container::Dump(FILE* pFile, uint8_t indent, bool dumpImplicits)
 {
-	u_int32_t numProperties = m_pProperties.Size();
+	uint32_t numProperties = m_pProperties.Size();
 
-	for (u_int32_t i = 0; i < numProperties; i++) {
+	for (uint32_t i = 0; i < numProperties; i++) {
 		m_pProperties[i]->Dump(pFile, indent, dumpImplicits);
 	}
 }

@@ -21,7 +21,7 @@
 
 #include "mp4common.h"
 #if 1
-MP4QosDescriptorBase::MP4QosDescriptorBase (u_int8_t tag)
+MP4QosDescriptorBase::MP4QosDescriptorBase (uint8_t tag)
   : MP4Descriptor(tag)
 {
   switch (tag) {
@@ -141,7 +141,7 @@ void MP4UnknownQosQualifier::Read(MP4File* pFile)
 	ReadProperties(pFile);
 }
 
-MP4Descriptor* MP4QosQualifierProperty::CreateDescriptor(u_int8_t tag) 
+MP4Descriptor* MP4QosQualifierProperty::CreateDescriptor(uint8_t tag) 
 {
 	MP4Descriptor* pDescriptor = NULL;
 	switch (tag) {

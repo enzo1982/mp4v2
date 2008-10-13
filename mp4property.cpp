@@ -30,7 +30,7 @@ MP4Property::MP4Property(const char* name)
 }
 
 bool MP4Property::FindProperty(const char* name, 
-	MP4Property** ppProperty, u_int32_t* pIndex) 
+	MP4Property** ppProperty, uint32_t* pIndex) 
 {
 	if (name == NULL) {
 		return false;
@@ -50,7 +50,7 @@ bool MP4Property::FindProperty(const char* name,
 
 // Integer Property
 
-u_int64_t MP4IntegerProperty::GetValue(u_int32_t index)
+uint64_t MP4IntegerProperty::GetValue(uint32_t index)
 {
 	switch (this->GetType()) {
 	case Integer8Property:
@@ -69,7 +69,7 @@ u_int64_t MP4IntegerProperty::GetValue(u_int32_t index)
 	return (0);
 }
 
-void MP4IntegerProperty::SetValue(u_int64_t value, u_int32_t index)
+void MP4IntegerProperty::SetValue(uint64_t value, uint32_t index)
 {
 	switch (this->GetType()) {
 	case Integer8Property:
@@ -92,7 +92,7 @@ void MP4IntegerProperty::SetValue(u_int64_t value, u_int32_t index)
 	}
 }
 
-void MP4IntegerProperty::InsertValue(u_int64_t value, u_int32_t index)
+void MP4IntegerProperty::InsertValue(uint64_t value, uint32_t index)
 {
 	switch (this->GetType()) {
 	case Integer8Property:
@@ -115,7 +115,7 @@ void MP4IntegerProperty::InsertValue(u_int64_t value, u_int32_t index)
 	}
 }
 
-void MP4IntegerProperty::DeleteValue(u_int32_t index)
+void MP4IntegerProperty::DeleteValue(uint32_t index)
 {
 	switch (this->GetType()) {
 	case Integer8Property:
@@ -138,13 +138,13 @@ void MP4IntegerProperty::DeleteValue(u_int32_t index)
 	}
 }
 
-void MP4IntegerProperty::IncrementValue(int32_t increment, u_int32_t index)
+void MP4IntegerProperty::IncrementValue(int32_t increment, uint32_t index)
 {
 	SetValue(GetValue() + increment);
 }
 
-void MP4Integer8Property::Dump(FILE* pFile, u_int8_t indent,
-	bool dumpImplicits, u_int32_t index)
+void MP4Integer8Property::Dump(FILE* pFile, uint8_t indent,
+	bool dumpImplicits, uint32_t index)
 {
 	if (m_implicit && !dumpImplicits) {
 		return;
@@ -159,8 +159,8 @@ void MP4Integer8Property::Dump(FILE* pFile, u_int8_t indent,
 	fflush(pFile);
 }
 
-void MP4Integer16Property::Dump(FILE* pFile, u_int8_t indent,
-	bool dumpImplicits, u_int32_t index)
+void MP4Integer16Property::Dump(FILE* pFile, uint8_t indent,
+	bool dumpImplicits, uint32_t index)
 {
 	if (m_implicit && !dumpImplicits) {
 		return;
@@ -175,8 +175,8 @@ void MP4Integer16Property::Dump(FILE* pFile, u_int8_t indent,
 	fflush(pFile);
 }
 
-void MP4Integer24Property::Dump(FILE* pFile, u_int8_t indent,
-	bool dumpImplicits, u_int32_t index)
+void MP4Integer24Property::Dump(FILE* pFile, uint8_t indent,
+	bool dumpImplicits, uint32_t index)
 {
 	if (m_implicit && !dumpImplicits) {
 		return;
@@ -191,8 +191,8 @@ void MP4Integer24Property::Dump(FILE* pFile, u_int8_t indent,
 	fflush(pFile);
 }
 
-void MP4Integer32Property::Dump(FILE* pFile, u_int8_t indent,
-	bool dumpImplicits, u_int32_t index)
+void MP4Integer32Property::Dump(FILE* pFile, uint8_t indent,
+	bool dumpImplicits, uint32_t index)
 {
 	if (m_implicit && !dumpImplicits) {
 		return;
@@ -207,8 +207,8 @@ void MP4Integer32Property::Dump(FILE* pFile, u_int8_t indent,
 	fflush(pFile);
 }
 
-void MP4Integer64Property::Dump(FILE* pFile, u_int8_t indent,
-	bool dumpImplicits, u_int32_t index)
+void MP4Integer64Property::Dump(FILE* pFile, uint8_t indent,
+	bool dumpImplicits, uint32_t index)
 {
 	if (m_implicit && !dumpImplicits) {
 		return;
@@ -226,7 +226,7 @@ void MP4Integer64Property::Dump(FILE* pFile, u_int8_t indent,
 
 // MP4BitfieldProperty
 
-void MP4BitfieldProperty::Read(MP4File* pFile, u_int32_t index)
+void MP4BitfieldProperty::Read(MP4File* pFile, uint32_t index)
 {
 	if (m_implicit) {
 		return;
@@ -234,7 +234,7 @@ void MP4BitfieldProperty::Read(MP4File* pFile, u_int32_t index)
 	m_values[index] = pFile->ReadBits(m_numBits);
 }
 
-void MP4BitfieldProperty::Write(MP4File* pFile, u_int32_t index)
+void MP4BitfieldProperty::Write(MP4File* pFile, uint32_t index)
 {
 	if (m_implicit) {
 		return;
@@ -242,15 +242,15 @@ void MP4BitfieldProperty::Write(MP4File* pFile, u_int32_t index)
 	pFile->WriteBits(m_values[index], m_numBits);
 }
 
-void MP4BitfieldProperty::Dump(FILE* pFile, u_int8_t indent,
-	bool dumpImplicits, u_int32_t index)
+void MP4BitfieldProperty::Dump(FILE* pFile, uint8_t indent,
+	bool dumpImplicits, uint32_t index)
 {
 	if (m_implicit && !dumpImplicits) {
 		return;
 	}
 	Indent(pFile, indent);
 
-	u_int8_t hexWidth = m_numBits / 4;
+	uint8_t hexWidth = m_numBits / 4;
 	if (hexWidth == 0 || (m_numBits % 4)) {
 		hexWidth++;
 	}
@@ -267,7 +267,7 @@ void MP4BitfieldProperty::Dump(FILE* pFile, u_int8_t indent,
 
 // MP4Float32Property
 
-void MP4Float32Property::Read(MP4File* pFile, u_int32_t index) 
+void MP4Float32Property::Read(MP4File* pFile, uint32_t index) 
 {
 	if (m_implicit) {
 		return;
@@ -281,7 +281,7 @@ void MP4Float32Property::Read(MP4File* pFile, u_int32_t index)
 	}
 }
 
-void MP4Float32Property::Write(MP4File* pFile, u_int32_t index) 
+void MP4Float32Property::Write(MP4File* pFile, uint32_t index) 
 {
 	if (m_implicit) {
 		return;
@@ -295,8 +295,8 @@ void MP4Float32Property::Write(MP4File* pFile, u_int32_t index)
 	}
 }
 
-void MP4Float32Property::Dump(FILE* pFile, u_int8_t indent,
-	bool dumpImplicits, u_int32_t index)
+void MP4Float32Property::Dump(FILE* pFile, uint8_t indent,
+	bool dumpImplicits, uint32_t index)
 {
 	if (m_implicit && !dumpImplicits) {
 		return;
@@ -327,24 +327,24 @@ MP4StringProperty::MP4StringProperty(char* name,
 
 MP4StringProperty::~MP4StringProperty() 
 {
-	u_int32_t count = GetCount();
-	for (u_int32_t i = 0; i < count; i++) {
+	uint32_t count = GetCount();
+	for (uint32_t i = 0; i < count; i++) {
 		MP4Free(m_values[i]);
 	}
 }
 
-void MP4StringProperty::SetCount(u_int32_t count) 
+void MP4StringProperty::SetCount(uint32_t count) 
 {
-	u_int32_t oldCount = m_values.Size();
+	uint32_t oldCount = m_values.Size();
 
 	m_values.Resize(count);
 
-	for (u_int32_t i = oldCount; i < count; i++) {
+	for (uint32_t i = oldCount; i < count; i++) {
 		m_values[i] = NULL;
 	}
 }
 
-void MP4StringProperty::SetValue(const char* value, u_int32_t index) 
+void MP4StringProperty::SetValue(const char* value, uint32_t index) 
 {
 	if (m_readOnly) {
 		throw new MP4Error(EACCES, "property is read-only", m_name);
@@ -366,7 +366,7 @@ void MP4StringProperty::SetValue(const char* value, u_int32_t index)
 	}
 }
 
-void MP4StringProperty::Read(MP4File* pFile, u_int32_t index)
+void MP4StringProperty::Read(MP4File* pFile, uint32_t index)
 {
 	if (m_implicit) {
 		return;
@@ -377,13 +377,13 @@ void MP4StringProperty::Read(MP4File* pFile, u_int32_t index)
 	} else if (m_fixedLength) {
 		MP4Free(m_values[index]);
 		m_values[index] = (char*)MP4Calloc(m_fixedLength + 1);
-		pFile->ReadBytes((u_int8_t*)m_values[index], m_fixedLength);
+		pFile->ReadBytes((uint8_t*)m_values[index], m_fixedLength);
 	} else {
 		m_values[index] = pFile->ReadString();
 	}
 }
 
-void MP4StringProperty::Write(MP4File* pFile, u_int32_t index)
+void MP4StringProperty::Write(MP4File* pFile, uint32_t index)
 {
 	if (m_implicit) {
 		return;
@@ -392,14 +392,14 @@ void MP4StringProperty::Write(MP4File* pFile, u_int32_t index)
 		pFile->WriteCountedString(m_values[index],
 			(m_useUnicode ? 2 : 1), m_useExpandedCount);
 	} else if (m_fixedLength) {
-		pFile->WriteBytes((u_int8_t*)m_values[index], m_fixedLength);
+		pFile->WriteBytes((uint8_t*)m_values[index], m_fixedLength);
 	} else {
 		pFile->WriteString(m_values[index]);
 	}
 }
 
-void MP4StringProperty::Dump(FILE* pFile, u_int8_t indent,
-	bool dumpImplicits, u_int32_t index)
+void MP4StringProperty::Dump(FILE* pFile, uint8_t indent,
+	bool dumpImplicits, uint32_t index)
 {
 	if (m_implicit && !dumpImplicits) {
 		return;
@@ -420,12 +420,12 @@ void MP4StringProperty::Dump(FILE* pFile, u_int8_t indent,
 
 // MP4BytesProperty
 
-MP4BytesProperty::MP4BytesProperty(char* name, u_int32_t valueSize,
-                                   u_int32_t defaultValueSize)
+MP4BytesProperty::MP4BytesProperty(char* name, uint32_t valueSize,
+                                   uint32_t defaultValueSize)
 	: MP4Property(name)
 {
 	SetCount(1);
-	m_values[0] = (u_int8_t*)MP4Calloc(valueSize);
+	m_values[0] = (uint8_t*)MP4Calloc(valueSize);
 	m_valueSizes[0] = valueSize;
 	m_fixedValueSize = 0;
         m_defaultValueSize = defaultValueSize;
@@ -433,27 +433,27 @@ MP4BytesProperty::MP4BytesProperty(char* name, u_int32_t valueSize,
 
 MP4BytesProperty::~MP4BytesProperty() 
 {
-	u_int32_t count = GetCount();
-	for (u_int32_t i = 0; i < count; i++) {
+	uint32_t count = GetCount();
+	for (uint32_t i = 0; i < count; i++) {
 		MP4Free(m_values[i]);
 	}
 }
   
-void MP4BytesProperty::SetCount(u_int32_t count) 
+void MP4BytesProperty::SetCount(uint32_t count) 
 {
-	u_int32_t oldCount = m_values.Size();
+	uint32_t oldCount = m_values.Size();
 
 	m_values.Resize(count);
 	m_valueSizes.Resize(count);
 
-	for (u_int32_t i = oldCount; i < count; i++) {
+	for (uint32_t i = oldCount; i < count; i++) {
 		m_values[i] = NULL;
 		m_valueSizes[i] = m_defaultValueSize;
 	}
 }
 
-void MP4BytesProperty::SetValue(const u_int8_t* pValue, u_int32_t valueSize, 
-	u_int32_t index) 
+void MP4BytesProperty::SetValue(const uint8_t* pValue, uint32_t valueSize, 
+	uint32_t index) 
 {
 	if (m_readOnly) {
 		throw new MP4Error(EACCES, "property is read-only", m_name);
@@ -468,7 +468,7 @@ void MP4BytesProperty::SetValue(const u_int8_t* pValue, u_int32_t valueSize,
 					   m_fixedValueSize);
 		}
 		if (m_values[index] == NULL) {
-			m_values[index] = (u_int8_t*)MP4Calloc(m_fixedValueSize);
+			m_values[index] = (uint8_t*)MP4Calloc(m_fixedValueSize);
 			m_valueSizes[index] = m_fixedValueSize;
 		}
 		if (pValue) {
@@ -477,7 +477,7 @@ void MP4BytesProperty::SetValue(const u_int8_t* pValue, u_int32_t valueSize,
 	} else {
 		MP4Free(m_values[index]);
 		if (pValue) {
-			m_values[index] = (u_int8_t*)MP4Malloc(valueSize);
+			m_values[index] = (uint8_t*)MP4Malloc(valueSize);
 			memcpy(m_values[index], pValue, valueSize);
 			m_valueSizes[index] = valueSize;
 		} else {
@@ -487,38 +487,38 @@ void MP4BytesProperty::SetValue(const u_int8_t* pValue, u_int32_t valueSize,
 	}
 }
 
-void MP4BytesProperty::SetValueSize(u_int32_t valueSize, u_int32_t index) 
+void MP4BytesProperty::SetValueSize(uint32_t valueSize, uint32_t index) 
 {
 	if (m_fixedValueSize) {
 		throw new MP4Error("can't change size of fixed sized property",
 			"MP4BytesProperty::SetValueSize");
 	}
 	if (m_values[index] != NULL) {
-		m_values[index] = (u_int8_t*)MP4Realloc(m_values[index], valueSize);
+		m_values[index] = (uint8_t*)MP4Realloc(m_values[index], valueSize);
 	}
 	m_valueSizes[index] = valueSize;
 }
 
-void MP4BytesProperty::SetFixedSize(u_int32_t fixedSize) 
+void MP4BytesProperty::SetFixedSize(uint32_t fixedSize) 
 {
 	m_fixedValueSize = 0;
-	for (u_int32_t i = 0; i < GetCount(); i++) {
+	for (uint32_t i = 0; i < GetCount(); i++) {
 		SetValueSize(fixedSize, i);
 	}
 	m_fixedValueSize = fixedSize;
 }
 
-void MP4BytesProperty::Read(MP4File* pFile, u_int32_t index)
+void MP4BytesProperty::Read(MP4File* pFile, uint32_t index)
 {
 	if (m_implicit) {
 		return;
 	}
 	MP4Free(m_values[index]);
-	m_values[index] = (u_int8_t*)MP4Malloc(m_valueSizes[index]);
+	m_values[index] = (uint8_t*)MP4Malloc(m_valueSizes[index]);
 	pFile->ReadBytes(m_values[index], m_valueSizes[index]);
 }
 
-void MP4BytesProperty::Write(MP4File* pFile, u_int32_t index)
+void MP4BytesProperty::Write(MP4File* pFile, uint32_t index)
 {
 	if (m_implicit) {
 		return;
@@ -526,8 +526,8 @@ void MP4BytesProperty::Write(MP4File* pFile, u_int32_t index)
 	pFile->WriteBytes(m_values[index], m_valueSizes[index]);
 }
 
-void MP4BytesProperty::Dump(FILE* pFile, u_int8_t indent,
-	bool dumpImplicits, u_int32_t index)
+void MP4BytesProperty::Dump(FILE* pFile, uint8_t indent,
+	bool dumpImplicits, uint32_t index)
 {
 	if (m_implicit && !dumpImplicits) {
 		return;
@@ -536,7 +536,7 @@ void MP4BytesProperty::Dump(FILE* pFile, u_int8_t indent,
 	fputs(m_name, pFile);
 	if (index != 0) fprintf(pFile, "[%u]", index);
 	fprintf(pFile, " = <%u bytes> ", m_valueSizes[index]);
-	for (u_int32_t i = 0; i < m_valueSizes[index]; i++) {
+	for (uint32_t i = 0; i < m_valueSizes[index]; i++) {
 		if ((i % 16) == 0 && m_valueSizes[index] > 16) {
 			fprintf(pFile, "\n");
 			Indent(pFile, indent);
@@ -558,7 +558,7 @@ MP4TableProperty::MP4TableProperty(char* name, MP4IntegerProperty* pCountPropert
 
 MP4TableProperty::~MP4TableProperty()
 {
-	for (u_int32_t i = 0; i < m_pProperties.Size(); i++) {
+	for (uint32_t i = 0; i < m_pProperties.Size(); i++) {
 		delete m_pProperties[i];
 	}
 }
@@ -574,7 +574,7 @@ void MP4TableProperty::AddProperty(MP4Property* pProperty)
 }
 
 bool MP4TableProperty::FindProperty(const char *name,
-	MP4Property** ppProperty, u_int32_t* pIndex)
+	MP4Property** ppProperty, uint32_t* pIndex)
 {
 	ASSERT(m_name);
 
@@ -584,7 +584,7 @@ bool MP4TableProperty::FindProperty(const char *name,
 	}
 
 	// check if the specified table entry exists
-	u_int32_t index;
+	uint32_t index;
 	bool haveIndex = MP4NameFirstIndex(name, &index);
 	if (haveIndex) {
 		if (index >= GetCount()) {
@@ -613,11 +613,11 @@ bool MP4TableProperty::FindProperty(const char *name,
 }
 
 bool MP4TableProperty::FindContainedProperty(const char *name,
-	MP4Property** ppProperty, u_int32_t* pIndex)
+	MP4Property** ppProperty, uint32_t* pIndex)
 {
-	u_int32_t numProperties = m_pProperties.Size();
+	uint32_t numProperties = m_pProperties.Size();
 
-	for (u_int32_t i = 0; i < numProperties; i++) {
+	for (uint32_t i = 0; i < numProperties; i++) {
 		if (m_pProperties[i]->FindProperty(name, ppProperty, pIndex)) {
 			return true;
 		}
@@ -625,7 +625,7 @@ bool MP4TableProperty::FindContainedProperty(const char *name,
 	return false;
 }
 
-void MP4TableProperty::Read(MP4File* pFile, u_int32_t index)
+void MP4TableProperty::Read(MP4File* pFile, uint32_t index)
 {
 	ASSERT(index == 0);
 
@@ -633,33 +633,33 @@ void MP4TableProperty::Read(MP4File* pFile, u_int32_t index)
 		return;
 	}
 
-	u_int32_t numProperties = m_pProperties.Size();
+	uint32_t numProperties = m_pProperties.Size();
 
 	if (numProperties == 0) {
 		WARNING(numProperties == 0);
 		return;
 	}
 
-	u_int32_t numEntries = GetCount();
+	uint32_t numEntries = GetCount();
 
 	/* for each property set size */
-	for (u_int32_t j = 0; j < numProperties; j++) {
+	for (uint32_t j = 0; j < numProperties; j++) {
 		m_pProperties[j]->SetCount(numEntries);
 	}
 
-	for (u_int32_t i = 0; i < numEntries; i++) {
+	for (uint32_t i = 0; i < numEntries; i++) {
 		ReadEntry(pFile, i);
 	}
 }
 
-void MP4TableProperty::ReadEntry(MP4File* pFile, u_int32_t index)
+void MP4TableProperty::ReadEntry(MP4File* pFile, uint32_t index)
 {
-	for (u_int32_t j = 0; j < m_pProperties.Size(); j++) {
+	for (uint32_t j = 0; j < m_pProperties.Size(); j++) {
 		m_pProperties[j]->Read(pFile, index);
 	}
 }
 
-void MP4TableProperty::Write(MP4File* pFile, u_int32_t index)
+void MP4TableProperty::Write(MP4File* pFile, uint32_t index)
 {
 	ASSERT(index == 0);
 
@@ -667,14 +667,14 @@ void MP4TableProperty::Write(MP4File* pFile, u_int32_t index)
 		return;
 	}
 
-	u_int32_t numProperties = m_pProperties.Size();
+	uint32_t numProperties = m_pProperties.Size();
 
 	if (numProperties == 0) {
 		WARNING(numProperties == 0);
 		return;
 	}
 
-	u_int32_t numEntries = GetCount();
+	uint32_t numEntries = GetCount();
 
 	if (m_pProperties[0]->GetCount() != numEntries) {
 	  fprintf(stderr, "%s %s \"%s\"table entries %u doesn't match count %u\n", 
@@ -685,20 +685,20 @@ void MP4TableProperty::Write(MP4File* pFile, u_int32_t index)
 	  ASSERT(m_pProperties[0]->GetCount() == numEntries);
 	}
 
-	for (u_int32_t i = 0; i < numEntries; i++) {
+	for (uint32_t i = 0; i < numEntries; i++) {
 		WriteEntry(pFile, i);
 	}
 }
 
-void MP4TableProperty::WriteEntry(MP4File* pFile, u_int32_t index)
+void MP4TableProperty::WriteEntry(MP4File* pFile, uint32_t index)
 {
-	for (u_int32_t j = 0; j < m_pProperties.Size(); j++) {
+	for (uint32_t j = 0; j < m_pProperties.Size(); j++) {
 		m_pProperties[j]->Write(pFile, index);
 	}
 }
 
-void MP4TableProperty::Dump(FILE* pFile, u_int8_t indent,
-	bool dumpImplicits, u_int32_t index)
+void MP4TableProperty::Dump(FILE* pFile, uint8_t indent,
+	bool dumpImplicits, uint32_t index)
 {
 	ASSERT(index == 0);
 
@@ -707,17 +707,17 @@ void MP4TableProperty::Dump(FILE* pFile, u_int8_t indent,
 		return;
 	}
 
-	u_int32_t numProperties = m_pProperties.Size();
+	uint32_t numProperties = m_pProperties.Size();
 
 	if (numProperties == 0) {
 		WARNING(numProperties == 0);
 		return;
 	}
 
-	u_int32_t numEntries = GetCount();
+	uint32_t numEntries = GetCount();
 
-	for (u_int32_t i = 0; i < numEntries; i++) {
-		for (u_int32_t j = 0; j < numProperties; j++) {
+	for (uint32_t i = 0; i < numEntries; i++) {
+		for (uint32_t j = 0; j < numProperties; j++) {
 			m_pProperties[j]->Dump(pFile, indent + 1, dumpImplicits, i);
 		}
 	}
@@ -726,7 +726,7 @@ void MP4TableProperty::Dump(FILE* pFile, u_int8_t indent,
 // MP4DescriptorProperty
   
 MP4DescriptorProperty::MP4DescriptorProperty(char* name, 
-	u_int8_t tagsStart, u_int8_t tagsEnd, bool mandatory, bool onlyOne)
+	uint8_t tagsStart, uint8_t tagsEnd, bool mandatory, bool onlyOne)
 	: MP4Property(name) 
 { 
 	SetTags(tagsStart, tagsEnd);
@@ -737,19 +737,19 @@ MP4DescriptorProperty::MP4DescriptorProperty(char* name,
 
 MP4DescriptorProperty::~MP4DescriptorProperty() 
 {
-	for (u_int32_t i = 0; i < m_pDescriptors.Size(); i++) {
+	for (uint32_t i = 0; i < m_pDescriptors.Size(); i++) {
 		delete m_pDescriptors[i];
 	}
 }
 
 void MP4DescriptorProperty::SetParentAtom(MP4Atom* pParentAtom) {
 	m_pParentAtom = pParentAtom;
-	for (u_int32_t i = 0; i < m_pDescriptors.Size(); i++) {
+	for (uint32_t i = 0; i < m_pDescriptors.Size(); i++) {
 		m_pDescriptors[i]->SetParentAtom(pParentAtom);
 	}
 }
 
-MP4Descriptor* MP4DescriptorProperty::AddDescriptor(u_int8_t tag)
+MP4Descriptor* MP4DescriptorProperty::AddDescriptor(uint8_t tag)
 {
 	// check that tag is in expected range
 	ASSERT(tag >= m_tagsStart && tag <= m_tagsEnd);
@@ -763,7 +763,7 @@ MP4Descriptor* MP4DescriptorProperty::AddDescriptor(u_int8_t tag)
 	return pDescriptor;
 }
 
-void MP4DescriptorProperty::DeleteDescriptor(u_int32_t index)
+void MP4DescriptorProperty::DeleteDescriptor(uint32_t index)
 {
 	delete m_pDescriptors[index];
 	m_pDescriptors.Delete(index);
@@ -781,7 +781,7 @@ void MP4DescriptorProperty::Generate()
 }
 
 bool MP4DescriptorProperty::FindProperty(const char *name,
-	MP4Property** ppProperty, u_int32_t* pIndex)
+	MP4Property** ppProperty, uint32_t* pIndex)
 {
 	// we're unnamed, so just check contained properties
 	if (m_name == NULL || !strcmp(m_name, "")) {
@@ -794,7 +794,7 @@ bool MP4DescriptorProperty::FindProperty(const char *name,
 	}
 
 	// check if the specific descriptor entry exists
-	u_int32_t descrIndex;
+	uint32_t descrIndex;
 	bool haveDescrIndex = MP4NameFirstIndex(name, &descrIndex);
 
 	if (haveDescrIndex && descrIndex >= GetCount()) {
@@ -826,9 +826,9 @@ bool MP4DescriptorProperty::FindProperty(const char *name,
 }
 
 bool MP4DescriptorProperty::FindContainedProperty(const char *name,
-	MP4Property** ppProperty, u_int32_t* pIndex)
+	MP4Property** ppProperty, uint32_t* pIndex)
 {
-	for (u_int32_t i = 0; i < m_pDescriptors.Size(); i++) {
+	for (uint32_t i = 0; i < m_pDescriptors.Size(); i++) {
 		if (m_pDescriptors[i]->FindProperty(name, ppProperty, pIndex)) {
 			return true;
 		}
@@ -836,7 +836,7 @@ bool MP4DescriptorProperty::FindContainedProperty(const char *name,
 	return false;
 }
 
-void MP4DescriptorProperty::Read(MP4File* pFile, u_int32_t index)
+void MP4DescriptorProperty::Read(MP4File* pFile, uint32_t index)
 {
 	ASSERT(index == 0);
 
@@ -844,7 +844,7 @@ void MP4DescriptorProperty::Read(MP4File* pFile, u_int32_t index)
 		return;
 	}
 
-	u_int64_t start = pFile->GetPosition();
+	uint64_t start = pFile->GetPosition();
 
 	while (true) {
 		// enforce size limitation
@@ -852,7 +852,7 @@ void MP4DescriptorProperty::Read(MP4File* pFile, u_int32_t index)
 			break;
 		}
 
-		u_int8_t tag;
+		uint8_t tag;
 		try {
 			pFile->PeekBytes(&tag, 1);
 		}
@@ -888,7 +888,7 @@ void MP4DescriptorProperty::Read(MP4File* pFile, u_int32_t index)
 	}
 }
 
-void MP4DescriptorProperty::Write(MP4File* pFile, u_int32_t index)
+void MP4DescriptorProperty::Write(MP4File* pFile, uint32_t index)
 {
 	ASSERT(index == 0);
 
@@ -896,13 +896,13 @@ void MP4DescriptorProperty::Write(MP4File* pFile, u_int32_t index)
 		return;
 	}
 
-	for (u_int32_t i = 0; i < m_pDescriptors.Size(); i++) {
+	for (uint32_t i = 0; i < m_pDescriptors.Size(); i++) {
 		m_pDescriptors[i]->Write(pFile);
 	}
 }
 
-void MP4DescriptorProperty::Dump(FILE* pFile, u_int8_t indent,
-	bool dumpImplicits, u_int32_t index)
+void MP4DescriptorProperty::Dump(FILE* pFile, uint8_t indent,
+	bool dumpImplicits, uint32_t index)
 {
 	ASSERT(index == 0);
 
@@ -919,7 +919,7 @@ void MP4DescriptorProperty::Dump(FILE* pFile, u_int8_t indent,
 		indent++;
 	}
 
-	for (u_int32_t i = 0; i < m_pDescriptors.Size(); i++) {
+	for (uint32_t i = 0; i < m_pDescriptors.Size(); i++) {
 		m_pDescriptors[i]->Dump(pFile, indent, dumpImplicits);
 	}
 }

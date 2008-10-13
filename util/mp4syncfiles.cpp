@@ -422,7 +422,7 @@ int main(int argc, char** argv)
   MP4TrackId trackId = MP4_INVALID_TRACK_ID;
   MP4SampleId sampleId = MP4_INVALID_SAMPLE_ID;
 #endif
-  u_int32_t verbosity = MP4_DETAILS_ERROR;
+  uint32_t verbosity = MP4_DETAILS_ERROR;
   bool force_meta = false;
 
   /* begin processing command line */
@@ -450,7 +450,7 @@ int main(int argc, char** argv)
     case 'v':
       verbosity |= MP4_DETAILS_READ;
       if (optarg) {
-	u_int32_t level;
+	uint32_t level;
 	if (sscanf(optarg, "%u", &level) == 1) {
 	  if (level >= 2) {
 	    verbosity |= MP4_DETAILS_TABLE;

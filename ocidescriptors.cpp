@@ -175,11 +175,11 @@ public:
 		MP4TableProperty(name, pCountProperty) {
 	};
 protected:
-	void ReadEntry(MP4File* pFile, u_int32_t index);
-	void WriteEntry(MP4File* pFile, u_int32_t index);
+	void ReadEntry(MP4File* pFile, uint32_t index);
+	void WriteEntry(MP4File* pFile, uint32_t index);
 };
 
-MP4CreatorDescriptor::MP4CreatorDescriptor(u_int8_t tag)
+MP4CreatorDescriptor::MP4CreatorDescriptor(uint8_t tag)
 	: MP4Descriptor(tag)
 {
 	MP4Integer8Property* pCount = 
@@ -199,7 +199,7 @@ MP4CreatorDescriptor::MP4CreatorDescriptor(u_int8_t tag)
 		new MP4StringProperty("name", Counted));
 }
 
-void MP4CreatorTableProperty::ReadEntry(MP4File* pFile, u_int32_t index)
+void MP4CreatorTableProperty::ReadEntry(MP4File* pFile, uint32_t index)
 {
 	m_pProperties[0]->Read(pFile, index);
 	m_pProperties[1]->Read(pFile, index);
@@ -211,7 +211,7 @@ void MP4CreatorTableProperty::ReadEntry(MP4File* pFile, u_int32_t index)
 	m_pProperties[3]->Read(pFile, index);
 }
 
-void MP4CreatorTableProperty::WriteEntry(MP4File* pFile, u_int32_t index)
+void MP4CreatorTableProperty::WriteEntry(MP4File* pFile, uint32_t index)
 {
 	bool utf8Flag = ((MP4BitfieldProperty*)m_pProperties[1])->GetValue(index);
 	((MP4StringProperty*)m_pProperties[3])->SetUnicode(!utf8Flag);
@@ -219,7 +219,7 @@ void MP4CreatorTableProperty::WriteEntry(MP4File* pFile, u_int32_t index)
 	MP4TableProperty::WriteEntry(pFile, index);
 }
 
-MP4CreationDescriptor::MP4CreationDescriptor(u_int8_t tag)
+MP4CreationDescriptor::MP4CreationDescriptor(uint8_t tag)
 	: MP4Descriptor(tag)
 {
 	AddProperty( /* 0 */
@@ -259,7 +259,7 @@ void MP4UnknownOCIDescriptor::Read(MP4File* pFile)
 	ReadProperties(pFile);
 }
 
-MP4Descriptor* CreateOCIDescriptor(u_int8_t tag) 
+MP4Descriptor* CreateOCIDescriptor(uint8_t tag) 
 {
 	MP4Descriptor* pDescriptor = NULL;
 

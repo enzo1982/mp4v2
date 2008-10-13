@@ -35,12 +35,12 @@ public:
 		return m_pPacket;
 	}
 
-	virtual u_int16_t GetDataSize() = 0;
-	virtual void GetData(u_int8_t* pDest) = 0;
+	virtual uint16_t GetDataSize() = 0;
+	virtual void GetData(uint8_t* pDest) = 0;
 
-	MP4Track* FindTrackFromRefIndex(u_int8_t refIndex);
+	MP4Track* FindTrackFromRefIndex(uint8_t refIndex);
 
-	virtual void WriteEmbeddedData(MP4File* pFile, u_int64_t startPos) {
+	virtual void WriteEmbeddedData(MP4File* pFile, uint64_t startPos) {
 		// default is no-op
 	}
 
@@ -54,11 +54,11 @@ class MP4RtpNullData : public MP4RtpData {
 public:
 	MP4RtpNullData(MP4RtpPacket* pPacket);
 
-	u_int16_t GetDataSize() {
+	uint16_t GetDataSize() {
 		return 0;
 	}
 
-	void GetData(u_int8_t* pDest) {
+	void GetData(uint8_t* pDest) {
 		// no-op
 	}
 };
@@ -67,11 +67,11 @@ class MP4RtpImmediateData : public MP4RtpData {
 public:
 	MP4RtpImmediateData(MP4RtpPacket* pPacket);
 
-	void Set(const u_int8_t* pBytes, u_int8_t numBytes);
+	void Set(const uint8_t* pBytes, uint8_t numBytes);
 
-	u_int16_t GetDataSize();
+	uint16_t GetDataSize();
 
-	void GetData(u_int8_t* pDest);
+	void GetData(uint8_t* pDest);
 };
 
 class MP4RtpSampleData : public MP4RtpData {
@@ -84,41 +84,41 @@ public:
 
 	void SetEmbeddedImmediate(
 		MP4SampleId sampleId, 
-		u_int8_t* pData, u_int16_t dataLength);
+		uint8_t* pData, uint16_t dataLength);
 
 	void SetReferenceSample(
-		MP4SampleId refSampleId, u_int32_t refSampleOffset, 
-		u_int16_t sampleLength);
+		MP4SampleId refSampleId, uint32_t refSampleOffset, 
+		uint16_t sampleLength);
 
 	void SetEmbeddedSample(
 		MP4SampleId sampleId, MP4Track* pRefTrack, 
-		MP4SampleId refSampleId, u_int32_t refSampleOffset, 
-		u_int16_t sampleLength);
+		MP4SampleId refSampleId, uint32_t refSampleOffset, 
+		uint16_t sampleLength);
 
-	u_int16_t GetDataSize();
+	uint16_t GetDataSize();
 
-	void GetData(u_int8_t* pDest);
+	void GetData(uint8_t* pDest);
 
-	void WriteEmbeddedData(MP4File* pFile, u_int64_t startPos);
+	void WriteEmbeddedData(MP4File* pFile, uint64_t startPos);
 
 protected:
-	u_int8_t*		m_pRefData;
+	uint8_t*		m_pRefData;
 
 	MP4Track*		m_pRefTrack;
 	MP4SampleId		m_refSampleId;
-	u_int32_t		m_refSampleOffset;
+	uint32_t		m_refSampleOffset;
 };
 
 class MP4RtpSampleDescriptionData : public MP4RtpData {
 public:
 	MP4RtpSampleDescriptionData(MP4RtpPacket* pPacket);
 
-	void Set(u_int32_t sampleDescrIndex,
-		u_int32_t offset, u_int16_t length);
+	void Set(uint32_t sampleDescrIndex,
+		uint32_t offset, uint16_t length);
 
-	u_int16_t GetDataSize();
+	uint16_t GetDataSize();
 
-	void GetData(u_int8_t* pDest);
+	void GetData(uint8_t* pDest);
 };
 
 class MP4RtpPacket : public MP4Container {
@@ -133,7 +133,7 @@ public:
 		return m_pHint;
 	}
 
-	void Set(u_int8_t payloadNumber, u_int32_t packetId, bool setMbit);
+	void Set(uint8_t payloadNumber, uint32_t packetId, bool setMbit);
 
 	int32_t GetTransmitOffset();
 
@@ -143,9 +143,9 @@ public:
 
 	bool GetMBit();
 
-	u_int8_t GetPayload();
+	uint8_t GetPayload();
 
-	u_int16_t GetSequenceNumber();
+	uint16_t GetSequenceNumber();
 
 	void SetTransmitOffset(int32_t transmitOffset);
 
@@ -153,13 +153,13 @@ public:
 
 	void SetBFrame(bool isBFrame);
 
-	void SetTimestampOffset(u_int32_t timestampOffset);
+	void SetTimestampOffset(uint32_t timestampOffset);
 
 	void AddData(MP4RtpData* pData);
 
-	u_int32_t GetDataSize();
+	uint32_t GetDataSize();
 
-	void GetData(u_int8_t* pDest);
+	void GetData(uint8_t* pDest);
 
 	void Read(MP4File* pFile);
 
@@ -167,9 +167,9 @@ public:
 
 	void Write(MP4File* pFile);
 
-	void WriteEmbeddedData(MP4File* pFile, u_int64_t startPos);
+	void WriteEmbeddedData(MP4File* pFile, uint64_t startPos);
 
-	void Dump(FILE* pFile, u_int8_t indent, bool dumpImplicits);
+	void Dump(FILE* pFile, uint8_t indent, bool dumpImplicits);
 
 protected:
 	MP4RtpHint*			m_pHint;
@@ -188,7 +188,7 @@ public:
 		return m_pTrack;
 	}
 
-	u_int16_t GetNumberOfPackets() {
+	uint16_t GetNumberOfPackets() {
 		return m_rtpPackets.Size();
 	}
 
@@ -199,16 +199,16 @@ public:
 		m_isBFrame = isBFrame;
 	}
 
-	u_int32_t GetTimestampOffset() {
+	uint32_t GetTimestampOffset() {
 		return m_timestampOffset;
 	}
-	void SetTimestampOffset(u_int32_t timestampOffset) {
+	void SetTimestampOffset(uint32_t timestampOffset) {
 		m_timestampOffset = timestampOffset;
 	}
 
 	MP4RtpPacket* AddPacket();
 
-	MP4RtpPacket* GetPacket(u_int16_t index) {
+	MP4RtpPacket* GetPacket(uint16_t index) {
 		return m_rtpPackets[index];
 	}
 
@@ -223,7 +223,7 @@ public:
 
 	void Write(MP4File* pFile);
 
-	void Dump(FILE* pFile, u_int8_t indent, bool dumpImplicits);
+	void Dump(FILE* pFile, uint8_t indent, bool dumpImplicits);
 
 protected:
 	MP4RtpHintTrack*	m_pTrack;
@@ -231,7 +231,7 @@ protected:
 
 	// values when adding packets to a hint (write mode)
 	bool 				m_isBFrame;
-	u_int32_t 			m_timestampOffset;
+	uint32_t 			m_timestampOffset;
 };
 
 class MP4RtpHintTrack : public MP4Track {
@@ -255,33 +255,33 @@ public:
 
 	void GetPayload(
 		char** ppPayloadName = NULL,
-		u_int8_t* pPayloadNumber = NULL,
-		u_int16_t* pMaxPayloadSize = NULL,
+		uint8_t* pPayloadNumber = NULL,
+		uint16_t* pMaxPayloadSize = NULL,
 		char **ppEncodingParams = NULL);
 
 	void SetPayload(
 		const char* payloadName,
-		u_int8_t payloadNumber,
-		u_int16_t maxPayloadSize,
+		uint8_t payloadNumber,
+		uint16_t maxPayloadSize,
 		const char *encoding_parms,
 		bool add_rtpmap,
 		bool add_mpeg4_esid);
 
 	void ReadHint(
 		MP4SampleId hintSampleId,
-		u_int16_t* pNumPackets = NULL);
+		uint16_t* pNumPackets = NULL);
 
-	u_int16_t GetHintNumberOfPackets();
+	uint16_t GetHintNumberOfPackets();
 
-	bool GetPacketBFrame(u_int16_t packetIndex);
+	bool GetPacketBFrame(uint16_t packetIndex);
 
-	u_int16_t GetPacketTransmitOffset(u_int16_t packetIndex);
+	uint16_t GetPacketTransmitOffset(uint16_t packetIndex);
 
 	void ReadPacket(
-		u_int16_t packetIndex,
-		u_int8_t** ppBytes, 
-		u_int32_t* pNumBytes,
-		u_int32_t ssrc,
+		uint16_t packetIndex,
+		uint8_t** ppBytes, 
+		uint32_t* pNumBytes,
+		uint32_t ssrc,
 		bool includeHeader = true,
 		bool includePayload = true);
 
@@ -289,14 +289,14 @@ public:
 
 	void SetRtpTimestampStart(MP4Timestamp start);
 
-	void AddHint(bool isBFrame, u_int32_t timestampOffset);
+	void AddHint(bool isBFrame, uint32_t timestampOffset);
 
 	void AddPacket(bool setMbit, int32_t transmitOffset = 0);
 
-	void AddImmediateData(const u_int8_t* pBytes, u_int32_t numBytes);
+	void AddImmediateData(const uint8_t* pBytes, uint32_t numBytes);
 
 	void AddSampleData(MP4SampleId sampleId,
-		 u_int32_t dataOffset, u_int32_t dataLength);
+		 uint32_t dataOffset, uint32_t dataLength);
 
 	void AddESConfigurationPacket();
 
@@ -312,19 +312,19 @@ protected:
 	MP4Integer32Property*	m_pMaxPacketSizeProperty;
 	MP4Integer32Property*	m_pSnroProperty;
 	MP4Integer32Property*	m_pTsroProperty;
-	u_int32_t				m_rtpSequenceStart;
-	u_int32_t				m_rtpTimestampStart;
+	uint32_t				m_rtpSequenceStart;
+	uint32_t				m_rtpTimestampStart;
 
 	// reading
 	MP4RtpHint*	m_pReadHint;
-	u_int8_t*	m_pReadHintSample;
-	u_int32_t	m_readHintSampleSize;
+	uint8_t*	m_pReadHintSample;
+	uint32_t	m_readHintSampleSize;
 	MP4Timestamp m_readHintTimestamp;
 
 	// writing
 	MP4RtpHint*	m_pWriteHint;
 	MP4SampleId	m_writeHintId;
-	u_int32_t	m_writePacketId;
+	uint32_t	m_writePacketId;
 
 	// statistics
 	// in trak.udta.hinf
@@ -344,9 +344,9 @@ protected:
 	MP4Integer32Property*	m_pAvgBitRate;
 
 	MP4Timestamp			m_thisSec;
-	u_int32_t				m_bytesThisSec;
-	u_int32_t				m_bytesThisHint;
-	u_int32_t				m_bytesThisPacket;
+	uint32_t				m_bytesThisSec;
+	uint32_t				m_bytesThisHint;
+	uint32_t				m_bytesThisPacket;
 };
 
 #endif /* __RTPHINT_INCLUDED__ */

@@ -48,7 +48,7 @@ public:
 	void FinishOptimalWrite();
 
 protected:
-	u_int32_t GetLastMdatIndex();
+	uint32_t GetLastMdatIndex();
 	void WriteAtomType(const char* type, bool onlyOne);
 };
 
@@ -84,7 +84,7 @@ class MP4SoundAtom : public MP4Atom {
   void Generate();
   void Read();
 protected:
-  void AddProperties(u_int8_t version);
+  void AddProperties(uint8_t version);
 };
 
 class MP4VideoAtom : public MP4Atom {
@@ -189,7 +189,7 @@ public:
 	void Generate();
 	void Read();
 protected:
-	void AddProperties(u_int8_t version);
+	void AddProperties(uint8_t version);
 };
 
 class MP4FreeAtom : public MP4Atom {
@@ -244,7 +244,7 @@ public:
 	void Generate();
 	void Read();
 protected:
-	void AddProperties(u_int8_t version);
+	void AddProperties(uint8_t version);
 };
 
 class MP4Meta1Atom : public MP4Atom {
@@ -265,7 +265,7 @@ public:
 	void Generate();
 	void Read();
 protected:
-	void AddProperties(u_int8_t version);
+	void AddProperties(uint8_t version);
 };
 
 class MP4OhdrAtom : public MP4Atom {
@@ -363,7 +363,7 @@ public:
 	MP4TfhdAtom();
 	void Read();
 protected:
-	void AddProperties(u_int32_t flags);
+	void AddProperties(uint32_t flags);
 };
 
 class MP4TkhdAtom : public MP4Atom {
@@ -372,14 +372,14 @@ public:
 	void Generate();
 	void Read();
 protected:
-	void AddProperties(u_int8_t version);
+	void AddProperties(uint8_t version);
 };
 class MP4TrunAtom : public MP4Atom {
 public:
 	MP4TrunAtom();
 	void Read();
 protected:
-	void AddProperties(u_int32_t flags);
+	void AddProperties(uint32_t flags);
 };
 
 class MP4UdtaAtom : public MP4Atom {

@@ -46,7 +46,7 @@
  extern "C" MP4FileHandle MP4ReadEx (const char* fileName,
 				     void *user, 
 				     struct Virtual_IO *virtual_IO, 
-				     u_int32_t verbosity)
+				     uint32_t verbosity)
 {
   MP4File* pFile = NULL;
   try {
@@ -62,7 +62,7 @@
   }
 }
 
-extern "C" MP4FileHandle MP4Read(const char* fileName, u_int32_t verbosity)
+extern "C" MP4FileHandle MP4Read(const char* fileName, uint32_t verbosity)
 {
 	MP4File* pFile = NULL;
 	try {
@@ -79,21 +79,21 @@ extern "C" MP4FileHandle MP4Read(const char* fileName, u_int32_t verbosity)
 }
 
 extern "C" MP4FileHandle MP4Create (const char* fileName,
-				    u_int32_t verbosity, 
-				    u_int32_t  flags)
+				    uint32_t verbosity, 
+				    uint32_t  flags)
 {
   return MP4CreateEx(fileName, verbosity, flags);
 }
 
 extern "C" MP4FileHandle MP4CreateEx (const char* fileName,
-				      u_int32_t verbosity, 
-				      u_int32_t  flags,
+				      uint32_t verbosity, 
+				      uint32_t  flags,
 				      int add_ftyp,
 				      int add_iods,
 				      char* majorBrand, 
-				      u_int32_t minorVersion,
+				      uint32_t minorVersion,
 				      char** supportedBrands, 
-				      u_int32_t supportedBrandsCount)
+				      uint32_t supportedBrandsCount)
 {
 	MP4File* pFile = NULL;
 	try {
@@ -113,7 +113,7 @@ extern "C" MP4FileHandle MP4CreateEx (const char* fileName,
 }
 
 extern "C" MP4FileHandle MP4Modify(const char* fileName, 
-	u_int32_t verbosity, u_int32_t flags)
+	uint32_t verbosity, uint32_t flags)
 {
 	MP4File* pFile = NULL;
 	try {
@@ -133,7 +133,7 @@ extern "C" MP4FileHandle MP4Modify(const char* fileName,
 
 extern "C" bool MP4Optimize(const char* existingFileName, 
 	const char* newFileName, 
-	u_int32_t verbosity)
+	uint32_t verbosity)
 {
 	try {
 		MP4File* pFile = new MP4File(verbosity);
@@ -185,7 +185,7 @@ extern "C" bool MP4Dump(
 
 /* specific file properties */
 
-extern "C" u_int32_t MP4GetVerbosity(MP4FileHandle hFile)
+extern "C" uint32_t MP4GetVerbosity(MP4FileHandle hFile)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -199,7 +199,7 @@ extern "C" u_int32_t MP4GetVerbosity(MP4FileHandle hFile)
 	return 0;
 }
 
-extern "C" void MP4SetVerbosity(MP4FileHandle hFile, u_int32_t verbosity)
+extern "C" void MP4SetVerbosity(MP4FileHandle hFile, uint32_t verbosity)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -228,7 +228,7 @@ extern "C" MP4Duration MP4GetDuration(MP4FileHandle hFile)
 	return MP4_INVALID_DURATION;
 }
 
-extern "C" u_int32_t MP4GetTimeScale(MP4FileHandle hFile)
+extern "C" uint32_t MP4GetTimeScale(MP4FileHandle hFile)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -242,7 +242,7 @@ extern "C" u_int32_t MP4GetTimeScale(MP4FileHandle hFile)
 	return 0;
 }
 
-extern "C" bool MP4SetTimeScale(MP4FileHandle hFile, u_int32_t value)
+extern "C" bool MP4SetTimeScale(MP4FileHandle hFile, uint32_t value)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -257,7 +257,7 @@ extern "C" bool MP4SetTimeScale(MP4FileHandle hFile, u_int32_t value)
 	return false;
 }
 
-extern "C" u_int8_t MP4GetODProfileLevel(MP4FileHandle hFile)
+extern "C" uint8_t MP4GetODProfileLevel(MP4FileHandle hFile)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -271,7 +271,7 @@ extern "C" u_int8_t MP4GetODProfileLevel(MP4FileHandle hFile)
 	return 0;
 }
 
-extern "C" bool MP4SetODProfileLevel(MP4FileHandle hFile, u_int8_t value)
+extern "C" bool MP4SetODProfileLevel(MP4FileHandle hFile, uint8_t value)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -286,7 +286,7 @@ extern "C" bool MP4SetODProfileLevel(MP4FileHandle hFile, u_int8_t value)
 	return false;
 }
 
-extern "C" u_int8_t MP4GetSceneProfileLevel(MP4FileHandle hFile)
+extern "C" uint8_t MP4GetSceneProfileLevel(MP4FileHandle hFile)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -300,7 +300,7 @@ extern "C" u_int8_t MP4GetSceneProfileLevel(MP4FileHandle hFile)
 	return 0;
 }
 
-extern "C" bool MP4SetSceneProfileLevel(MP4FileHandle hFile, u_int8_t value)
+extern "C" bool MP4SetSceneProfileLevel(MP4FileHandle hFile, uint8_t value)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -315,7 +315,7 @@ extern "C" bool MP4SetSceneProfileLevel(MP4FileHandle hFile, u_int8_t value)
 	return false;
 }
 
-extern "C" u_int8_t MP4GetVideoProfileLevel(MP4FileHandle hFile,
+extern "C" uint8_t MP4GetVideoProfileLevel(MP4FileHandle hFile,
 					    MP4TrackId trackId)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
@@ -357,7 +357,7 @@ extern "C" u_int8_t MP4GetVideoProfileLevel(MP4FileHandle hFile,
 	return 0;
 }
 
-extern "C" void MP4SetVideoProfileLevel(MP4FileHandle hFile, u_int8_t value)
+extern "C" void MP4SetVideoProfileLevel(MP4FileHandle hFile, uint8_t value)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -372,7 +372,7 @@ extern "C" void MP4SetVideoProfileLevel(MP4FileHandle hFile, u_int8_t value)
 	return ;
 }
 
-extern "C" u_int8_t MP4GetAudioProfileLevel(MP4FileHandle hFile)
+extern "C" uint8_t MP4GetAudioProfileLevel(MP4FileHandle hFile)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -386,7 +386,7 @@ extern "C" u_int8_t MP4GetAudioProfileLevel(MP4FileHandle hFile)
 	return 0;
 }
 
-extern "C" void MP4SetAudioProfileLevel(MP4FileHandle hFile, u_int8_t value)
+extern "C" void MP4SetAudioProfileLevel(MP4FileHandle hFile, uint8_t value)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -399,7 +399,7 @@ extern "C" void MP4SetAudioProfileLevel(MP4FileHandle hFile, u_int8_t value)
 	}
 }
 
-extern "C" u_int8_t MP4GetGraphicsProfileLevel(MP4FileHandle hFile)
+extern "C" uint8_t MP4GetGraphicsProfileLevel(MP4FileHandle hFile)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -413,7 +413,7 @@ extern "C" u_int8_t MP4GetGraphicsProfileLevel(MP4FileHandle hFile)
 	return 0;
 }
 
-extern "C" bool MP4SetGraphicsProfileLevel(MP4FileHandle hFile, u_int8_t value)
+extern "C" bool MP4SetGraphicsProfileLevel(MP4FileHandle hFile, uint8_t value)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -444,7 +444,7 @@ extern "C" bool MP4HaveAtom (MP4FileHandle hFile, const char *atomName)
 }
 
 extern "C" bool MP4GetIntegerProperty(
-	MP4FileHandle hFile, const char* propName, u_int64_t *retvalue)
+	MP4FileHandle hFile, const char* propName, uint64_t *retvalue)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -494,7 +494,7 @@ extern "C" bool MP4GetStringProperty(
 
 extern "C" bool MP4GetBytesProperty(
 	MP4FileHandle hFile, const char* propName, 
-	u_int8_t** ppValue, u_int32_t* pValueSize)
+	uint8_t** ppValue, uint32_t* pValueSize)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -561,7 +561,7 @@ extern "C" bool MP4SetStringProperty(
 
 extern "C" bool MP4SetBytesProperty(
 	MP4FileHandle hFile, const char* propName, 
-	const u_int8_t* pValue, u_int32_t valueSize)
+	const uint8_t* pValue, uint32_t valueSize)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -638,9 +638,9 @@ extern "C" MP4TrackId MP4AddSceneTrack(MP4FileHandle hFile)
 
 extern "C" MP4TrackId MP4AddAudioTrack(
 	MP4FileHandle hFile, 
-	u_int32_t timeScale, 
+	uint32_t timeScale, 
 	MP4Duration sampleDuration, 
-	u_int8_t audioType)
+	uint8_t audioType)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -678,10 +678,10 @@ extern "C" mp4v2_ismacrypParams *MP4DefaultISMACrypParams(mp4v2_ismacrypParams *
 
 
 extern "C" MP4TrackId MP4AddEncAudioTrack(MP4FileHandle hFile, 
-					  u_int32_t timeScale, 
+					  uint32_t timeScale, 
 					  MP4Duration sampleDuration,
                                           mp4v2_ismacrypParams *icPp,
-					  u_int8_t audioType)
+					  uint8_t audioType)
 {
   if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
     try {
@@ -707,10 +707,10 @@ extern "C" MP4TrackId MP4AddEncAudioTrack(MP4FileHandle hFile,
 }
 extern "C" MP4TrackId MP4AddAmrAudioTrack(
 		MP4FileHandle hFile,
-		u_int32_t timeScale,
-		u_int16_t modeSet,
-		u_int8_t modeChangePeriod,
-		u_int8_t framesPerSample,
+		uint32_t timeScale,
+		uint16_t modeSet,
+		uint8_t modeChangePeriod,
+		uint8_t framesPerSample,
 		bool isAmrWB)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
@@ -729,7 +729,7 @@ extern "C" MP4TrackId MP4AddAmrAudioTrack(
 extern "C" void MP4SetAmrVendor(
 		MP4FileHandle hFile,
 		MP4TrackId trackId,
-		u_int32_t vendor)
+		uint32_t vendor)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -746,7 +746,7 @@ extern "C" void MP4SetAmrVendor(
 extern "C" void MP4SetAmrDecoderVersion(
 		MP4FileHandle hFile,
 		MP4TrackId trackId,
-		u_int8_t decoderVersion)
+		uint8_t decoderVersion)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -763,7 +763,7 @@ extern "C" void MP4SetAmrDecoderVersion(
 extern "C" void MP4SetAmrModeSet(
 		MP4FileHandle hFile,
 		MP4TrackId trackId,
-		u_int16_t modeSet)
+		uint16_t modeSet)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -833,11 +833,11 @@ extern "C" const char *MP4GetHrefTrackBaseUrl (MP4FileHandle hFile,
 
 extern "C" MP4TrackId MP4AddVideoTrack(
 	MP4FileHandle hFile, 
-	u_int32_t timeScale, 
+	uint32_t timeScale, 
 	MP4Duration sampleDuration,
-	u_int16_t width, 
-	u_int16_t height, 
-	u_int8_t videoType)
+	uint16_t width, 
+	uint16_t height, 
+	uint8_t videoType)
 {
   if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
     try {
@@ -858,12 +858,12 @@ extern "C" MP4TrackId MP4AddVideoTrack(
 }
 
 extern "C" MP4TrackId MP4AddEncVideoTrack(MP4FileHandle hFile, 
-					  u_int32_t timeScale, 
+					  uint32_t timeScale, 
 					  MP4Duration sampleDuration,
-					  u_int16_t width, 
-					  u_int16_t height, 
+					  uint16_t width, 
+					  uint16_t height, 
                                           mp4v2_ismacrypParams *icPp,
-					  u_int8_t videoType,
+					  uint8_t videoType,
 					  const char *oFormat)
 {
   if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
@@ -892,7 +892,7 @@ extern "C" MP4TrackId MP4AddEncVideoTrack(MP4FileHandle hFile,
 }
 
 extern "C" MP4TrackId MP4AddColr(
-	MP4FileHandle hFile, MP4TrackId refTrackId, u_int16_t pri, u_int16_t tran, u_int16_t mat)
+	MP4FileHandle hFile, MP4TrackId refTrackId, uint16_t pri, uint16_t tran, uint16_t mat)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -908,10 +908,10 @@ extern "C" MP4TrackId MP4AddColr(
 
 
 extern "C" MP4TrackId MP4AddH264VideoTrack(MP4FileHandle hFile, 
-					   u_int32_t timeScale, 
+					   uint32_t timeScale, 
 					   MP4Duration sampleDuration,
-					   u_int16_t width, 
-					   u_int16_t height, 
+					   uint16_t width, 
+					   uint16_t height, 
 					   uint8_t AVCProfileIndication,
 					   uint8_t profile_compat,
 					   uint8_t AVCLevelIndication,
@@ -940,10 +940,10 @@ extern "C" MP4TrackId MP4AddH264VideoTrack(MP4FileHandle hFile,
 
 extern "C" MP4TrackId MP4AddEncH264VideoTrack(
 	MP4FileHandle hFile, 
-	u_int32_t timeScale, 
+	uint32_t timeScale, 
 	MP4Duration sampleDuration,
-	u_int16_t width, 
-	u_int16_t height, 
+	uint16_t width, 
+	uint16_t height, 
 	MP4FileHandle srcFile, 
 	MP4TrackId srcTrackId, 
     mp4v2_ismacrypParams *icPp
@@ -1023,14 +1023,14 @@ extern "C" void MP4AddH264PictureParameterSet (MP4FileHandle hFile,
 
 extern "C" MP4TrackId MP4AddH263VideoTrack(
 		MP4FileHandle hFile,
-		u_int32_t timeScale,
+		uint32_t timeScale,
 		MP4Duration sampleDuration,
-		u_int16_t width,
-		u_int16_t height,
-		u_int8_t h263Level,
-		u_int8_t h263Profile,
-		u_int32_t avgBitrate,
-		u_int32_t maxBitrate)
+		uint16_t width,
+		uint16_t height,
+		uint8_t h263Level,
+		uint8_t h263Profile,
+		uint32_t avgBitrate,
+		uint32_t maxBitrate)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -1049,7 +1049,7 @@ extern "C" MP4TrackId MP4AddH263VideoTrack(
 extern "C" void MP4SetH263Vendor(
 		MP4FileHandle hFile,
 		MP4TrackId trackId,
-		u_int32_t vendor)
+		uint32_t vendor)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -1066,7 +1066,7 @@ extern "C" void MP4SetH263Vendor(
 extern "C" void MP4SetH263DecoderVersion(
 		MP4FileHandle hFile,
 		MP4TrackId trackId,
-		u_int8_t decoderVersion)
+		uint8_t decoderVersion)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		
@@ -1084,8 +1084,8 @@ extern "C" void MP4SetH263DecoderVersion(
 extern "C" void MP4SetH263Bitrates(
 		MP4FileHandle hFile,
 		MP4TrackId trackId,
-		u_int32_t avgBitrate,
-		u_int32_t maxBitrate)
+		uint32_t avgBitrate,
+		uint32_t maxBitrate)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 
@@ -1146,7 +1146,7 @@ extern "C" MP4TrackId MP4AddChapterTextTrack(
 }
 
 extern "C" MP4TrackId MP4AddPixelAspectRatio(
-	MP4FileHandle hFile, MP4TrackId refTrackId, u_int32_t hSpacing, u_int32_t vSpacing)
+	MP4FileHandle hFile, MP4TrackId refTrackId, uint32_t hSpacing, uint32_t vSpacing)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -1299,8 +1299,8 @@ extern "C" MP4TrackId MP4CloneTrack (MP4FileHandle srcFile,
   if (MP4_IS_AUDIO_TRACK_TYPE(trackType) 
       || MP4_IS_VIDEO_TRACK_TYPE(trackType)) {
     // copy track ES configuration
-    u_int8_t* pConfig = NULL;
-    u_int32_t configSize = 0;
+    uint8_t* pConfig = NULL;
+    uint32_t configSize = 0;
     uint32_t verb = MP4GetVerbosity(srcFile);
     MP4SetVerbosity(srcFile, verb & ~(MP4_DETAILS_ERROR));
     bool haveEs = MP4GetTrackESConfiguration(srcFile, 
@@ -1330,8 +1330,8 @@ extern "C" MP4TrackId MP4CloneTrack (MP4FileHandle srcFile,
 
     char* payloadName = NULL;
     char *encodingParms = NULL;
-    u_int8_t payloadNumber;
-    u_int16_t maxPayloadSize;
+    uint8_t payloadNumber;
+    uint16_t maxPayloadSize;
 
     if (MP4GetHintTrackRtpPayload(
 			      srcFile,
@@ -1458,8 +1458,8 @@ extern "C" MP4TrackId MP4EncAndCloneTrack(MP4FileHandle srcFile,
   if (MP4_IS_AUDIO_TRACK_TYPE(trackType) 
    || MP4_IS_VIDEO_TRACK_TYPE(trackType)) {
     // copy track ES configuration
-    u_int8_t* pConfig = NULL;
-    u_int32_t configSize = 0;
+    uint8_t* pConfig = NULL;
+    uint32_t configSize = 0;
     if (MP4GetTrackESConfiguration(srcFile, srcTrackId,
 				   &pConfig, &configSize)) {
     
@@ -1479,8 +1479,8 @@ extern "C" MP4TrackId MP4EncAndCloneTrack(MP4FileHandle srcFile,
 
     char* payloadName = NULL;
     char *encodingParms = NULL;
-    u_int8_t payloadNumber;
-    u_int16_t maxPayloadSize;
+    uint8_t payloadNumber;
+    uint16_t maxPayloadSize;
 
     if (MP4GetHintTrackRtpPayload(
 				  srcFile,
@@ -1600,7 +1600,7 @@ extern "C" MP4TrackId MP4EncAndCopyTrack(MP4FileHandle srcFile,
 					 MP4TrackId srcTrackId,
                                          mp4v2_ismacrypParams *icPp,
                                          encryptFunc_t encfcnp,
-                                         u_int32_t encfcnparam1,
+                                         uint32_t encfcnparam1,
 					 MP4FileHandle dstFile,
 					 bool applyEdits,
 					 MP4TrackId dstHintTrackReferenceTrack
@@ -1705,10 +1705,10 @@ extern "C" void MP4DeleteTrack(
 	return;
 }
 
-extern "C" u_int32_t MP4GetNumberOfTracks(
+extern "C" uint32_t MP4GetNumberOfTracks(
 	MP4FileHandle hFile, 
 	const char* type,
-	u_int8_t subType)
+	uint8_t subType)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -1724,9 +1724,9 @@ extern "C" u_int32_t MP4GetNumberOfTracks(
 
 extern "C" MP4TrackId MP4FindTrackId(
 	MP4FileHandle hFile, 
-	u_int16_t index, 
+	uint16_t index, 
 	const char* type,
-	u_int8_t subType)
+	uint8_t subType)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -1740,7 +1740,7 @@ extern "C" MP4TrackId MP4FindTrackId(
 	return MP4_INVALID_TRACK_ID;
 }
 
-extern "C" u_int16_t MP4FindTrackIndex(
+extern "C" uint16_t MP4FindTrackIndex(
 	MP4FileHandle hFile, MP4TrackId trackId)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
@@ -1752,7 +1752,7 @@ extern "C" u_int16_t MP4FindTrackIndex(
 			delete e;
 		}
 	}
-	return (u_int16_t)-1;
+	return (uint16_t)-1;
 }
 
 /* specific track properties */
@@ -1788,7 +1788,7 @@ extern "C" const char* MP4GetTrackMediaDataName(
 
 extern "C" bool MP4GetTrackMediaDataOriginalFormat(
 	MP4FileHandle hFile, MP4TrackId trackId, char *originalFormat,
-	u_int32_t buflen)
+	uint32_t buflen)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -1819,7 +1819,7 @@ extern "C" MP4Duration MP4GetTrackDuration(
 	return MP4_INVALID_DURATION;
 }
 
-extern "C" u_int32_t MP4GetTrackTimeScale(
+extern "C" uint32_t MP4GetTrackTimeScale(
 	MP4FileHandle hFile, MP4TrackId trackId)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
@@ -1835,7 +1835,7 @@ extern "C" u_int32_t MP4GetTrackTimeScale(
 }
 
 extern "C" void MP4SetTrackTimeScale(
-	MP4FileHandle hFile, MP4TrackId trackId, u_int32_t value)
+	MP4FileHandle hFile, MP4TrackId trackId, uint32_t value)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -1850,7 +1850,7 @@ extern "C" void MP4SetTrackTimeScale(
 	return;
 }
 
-extern "C" u_int8_t MP4GetTrackAudioMpeg4Type(
+extern "C" uint8_t MP4GetTrackAudioMpeg4Type(
 	MP4FileHandle hFile, MP4TrackId trackId)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
@@ -1869,7 +1869,7 @@ extern "C" u_int8_t MP4GetTrackAudioMpeg4Type(
 
 // Replacement to MP4GetTrackVideoType and MP4GetTrackAudioType
 // Basically does the same thing but with a more self-explanatory name
-extern "C" u_int8_t MP4GetTrackEsdsObjectTypeId(
+extern "C" uint8_t MP4GetTrackEsdsObjectTypeId(
      MP4FileHandle hFile, MP4TrackId trackId)
 {
   if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
@@ -1900,7 +1900,7 @@ extern "C" MP4Duration MP4GetTrackFixedSampleDuration(
 	return MP4_INVALID_DURATION;
 }
 
-extern "C" u_int32_t MP4GetTrackBitRate(
+extern "C" uint32_t MP4GetTrackBitRate(
 	MP4FileHandle hFile, MP4TrackId trackId)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
@@ -1940,7 +1940,7 @@ extern "C" u_int32_t MP4GetTrackBitRate(
 
 extern "C" bool MP4GetTrackESConfiguration(
 	MP4FileHandle hFile, MP4TrackId trackId, 
-	u_int8_t** ppConfig, u_int32_t* pConfigSize)
+	uint8_t** ppConfig, uint32_t* pConfigSize)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -1959,7 +1959,7 @@ extern "C" bool MP4GetTrackESConfiguration(
 }
 extern "C" bool MP4GetTrackVideoMetadata(
 	MP4FileHandle hFile, MP4TrackId trackId, 
-	u_int8_t** ppConfig, u_int32_t* pConfigSize)
+	uint8_t** ppConfig, uint32_t* pConfigSize)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -1979,7 +1979,7 @@ extern "C" bool MP4GetTrackVideoMetadata(
 
 extern "C" bool MP4SetTrackESConfiguration(
 	MP4FileHandle hFile, MP4TrackId trackId, 
-	const u_int8_t* pConfig, u_int32_t configSize)
+	const uint8_t* pConfig, uint32_t configSize)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -2075,7 +2075,7 @@ extern "C" MP4SampleId MP4GetTrackNumberOfSamples(
 	return 0;
 }
 
-extern "C" u_int16_t MP4GetTrackVideoWidth(
+extern "C" uint16_t MP4GetTrackVideoWidth(
 	MP4FileHandle hFile, MP4TrackId trackId)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
@@ -2091,7 +2091,7 @@ extern "C" u_int16_t MP4GetTrackVideoWidth(
 	return 0;
 }
 
-extern "C" u_int16_t MP4GetTrackVideoHeight(
+extern "C" uint16_t MP4GetTrackVideoHeight(
 	MP4FileHandle hFile, MP4TrackId trackId)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
@@ -2180,7 +2180,7 @@ extern "C" bool MP4HaveTrackAtom (MP4FileHandle hFile,
 extern "C" bool MP4GetTrackIntegerProperty (
 	MP4FileHandle hFile, MP4TrackId trackId, 
 	const char* propName,
-	u_int64_t *retvalue)
+	uint64_t *retvalue)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -2234,7 +2234,7 @@ extern "C" bool MP4GetTrackStringProperty(
 
 extern "C" bool MP4GetTrackBytesProperty(
 	MP4FileHandle hFile, MP4TrackId trackId, const char* propName, 
-	u_int8_t** ppValue, u_int32_t* pValueSize)
+	uint8_t** ppValue, uint32_t* pValueSize)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -2306,7 +2306,7 @@ extern "C" bool MP4SetTrackStringProperty(
 
 extern "C" bool MP4SetTrackBytesProperty(
 	MP4FileHandle hFile, MP4TrackId trackId, 
-	const char* propName, const u_int8_t* pValue, u_int32_t valueSize)
+	const char* propName, const uint8_t* pValue, uint32_t valueSize)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -2330,8 +2330,8 @@ extern "C" bool MP4ReadSample(
 	MP4TrackId trackId, 
 	MP4SampleId sampleId,
 	/* output parameters */
-	u_int8_t** ppBytes, 
-	u_int32_t* pNumBytes, 
+	uint8_t** ppBytes, 
+	uint32_t* pNumBytes, 
 	MP4Timestamp* pStartTime, 
 	MP4Duration* pDuration,
 	MP4Duration* pRenderingOffset, 
@@ -2365,8 +2365,8 @@ extern "C" bool MP4ReadSampleFromTime(
 	MP4TrackId trackId, 
 	MP4Timestamp when,
 	/* output parameters */
-	u_int8_t** ppBytes, 
-	u_int32_t* pNumBytes, 
+	uint8_t** ppBytes, 
+	uint32_t* pNumBytes, 
 	MP4Timestamp* pStartTime, 
 	MP4Duration* pDuration,
 	MP4Duration* pRenderingOffset, 
@@ -2402,8 +2402,8 @@ extern "C" bool MP4ReadSampleFromTime(
 extern "C" bool MP4WriteSample(
 	MP4FileHandle hFile,
 	MP4TrackId trackId,
-	const u_int8_t* pBytes, 
-	u_int32_t numBytes,
+	const uint8_t* pBytes, 
+	uint32_t numBytes,
 	MP4Duration duration,
 	MP4Duration renderingOffset, 
 	bool isSyncSample)
@@ -2436,8 +2436,8 @@ extern "C" bool MP4CopySample(
 	MP4Duration dstSampleDuration)
 {
 	bool rc;
-	u_int8_t* pBytes = NULL; 
-	u_int32_t numBytes = 0;
+	uint8_t* pBytes = NULL; 
+	uint32_t numBytes = 0;
 	MP4Duration sampleDuration;
 	MP4Duration renderingOffset;
 	bool isSyncSample;
@@ -2491,16 +2491,16 @@ extern "C" bool MP4EncAndCopySample(
 	MP4TrackId srcTrackId, 
 	MP4SampleId srcSampleId,
         encryptFunc_t encfcnp,
-        u_int32_t encfcnparam1,
+        uint32_t encfcnparam1,
 	MP4FileHandle dstFile,
 	MP4TrackId dstTrackId,
 	MP4Duration dstSampleDuration)
 {
 	bool rc;
-	u_int8_t* pBytes = NULL; 
-	u_int32_t numBytes = 0;
-	u_int8_t* encSampleData = NULL;
-	u_int32_t encSampleLength = 0;
+	uint8_t* pBytes = NULL; 
+	uint32_t numBytes = 0;
+	uint8_t* encSampleData = NULL;
+	uint32_t encSampleLength = 0;
 	MP4Duration sampleDuration;
 	MP4Duration renderingOffset;
 	bool isSyncSample;
@@ -2574,7 +2574,7 @@ extern "C" bool MP4ReferenceSample(
 	return false;
 }
 
-extern "C" u_int32_t MP4GetSampleSize(
+extern "C" uint32_t MP4GetSampleSize(
 	MP4FileHandle hFile,
 	MP4TrackId trackId, 
 	MP4SampleId sampleId)
@@ -2592,7 +2592,7 @@ extern "C" u_int32_t MP4GetSampleSize(
 	return 0;
 }
 
-extern "C" u_int32_t MP4GetTrackMaxSampleSize(
+extern "C" uint32_t MP4GetTrackMaxSampleSize(
 	MP4FileHandle hFile,
 	MP4TrackId trackId)
 {
@@ -2720,10 +2720,10 @@ extern "C" int8_t MP4GetSampleSync(
 }
 
 
-extern "C" u_int64_t MP4ConvertFromMovieDuration(
+extern "C" uint64_t MP4ConvertFromMovieDuration(
 	MP4FileHandle hFile,
 	MP4Duration duration,
-	u_int32_t timeScale)
+	uint32_t timeScale)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -2735,14 +2735,14 @@ extern "C" u_int64_t MP4ConvertFromMovieDuration(
 			delete e;
 		}
 	}
-	return (u_int64_t)MP4_INVALID_DURATION;
+	return (uint64_t)MP4_INVALID_DURATION;
 }
 
-extern "C" u_int64_t MP4ConvertFromTrackTimestamp(
+extern "C" uint64_t MP4ConvertFromTrackTimestamp(
 	MP4FileHandle hFile,
 	MP4TrackId trackId, 
 	MP4Timestamp timeStamp,
-	u_int32_t timeScale)
+	uint32_t timeScale)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -2754,14 +2754,14 @@ extern "C" u_int64_t MP4ConvertFromTrackTimestamp(
 			delete e;
 		}
 	}
-	return (u_int64_t)MP4_INVALID_TIMESTAMP;
+	return (uint64_t)MP4_INVALID_TIMESTAMP;
 }
 
 extern "C" MP4Timestamp MP4ConvertToTrackTimestamp(
 	MP4FileHandle hFile,
 	MP4TrackId trackId, 
-	u_int64_t timeStamp,
-	u_int32_t timeScale)
+	uint64_t timeStamp,
+	uint32_t timeScale)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -2776,11 +2776,11 @@ extern "C" MP4Timestamp MP4ConvertToTrackTimestamp(
 	return MP4_INVALID_TIMESTAMP;
 }
 
-extern "C" u_int64_t MP4ConvertFromTrackDuration(
+extern "C" uint64_t MP4ConvertFromTrackDuration(
 	MP4FileHandle hFile,
 	MP4TrackId trackId, 
 	MP4Duration duration,
-	u_int32_t timeScale)
+	uint32_t timeScale)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -2792,14 +2792,14 @@ extern "C" u_int64_t MP4ConvertFromTrackDuration(
 			delete e;
 		}
 	}
-	return (u_int64_t)MP4_INVALID_DURATION;
+	return (uint64_t)MP4_INVALID_DURATION;
 }
 
 extern "C" MP4Duration MP4ConvertToTrackDuration(
 	MP4FileHandle hFile,
 	MP4TrackId trackId, 
-	u_int64_t duration,
-	u_int32_t timeScale)
+	uint64_t duration,
+	uint32_t timeScale)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -2818,8 +2818,8 @@ extern "C" bool MP4GetHintTrackRtpPayload(
 	MP4FileHandle hFile,
 	MP4TrackId hintTrackId,
 	char** ppPayloadName,
-	u_int8_t* pPayloadNumber,
-	u_int16_t* pMaxPayloadSize,
+	uint8_t* pPayloadNumber,
+	uint16_t* pMaxPayloadSize,
 	char **ppEncodingParams)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
@@ -2841,8 +2841,8 @@ extern "C" bool MP4SetHintTrackRtpPayload(
 	MP4FileHandle hFile,
 	MP4TrackId hintTrackId,
 	const char* pPayloadName,
-	u_int8_t* pPayloadNumber,
-	u_int16_t maxPayloadSize,
+	uint8_t* pPayloadNumber,
+	uint16_t maxPayloadSize,
 	const char *encode_params,
 	bool include_rtp_map,
 	bool include_mpeg4_esid)
@@ -2984,7 +2984,7 @@ extern "C" bool MP4ReadRtpHint(
 	MP4FileHandle hFile,
 	MP4TrackId hintTrackId,
 	MP4SampleId hintSampleId,
-	u_int16_t* pNumPackets)
+	uint16_t* pNumPackets)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -3000,7 +3000,7 @@ extern "C" bool MP4ReadRtpHint(
 	return false;
 }
 
-extern "C" u_int16_t MP4GetRtpHintNumberOfPackets(
+extern "C" uint16_t MP4GetRtpHintNumberOfPackets(
 	MP4FileHandle hFile,
 	MP4TrackId hintTrackId)
 {
@@ -3019,7 +3019,7 @@ extern "C" u_int16_t MP4GetRtpHintNumberOfPackets(
 extern "C" int8_t MP4GetRtpPacketBFrame(
 	MP4FileHandle hFile,
 	MP4TrackId hintTrackId,
-	u_int16_t packetIndex)
+	uint16_t packetIndex)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -3037,7 +3037,7 @@ extern "C" int8_t MP4GetRtpPacketBFrame(
 extern "C" int32_t MP4GetRtpPacketTransmitOffset(
 	MP4FileHandle hFile,
 	MP4TrackId hintTrackId,
-	u_int16_t packetIndex)
+	uint16_t packetIndex)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -3055,10 +3055,10 @@ extern "C" int32_t MP4GetRtpPacketTransmitOffset(
 extern "C" bool MP4ReadRtpPacket(
 	MP4FileHandle hFile,
 	MP4TrackId hintTrackId,
-	u_int16_t packetIndex,
-	u_int8_t** ppBytes, 
-	u_int32_t* pNumBytes,
-	u_int32_t ssrc,
+	uint16_t packetIndex,
+	uint8_t** ppBytes, 
+	uint32_t* pNumBytes,
+	uint32_t ssrc,
 	bool includeHeader,
 	bool includePayload)
 {
@@ -3124,7 +3124,7 @@ extern "C" bool MP4AddRtpVideoHint(
 	MP4FileHandle hFile,
 	MP4TrackId hintTrackId,
 	bool isBframe, 
-	u_int32_t timestampOffset)
+	uint32_t timestampOffset)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -3163,8 +3163,8 @@ extern "C" bool MP4AddRtpPacket(
 extern "C" bool MP4AddRtpImmediateData(
 	MP4FileHandle hFile,
 	MP4TrackId hintTrackId,
-	const u_int8_t* pBytes,
-	u_int32_t numBytes)
+	const uint8_t* pBytes,
+	uint32_t numBytes)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -3184,8 +3184,8 @@ extern "C" bool MP4AddRtpSampleData(
 	MP4FileHandle hFile,
 	MP4TrackId hintTrackId,
 	MP4SampleId sampleId,
-	u_int32_t dataOffset,
-	u_int32_t dataLength)
+	uint32_t dataOffset,
+	uint32_t dataLength)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {
@@ -3241,11 +3241,11 @@ extern "C" bool MP4WriteRtpHint(
 
 extern "C" bool MP4Make3GPCompliant(
 	const char* fileName,
-	u_int32_t verbosity,
+	uint32_t verbosity,
 	char* majorBrand,
-	u_int32_t minorVersion,
+	uint32_t minorVersion,
 	char** supportedBrands,
-	u_int32_t supportedBrandsCount,
+	uint32_t supportedBrandsCount,
 	bool deleteIodsAtom)
 {
 	MP4File* pFile;
@@ -3271,7 +3271,7 @@ extern "C" bool MP4Make3GPCompliant(
 
 extern "C" bool MP4MakeIsmaCompliant(
 	const char* fileName, 
-	u_int32_t verbosity,
+	uint32_t verbosity,
 	bool addIsmaComplianceSdp)
 {
 	MP4File* pFile;
@@ -3294,23 +3294,23 @@ extern "C" bool MP4MakeIsmaCompliant(
 }
 
 extern "C" char* MP4MakeIsmaSdpIod(
-	u_int8_t videoProfile,
-	u_int32_t videoBitrate,
-	u_int8_t* videoConfig,
-	u_int32_t videoConfigLength,
-	u_int8_t audioProfile,
-	u_int32_t audioBitrate,
-	u_int8_t* audioConfig,
-	u_int32_t audioConfigLength,
-	u_int32_t verbosity)
+	uint8_t videoProfile,
+	uint32_t videoBitrate,
+	uint8_t* videoConfig,
+	uint32_t videoConfigLength,
+	uint8_t audioProfile,
+	uint32_t audioBitrate,
+	uint8_t* audioConfig,
+	uint32_t audioConfigLength,
+	uint32_t verbosity)
 {
 	MP4File* pFile = NULL;
 
 	try {
 		pFile = new MP4File(verbosity);
 
-		u_int8_t* pBytes = NULL;
-		u_int64_t numBytes = 0;
+		uint8_t* pBytes = NULL;
+		uint64_t numBytes = 0;
 
 		pFile->CreateIsmaIodFromParams(
 			videoProfile,
@@ -3398,7 +3398,7 @@ extern "C" bool MP4DeleteTrackEdit(
 	return false;
 }
 
-extern "C" u_int32_t MP4GetTrackNumberOfEdits(
+extern "C" uint32_t MP4GetTrackNumberOfEdits(
 	MP4FileHandle hFile,
 	MP4TrackId trackId)
 {
@@ -3548,8 +3548,8 @@ extern "C" bool MP4ReadSampleFromEditTime(
 	MP4TrackId trackId, 
 	MP4Timestamp when,
 	/* output parameters */
-	u_int8_t** ppBytes, 
-	u_int32_t* pNumBytes, 
+	uint8_t** ppBytes, 
+	uint32_t* pNumBytes, 
 	MP4Timestamp* pStartTime, 
 	MP4Duration* pDuration,
 	MP4Duration* pRenderingOffset, 
@@ -3598,8 +3598,8 @@ extern "C" MP4SampleId MP4GetSampleIdFromEditTime(
 /* Utlities */
 
 extern "C" char* MP4BinaryToBase16(
-	const u_int8_t* pData, 
-	u_int32_t dataSize)
+	const uint8_t* pData, 
+	uint32_t dataSize)
 {
 	if (pData || dataSize == 0) {
 		try {
@@ -3613,8 +3613,8 @@ extern "C" char* MP4BinaryToBase16(
 }
 
 extern "C" char* MP4BinaryToBase64(
-	const u_int8_t* pData, 
-	u_int32_t dataSize)
+	const uint8_t* pData, 
+	uint32_t dataSize)
 {
 	if (pData || dataSize == 0) {
 		try {
@@ -3628,9 +3628,9 @@ extern "C" char* MP4BinaryToBase64(
 }
 
 /* iTunes meta data handling */
-extern "C" bool MP4GetMetadataByIndex(MP4FileHandle hFile, u_int32_t index,
+extern "C" bool MP4GetMetadataByIndex(MP4FileHandle hFile, uint32_t index,
 				      char** ppName,
-				      u_int8_t** ppValue, u_int32_t* pValueSize)
+				      uint8_t** ppValue, uint32_t* pValueSize)
 {
   if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
     try {
@@ -3968,7 +3968,7 @@ extern "C" bool MP4DeleteMetadataYear(MP4FileHandle hFile)
 }
 
 extern "C" bool MP4SetMetadataTrack(MP4FileHandle hFile,
-				    u_int16_t track, u_int16_t totalTracks)
+				    uint16_t track, uint16_t totalTracks)
 {
   if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
     try {
@@ -3983,7 +3983,7 @@ extern "C" bool MP4SetMetadataTrack(MP4FileHandle hFile,
 }
  
 extern "C" bool MP4GetMetadataTrack(MP4FileHandle hFile,
-				    u_int16_t* track, u_int16_t* totalTracks)
+				    uint16_t* track, uint16_t* totalTracks)
 {
   if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
     try {
@@ -4012,7 +4012,7 @@ extern "C" bool MP4DeleteMetadataTrack(MP4FileHandle hFile)
 }
 
 extern "C" bool MP4SetMetadataDisk(MP4FileHandle hFile,
-				   u_int16_t disk, u_int16_t totalDisks)
+				   uint16_t disk, uint16_t totalDisks)
 {
   if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
     try {
@@ -4027,7 +4027,7 @@ extern "C" bool MP4SetMetadataDisk(MP4FileHandle hFile,
 }
  
 extern "C" bool MP4GetMetadataDisk(MP4FileHandle hFile,
-				   u_int16_t* disk, u_int16_t* totalDisks)
+				   uint16_t* disk, uint16_t* totalDisks)
 {
   if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
     try {
@@ -4139,7 +4139,7 @@ extern "C" bool MP4DeleteMetadataGrouping(MP4FileHandle hFile)
   return false;
 }
 
-extern "C" bool MP4SetMetadataTempo(MP4FileHandle hFile, u_int16_t tempo)
+extern "C" bool MP4SetMetadataTempo(MP4FileHandle hFile, uint16_t tempo)
 {
   if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
     try {
@@ -4153,7 +4153,7 @@ extern "C" bool MP4SetMetadataTempo(MP4FileHandle hFile, u_int16_t tempo)
   return false;
 }
  
-extern "C" bool MP4GetMetadataTempo(MP4FileHandle hFile, u_int16_t* tempo)
+extern "C" bool MP4GetMetadataTempo(MP4FileHandle hFile, uint16_t* tempo)
 {
   if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
     try {
@@ -4181,7 +4181,7 @@ extern "C" bool MP4DeleteMetadataTempo(MP4FileHandle hFile)
   return false;
 }
 
-extern "C" bool MP4SetMetadataCompilation(MP4FileHandle hFile, u_int8_t cpl)
+extern "C" bool MP4SetMetadataCompilation(MP4FileHandle hFile, uint8_t cpl)
 {
   if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
     try {
@@ -4195,7 +4195,7 @@ extern "C" bool MP4SetMetadataCompilation(MP4FileHandle hFile, u_int8_t cpl)
   return false;
 }
  
-extern "C" bool MP4GetMetadataCompilation(MP4FileHandle hFile, u_int8_t* cpl)
+extern "C" bool MP4GetMetadataCompilation(MP4FileHandle hFile, uint8_t* cpl)
 {
   if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
     try {
@@ -4224,7 +4224,7 @@ extern "C" bool MP4DeleteMetadataCompilation(MP4FileHandle hFile)
 }
 
 extern "C" bool MP4SetMetadataPartOfGaplessAlbum (MP4FileHandle hFile, 
-						  u_int8_t pgap)
+						  uint8_t pgap)
 {
   if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
     try {
@@ -4239,7 +4239,7 @@ extern "C" bool MP4SetMetadataPartOfGaplessAlbum (MP4FileHandle hFile,
 }
  
 extern "C" bool MP4GetMetadataPartOfGaplessAlbum (MP4FileHandle hFile, 
-						  u_int8_t* pgap)
+						  uint8_t* pgap)
 {
   if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
     try {
@@ -4268,7 +4268,7 @@ extern "C" bool MP4DeleteMetadataPartOfGaplessAlbum (MP4FileHandle hFile)
 }
 
 extern "C" bool MP4SetMetadataCoverArt(MP4FileHandle hFile,
-				       u_int8_t *coverArt, u_int32_t size)
+				       uint8_t *coverArt, uint32_t size)
 {
   if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
     try {
@@ -4283,7 +4283,7 @@ extern "C" bool MP4SetMetadataCoverArt(MP4FileHandle hFile,
 }
  
 extern "C" bool MP4GetMetadataCoverArt(MP4FileHandle hFile,
-				       u_int8_t **coverArt, u_int32_t* size,
+				       uint8_t **coverArt, uint32_t* size,
 				       uint32_t index)
 {
   if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
@@ -4298,7 +4298,7 @@ extern "C" bool MP4GetMetadataCoverArt(MP4FileHandle hFile,
   return false;
 }
 
-extern "C" u_int32_t MP4GetMetadataCoverArtCount(MP4FileHandle hFile)
+extern "C" uint32_t MP4GetMetadataCoverArtCount(MP4FileHandle hFile)
 {
   if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
     try {
@@ -4371,8 +4371,8 @@ extern "C" bool MP4DeleteMetadataAlbumArtist (MP4FileHandle hFile)
 
 extern "C" bool MP4SetMetadataFreeForm(MP4FileHandle hFile, 
 				       const char *name,
-				       const u_int8_t* pValue, 
-				       u_int32_t valueSize,
+				       const uint8_t* pValue, 
+				       uint32_t valueSize,
 							 const char *owner)
 {
   if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
@@ -4388,7 +4388,7 @@ extern "C" bool MP4SetMetadataFreeForm(MP4FileHandle hFile,
 }
  
 extern "C" bool MP4GetMetadataFreeForm(MP4FileHandle hFile, const char *name,
-				       u_int8_t** pValue, u_int32_t* valueSize, const char *owner)
+				       uint8_t** pValue, uint32_t* valueSize, const char *owner)
 {
   if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
     try {

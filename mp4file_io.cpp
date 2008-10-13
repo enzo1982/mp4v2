@@ -23,12 +23,12 @@
 
 // MP4File low level IO support
 
-u_int64_t MP4File::GetPosition(FILE* pFile)
+uint64_t MP4File::GetPosition(FILE* pFile)
 {
 	if (m_memoryBuffer == NULL) {
 		if (pFile == NULL) {
 			ASSERT(m_pFile);
-			u_int64_t fpos;
+			uint64_t fpos;
 			if (m_virtual_IO->GetPosition(m_pFile, &fpos) != 0) {
 				throw new MP4Error("getting position via Virtual I/O", "MP4GetPosition");
 			}
@@ -47,7 +47,7 @@ u_int64_t MP4File::GetPosition(FILE* pFile)
 	}
 }
 
-void MP4File::SetPosition(u_int64_t pos, FILE* pFile)
+void MP4File::SetPosition(uint64_t pos, FILE* pFile)
 {
 	if (m_memoryBuffer == NULL) {
 		if (pFile == NULL) {
@@ -71,7 +71,7 @@ void MP4File::SetPosition(u_int64_t pos, FILE* pFile)
 	}
 }
 
-u_int64_t MP4File::GetSize()
+uint64_t MP4File::GetSize()
 {
 	if (m_mode == 'w') {
 		// we're always positioned at the end of file in write mode
@@ -84,7 +84,7 @@ u_int64_t MP4File::GetSize()
 	return m_fileSize;
 }
 
-void MP4File::ReadBytes(u_int8_t* pBytes, u_int32_t numBytes, FILE* pFile)
+void MP4File::ReadBytes(uint8_t* pBytes, uint32_t numBytes, FILE* pFile)
 {
 	// handle degenerate cases
 	if (numBytes == 0) {
@@ -123,14 +123,14 @@ void MP4File::ReadBytes(u_int8_t* pBytes, u_int32_t numBytes, FILE* pFile)
 	return;
 }
 
-void MP4File::PeekBytes(u_int8_t* pBytes, u_int32_t numBytes, FILE* pFile)
+void MP4File::PeekBytes(uint8_t* pBytes, uint32_t numBytes, FILE* pFile)
 {
-	u_int64_t pos = GetPosition(pFile);
+	uint64_t pos = GetPosition(pFile);
 	ReadBytes(pBytes, numBytes, pFile);
 	SetPosition(pos, pFile);
 }
 
-void MP4File::EnableMemoryBuffer(u_int8_t* pBytes, u_int64_t numBytes) 
+void MP4File::EnableMemoryBuffer(uint8_t* pBytes, uint64_t numBytes) 
 {
 	ASSERT(m_memoryBuffer == NULL);
 
@@ -143,12 +143,12 @@ void MP4File::EnableMemoryBuffer(u_int8_t* pBytes, u_int64_t numBytes)
 		} else {
 			m_memoryBufferSize = 4096;
 		}
-		m_memoryBuffer = (u_int8_t*)MP4Malloc(m_memoryBufferSize);
+		m_memoryBuffer = (uint8_t*)MP4Malloc(m_memoryBufferSize);
 	}
 	m_memoryBufferPosition = 0;
 }
 
-void MP4File::DisableMemoryBuffer(u_int8_t** ppBytes, u_int64_t* pNumBytes) 
+void MP4File::DisableMemoryBuffer(uint8_t** ppBytes, uint64_t* pNumBytes) 
 {
 	ASSERT(m_memoryBuffer != NULL);
 
@@ -164,7 +164,7 @@ void MP4File::DisableMemoryBuffer(u_int8_t** ppBytes, u_int64_t* pNumBytes)
 	m_memoryBufferPosition = 0;
 }
 
-void MP4File::WriteBytes(u_int8_t* pBytes, u_int32_t numBytes, FILE* pFile)
+void MP4File::WriteBytes(uint8_t* pBytes, uint32_t numBytes, FILE* pFile)
 {
 	ASSERT(m_numWriteBits == 0 || m_numWriteBits >= 8);
 
@@ -179,7 +179,7 @@ void MP4File::WriteBytes(u_int8_t* pBytes, u_int32_t numBytes, FILE* pFile)
 				throw new MP4Error("error writing bytes via virtual I/O", "MP4WriteBytes");
 			}
 		} else {
-			u_int32_t rc = fwrite(pBytes, 1, numBytes, pFile); 
+			uint32_t rc = fwrite(pBytes, 1, numBytes, pFile); 
 			if (rc != numBytes) {
 				throw new MP4Error(errno, "MP4WriteBytes");
 			}
@@ -187,7 +187,7 @@ void MP4File::WriteBytes(u_int8_t* pBytes, u_int32_t numBytes, FILE* pFile)
 	} else {
 		if (m_memoryBufferPosition + numBytes > m_memoryBufferSize) {
 			m_memoryBufferSize = 2 * (m_memoryBufferSize + numBytes);
-			m_memoryBuffer = (u_int8_t*)
+			m_memoryBuffer = (uint8_t*)
 				MP4Realloc(m_memoryBuffer, m_memoryBufferSize);
 		}
 		memcpy(&m_memoryBuffer[m_memoryBufferPosition], pBytes, numBytes);
@@ -195,7 +195,7 @@ void MP4File::WriteBytes(u_int8_t* pBytes, u_int32_t numBytes, FILE* pFile)
 	}
 }
 
-u_int64_t MP4File::ReadUInt(u_int8_t size)
+uint64_t MP4File::ReadUInt(uint8_t size)
 {
 	switch (size) {
 	case 1:
@@ -215,7 +215,7 @@ u_int64_t MP4File::ReadUInt(u_int8_t size)
 }
 
 #if 0
-void MP4File::WriteUInt(u_int64_t value, u_int8_t size)
+void MP4File::WriteUInt(uint64_t value, uint8_t size)
 {
 	switch (size) {
 	case 1:
@@ -234,59 +234,59 @@ void MP4File::WriteUInt(u_int64_t value, u_int8_t size)
 }
 #endif
 
-u_int8_t MP4File::ReadUInt8()
+uint8_t MP4File::ReadUInt8()
 {
-	u_int8_t data;
+	uint8_t data;
 	ReadBytes(&data, 1);
 	return data;
 }
 
-void MP4File::WriteUInt8(u_int8_t value)
+void MP4File::WriteUInt8(uint8_t value)
 {
 	WriteBytes(&value, 1);
 }
 
-u_int16_t MP4File::ReadUInt16()
+uint16_t MP4File::ReadUInt16()
 {
-	u_int8_t data[2];
+	uint8_t data[2];
 	ReadBytes(&data[0], 2);
 	return ((data[0] << 8) | data[1]);
 }
 
-void MP4File::WriteUInt16(u_int16_t value)
+void MP4File::WriteUInt16(uint16_t value)
 {
-	u_int8_t data[2];
+	uint8_t data[2];
 	data[0] = (value >> 8) & 0xFF;
 	data[1] = value & 0xFF;
 	WriteBytes(data, 2);
 }
 
-u_int32_t MP4File::ReadUInt24()
+uint32_t MP4File::ReadUInt24()
 {
-	u_int8_t data[3];
+	uint8_t data[3];
 	ReadBytes(&data[0], 3);
 	return ((data[0] << 16) | (data[1] << 8) | data[2]);
 }
 
-void MP4File::WriteUInt24(u_int32_t value)
+void MP4File::WriteUInt24(uint32_t value)
 {
-	u_int8_t data[3];
+	uint8_t data[3];
 	data[0] = (value >> 16) & 0xFF;
 	data[1] = (value >> 8) & 0xFF;
 	data[2] = value & 0xFF;
 	WriteBytes(data, 3);
 }
 
-u_int32_t MP4File::ReadUInt32()
+uint32_t MP4File::ReadUInt32()
 {
-	u_int8_t data[4];
+	uint8_t data[4];
 	ReadBytes(&data[0], 4);
 	return ((data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3]);
 }
 
-void MP4File::WriteUInt32(u_int32_t value)
+void MP4File::WriteUInt32(uint32_t value)
 {
-	u_int8_t data[4];
+	uint8_t data[4];
 	data[0] = (value >> 24) & 0xFF;
 	data[1] = (value >> 16) & 0xFF;
 	data[2] = (value >> 8) & 0xFF;
@@ -294,11 +294,11 @@ void MP4File::WriteUInt32(u_int32_t value)
 	WriteBytes(data, 4);
 }
 
-u_int64_t MP4File::ReadUInt64()
+uint64_t MP4File::ReadUInt64()
 {
-	u_int8_t data[8];
-	u_int64_t result = 0;
-	u_int64_t temp;
+	uint8_t data[8];
+	uint64_t result = 0;
+	uint64_t temp;
 
 	ReadBytes(&data[0], 8);
 	
@@ -309,9 +309,9 @@ u_int64_t MP4File::ReadUInt64()
 	return result;
 }
 
-void MP4File::WriteUInt64(u_int64_t value)
+void MP4File::WriteUInt64(uint64_t value)
 {
-	u_int8_t data[8];
+	uint8_t data[8];
 
 	for (int i = 7; i >= 0; i--) {
 		data[i] = value & 0xFF;
@@ -322,8 +322,8 @@ void MP4File::WriteUInt64(u_int64_t value)
 
 float MP4File::ReadFixed16()
 {
-	u_int8_t iPart = ReadUInt8();
-	u_int8_t fPart = ReadUInt8();
+	uint8_t iPart = ReadUInt8();
+	uint8_t fPart = ReadUInt8();
 
 	return iPart + (((float)fPart) / 0x100);
 }
@@ -334,8 +334,8 @@ void MP4File::WriteFixed16(float value)
 		throw new MP4Error(ERANGE, "MP4WriteFixed16");
 	}
 
-	u_int8_t iPart = (u_int8_t)value;
-	u_int8_t fPart = (u_int8_t)((value - iPart) * 0x100);
+	uint8_t iPart = (uint8_t)value;
+	uint8_t fPart = (uint8_t)((value - iPart) * 0x100);
 
 	WriteUInt8(iPart);
 	WriteUInt8(fPart);
@@ -343,8 +343,8 @@ void MP4File::WriteFixed16(float value)
 
 float MP4File::ReadFixed32()
 {
-	u_int16_t iPart = ReadUInt16();
-	u_int16_t fPart = ReadUInt16();
+	uint16_t iPart = ReadUInt16();
+	uint16_t fPart = ReadUInt16();
 
 	return iPart + (((float)fPart) / 0x10000);
 }
@@ -355,8 +355,8 @@ void MP4File::WriteFixed32(float value)
 		throw new MP4Error(ERANGE, "MP4WriteFixed32");
 	}
 
-	u_int16_t iPart = (u_int16_t)value;
-	u_int16_t fPart = (u_int16_t)((value - iPart) * 0x10000);
+	uint16_t iPart = (uint16_t)value;
+	uint16_t fPart = (uint16_t)((value - iPart) * 0x10000);
 
 	WriteUInt16(iPart);
 	WriteUInt16(fPart);
@@ -366,7 +366,7 @@ float MP4File::ReadFloat()
 {
 	union {
 		float f;
-		u_int32_t i;
+		uint32_t i;
 	} u;
 
 	u.i = ReadUInt32();
@@ -377,7 +377,7 @@ void MP4File::WriteFloat(float value)
 {
 	union {
 		float f;
-		u_int32_t i;
+		uint32_t i;
 	} u;
 
 	u.f = value;
@@ -386,8 +386,8 @@ void MP4File::WriteFloat(float value)
 
 char* MP4File::ReadString()
 {
-	u_int32_t length = 0;
-	u_int32_t alloced = 64;
+	uint32_t length = 0;
+	uint32_t alloced = 64;
 	char* data = (char*)MP4Malloc(alloced);
 
 	do {
@@ -396,7 +396,7 @@ char* MP4File::ReadString()
 			if (data == NULL) return NULL;
 			alloced *= 2;
 		}
-		ReadBytes((u_int8_t*)&data[length], 1);
+		ReadBytes((uint8_t*)&data[length], 1);
 		length++;
 	} while (data[length - 1] != 0);
 
@@ -407,18 +407,18 @@ char* MP4File::ReadString()
 void MP4File::WriteString(char* string)
 {
 	if (string == NULL) {
-		u_int8_t zero = 0;
+		uint8_t zero = 0;
 		WriteBytes(&zero, 1);
 	} else {
-		WriteBytes((u_int8_t*)string, strlen(string) + 1);
+		WriteBytes((uint8_t*)string, strlen(string) + 1);
 	}
 }
 
-char* MP4File::ReadCountedString(u_int8_t charSize, bool allowExpandedCount)
+char* MP4File::ReadCountedString(uint8_t charSize, bool allowExpandedCount)
 {
-	u_int32_t charLength;
+	uint32_t charLength;
 	if (allowExpandedCount) {
-		u_int8_t b;
+		uint8_t b;
 		uint ix = 0;
 		charLength = 0;
 		do {
@@ -433,25 +433,25 @@ char* MP4File::ReadCountedString(u_int8_t charSize, bool allowExpandedCount)
 		charLength = ReadUInt8();
 	}
 
-	u_int32_t byteLength = charLength * charSize;
+	uint32_t byteLength = charLength * charSize;
 	char* data = (char*)MP4Malloc(byteLength + 1);
 	if (byteLength > 0) {
-		ReadBytes((u_int8_t*)data, byteLength);
+		ReadBytes((uint8_t*)data, byteLength);
 	}
 	data[byteLength] = '\0';
 	return data;
 }
 
 void MP4File::WriteCountedString(char* string, 
-	u_int8_t charSize, bool allowExpandedCount)
+	uint8_t charSize, bool allowExpandedCount)
 {
-	u_int32_t byteLength;
+	uint32_t byteLength;
 	if (string) {
 		byteLength = strlen(string);
 	} else {
 		byteLength = 0;
 	}
-	u_int32_t charLength = byteLength / charSize;
+	uint32_t charLength = byteLength / charSize;
 
 	if (allowExpandedCount) {
 		while (charLength >= 0xFF) {
@@ -467,18 +467,18 @@ void MP4File::WriteCountedString(char* string,
 	}
 
 	if (byteLength > 0) {
-		WriteBytes((u_int8_t*)string, byteLength);
+		WriteBytes((uint8_t*)string, byteLength);
 	}
 }
 
-u_int64_t MP4File::ReadBits(u_int8_t numBits)
+uint64_t MP4File::ReadBits(uint8_t numBits)
 {
 	ASSERT(numBits > 0);
 	ASSERT(numBits <= 64);
 
-	u_int64_t bits = 0;
+	uint64_t bits = 0;
 
-	for (u_int8_t i = numBits; i > 0; i--) {
+	for (uint8_t i = numBits; i > 0; i--) {
 		if (m_numReadBits == 0) {
 			ReadBytes(&m_bufReadBits, 1);
 			m_numReadBits = 8;
@@ -495,11 +495,11 @@ void MP4File::FlushReadBits()
 	m_numReadBits = 0;
 }
 
-void MP4File::WriteBits(u_int64_t bits, u_int8_t numBits)
+void MP4File::WriteBits(uint64_t bits, uint8_t numBits)
 {
 	ASSERT(numBits <= 64);
 
-	for (u_int8_t i = numBits; i > 0; i--) {
+	for (uint8_t i = numBits; i > 0; i--) {
 		m_bufWriteBits |= 
 			(((bits >> (i - 1)) & 1) << (8 - ++m_numWriteBits));
 	
@@ -509,7 +509,7 @@ void MP4File::WriteBits(u_int64_t bits, u_int8_t numBits)
 	}
 }
 
-void MP4File::PadWriteBits(u_int8_t pad)
+void MP4File::PadWriteBits(uint8_t pad)
 {
 	if (m_numWriteBits) {
 		WriteBits(pad ? 0xFF : 0x00, 8 - m_numWriteBits);
@@ -525,11 +525,11 @@ void MP4File::FlushWriteBits()
 	}
 }
 
-u_int32_t MP4File::ReadMpegLength()
+uint32_t MP4File::ReadMpegLength()
 {
-	u_int32_t length = 0;
-	u_int8_t numBytes = 0;
-	u_int8_t b;
+	uint32_t length = 0;
+	uint8_t numBytes = 0;
+	uint8_t b;
 
 	do {
 		b = ReadUInt8();
@@ -540,7 +540,7 @@ u_int32_t MP4File::ReadMpegLength()
 	return length;
 }
 
-void MP4File::WriteMpegLength(u_int32_t value, bool compact)
+void MP4File::WriteMpegLength(uint32_t value, bool compact)
 {
 	if (value > 0x0FFFFFFF) {
 		throw new MP4Error(ERANGE, "MP4WriteMpegLength");
@@ -565,7 +565,7 @@ void MP4File::WriteMpegLength(u_int32_t value, bool compact)
 	int8_t i = numBytes;
 	do {
 		i--;
-		u_int8_t b = (value >> (i * 7)) & 0x7F;
+		uint8_t b = (value >> (i * 7)) & 0x7F;
 		if (i > 0) {
 			b |= 0x80;
 		}

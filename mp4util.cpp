@@ -57,15 +57,15 @@ void MP4Error::Print(FILE* pFile)
 }
 
 void MP4HexDump(
-	u_int8_t* pBytes, u_int32_t numBytes,
-	FILE* pFile, u_int8_t indent)
+	uint8_t* pBytes, uint32_t numBytes,
+	FILE* pFile, uint8_t indent)
 {
 	if (pFile == NULL) {
 		pFile = stdout;
 	}
 	Indent(pFile, indent);
 	fprintf(pFile, "<%u bytes> ", numBytes);
-	for (u_int32_t i = 0; i < numBytes; i++) {
+	for (uint32_t i = 0; i < numBytes; i++) {
 		if ((i % 16) == 0 && numBytes > 16) {
 			fprintf(pFile, "\n");
 			Indent(pFile, indent);
@@ -98,7 +98,7 @@ bool MP4NameFirstMatches(const char* s1, const char* s2)
 	return true;
 }
 
-bool MP4NameFirstIndex(const char* s, u_int32_t* pIndex)
+bool MP4NameFirstIndex(const char* s, uint32_t* pIndex)
 {
 	if (s == NULL) {
 		return false;
@@ -158,7 +158,7 @@ const char* MP4NameAfterFirst(const char *s)
 	return NULL;
 }
 
-char* MP4ToBase16(const u_int8_t* pData, u_int32_t dataSize)
+char* MP4ToBase16(const uint8_t* pData, uint32_t dataSize)
 {
 	if (dataSize) {
 		ASSERT(pData);
@@ -166,7 +166,7 @@ char* MP4ToBase16(const u_int8_t* pData, u_int32_t dataSize)
 	uint size = 2 * dataSize + 1;
 	char* s = (char*)MP4Calloc(size);
 
-	u_int32_t i, j;
+	uint32_t i, j;
 	for (i = 0, j = 0; i < dataSize; i++) {
 		size -= snprintf(&s[j], size, "%02x", pData[i]);
 		j += 2;
@@ -175,7 +175,7 @@ char* MP4ToBase16(const u_int8_t* pData, u_int32_t dataSize)
 	return s;	/* N.B. caller is responsible for free'ing s */
 }
 
-char* MP4ToBase64(const u_int8_t* pData, u_int32_t dataSize)
+char* MP4ToBase64(const uint8_t* pData, uint32_t dataSize)
 {
   if (pData == NULL || dataSize == 0) return NULL;
 
@@ -188,12 +188,12 @@ char* MP4ToBase64(const u_int8_t* pData, u_int32_t dataSize)
 
 	char* s = (char*)MP4Calloc((((dataSize + 2) * 4) / 3) + 1);
 
-	const u_int8_t* src = pData;
+	const uint8_t* src = pData;
 	if (pData == NULL) return NULL;
 	char* dest = s;
-	u_int32_t numGroups = dataSize / 3;
+	uint32_t numGroups = dataSize / 3;
 
-	for (u_int32_t i = 0; i < numGroups; i++) {
+	for (uint32_t i = 0; i < numGroups; i++) {
 		*dest++ = encoding[src[0] >> 2];
 		*dest++ = encoding[((src[0] & 0x03) << 4) | (src[1] >> 4)];
 		*dest++ = encoding[((src[1] & 0x0F) << 2) | (src[2] >> 6)];
@@ -284,10 +284,10 @@ uint8_t *Base64ToBinary (const char *pData, uint32_t decodeSize, uint32_t *pData
 }
 
 // log2 of value, rounded up
-static u_int8_t ilog2(u_int64_t value)
+static uint8_t ilog2(uint64_t value)
 {
-	u_int64_t powerOf2 = 1;
-	for (u_int8_t i = 0; i < 64; i++) {
+	uint64_t powerOf2 = 1;
+	for (uint8_t i = 0; i < 64; i++) {
 		if (value <= powerOf2) {
 			return i;
 		}
@@ -296,8 +296,8 @@ static u_int8_t ilog2(u_int64_t value)
 	return 64;
 }
 
-u_int64_t MP4ConvertTime(u_int64_t t, 
-	u_int32_t oldTimeScale, u_int32_t newTimeScale)
+uint64_t MP4ConvertTime(uint64_t t, 
+	uint32_t oldTimeScale, uint32_t newTimeScale)
 {
 	// avoid float point exception
 	if (oldTimeScale == 0) {
@@ -317,7 +317,7 @@ u_int64_t MP4ConvertTime(u_int64_t t,
 	d /= (double)oldTimeScale;	
 	d += 0.5; // round up.
 
-	return (u_int64_t)d;
+	return (uint64_t)d;
 }
 
 const char* MP4NormalizeTrackType (const char* type,

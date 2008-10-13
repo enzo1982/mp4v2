@@ -56,7 +56,7 @@ void MP4Mp4vAtom::Generate()
 	((MP4Integer16Property*)m_pProperties[1])->SetValue(1);
 
 	// property reserved3 has non-zero fixed values
-	static u_int8_t reserved3[14] = {
+	static uint8_t reserved3[14] = {
 		0x00, 0x48, 0x00, 0x00, 
 		0x00, 0x48, 0x00, 0x00, 
 		0x00, 0x00, 0x00, 0x00, 
@@ -68,7 +68,7 @@ void MP4Mp4vAtom::Generate()
 	m_pProperties[5]->SetReadOnly(true);
 
 	// property reserved4 has non-zero fixed values
-	static u_int8_t reserved4[4] = {
+	static uint8_t reserved4[4] = {
 		0x00, 0x18, 0xFF, 0xFF, 
 	};
 	m_pProperties[7]->SetReadOnly(false);

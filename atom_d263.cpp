@@ -63,8 +63,8 @@ void MP4D263Atom::Write()
 	// (if it exists, of course)
 	MP4Atom* bitrAtom = FindAtom("d263.bitr");
 	if (bitrAtom) {
-		u_int32_t avgBitrate;
-		u_int32_t maxBitrate;
+		uint32_t avgBitrate;
+		uint32_t maxBitrate;
 
 		MP4Integer32Property* pProp;
 		bitrAtom->FindProperty("bitr.avgBitrate",
