@@ -1425,6 +1425,8 @@ MP4TrackId MP4File::AddAudioTrack(
 
 	(void)AddChildAtom(MakeTrackName(trackId, "mdia.minf.stbl.stsd"), "mp4a");
 
+    AddDescendantAtoms(MakeTrackName(trackId, NULL), "udta.name");
+
 	// stsd is a unique beast in that it has a count of the number 
 	// of child atoms that needs to be incremented after we add the mp4a atom
 	MP4Integer32Property* pStsdCountProperty;
