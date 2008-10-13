@@ -116,7 +116,7 @@ void MP4TkhdAtom::Generate()
 		0x40, 0x00, 0x00, 0x00, 
 	};
 
-	((MP4BytesProperty*)m_pProperties[10])->
+	((MP4BytesProperty*)m_pProperties[12])->
 		SetValue(matrix, sizeof(matrix));
 }
 
