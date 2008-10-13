@@ -209,9 +209,9 @@ public: /* equivalent to MP4 library API */
 		uint8_t audioType);
 
 	MP4TrackId AddAC3AudioTrack(
-		u_int32_t timeScale, 
+		uint32_t timeScale, 
 		MP4Duration sampleDuration,
-		u_int8_t audioType);
+		uint8_t audioType);
 
 	MP4TrackId AddEncAudioTrack( // ismacryp
 		uint32_t timeScale, 

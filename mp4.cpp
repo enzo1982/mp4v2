@@ -679,9 +679,9 @@ extern "C" mp4v2_ismacrypParams *MP4DefaultISMACrypParams(mp4v2_ismacrypParams *
 
 extern "C" MP4TrackId MP4AddAC3AudioTrack(
 	MP4FileHandle hFile, 
-	u_int32_t timeScale, 
+	uint32_t timeScale, 
 	MP4Duration sampleDuration, 
-	u_int8_t audioType)
+	uint8_t audioType)
 {
 	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
 		try {

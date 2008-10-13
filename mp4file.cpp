@@ -1466,9 +1466,9 @@ MP4TrackId MP4File::AddAudioTrack(
  * this is to be rewritten.
  */
 MP4TrackId MP4File::AddAC3AudioTrack(
-	u_int32_t timeScale, 
+	uint32_t timeScale, 
 	MP4Duration sampleDuration, 
-	u_int8_t audioType)
+	uint8_t audioType)
 {
 	MP4TrackId trackId = AddTrack(MP4_AUDIO_TRACK_TYPE, timeScale);
 
