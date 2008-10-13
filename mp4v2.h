@@ -196,11 +196,6 @@ typedef unsigned int socklen_t;
 
 #ifdef sun
 #include <limits.h>
-#define uint8_t uint8_t
-#define uint16_t uint16_t
-#define uint32_t uint32_t
-#define uint64_t uint64_t
-#define __STRING(expr) #expr
 #endif
 
 #ifndef HAVE_STRSEP
@@ -232,34 +227,6 @@ char *strsep(char **strp, const char *delim);
 #define NUM_ELEMENTS_IN_ARRAY(name) ((sizeof((name))) / (sizeof(*(name))))
 
 #define ADV_SPACE(a) {while (isspace(*(a)) && (*(a) != '\0'))(a)++;}
-
-#ifndef HAVE_GTK
-typedef char gchar;
-typedef unsigned char guchar;
-
-typedef int gint;
-typedef unsigned int guint;
-
-typedef long glong;
-typedef unsigned long gulong;
-
-typedef double gdouble;
-
-typedef int gboolean;
-
-typedef int16_t gint16;
-typedef uint16_t guint16;
-
-typedef int32_t gint32;
-typedef uint32_t guint32;
-
-typedef int64_t gint64;
-typedef uint64_t guint64;
-
-typedef uint8_t  guint8;
-typedef int8_t gint8;
-
-#endif
 
 #ifndef FALSE
 #define FALSE 0
@@ -336,6 +303,10 @@ struct iovec {
   void *iov_base;
   unsigned int iov_len;
 };
+#endif
+
+#ifndef __STRING
+#define __STRING(expr) #expr
 #endif
 
 #endif /* __MPEG4IP_INCLUDED__ */

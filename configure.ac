@@ -1,8 +1,8 @@
 
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.63])
-AC_INIT(mp4v2, 1.6.1, eddyg@myreflection.org)
+AC_PREREQ([2.60])
+AC_INIT(mp4v2, 1.0.0, eddyg@myreflection.org)
 AC_CONFIG_SRCDIR([3gp.cpp])
 AC_CONFIG_HEADERS([mp4v2_config.h])
 
