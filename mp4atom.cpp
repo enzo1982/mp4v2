@@ -93,6 +93,8 @@ MP4Atom* MP4Atom::CreateAtom(const char* type)
     case 'c':
       if (ATOMID(type) == ATOMID("chap")) {
 	pAtom = new MP4TrefTypeAtom(type);
+      } else if (ATOMID(type) == ATOMID("colr")) {
+	pAtom = new MP4ColrAtom();
 	  }
 	  break;
     case 'd':
@@ -277,6 +279,12 @@ MP4Atom* MP4Atom::CreateAtom(const char* type)
 	pAtom = new MP4Meta2Atom(type);
       }
       break;
+     case 'p':
+         if (ATOMID(type) == ATOMID("pasp")) {
+ 	pAtom = new MP4PaspAtom();
+       }
+       break;
+    
     }
   }
 

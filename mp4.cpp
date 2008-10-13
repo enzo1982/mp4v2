@@ -891,6 +891,21 @@ extern "C" MP4TrackId MP4AddEncVideoTrack(MP4FileHandle hFile,
   return MP4_INVALID_TRACK_ID;
 }
 
+extern "C" MP4TrackId MP4AddColr(
+	MP4FileHandle hFile, MP4TrackId refTrackId, u_int16_t pri, u_int16_t tran, u_int16_t mat)
+{
+	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+		try {
+			return ((MP4File*)hFile)->AddColr(refTrackId, pri, tran, mat);
+		}
+		catch (MP4Error* e) {
+			PRINT_ERROR(e);
+			delete e;
+		}
+	}
+	return MP4_INVALID_TRACK_ID;
+}
+
 
 extern "C" MP4TrackId MP4AddH264VideoTrack(MP4FileHandle hFile, 
 					   u_int32_t timeScale, 
@@ -1130,6 +1145,20 @@ extern "C" MP4TrackId MP4AddChapterTextTrack(
 	return MP4_INVALID_TRACK_ID;
 }
 
+extern "C" MP4TrackId MP4AddPixelAspectRatio(
+	MP4FileHandle hFile, MP4TrackId refTrackId, u_int32_t hSpacing, u_int32_t vSpacing)
+{
+	if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+		try {
+			return ((MP4File*)hFile)->AddPixelAspectRatio(refTrackId, hSpacing, vSpacing);
+		}
+		catch (MP4Error* e) {
+			PRINT_ERROR(e);
+			delete e;
+		}
+	}
+	return MP4_INVALID_TRACK_ID;
+}
 
 extern "C" MP4TrackId MP4CloneTrack (MP4FileHandle srcFile, 
 				     MP4TrackId srcTrackId,

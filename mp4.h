@@ -601,6 +601,19 @@ MP4TrackId MP4AddChapterTextTrack(
 	MP4FileHandle hFile, 
 	MP4TrackId refTrackId);
 
+MP4TrackId MP4AddPixelAspectRatio(
+	MP4FileHandle hFile, 
+	MP4TrackId refTrackId,
+    u_int32_t hSpacing,
+    u_int32_t vSpacing);
+
+MP4TrackId MP4AddColr(
+	MP4FileHandle hFile, 
+	MP4TrackId refTrackId,
+    u_int16_t primary,
+    u_int16_t transfer,
+    u_int16_t matrix);
+
 MP4TrackId MP4CloneTrack(
 	MP4FileHandle srcFile, 
 	MP4TrackId srcTrackId,

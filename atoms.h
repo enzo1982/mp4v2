@@ -405,4 +405,16 @@ class MP4HrefAtom : public MP4Atom {
   void Generate(void);
 };
 
+class MP4PaspAtom : public MP4Atom {
+ public:
+    MP4PaspAtom();
+    void Generate();
+};
+
+class MP4ColrAtom : public MP4Atom {
+ public:
+    MP4ColrAtom();
+    void Generate();
+};
+
 #endif /* __MP4_ATOMS_INCLUDED__ */

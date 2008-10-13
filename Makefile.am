@@ -13,6 +13,7 @@ libmp4v2_la_SOURCES = \
 	atom_amr.cpp \
 	atom_avc1.cpp \
 	atom_avcC.cpp \
+	atom_colr.cpp \
 	atom_d263.cpp \
 	atom_damr.cpp \
 	atom_dref.cpp \
@@ -32,6 +33,7 @@ libmp4v2_la_SOURCES = \
 	atom_mp4s.cpp \
 	atom_mp4v.cpp \
 	atom_mvhd.cpp \
+	atom_pasp.cpp \
 	atom_ohdr.cpp \
 	atom_root.cpp \
 	atom_rtp.cpp \

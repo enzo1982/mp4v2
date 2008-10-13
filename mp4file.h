@@ -312,6 +312,9 @@ public: /* equivalent to MP4 library API */
 	MP4TrackId AddTextTrack(MP4TrackId refTrackId);
 	MP4TrackId AddChapterTextTrack(MP4TrackId refTrackId);
 
+	MP4TrackId AddPixelAspectRatio(MP4TrackId trackId, u_int32_t hSpacing, u_int32_t vSpacing);
+	MP4TrackId AddColr(MP4TrackId trackId, u_int16_t pri, u_int16_t tran, u_int16_t mat);
+
 	MP4SampleId GetTrackNumberOfSamples(MP4TrackId trackId);
 
 	const char* GetTrackType(MP4TrackId trackId);

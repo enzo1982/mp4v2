@@ -53,25 +53,30 @@ void MP4TkhdAtom::AddProperties(u_int8_t version)
 			new MP4Integer32Property("duration"));
 	}
 
-	AddReserved("reserved2", 12); /* 7 */
+	AddReserved("reserved2", 8); /* 7 */
+	
+	AddProperty( /* 8 */
+			new MP4Integer16Property("layer"));
+	AddProperty( /* 9 */
+			new MP4Integer16Property("alternate_group"));
 
 	MP4Float32Property* pProp;
 
 	pProp = new MP4Float32Property("volume");
 	pProp->SetFixed16Format();
-	AddProperty(pProp); /* 8 */
+	AddProperty(pProp); /* 10 */
 
-	AddReserved("reserved3", 2); /* 9 */
+	AddReserved("reserved3", 2); /* 11 */
 
-	AddProperty(new MP4BytesProperty("matrix", 36)); /* 10 */
+	AddProperty(new MP4BytesProperty("matrix", 36)); /* 12 */
 
 	pProp = new MP4Float32Property("width");
 	pProp->SetFixed32Format();
-	AddProperty(pProp); /* 11 */
+	AddProperty(pProp); /* 13 */
 
 	pProp = new MP4Float32Property("height");
 	pProp->SetFixed32Format();
-	AddProperty(pProp); /* 12 */
+	AddProperty(pProp); /* 14 */
 }
 
 void MP4TkhdAtom::Generate() 

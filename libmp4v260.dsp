@@ -182,6 +182,10 @@ SOURCE=.\atom_ohdr.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\atom_pasp.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\atom_root.cpp
 # End Source File
 # Begin Source File

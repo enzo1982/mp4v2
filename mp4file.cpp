@@ -2168,6 +2168,55 @@ MP4TrackId MP4File::AddChapterTextTrack(MP4TrackId refTrackId)
 	return trackId;
 }
 
+MP4TrackId MP4File::AddPixelAspectRatio(MP4TrackId trackId, u_int32_t hSpacing, u_int32_t vSpacing)
+{
+	// validate reference track id
+  (void)FindTrackIndex(trackId);
+    const char *format = GetTrackMediaDataName (trackId);
+    
+    if (!strcasecmp(format, "avc1"))
+    {
+           (void)AddChildAtom(MakeTrackName(trackId, "mdia.minf.stbl.stsd.avc1"), "pasp");
+            SetTrackIntegerProperty(trackId, "mdia.minf.stbl.stsd.avc1.pasp.hSpacing", hSpacing);
+            SetTrackIntegerProperty(trackId, "mdia.minf.stbl.stsd.avc1.pasp.vSpacing", vSpacing);
+    }
+    else if (!strcasecmp(format, "mp4v"))
+    {
+           (void)AddChildAtom(MakeTrackName(trackId, "mdia.minf.stbl.stsd.mp4v"), "pasp");
+            SetTrackIntegerProperty(trackId, "mdia.minf.stbl.stsd.mp4v.pasp.hSpacing", hSpacing);
+            SetTrackIntegerProperty(trackId, "mdia.minf.stbl.stsd.mp4v.pasp.vSpacing", vSpacing);
+    }
+
+	return trackId;
+}
+
+MP4TrackId MP4File::AddColr(MP4TrackId trackId,
+                            u_int16_t primariesIndex,
+                            u_int16_t transferFunctionIndex,
+                            u_int16_t matrixIndex)
+{
+	// validate reference track id
+  (void)FindTrackIndex(trackId);
+    const char *format = GetTrackMediaDataName (trackId);
+    
+    if (!strcasecmp(format, "avc1"))
+    {
+        AddChildAtom(MakeTrackName(trackId, "mdia.minf.stbl.stsd.avc1"), "colr");
+        SetTrackIntegerProperty(trackId, "mdia.minf.stbl.stsd.avc1.colr.primariesIndex", primariesIndex);
+        SetTrackIntegerProperty(trackId, "mdia.minf.stbl.stsd.avc1.colr.transferFunctionIndex", transferFunctionIndex);
+        SetTrackIntegerProperty(trackId, "mdia.minf.stbl.stsd.avc1.colr.matrixIndex", matrixIndex);
+    }
+    else if (!strcasecmp(format, "mp4v"))
+    {
+        AddChildAtom(MakeTrackName(trackId, "mdia.minf.stbl.stsd.mp4v"), "colr");
+        SetTrackIntegerProperty(trackId, "mdia.minf.stbl.stsd.mp4v.colr.primariesIndex", primariesIndex);
+        SetTrackIntegerProperty(trackId, "mdia.minf.stbl.stsd.mp4v.colr.transferFunctionIndex", transferFunctionIndex);
+        SetTrackIntegerProperty(trackId, "mdia.minf.stbl.stsd.mp4v.colr.matrixIndex", matrixIndex);
+    }
+
+	return trackId;
+}
+
 void MP4File::DeleteTrack(MP4TrackId trackId)
 {
 	ProtectWriteOperation("MP4DeleteTrack");
