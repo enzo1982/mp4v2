@@ -181,7 +181,10 @@ MP4Atom* MP4Atom::CreateAtom(const char* type)
       break;
     case 'n':
       if (ATOMID(type) == ATOMID("name")) { // iTunes
-	pAtom = new MP4Meta1Atom(type);
+        // Use the new MP4NameAtom instead of the metadata one since we
+        // know the format of the name as being a simple "value". 
+        //pAtom = new MP4Meta1Atom(type);
+        pAtom = new MP4NameAtom();
       }
       break;
     case 'o':
