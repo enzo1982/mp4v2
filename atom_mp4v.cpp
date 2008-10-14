@@ -41,6 +41,7 @@ MP4Mp4vAtom::MP4Mp4vAtom()
 	MP4StringProperty* pProp = 
 		new MP4StringProperty("compressorName");
 	pProp->SetFixedLength(32);
+        pProp->SetCountedFormat(true);
 	pProp->SetValue("");
 	AddProperty(pProp); /* 6 */
 

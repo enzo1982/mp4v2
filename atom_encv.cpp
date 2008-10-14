@@ -41,7 +41,8 @@ MP4EncvAtom::MP4EncvAtom()
 
 	MP4StringProperty* pProp = 
 		new MP4StringProperty("compressorName");
-	pProp->SetFixedLength(32);
+	pProp->SetFixedLength(32); 
+        pProp->SetCountedFormat(true);
 	pProp->SetValue("");
 	AddProperty(pProp); /* 6 */
 	AddReserved("reserved4", 4); /* 7 */

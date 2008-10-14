@@ -443,11 +443,17 @@ char* MP4File::ReadCountedString(uint8_t charSize, bool allowExpandedCount)
 }
 
 void MP4File::WriteCountedString(char* string, 
-	uint8_t charSize, bool allowExpandedCount)
+                                 uint8_t charSize, bool allowExpandedCount, 
+                                 uint8_t fixedLength)
 {
 	uint32_t byteLength;
+        uint8_t zero[1];
+
 	if (string) {
 		byteLength = strlen(string);
+                if (byteLength >= fixedLength) {
+                    byteLength = fixedLength-1;
+                }
 	} else {
 		byteLength = 0;
 	}
@@ -458,16 +464,27 @@ void MP4File::WriteCountedString(char* string,
 			WriteUInt8(0xFF);
 			charLength -= 0xFF;
 		}		
+                // Write the count
 		WriteUInt8(charLength);
 	} else {
 		if (charLength > 255) {
 			throw new MP4Error(ERANGE, "Length is %d", "MP4WriteCountedString", charLength);
 		}
+                // Write the count
 		WriteUInt8(charLength);
 	}
 
 	if (byteLength > 0) {
-		WriteBytes((uint8_t*)string, byteLength);
+            // Write the string (or the portion that we want to write)
+            WriteBytes((uint8_t*)string, byteLength);
+            // Write any padding if this is a fixed length counted string
+            if (fixedLength) {
+                zero[0] = 0;
+                while (byteLength < fixedLength-1) {
+                    WriteBytes(zero, 1);
+                    byteLength++;
+                }
+            }
 	}
 }
 

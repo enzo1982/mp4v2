@@ -41,7 +41,8 @@ MP4Avc1Atom::MP4Avc1Atom()
 	MP4StringProperty* pProp = 
 		new MP4StringProperty("compressorName");
 	pProp->SetFixedLength(32);
-	pProp->SetValue("AVC Coding");
+        pProp->SetCountedFormat(true);
+	pProp->SetValue("JVT/AVC Coding");
 	AddProperty(pProp); /* 6 */
 
 	AddReserved("reserved4", 4); /* 7 */

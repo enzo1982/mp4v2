@@ -644,7 +644,9 @@ public: /* equivalent to MP4 library API */
 	void WriteFloat(float value);
 	void WriteString(char* string);
 	void WriteCountedString(char* string, 
-		uint8_t charSize = 1, bool allowExpandedCount = false);
+                                uint8_t charSize = 1, 
+                                bool allowExpandedCount = false,
+                                uint8_t fixedLength = 0);
 	void WriteBits(uint64_t bits, uint8_t numBits);
 	void PadWriteBits(uint8_t pad = 0);
 	void FlushWriteBits();

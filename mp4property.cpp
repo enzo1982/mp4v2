@@ -390,7 +390,9 @@ void MP4StringProperty::Write(MP4File* pFile, uint32_t index)
 	}
 	if (m_useCountedFormat) {
 		pFile->WriteCountedString(m_values[index],
-			(m_useUnicode ? 2 : 1), m_useExpandedCount);
+                                          (m_useUnicode ? 2 : 1), 
+                                          m_useExpandedCount,
+                                          m_fixedLength);
 	} else if (m_fixedLength) {
 		pFile->WriteBytes((uint8_t*)m_values[index], m_fixedLength);
 	} else {
