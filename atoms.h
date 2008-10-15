@@ -430,4 +430,9 @@ class MP4ColrAtom : public MP4Atom {
     void Generate();
 };
 
+class IPodUUIDAtom : public MP4Atom {
+ public:
+    IPodUUIDAtom();
+};
+
 #endif /* __MP4_ATOMS_INCLUDED__ */

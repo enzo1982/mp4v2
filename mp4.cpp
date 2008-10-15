@@ -4441,3 +4441,11 @@ extern "C" void MP4Free (void *p)
   if (p != NULL)
     free(p);
 }
+
+extern "C" void MP4AddIPodUUID (MP4FileHandle hFile, MP4TrackId trackId)
+{
+    MP4Track* track = ((MP4File*)hFile)->GetTrack(trackId);
+    MP4Atom* avc1 = track->GetTrakAtom()->FindChildAtom("mdia.minf.stbl.stsd.avc1")
+        ;
+    avc1->AddChildAtom(new IPodUUIDAtom());
+}

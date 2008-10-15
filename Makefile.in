@@ -73,12 +73,12 @@ am_libmp4v2_la_OBJECTS = 3gp.lo atom_ac3.lo atom_amr.lo atom_avc1.lo \
 	atom_standard.lo atom_stbl.lo atom_stdp.lo atom_stsc.lo \
 	atom_stsd.lo atom_stsz.lo atom_stz2.lo atom_text.lo \
 	atom_tfhd.lo atom_tkhd.lo atom_treftype.lo atom_trun.lo \
-	atom_udta.lo atom_url.lo atom_urn.lo atom_video.lo \
-	atom_vmhd.lo descriptors.lo isma.lo mp4atom.lo mp4container.lo \
-	mp4.lo mp4descriptor.lo mp4file.lo mp4file_io.lo mp4info.lo \
-	mp4meta.lo mp4property.lo mp4track.lo mp4util.lo \
-	ocidescriptors.lo odcommands.lo qosqualifiers.lo rtphint.lo \
-	virtual_io.lo
+	atom_udta.lo atom_url.lo atom_urn.lo atom_uuid.lo \
+	atom_video.lo atom_vmhd.lo descriptors.lo isma.lo mp4atom.lo \
+	mp4container.lo mp4.lo mp4descriptor.lo mp4file.lo \
+	mp4file_io.lo mp4info.lo mp4meta.lo mp4property.lo mp4track.lo \
+	mp4util.lo ocidescriptors.lo odcommands.lo qosqualifiers.lo \
+	rtphint.lo virtual_io.lo
 libmp4v2_la_OBJECTS = $(am_libmp4v2_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I.
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -282,6 +282,7 @@ libmp4v2_la_SOURCES = \
 	atom_udta.cpp \
 	atom_url.cpp \
 	atom_urn.cpp \
+	atom_uuid.cpp \
 	atom_video.cpp \
 	atom_vmhd.cpp \
 	descriptors.cpp \
@@ -463,6 +464,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_udta.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_url.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_urn.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_uuid.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_video.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_vmhd.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/descriptors.Plo@am__quote@

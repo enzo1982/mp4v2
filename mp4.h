@@ -1252,6 +1252,8 @@ bool MP4GetMetadataFreeForm(MP4FileHandle hFile, const char *name,
 			    uint8_t** pValue, uint32_t* valueSize, const char *owner DEFAULT(NULL));
 bool MP4DeleteMetadataFreeForm(MP4FileHandle hFile, const char *name, const char *owner DEFAULT(NULL));
 
+void MP4AddIPodUUID(MP4FileHandle hFile, MP4TrackId trackId);
+
 /* time conversion utilties */
 
 /* predefined values for timeScale parameter below */

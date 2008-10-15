@@ -58,6 +58,7 @@ libmp4v2_la_SOURCES = \
 	atom_udta.cpp \
 	atom_url.cpp \
 	atom_urn.cpp \
+	atom_uuid.cpp \
 	atom_video.cpp \
 	atom_vmhd.cpp \
 	descriptors.cpp \
