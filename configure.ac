@@ -41,6 +41,7 @@ AC_CHECK_TYPES([in_port_t, socklen_t, struct iovec, struct sockaddr_storage], , 
          #include <sys/socket.h>
          #include <netinet/in.h>])
 
+AC_CHECK_MEMBERS(fpos_t.__pos,,, [#include <stdio.h>])
 
 AC_CONFIG_FILES([Makefile
                  test/Makefile
