@@ -34,7 +34,7 @@ AC_TYPE_UINT8_T
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
-AC_CHECK_FUNCS([gethostname gettimeofday memmove memset socket strcasecmp strchr strdup strerror strrchr])
+AC_CHECK_FUNCS([gethostname gettimeofday memmove memset socket strcasecmp strchr strdup strerror strrchr strsep])
 
 AC_CHECK_TYPES([in_port_t, socklen_t, struct iovec, struct sockaddr_storage], , , 
         [#include <sys/types.h>

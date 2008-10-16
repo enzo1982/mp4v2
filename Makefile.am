@@ -6,7 +6,7 @@ AM_CXXFLAGS =
 
 lib_LTLIBRARIES = libmp4v2.la 
 
-include_HEADERS = mp4.h 
+include_HEADERS = mp4.h mp4v2.h mp4v2_config.h mp4v2_version.h
 
 libmp4v2_la_SOURCES = \
 	3gp.cpp \
