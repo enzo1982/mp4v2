@@ -126,6 +126,8 @@ MP4Atom* MP4Atom::CreateAtom(const char* type)
 	pAtom = new MP4FreeAtom();
       } else if (ATOMID(type) == ATOMID("ftyp")) {
 	pAtom = new MP4FtypAtom();
+      } else if (ATOMID(type) == ATOMID("ftab")) {
+		  pAtom = new MP4FtabAtom();
       }
       break;
     case 'g':
@@ -185,6 +187,8 @@ MP4Atom* MP4Atom::CreateAtom(const char* type)
         // know the format of the name as being a simple "value". 
         //pAtom = new MP4Meta1Atom(type);
         pAtom = new MP4NameAtom();
+      } else if (ATOMID(type) == ATOMID("nmhd")) {
+          pAtom = new MP4NmhdAtom();
       }
       break;
     case 'o':
@@ -232,6 +236,8 @@ MP4Atom* MP4Atom::CreateAtom(const char* type)
     case 't':
       if (ATOMID(type) == ATOMID("text")) {
 	pAtom = new MP4TextAtom();
+      } else if (ATOMID(type) == ATOMID("tx3g")) {
+	pAtom = new MP4Tx3gAtom();
       } else if (ATOMID(type) == ATOMID("tkhd")) {
 	pAtom = new MP4TkhdAtom();
       } else if (ATOMID(type) == ATOMID("tfhd")) {

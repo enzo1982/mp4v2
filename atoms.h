@@ -371,6 +371,16 @@ protected:
 	void GenerateGmhdType();
 };
 
+class MP4Tx3gAtom : public MP4Atom {
+public:
+	MP4Tx3gAtom();
+};
+
+class MP4FtabAtom : public MP4Atom {
+public:
+	MP4FtabAtom();
+};
+
 class MP4TfhdAtom : public MP4Atom {
 public:
 	MP4TfhdAtom();
@@ -433,6 +443,11 @@ class MP4ColrAtom : public MP4Atom {
 class IPodUUIDAtom : public MP4Atom {
  public:
     IPodUUIDAtom();
+};
+
+class MP4NmhdAtom : public MP4Atom {
+public:
+	MP4NmhdAtom();
 };
 
 #endif /* __MP4_ATOMS_INCLUDED__ */

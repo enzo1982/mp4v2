@@ -23,6 +23,7 @@ libmp4v2_la_SOURCES = \
 	atom_encv.cpp \
 	atom_free.cpp \
 	atom_ftyp.cpp \
+	atom_ftab.cpp \
 	atom_gmin.cpp \
 	atom_hdlr.cpp \
 	atom_hinf.cpp \
@@ -34,6 +35,7 @@ libmp4v2_la_SOURCES = \
 	atom_mp4s.cpp \
 	atom_mp4v.cpp \
 	atom_mvhd.cpp \
+	atom_nmhd.cpp \
 	atom_pasp.cpp \
 	atom_ohdr.cpp \
 	atom_root.cpp \
@@ -54,6 +56,7 @@ libmp4v2_la_SOURCES = \
 	atom_tfhd.cpp \
 	atom_tkhd.cpp \
 	atom_treftype.cpp \
+	atom_tx3g.cpp \
 	atom_trun.cpp \
 	atom_udta.cpp \
 	atom_url.cpp \

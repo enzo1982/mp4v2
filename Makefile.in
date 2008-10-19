@@ -65,20 +65,21 @@ libmp4v2_la_LIBADD =
 am_libmp4v2_la_OBJECTS = 3gp.lo atom_ac3.lo atom_amr.lo atom_avc1.lo \
 	atom_avcC.lo atom_colr.lo atom_d263.lo atom_damr.lo \
 	atom_dref.lo atom_elst.lo atom_enca.lo atom_encv.lo \
-	atom_free.lo atom_ftyp.lo atom_gmin.lo atom_hdlr.lo \
-	atom_hinf.lo atom_hnti.lo atom_href.lo atom_mdat.lo \
-	atom_mdhd.lo atom_meta.lo atom_mp4s.lo atom_mp4v.lo \
-	atom_mvhd.lo atom_pasp.lo atom_ohdr.lo atom_root.lo \
-	atom_rtp.lo atom_s263.lo atom_sdp.lo atom_smi.lo atom_sound.lo \
-	atom_standard.lo atom_stbl.lo atom_stdp.lo atom_stsc.lo \
-	atom_stsd.lo atom_stsz.lo atom_stz2.lo atom_text.lo \
-	atom_tfhd.lo atom_tkhd.lo atom_treftype.lo atom_trun.lo \
-	atom_udta.lo atom_url.lo atom_urn.lo atom_uuid.lo \
-	atom_video.lo atom_vmhd.lo descriptors.lo isma.lo mp4atom.lo \
-	mp4container.lo mp4.lo mp4descriptor.lo mp4file.lo \
-	mp4file_io.lo mp4info.lo mp4meta.lo mp4property.lo mp4track.lo \
-	mp4util.lo ocidescriptors.lo odcommands.lo qosqualifiers.lo \
-	rtphint.lo virtual_io.lo
+	atom_free.lo atom_ftyp.lo atom_ftab.lo atom_gmin.lo \
+	atom_hdlr.lo atom_hinf.lo atom_hnti.lo atom_href.lo \
+	atom_mdat.lo atom_mdhd.lo atom_meta.lo atom_mp4s.lo \
+	atom_mp4v.lo atom_mvhd.lo atom_nmhd.lo atom_pasp.lo \
+	atom_ohdr.lo atom_root.lo atom_rtp.lo atom_s263.lo atom_sdp.lo \
+	atom_smi.lo atom_sound.lo atom_standard.lo atom_stbl.lo \
+	atom_stdp.lo atom_stsc.lo atom_stsd.lo atom_stsz.lo \
+	atom_stz2.lo atom_text.lo atom_tfhd.lo atom_tkhd.lo \
+	atom_treftype.lo atom_tx3g.lo atom_trun.lo atom_udta.lo \
+	atom_url.lo atom_urn.lo atom_uuid.lo atom_video.lo \
+	atom_vmhd.lo descriptors.lo isma.lo mp4atom.lo mp4container.lo \
+	mp4.lo mp4descriptor.lo mp4file.lo mp4file_io.lo mp4info.lo \
+	mp4meta.lo mp4property.lo mp4track.lo mp4util.lo \
+	ocidescriptors.lo odcommands.lo qosqualifiers.lo rtphint.lo \
+	virtual_io.lo
 libmp4v2_la_OBJECTS = $(am_libmp4v2_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I.
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -247,6 +248,7 @@ libmp4v2_la_SOURCES = \
 	atom_encv.cpp \
 	atom_free.cpp \
 	atom_ftyp.cpp \
+	atom_ftab.cpp \
 	atom_gmin.cpp \
 	atom_hdlr.cpp \
 	atom_hinf.cpp \
@@ -258,6 +260,7 @@ libmp4v2_la_SOURCES = \
 	atom_mp4s.cpp \
 	atom_mp4v.cpp \
 	atom_mvhd.cpp \
+	atom_nmhd.cpp \
 	atom_pasp.cpp \
 	atom_ohdr.cpp \
 	atom_root.cpp \
@@ -278,6 +281,7 @@ libmp4v2_la_SOURCES = \
 	atom_tfhd.cpp \
 	atom_tkhd.cpp \
 	atom_treftype.cpp \
+	atom_tx3g.cpp \
 	atom_trun.cpp \
 	atom_udta.cpp \
 	atom_url.cpp \
@@ -429,6 +433,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_enca.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_encv.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_free.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_ftab.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_ftyp.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_gmin.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_hdlr.Plo@am__quote@
@@ -441,6 +446,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_mp4s.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_mp4v.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_mvhd.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_nmhd.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_ohdr.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_pasp.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_root.Plo@am__quote@
@@ -461,6 +467,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_tkhd.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_treftype.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_trun.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_tx3g.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_udta.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_url.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/atom_urn.Plo@am__quote@

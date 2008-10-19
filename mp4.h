@@ -607,6 +607,10 @@ MP4TrackId MP4AddChapterTextTrack(
 	MP4FileHandle hFile, 
 	MP4TrackId refTrackId);
 
+MP4TrackId MP4AddSubtitleTrack(
+	MP4FileHandle hFile,
+	MP4TrackId refTrackId);
+	
 MP4TrackId MP4AddPixelAspectRatio(
 	MP4FileHandle hFile, 
 	MP4TrackId refTrackId,
