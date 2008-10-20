@@ -2182,7 +2182,7 @@ MP4TrackId MP4File::AddSubtitleTrack(MP4TrackId refTrackId)
 	
 	// Hardcoded crap... add the ftab atom and add one font entry
 	MP4Atom* pFtabAtom = AddChildAtom(MakeTrackName(trackId, "mdia.minf.stbl.stsd.tx3g"), "ftab");
-	
+
 	((MP4Integer16Property*)pFtabAtom->GetProperty(0))->IncrementValue();
 	
 	MP4Integer16Property* pfontID = (MP4Integer16Property*)((MP4TableProperty*)pFtabAtom->GetProperty(1))->GetProperty(0);
@@ -2190,7 +2190,6 @@ MP4TrackId MP4File::AddSubtitleTrack(MP4TrackId refTrackId)
 	
 	MP4StringProperty* pName = (MP4StringProperty*)((MP4TableProperty*)pFtabAtom->GetProperty(1))->GetProperty(1);
 	pName->AddValue("Arial");
-	
 	
 	// stsd is a unique beast in that it has a count of the number 
 	// of child atoms that needs to be incremented after we add the text atom

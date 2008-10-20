@@ -451,7 +451,7 @@ void MP4File::WriteCountedString(char* string,
 
 	if (string) {
 		byteLength = strlen(string);
-                if (byteLength >= fixedLength) {
+                if (fixedLength && (byteLength >= fixedLength)) {
                     byteLength = fixedLength-1;
                 }
 	} else {
