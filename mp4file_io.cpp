@@ -477,15 +477,16 @@ void MP4File::WriteCountedString(char* string,
 	if (byteLength > 0) {
             // Write the string (or the portion that we want to write)
             WriteBytes((uint8_t*)string, byteLength);
-            // Write any padding if this is a fixed length counted string
-            if (fixedLength) {
-                zero[0] = 0;
-                while (byteLength < fixedLength-1) {
-                    WriteBytes(zero, 1);
-                    byteLength++;
-                }
+        }
+
+        // Write any padding if this is a fixed length counted string
+        if (fixedLength) {
+            zero[0] = 0;
+            while (byteLength < fixedLength-1) {
+                WriteBytes(zero, 1);
+                byteLength++;
             }
-	}
+        }
 }
 
 uint64_t MP4File::ReadBits(uint8_t numBits)
