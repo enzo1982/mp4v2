@@ -16,7 +16,7 @@
  * Copyright (C) Cisco Systems Inc. 2001.  All Rights Reserved.
  * 
  * Contributor(s): 
- *		Dave Mackie		dmackie@cisco.com
+ *      Dave Mackie     dmackie@cisco.com
  */
 
 // N.B. mp4extract just extracts tracks/samples from an mp4 file
@@ -24,8 +24,11 @@
 // elementary stream (ES). Use "mp4creator -extract=<trackId>" if
 // you need the ES reconstructed. 
 
-#include "mp4.h"
-#include "getopt.h"
+#include "impl.h"
+
+namespace mp4v2 { namespace util {
+
+///////////////////////////////////////////////////////////////////////////////
 
 char* ProgName;
 char* Mp4PathName;
@@ -43,33 +46,33 @@ static void DumpTrack (MP4FileHandle mp4file, MP4TrackId tid)
   numSamples = MP4GetTrackNumberOfSamples(mp4file, tid);
   timescale = MP4GetTrackTimeScale(mp4file, tid);
   printf("mp4file %s, track %d, samples %d, timescale %d\n", 
-	 Mp4FileName, tid, numSamples, timescale);
+     Mp4FileName, tid, numSamples, timescale);
 
   for (sid = 1; sid <= numSamples; sid++) {
     time = MP4GetSampleTime(mp4file, tid, sid);
     msectime = time;
-    msectime *= TO_U64(1000);
+    msectime *= UINT64_C(1000);
     msectime /= timescale;
     if (msectime == 0) {
-      hrtime = mintime = sectime = TO_U64(0);
+      hrtime = mintime = sectime = UINT64_C(0);
     } else {
-      hrtime = msectime / TO_U64(3600 * 1000);
-      msectime -= hrtime * TO_U64(3600 * 1000);
-      mintime = msectime / TO_U64(60 * 1000);
-      msectime -= (mintime * TO_U64(60 * 1000));
-      sectime = msectime / TO_U64(1000);
-      msectime -= sectime * TO_U64(1000);
+      hrtime = msectime / UINT64_C(3600 * 1000);
+      msectime -= hrtime * UINT64_C(3600 * 1000);
+      mintime = msectime / UINT64_C(60 * 1000);
+      msectime -= (mintime * UINT64_C(60 * 1000));
+      sectime = msectime / UINT64_C(1000);
+      msectime -= sectime * UINT64_C(1000);
     }
 
-    printf("sampleId %6d, size %5u duration %8"U64F" time %8"U64F" %02"U64F":%02"U64F":%02"U64F".%03"U64F" %c\n",
-	  sid,  MP4GetSampleSize(mp4file, tid, sid), 
-	   MP4GetSampleDuration(mp4file, tid, sid),
-	   time, hrtime, mintime, sectime, msectime,
-	   MP4GetSampleSync(mp4file, tid, sid) == 1 ? 'S' : ' ');
+    printf("sampleId %6d, size %5u duration %8" PRIu64 " time %8" PRIu64 " %02" PRIu64 ":%02" PRIu64 ":%02" PRIu64 ".%03" PRIu64 " %c\n",
+      sid,  MP4GetSampleSize(mp4file, tid, sid), 
+       MP4GetSampleDuration(mp4file, tid, sid),
+       time, hrtime, mintime, sectime, msectime,
+       MP4GetSampleSync(mp4file, tid, sid) == 1 ? 'S' : ' ');
   }
 }
 
-int main(int argc, char** argv)
+extern "C" int main(int argc, char** argv)
 {
   const char* usageString = 
     "[-l] [-t <track-id>] [-s <sample-id>] [-v [<level>]] <file-name>\n";
@@ -83,15 +86,15 @@ int main(int argc, char** argv)
     int c = -1;
     int option_index = 0;
     static struct option long_options[] = {
-      { "track", 1, 0, 't' },
-      { "sample", 1, 0, 's' },
-      { "verbose", 2, 0, 'v' },
-      { "version", 0, 0, 'V' },
+      { "track",   required_argument, 0, 't' },
+      { "sample",  required_argument, 0, 's' },
+      { "verbose", optional_argument, 0, 'v' },
+      { "version", no_argument,       0, 'V' },
       { NULL, 0, 0, 0 }
     };
 
     c = getopt_long_only(argc, argv, "t:v::V",
-			 long_options, &option_index);
+             long_options, &option_index);
 
     if (c == -1)
       break;
@@ -99,46 +102,46 @@ int main(int argc, char** argv)
     switch (c) {
     case 's':
       if (sscanf(optarg, "%u", &sampleId) != 1) {
-	fprintf(stderr, "%s: bad sample-id specified: %s\n", 
-		ProgName, optarg);
-	exit(1);
+    fprintf(stderr, "%s: bad sample-id specified: %s\n", 
+        ProgName, optarg);
+    exit(1);
       }
       break;
     case 't':
       if (sscanf(optarg, "%u", &trackId) != 1) {
-	fprintf(stderr, 
-		"%s: bad track-id specified: %s\n",
-		ProgName, optarg);
-	exit(1);
+    fprintf(stderr, 
+        "%s: bad track-id specified: %s\n",
+        ProgName, optarg);
+    exit(1);
       }
       break;
     case 'v':
       verbosity |= MP4_DETAILS_READ;
       if (optarg) {
-	uint32_t level;
-	if (sscanf(optarg, "%u", &level) == 1) {
-	  if (level >= 2) {
-	    verbosity |= MP4_DETAILS_TABLE;
-	  } 
-	  if (level >= 3) {
-	    verbosity |= MP4_DETAILS_SAMPLE;
-	  } 
-	  if (level >= 4) {
-	    verbosity = MP4_DETAILS_ALL;
-	  }
-	}
+    uint32_t level;
+    if (sscanf(optarg, "%u", &level) == 1) {
+      if (level >= 2) {
+        verbosity |= MP4_DETAILS_TABLE;
+      } 
+      if (level >= 3) {
+        verbosity |= MP4_DETAILS_SAMPLE;
+      } 
+      if (level >= 4) {
+        verbosity = MP4_DETAILS_ALL;
+      }
+    }
       }
       break;
     case '?':
       fprintf(stderr, "usage: %s %s", ProgName, usageString);
       exit(0);
     case 'V':
-      fprintf(stderr, "%s - %s version %s\n", 
-	      ProgName, MP4V2_PACKAGE, MP4V2_VERSION);
+      fprintf(stderr, "%s - %s\n", 
+          ProgName, MP4V2_PROJECT_name_formal);
       exit(0);
     default:
       fprintf(stderr, "%s: unknown option specified, ignoring: %c\n", 
-	      ProgName, c);
+          ProgName, c);
     }
   }
 
@@ -147,9 +150,9 @@ int main(int argc, char** argv)
     fprintf(stderr, "usage: %s %s", ProgName, usageString);
     exit(1);
   }
-	
+    
   if (verbosity) {
-    fprintf(stderr, "%s version %s\n", ProgName, MP4V2_VERSION);
+    fprintf(stderr, "%s version %s\n", ProgName, MP4V2_PROJECT_version);
   }
 
   /* point to the specified file names */
@@ -187,7 +190,7 @@ int main(int argc, char** argv)
     }
     if (sampleId > MP4GetTrackNumberOfSamples(mp4File, trackId)) {
       fprintf(stderr, "%s: Sample number %u is past end %u\n", 
-	      ProgName, sampleId, MP4GetTrackNumberOfSamples(mp4File, trackId));
+          ProgName, sampleId, MP4GetTrackNumberOfSamples(mp4File, trackId));
       return -1;
     }
     uint32_t sample_size = MP4GetTrackMaxSampleSize(mp4File, trackId);
@@ -197,20 +200,20 @@ int main(int argc, char** argv)
     uint32_t this_size = sample_size;
     bool isSyncSample;
     bool ret = MP4ReadSample(mp4File, 
-			     trackId, 
-			     sampleId, 
-			     &sample,
-			     &this_size,
-			     &sampleTime, 
-			     &sampleDuration, 
-			     &sampleRenderingOffset,
-			     &isSyncSample);
+                 trackId, 
+                 sampleId, 
+                 &sample,
+                 &this_size,
+                 &sampleTime, 
+                 &sampleDuration, 
+                 &sampleRenderingOffset,
+                 &isSyncSample);
     if (ret == false) {
       fprintf(stderr, "Sample read error\n");
       return -1;
     }
     printf("Track %u, Sample %u, Length %u\n", 
-	   trackId, sampleId, this_size);
+       trackId, sampleId, this_size);
 
     for (uint32_t ix = 0; ix < this_size; ix++) {
       if ((ix % 16) == 0) printf("\n%04u ", ix);
@@ -222,8 +225,8 @@ int main(int argc, char** argv)
       uint32_t numTracks = MP4GetNumberOfTracks(mp4File);
       
       for (uint32_t i = 0; i < numTracks; i++) {
-	trackId = MP4FindTrackId(mp4File, i);
-	DumpTrack(mp4File, trackId);
+    trackId = MP4FindTrackId(mp4File, i);
+    DumpTrack(mp4File, trackId);
       }
     } else {
       DumpTrack(mp4File, trackId);
@@ -235,3 +238,6 @@ int main(int argc, char** argv)
   return(0);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
+}} // namespace mp4v2::util

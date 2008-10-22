@@ -16,11 +16,14 @@
  * Copyright (C) Cisco Systems Inc. 2004.  All Rights Reserved.
  * 
  * Contributor(s): 
- *		Bill May wmay@cisco.com (from mp4info.cpp)
+ *      Bill May wmay@cisco.com (from mp4info.cpp)
  */
 
-#include "mp4.h"
-#include "getopt.h"
+#include "impl.h"
+
+namespace mp4v2 { namespace util {
+
+///////////////////////////////////////////////////////////////////////////////
 
 static uint8_t png_hdr[] = {
   0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a
@@ -66,20 +69,20 @@ static void strip_filename (const char *name, char *buffer)
   }
 }
 
-int main(int argc, char** argv)
+extern "C" int main(int argc, char** argv)
 {
   /* begin processing command line */
   char* ProgName = argv[0];
   while (true) {
     int c = -1;
     int option_index = 0;
-    static struct option long_options[] = {
-      { "version", 0, 0, 'V' },
+    static option long_options[] = {
+      { "version", no_argument, 0, 'V' },
       { NULL, 0, 0, 0 }
     };
 
     c = getopt_long_only(argc, argv, "V",
-			 long_options, &option_index);
+             long_options, &option_index);
 
     if (c == -1)
       break;
@@ -87,27 +90,26 @@ int main(int argc, char** argv)
     switch (c) {
     case '?':
       //fprintf(stderr, "usage: %s %s", ProgName, usageString);
-	  PrintUsage(ProgName);
+      PrintUsage(ProgName);
       exit(0);
     case 'V':
-      fprintf(stderr, "%s - %s version %s\n", ProgName, 
-	      MP4V2_PACKAGE, MP4V2_VERSION);
+      fprintf(stderr, "%s - %s\n", ProgName, MP4V2_PROJECT_name_formal);
       exit(0);
     default:
       PrintUsage(ProgName);
       fprintf(stderr, "%s: unknown option specified, ignoring: %c\n", 
-	      ProgName, c);
+          ProgName, c);
     }
   }
 
   /* check that we have at least one non-option argument */
   if ((argc - optind) < 1) {
-	PrintUsage(ProgName);
+    PrintUsage(ProgName);
     exit(1);
   }
 
   /* end processing of command line */
-  printf("%s version %s\n", ProgName, MP4V2_VERSION);
+  printf("%s version %s\n", ProgName, MP4V2_PROJECT_version);
 
   while (optind < argc) {
     char *mp4FileName = argv[optind];
@@ -117,39 +119,39 @@ int main(int argc, char** argv)
       uint32_t art_size;
 
       if (MP4GetMetadataCoverArt(mp4file, &art, &art_size)) { 
-	//extract the image from the mp4file
-	char filename[MAXPATHLEN];
-	//the user-supplied path with no extension (it will get determined from the header)
-	const char* ending = check_image_header(art); 
-	if (argc != optind + 1) {
-	  strcpy(filename, argv[optind + 1]);
-	  optind++;
-	} else {
-	  strip_filename(mp4FileName, filename);
-	}
+    //extract the image from the mp4file
+    char filename[PATH_MAX];
+    //the user-supplied path with no extension (it will get determined from the header)
+    const char* ending = check_image_header(art); 
+    if (argc != optind + 1) {
+      strcpy(filename, argv[optind + 1]);
+      optind++;
+    } else {
+      strip_filename(mp4FileName, filename);
+    }
 
-	if (ending != NULL)
-	  strcat(filename, ending);
+    if (ending != NULL)
+      strcat(filename, ending);
 
-	struct stat fstat;
-	if (stat(filename, &fstat) == 0) {
-	  fprintf(stderr, "Error: file %s already exists\n", filename);
-	  exit(0);
-	} else {
-	  FILE *ofile = fopen(filename, FOPEN_WRITE_BINARY);
-	  if (ofile != NULL) {
-	    fwrite(art, art_size, 1, ofile);
-	    fclose(ofile);
-	    printf("created file %s\n", filename);
-					  free(art);
-					  MP4Close(mp4file);
-					  return(0);
-	  } else {
-	    fprintf(stderr, "couldn't create file %s\n", filename);
-	  }
-	}
+    struct stat fstat;
+    if (stat(filename, &fstat) == 0) {
+      fprintf(stderr, "Error: file %s already exists\n", filename);
+      exit(0);
+    } else {
+      FILE *ofile = fopen(filename, "wb");
+      if (ofile != NULL) {
+        fwrite(art, art_size, 1, ofile);
+        fclose(ofile);
+        printf("created file %s\n", filename);
+                      free(art);
+                      MP4Close(mp4file);
+                      return(0);
       } else {
-	fprintf(stderr, "art not available for %s\n", mp4FileName);
+        fprintf(stderr, "couldn't create file %s\n", filename);
+      }
+    }
+      } else {
+    fprintf(stderr, "art not available for %s\n", mp4FileName);
       }
       optind++;
     }
@@ -158,3 +160,6 @@ int main(int argc, char** argv)
   return(0);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
+}} // namespace mp4v2::util

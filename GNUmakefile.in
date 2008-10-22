@@ -1,0 +1,55 @@
+include GNUmakefile.auto
+
+###############################################################################
+
+AM_CPPFLAGS = $(strip \
+    $(MK_CXX_ARCH) $(AC_CXX_ARCH) \
+    $(MK_CXX_CYGWIN) $(AC_CXX_CYGWIN) \
+    $(MK_CXX_I) $(AC_CXX_I))
+
+AM_LDFLAGS = $(strip \
+    $(MK_CXX_ARCH) $(AC_CXX_ARCH) \
+    $(MK_CXX_CYGWIN) $(AC_CXX_CYGWIN))
+
+AM_CXXFLAGS = $(strip \
+    $(MK_CXX_W) $(AC_CXX_W))
+
+###############################################################################
+
+MK_CXX_ARCH   =
+MK_CXX_CYGWIN =
+MK_CXX_W      = -Wall
+MK_CXX_D      =
+MK_CXX_I      = -I$(top_builddir)/include -I$(top_srcdir)/include
+
+###############################################################################
+
+##
+## override automake 1.10.1's internal am__strip_dir implementation
+##
+## reason: it strips all leading directory components in a path, but we need
+## an exception where if it is used for a destination with include/ that
+## a single include/ be stripped because our source tree specifies public
+## headers in include/ -- and this results in include/ being repeated .
+##
+## alternatively we could put a subdir make just for public headers to
+## get a similar stripping effect but subdir make is evil.
+##
+## default as of automake 1.10.1:
+##   am__vpath_adj = case $$p in \
+##       $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
+##       *) f=$$p;; \
+##       esac;
+##
+
+am__vpath_adj = case $$p in \
+    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
+    *) f=$$p;; \
+    esac; \
+    f=`echo $$f | sed 's|include/||'`;
+
+###############################################################################
+
+$(top_srcdir)/README: $(top_builddir)/project/project.texi
+$(top_srcdir)/README: $(top_srcdir)/project/README.texi
+	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<

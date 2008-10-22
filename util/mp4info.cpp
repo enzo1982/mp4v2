@@ -16,149 +16,153 @@
  * Copyright (C) Cisco Systems Inc. 2001-2002.  All Rights Reserved.
  * 
  * Contributor(s): 
- *		Dave Mackie		dmackie@cisco.com
+ *      Dave Mackie     dmackie@cisco.com
  */
 
-#include "mp4.h"
-#include "getopt.h"
+#include "impl.h"
 
+namespace mp4v2 { namespace util {
 
-int main(int argc, char** argv)
+///////////////////////////////////////////////////////////////////////////////
+
+extern "C" int main(int argc, char** argv)
 {
-	const char* usageString = 
-		"<file-name>\n";
+    const char* usageString = 
+        "<file-name>\n";
 
-	/* begin processing command line */
-	char* ProgName = argv[0];
-	while (true) {
-		int c = -1;
-		int option_index = 0;
-		static struct option long_options[] = {
-			{ "version", 0, 0, 'V' },
-			{ NULL, 0, 0, 0 }
-		};
+    /* begin processing command line */
+    char* ProgName = argv[0];
+    while (true) {
+        int c = -1;
+        int option_index = 0;
+        static struct option long_options[] = {
+            { "version", no_argument, 0, 'V' },
+            { NULL, 0, 0, 0 }
+        };
 
-		c = getopt_long_only(argc, argv, "V",
-			long_options, &option_index);
+        c = getopt_long_only(argc, argv, "V",
+            long_options, &option_index);
 
-		if (c == -1)
-			break;
+        if (c == -1)
+            break;
 
-		switch (c) {
-		case '?':
-			fprintf(stderr, "usage: %s %s", ProgName, usageString);
-			exit(0);
-		case 'V':
-		  fprintf(stderr, "%s - %s version %s\n", ProgName, 
-			  MP4V2_PACKAGE, MP4V2_VERSION);
-		  exit(0);
-		default:
-			fprintf(stderr, "%s: unknown option specified, ignoring: %c\n", 
-				ProgName, c);
-		}
-	}
+        switch (c) {
+        case '?':
+            fprintf(stderr, "usage: %s %s", ProgName, usageString);
+            exit(0);
+        case 'V':
+          fprintf(stderr, "%s - %s\n", ProgName, MP4V2_PROJECT_name_formal);
+          exit(0);
+        default:
+            fprintf(stderr, "%s: unknown option specified, ignoring: %c\n", 
+                ProgName, c);
+        }
+    }
 
-	/* check that we have at least one non-option argument */
-	if ((argc - optind) < 1) {
-		fprintf(stderr, "usage: %s %s", ProgName, usageString);
-		exit(1);
-	}
+    /* check that we have at least one non-option argument */
+    if ((argc - optind) < 1) {
+        fprintf(stderr, "usage: %s %s", ProgName, usageString);
+        exit(1);
+    }
 
-	/* end processing of command line */
-	printf("%s version %s\n", ProgName, MP4V2_VERSION);
+    /* end processing of command line */
+    printf("%s version %s\n", ProgName, MP4V2_PROJECT_version);
 
-	while (optind < argc) {
-		char *mp4FileName = argv[optind++];
+    while (optind < argc) {
+        char *mp4FileName = argv[optind++];
 
-		printf("%s:\n", mp4FileName);
+        printf("%s:\n", mp4FileName);
 
-		char* info = MP4FileInfo(mp4FileName);
+        char* info = MP4FileInfo(mp4FileName);
 
-		if (!info) {
-			fprintf(stderr, 
-				"%s: can't open %s\n", 
-				ProgName, mp4FileName);
-			continue;
-		}
+        if (!info) {
+            fprintf(stderr, 
+                "%s: can't open %s\n", 
+                ProgName, mp4FileName);
+            continue;
+        }
 
-		fputs(info, stdout);
-		MP4FileHandle mp4file = MP4Read(mp4FileName); //, MP4_DETAILS_ERROR);
-		if (mp4file != MP4_INVALID_FILE_HANDLE) {
-		  char *value;
-		  uint16_t numvalue, numvalue2;
-		  uint8_t bytevalue;
-		  if (MP4GetMetadataName(mp4file, &value) && value != NULL) {
-		    fprintf(stdout, " Name: %s\n", value);
-		    free(value);
-		  }
-		  if (MP4GetMetadataArtist(mp4file, &value) && value != NULL) {
-		    fprintf(stdout, " Artist: %s\n", value);
-		    free(value);
-		  }
-		  if (MP4GetMetadataWriter(mp4file, &value) && value != NULL) {
-		    fprintf(stdout, " Writer: %s\n", value);
-		    free(value);
-		  }
-		  if (MP4GetMetadataTool(mp4file, &value) && value != NULL) {
-		    fprintf(stdout, " Tool: %s\n", value);
-		    free(value);
-		  }
-		  if (MP4GetMetadataYear(mp4file, &value) && value != NULL) {
-		    fprintf(stdout, " Year: %s\n", value);
-		    free(value);
-		  }
-		  if (MP4GetMetadataAlbum(mp4file, &value) && value != NULL) {
-		    fprintf(stdout, " Album: %s\n", value);
-		    free(value);
-		  }
-  		  if (MP4GetMetadataTrack(mp4file, &numvalue, &numvalue2)) {
-		    fprintf(stdout, " Track: %u of %u\n", numvalue,
-			    numvalue2);
-		  }
-		  if (MP4GetMetadataDisk(mp4file, &numvalue, &numvalue2)) {
-		    fprintf(stdout, " Disk: %u of %u\n", numvalue,
-			    numvalue2);
-		  }
-		  if (MP4GetMetadataGenre(mp4file, &value) && value != NULL) {
-		    fprintf(stdout, " Genre: %s\n", value);
-		    free(value);
-		  }
-		  if (MP4GetMetadataGrouping(mp4file, &value) && value != NULL) {
-		    fprintf(stdout, " Grouping: %s\n", value);
-		    free(value);
-		  }
-		  if (MP4GetMetadataTempo(mp4file, &numvalue)) {
-		    fprintf(stdout, " Tempo: %u\n", numvalue);
-		  }
-		  if (MP4GetMetadataComment(mp4file, &value) && 
-		      value != NULL) {
-		    fprintf(stdout, " Comment: %s\n", value);
-		    free(value);
-		  }
-		  if (MP4GetMetadataCompilation(mp4file, &bytevalue)) {
-		      fprintf(stdout, " Part of Compilation: %s\n", 
-			      bytevalue ? "yes" : "no");
-		  }
-		  if (MP4GetMetadataPartOfGaplessAlbum(mp4file, &bytevalue)) {
-		      fprintf(stdout, " Part of Gapless Album: %s\n", 
-			      bytevalue ? "yes" : "no");
-		  }
-		  uint32_t artcount = MP4GetMetadataCoverArtCount(mp4file);
-		  if (artcount > 0) {
-		    fprintf(stdout, " Cover Art pieces: %u\n", 
-			    artcount);
-		  }
-		  if (MP4GetMetadataAlbumArtist(mp4file, &value) &&
-		      value != NULL) {
-		    fprintf(stdout, " Album Artist: %s\n", 
-			    value);
-		    free(value);
-		  }
-		  MP4Close(mp4file);
-		}
-		free(info);
-	}
+        fputs(info, stdout);
+        MP4FileHandle mp4file = MP4Read(mp4FileName); //, MP4_DETAILS_ERROR);
+        if (mp4file != MP4_INVALID_FILE_HANDLE) {
+          char *value;
+          uint16_t numvalue, numvalue2;
+          uint8_t bytevalue;
+          if (MP4GetMetadataName(mp4file, &value) && value != NULL) {
+            fprintf(stdout, " Name: %s\n", value);
+            free(value);
+          }
+          if (MP4GetMetadataArtist(mp4file, &value) && value != NULL) {
+            fprintf(stdout, " Artist: %s\n", value);
+            free(value);
+          }
+          if (MP4GetMetadataWriter(mp4file, &value) && value != NULL) {
+            fprintf(stdout, " Writer: %s\n", value);
+            free(value);
+          }
+          if (MP4GetMetadataTool(mp4file, &value) && value != NULL) {
+            fprintf(stdout, " Tool: %s\n", value);
+            free(value);
+          }
+          if (MP4GetMetadataYear(mp4file, &value) && value != NULL) {
+            fprintf(stdout, " Year: %s\n", value);
+            free(value);
+          }
+          if (MP4GetMetadataAlbum(mp4file, &value) && value != NULL) {
+            fprintf(stdout, " Album: %s\n", value);
+            free(value);
+          }
+          if (MP4GetMetadataTrack(mp4file, &numvalue, &numvalue2)) {
+            fprintf(stdout, " Track: %u of %u\n", numvalue,
+                numvalue2);
+          }
+          if (MP4GetMetadataDisk(mp4file, &numvalue, &numvalue2)) {
+            fprintf(stdout, " Disk: %u of %u\n", numvalue,
+                numvalue2);
+          }
+          if (MP4GetMetadataGenre(mp4file, &value) && value != NULL) {
+            fprintf(stdout, " Genre: %s\n", value);
+            free(value);
+          }
+          if (MP4GetMetadataGrouping(mp4file, &value) && value != NULL) {
+            fprintf(stdout, " Grouping: %s\n", value);
+            free(value);
+          }
+          if (MP4GetMetadataTempo(mp4file, &numvalue)) {
+            fprintf(stdout, " Tempo: %u\n", numvalue);
+          }
+          if (MP4GetMetadataComment(mp4file, &value) && 
+              value != NULL) {
+            fprintf(stdout, " Comment: %s\n", value);
+            free(value);
+          }
+          if (MP4GetMetadataCompilation(mp4file, &bytevalue)) {
+              fprintf(stdout, " Part of Compilation: %s\n", 
+                  bytevalue ? "yes" : "no");
+          }
+          if (MP4GetMetadataPartOfGaplessAlbum(mp4file, &bytevalue)) {
+              fprintf(stdout, " Part of Gapless Album: %s\n", 
+                  bytevalue ? "yes" : "no");
+          }
+          uint32_t artcount = MP4GetMetadataCoverArtCount(mp4file);
+          if (artcount > 0) {
+            fprintf(stdout, " Cover Art pieces: %u\n", 
+                artcount);
+          }
+          if (MP4GetMetadataAlbumArtist(mp4file, &value) &&
+              value != NULL) {
+            fprintf(stdout, " Album Artist: %s\n", 
+                value);
+            free(value);
+          }
+          MP4Close(mp4file);
+        }
+        free(info);
+    }
 
-	return(0);
+    return(0);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
+}} // namespace mp4v2::util

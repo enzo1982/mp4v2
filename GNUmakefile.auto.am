@@ -1,0 +1,166 @@
+AC_CXX_ARCH   = @AC_CXX_ARCH@
+AC_CXX_CYGWIN = @AC_CXX_CYGWIN@
+AC_CXX_W      = @AC_CXX_W@
+AC_CXX_D      = @AC_CXX_D@
+AC_CXX_I      = @AC_CXX_I@
+
+AC_LIB_WINSOCK2 = @AC_LIB_WINSOCK2@
+
+###############################################################################
+
+bin_PROGRAMS =
+
+lib_LTLIBRARIES = libmp4v2.la
+
+libmp4v2_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_builddir)/src -I$(top_srcdir)/src
+
+###############################################################################
+
+libmp4v2_la_SOURCES = \
+    src/3gp.cpp                          \
+    src/atom_ac3.cpp                     \
+    src/atom_amr.cpp                     \
+    src/atom_avc1.cpp                    \
+    src/atom_avcC.cpp                    \
+    src/atom_colr.cpp                    \
+    src/atom_d263.cpp                    \
+    src/atom_damr.cpp                    \
+    src/atom_dref.cpp                    \
+    src/atom_elst.cpp                    \
+    src/atom_enca.cpp                    \
+    src/atom_encv.cpp                    \
+    src/atom_free.cpp                    \
+    src/atom_ftyp.cpp                    \
+    src/atom_ftab.cpp                    \
+    src/atom_gmin.cpp                    \
+    src/atom_hdlr.cpp                    \
+    src/atom_hinf.cpp                    \
+    src/atom_hnti.cpp                    \
+    src/atom_href.cpp                    \
+    src/atom_mdat.cpp                    \
+    src/atom_mdhd.cpp                    \
+    src/atom_meta.cpp                    \
+    src/atom_mp4s.cpp                    \
+    src/atom_mp4v.cpp                    \
+    src/atom_mvhd.cpp                    \
+    src/atom_nmhd.cpp                    \
+    src/atom_ohdr.cpp                    \
+    src/atom_pasp.cpp                    \
+    src/atom_root.cpp                    \
+    src/atom_rtp.cpp                     \
+    src/atom_s263.cpp                    \
+    src/atom_sdp.cpp                     \
+    src/atom_smi.cpp                     \
+    src/atom_sound.cpp                   \
+    src/atom_standard.cpp                \
+    src/atom_stbl.cpp                    \
+    src/atom_stdp.cpp                    \
+    src/atom_stsc.cpp                    \
+    src/atom_stsd.cpp                    \
+    src/atom_stsz.cpp                    \
+    src/atom_stz2.cpp                    \
+    src/atom_text.cpp                    \
+    src/atom_tfhd.cpp                    \
+    src/atom_tkhd.cpp                    \
+    src/atom_treftype.cpp                \
+    src/atom_trun.cpp                    \
+    src/atom_tx3g.cpp                    \
+    src/atom_udta.cpp                    \
+    src/atom_url.cpp                     \
+    src/atom_urn.cpp                     \
+    src/atom_uuid.cpp                    \
+    src/atom_video.cpp                   \
+    src/atom_vmhd.cpp                    \
+    src/atoms.h                          \
+    src/descriptors.cpp                  \
+    src/descriptors.h                    \
+    src/impl.h                           \
+    src/isma.cpp                         \
+    src/mp4.cpp                          \
+    src/mp4array.h                       \
+    src/mp4atom.cpp                      \
+    src/mp4atom.h                        \
+    src/mp4container.cpp                 \
+    src/mp4container.h                   \
+    src/mp4descriptor.cpp                \
+    src/mp4descriptor.h                  \
+    src/mp4file.cpp                      \
+    src/mp4file.h                        \
+    src/mp4file_io.cpp                   \
+    src/mp4info.cpp                      \
+    src/mp4meta.cpp                      \
+    src/mp4property.cpp                  \
+    src/mp4property.h                    \
+    src/mp4track.cpp                     \
+    src/mp4track.h                       \
+    src/mp4util.cpp                      \
+    src/mp4util.h                        \
+    src/ocidescriptors.cpp               \
+    src/ocidescriptors.h                 \
+    src/odcommands.cpp                   \
+    src/odcommands.h                     \
+    src/platform/platform.h              \
+    src/platform/posix/impl.h            \
+    src/platform/posix/posix.h           \
+    src/platform/win32/gettimeofday.h    \
+    src/platform/win32/impl.h            \
+    src/platform/win32/win32.h           \
+    src/qosqualifiers.cpp                \
+    src/qosqualifiers.h                  \
+    src/rtphint.cpp                      \
+    src/rtphint.h                        \
+    src/type.h                           \
+    src/util.h                           \
+    src/virtual_io.cpp                   \
+    src/virtual_io.h
+
+###############################################################################
+
+if ADD_GETTIMEOFDAY
+    libmp4v2_la_SOURCES += src/platform/win32/gettimeofday.cpp
+endif
+
+if ADD_UTIL
+    bin_PROGRAMS += mp4art mp4dump mp4extract mp4info mp4syncfiles mp4tags mp4trackdump
+
+    mp4art_SOURCES       = util/mp4art.cpp
+    mp4dump_SOURCES      = util/mp4dump.cpp
+    mp4extract_SOURCES   = util/mp4extract.cpp
+    mp4info_SOURCES      = util/mp4info.cpp
+    mp4syncfiles_SOURCES = util/mp4syncfiles.cpp
+    mp4tags_SOURCES      = util/mp4tags.cpp
+    mp4trackdump_SOURCES = util/mp4trackdump.cpp
+
+    mp4art_CPPFLAGS       = $(AM_CPPFLAGS) -I$(top_builddir)/src -I$(top_srcdir)/src
+    mp4dump_CPPFLAGS      = $(AM_CPPFLAGS) -I$(top_builddir)/src -I$(top_srcdir)/src
+    mp4extract_CPPFLAGS   = $(AM_CPPFLAGS) -I$(top_builddir)/src -I$(top_srcdir)/src
+    mp4info_CPPFLAGS      = $(AM_CPPFLAGS) -I$(top_builddir)/src -I$(top_srcdir)/src
+    mp4syncfiles_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_builddir)/src -I$(top_srcdir)/src
+    mp4tags_CPPFLAGS      = $(AM_CPPFLAGS) -I$(top_builddir)/src -I$(top_srcdir)/src
+    mp4trackdump_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_builddir)/src -I$(top_srcdir)/src
+
+    mp4art_LDADD       = libmp4v2.la $(AC_LIB_WINSOCK2)
+    mp4dump_LDADD      = libmp4v2.la $(AC_LIB_WINSOCK2)
+    mp4extract_LDADD   = libmp4v2.la $(AC_LIB_WINSOCK2)
+    mp4info_LDADD      = libmp4v2.la $(AC_LIB_WINSOCK2)
+    mp4syncfiles_LDADD = libmp4v2.la $(AC_LIB_WINSOCK2)
+    mp4tags_LDADD      = libmp4v2.la $(AC_LIB_WINSOCK2)
+    mp4trackdump_LDADD = libmp4v2.la $(AC_LIB_WINSOCK2)
+endif
+
+###############################################################################
+
+nobase_include_HEADERS = \
+    include/mp4v2/mp4v2.h \
+    include/mp4v2/platform.h
+
+nobase_nodist_include_HEADERS = include/mp4v2/project.h
+
+###############################################################################
+
+EXTRA_DIST = \
+    README                      \
+    autoaux/svninfo.awk         \
+    project/README.texi         \
+    project/project.defs        \
+    project/project.texi.in

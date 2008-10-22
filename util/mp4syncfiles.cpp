@@ -16,27 +16,32 @@
  * Copyright (C) Cisco Systems Inc. 2001.  All Rights Reserved.
  * 
  * Contributor(s): 
- *		Bill May wmay@cisco.com
+ *      Bill May wmay@cisco.com
  */
 
-#include "mp4.h"
-#include "getopt.h"
+#include "impl.h"
+
+namespace mp4v2 { namespace util {
+
+///////////////////////////////////////////////////////////////////////////////
+
+#define CHECK_AND_FREE(a) if ((a) != NULL) { free((void *)(a)); (a) = NULL;}
 
 static bool compare_duration(char *toname, MP4FileHandle to, 
-			     char *fromname, MP4FileHandle from)
+                 char *fromname, MP4FileHandle from)
 {
   MP4Duration todur, fromdur;
 
   todur = MP4GetTrackDuration(to, 1);
   fromdur = MP4GetTrackDuration(from, 1);
   if (todur == fromdur) return true;
-  printf("%s durations do not match "U64" "U64"\n", fromname,
-	 fromdur, todur);
+  printf("%s durations do not match %" PRIu64 " %" PRIu64 "\n", fromname,
+     fromdur, todur);
   return false;
 }
 
 static void sync_duration (char *toFileName, 
-			   MP4FileHandle durfile)
+               MP4FileHandle durfile)
 {
   MP4Duration todur;
   MP4FileHandle tofile;
@@ -77,7 +82,7 @@ static void sync_duration (char *toFileName,
 
 
 static bool compare_meta(char *toname, MP4FileHandle to, 
-			 char *fromname, MP4FileHandle from)
+             char *fromname, MP4FileHandle from)
 {
   char *tovalue, *fromvalue;
   uint16_t tonum, tonum2, fromnum, fromnum2;
@@ -93,7 +98,7 @@ static bool compare_meta(char *toname, MP4FileHandle to,
   MP4GetMetadataName(from, &fromvalue);
   if (tovalue == NULL || fromvalue == NULL || strcmp(tovalue, fromvalue) != 0) {
     printf("%s name \"%s\" \"%s\"\n", 
-	   fromname, fromvalue, tovalue);
+       fromname, fromvalue, tovalue);
     CHECK_AND_FREE(tovalue);
     CHECK_AND_FREE(fromvalue);
     return false;
@@ -105,7 +110,7 @@ static bool compare_meta(char *toname, MP4FileHandle to,
   MP4GetMetadataArtist(from, &fromvalue);
   if (tovalue == NULL || fromvalue == NULL || strcmp(tovalue, fromvalue) != 0) {
     printf("%s artist \"%s\" \"%s\"\n", 
-	   fromname, fromvalue, tovalue);
+       fromname, fromvalue, tovalue);
     CHECK_AND_FREE(tovalue);
     CHECK_AND_FREE(fromvalue);
     return false;
@@ -118,7 +123,7 @@ static bool compare_meta(char *toname, MP4FileHandle to,
   if (tovalue == NULL || fromvalue == NULL || strcmp(tovalue, fromvalue) != 0) {
     if (tovalue != NULL || fromvalue != NULL) {
       printf("%s writer \"%s\" \"%s\"\n", 
-	     fromname, fromvalue, tovalue);
+         fromname, fromvalue, tovalue);
       CHECK_AND_FREE(tovalue);
       CHECK_AND_FREE(fromvalue);
       return false;
@@ -130,7 +135,7 @@ static bool compare_meta(char *toname, MP4FileHandle to,
   MP4GetMetadataYear(from, &fromvalue);
   if (tovalue == NULL || fromvalue == NULL || strcmp(tovalue, fromvalue) != 0) {
     printf("%s year \"%s\" \"%s\"\n", 
-	   fromname, fromvalue, tovalue);
+       fromname, fromvalue, tovalue);
     CHECK_AND_FREE(tovalue);
     CHECK_AND_FREE(fromvalue);
     return false;
@@ -141,7 +146,7 @@ static bool compare_meta(char *toname, MP4FileHandle to,
   MP4GetMetadataAlbum(from, &fromvalue);
   if (tovalue == NULL || fromvalue == NULL || strcmp(tovalue, fromvalue) != 0) {
     printf("%s album \"%s\" \"%s\"\n", 
-	   fromname, fromvalue, tovalue);
+       fromname, fromvalue, tovalue);
     CHECK_AND_FREE(tovalue);
     CHECK_AND_FREE(fromvalue);
     return false;
@@ -152,7 +157,7 @@ static bool compare_meta(char *toname, MP4FileHandle to,
   MP4GetMetadataAlbumArtist(from, &fromvalue);
   if (tovalue == NULL || fromvalue == NULL || strcmp(tovalue, fromvalue) != 0) {
     printf("%s album artist \"%s\" \"%s\"\n", 
-	   fromname, fromvalue, tovalue);
+       fromname, fromvalue, tovalue);
     CHECK_AND_FREE(tovalue);
     CHECK_AND_FREE(fromvalue);
     return false;
@@ -164,7 +169,7 @@ static bool compare_meta(char *toname, MP4FileHandle to,
   MP4GetMetadataGenre(from, &fromvalue);
   if (tovalue == NULL || fromvalue == NULL || strcmp(tovalue, fromvalue) != 0) {
     printf("%s genre \"%s\" \"%s\"\n", 
-	   fromname, fromvalue, tovalue);
+       fromname, fromvalue, tovalue);
     CHECK_AND_FREE(tovalue);
     CHECK_AND_FREE(fromvalue);
     return false;
@@ -177,7 +182,7 @@ static bool compare_meta(char *toname, MP4FileHandle to,
   if (tovalue == NULL || fromvalue == NULL || strcmp(tovalue, fromvalue) != 0) {
     if (tovalue != NULL || fromvalue != NULL) {
       printf("%s grouping \"%s\" \"%s\"\n", 
-	     fromname, fromvalue, tovalue);
+         fromname, fromvalue, tovalue);
       CHECK_AND_FREE(tovalue);
       CHECK_AND_FREE(fromvalue);
       return false;
@@ -191,7 +196,7 @@ static bool compare_meta(char *toname, MP4FileHandle to,
   if (tovalue == NULL || fromvalue == NULL || strcmp(tovalue, fromvalue) != 0) {
     if (tovalue != NULL || fromvalue != NULL) {
       printf("%s comment \"%s\" \"%s\"\n", 
-	     fromname, fromvalue, tovalue);
+         fromname, fromvalue, tovalue);
       CHECK_AND_FREE(tovalue);
       CHECK_AND_FREE(fromvalue);
       return false;
@@ -205,7 +210,7 @@ static bool compare_meta(char *toname, MP4FileHandle to,
   if (tovalue == NULL || fromvalue == NULL || strcmp(tovalue, fromvalue) != 0) {
     if (tovalue != NULL || fromvalue != NULL) {
       printf("%s comment \"%s\" \"%s\"\n", 
-	     fromname, fromvalue, tovalue);
+         fromname, fromvalue, tovalue);
       CHECK_AND_FREE(tovalue);
       CHECK_AND_FREE(fromvalue);
       return false;
@@ -218,7 +223,7 @@ static bool compare_meta(char *toname, MP4FileHandle to,
   MP4GetMetadataTempo(from, &fromnum);
   if (tonum != fromnum) {
     printf("%s tempo %u %u \n", 
-	   fromname, fromnum, tonum);
+       fromname, fromnum, tonum);
     return false;
   }
 
@@ -226,7 +231,7 @@ static bool compare_meta(char *toname, MP4FileHandle to,
   MP4GetMetadataTrack(from, &fromnum, &fromnum2);
   if (tonum != fromnum || tonum2 != fromnum2) {
     printf("%s track %u %u from %u %u\n", 
-	   fromname, tonum, tonum2, fromnum, fromnum2);
+       fromname, tonum, tonum2, fromnum, fromnum2);
     return false;
   }
 
@@ -234,7 +239,7 @@ static bool compare_meta(char *toname, MP4FileHandle to,
   MP4GetMetadataDisk(from, &fromnum, &fromnum2);
   if (tonum != fromnum || tonum2 != fromnum2) {
     printf("%s disk %u %u from %u %u\n", 
-	   fromname, tonum, tonum2, fromnum, fromnum2);
+       fromname, tonum, tonum2, fromnum, fromnum2);
     return false;
   }
 
@@ -252,8 +257,8 @@ static bool compare_meta(char *toname, MP4FileHandle to,
 
 
 static void copy_meta(char *toname, MP4FileHandle to, 
-		      char *fromname, MP4FileHandle from, 
-		      bool force)
+              char *fromname, MP4FileHandle from, 
+              bool force)
 {
   char *tovalue, *fromvalue;
   uint16_t tonum, tonum2, fromnum, fromnum2;
@@ -399,20 +404,10 @@ static void copy_meta(char *toname, MP4FileHandle to,
   MP4SetVerbosity(to, toverb);
   MP4SetVerbosity(from, fromverb);
 }
-#if 0
-void transit (char *to, char *from)
-{
-  do {
-    if (*from == ' ') {
-      *to++ = '\\';
-    }
-    *to++ = *from;
-  } while (*from++ != '\0');
-}
-#endif
+
 char* ProgName;
 
-int main(int argc, char** argv)
+extern "C" int main(int argc, char** argv)
 {
   const char* usageString = 
     "[-v [<level>]] [-force-meta] <file containing protected file names>\n";
@@ -431,14 +426,14 @@ int main(int argc, char** argv)
     int c = -1;
     int option_index = 0;
     static struct option long_options[] = {
-      { "verbose", 2, 0, 'v' },
-      { "version", 0, 0, 'V' },
-      { "force-meta", 0, 0, 'f'},
+      { "verbose",    optional_argument, 0, 'v' },
+      { "version",    no_argument,       0, 'V' },
+      { "force-meta", no_argument,       0, 'f'},
       { NULL, 0, 0, 0 }
     };
 
     c = getopt_long_only(argc, argv, "v::V",
-			 long_options, &option_index);
+             long_options, &option_index);
 
     if (c == -1)
       break;
@@ -450,30 +445,29 @@ int main(int argc, char** argv)
     case 'v':
       verbosity |= MP4_DETAILS_READ;
       if (optarg) {
-	uint32_t level;
-	if (sscanf(optarg, "%u", &level) == 1) {
-	  if (level >= 2) {
-	    verbosity |= MP4_DETAILS_TABLE;
-	  } 
-	  if (level >= 3) {
-	    verbosity |= MP4_DETAILS_SAMPLE;
-	  } 
-	  if (level >= 4) {
-	    verbosity = MP4_DETAILS_ALL;
-	  }
-	}
+    uint32_t level;
+    if (sscanf(optarg, "%u", &level) == 1) {
+      if (level >= 2) {
+        verbosity |= MP4_DETAILS_TABLE;
+      } 
+      if (level >= 3) {
+        verbosity |= MP4_DETAILS_SAMPLE;
+      } 
+      if (level >= 4) {
+        verbosity = MP4_DETAILS_ALL;
+      }
+    }
       }
       break;
     case '?':
       fprintf(stderr, "usage: %s %s", ProgName, usageString);
       exit(0);
     case 'V':
-      fprintf(stderr, "%s - %s version %s\n", 
-	      ProgName, MP4V2_PACKAGE, MP4V2_VERSION);
+      fprintf(stderr, "%s - %s\n", ProgName, MP4V2_PROJECT_name_formal);
       exit(0);
     default:
       fprintf(stderr, "%s: unknown option specified, ignoring: %c\n", 
-	      ProgName, c);
+          ProgName, c);
     }
   }
 
@@ -482,9 +476,9 @@ int main(int argc, char** argv)
     fprintf(stderr, "usage: %s %s", ProgName, usageString);
     exit(1);
   }
-	
+    
   if (verbosity) {
-    fprintf(stderr, "%s version %s\n", ProgName, MP4V2_VERSION);
+    fprintf(stderr, "%s version %s\n", ProgName, MP4V2_PROJECT_version);
   }
 
   /* warn about extraneous non-option arguments */
@@ -495,74 +489,74 @@ int main(int argc, char** argv)
     FILE *lfile = fopen(difflist, "r");
     while (fgets(Mp4FileName, PATH_MAX, lfile) != NULL) {
       //transit(Mp4FileName, trans);
-      uint len = strlen(Mp4FileName);
+      size_t len = strlen(Mp4FileName);
       len--;
       while (isspace(Mp4FileName[len])) {
-	Mp4FileName[len] = '\0';
-	len--;
+    Mp4FileName[len] = '\0';
+    len--;
       }
       MP4FileHandle mp4File = MP4Read(Mp4FileName, verbosity);
-	
+    
       if (!mp4File) {
-	printf("Cannot open %s\n", Mp4FileName);
+    printf("Cannot open %s\n", Mp4FileName);
       } else {
-	//printf("trying %s\n", Mp4FileName);
-	bool found = false;
-	struct stat statbuf;
-	strcpy(toFileName, Mp4FileName);
-	toFileName[strlen(toFileName) - 1] = 'a';
-	if (stat(toFileName, &statbuf) == 0 &&
-	    S_ISREG(statbuf.st_mode)) {
-	  found = true;
-	} else {
-	  char *lastslash = strrchr(toFileName, '/');
-	  if (lastslash == NULL) {
-	    lastslash = toFileName;
-	  } else
-	    lastslash++;
-	  if (lastslash[2] != ' ') {
-	    char *nextspace = lastslash;
-	    while (!isspace(*nextspace)) nextspace++;
-	    char *to = lastslash + 2;
-	    do {
-	      *to++ = *nextspace++;
-	    } while (*nextspace != '\0');
-	    *to = '\0';
-	  }
-	  for (uint ix = 1; ix < 36 && found == false; ix++) {
-	    lastslash[0] = (ix / 10) + '0';
-	    lastslash[1] = (ix % 10) + '0';
-	    if (stat(toFileName, &statbuf) == 0 &&
-		S_ISREG(statbuf.st_mode)) {
-	      found = true;
-	    }
-	  }
-	}
-	if (found == false) {
-	  printf("Couldn't find %s\n", Mp4FileName);
-	} else {
-	  MP4FileHandle toFile = MP4Read(toFileName, verbosity);
-	  if (!toFile) {
-	    printf("Cannot open %s\n", toFileName);
-	  } else {
-	    if (compare_duration(toFileName, toFile, Mp4FileName, mp4File) == false) {
-	      MP4Close(toFile);
-	      sync_duration(toFileName, mp4File);
-	      toFile = MP4Read(toFileName, verbosity);
-	    }
-	    if (force_meta || compare_meta(toFileName, toFile, Mp4FileName, mp4File) == false) {
-	      printf("need meta fixup %s\n", Mp4FileName);
-	      MP4Close(toFile);
-	      toFile = MP4Modify(toFileName, verbosity);
-	      if (toFile == MP4_INVALID_FILE_HANDLE) {
-		printf("can't open %s for modify\n", toFileName);
-	      }
-	      copy_meta(toFileName, toFile, Mp4FileName, mp4File, force_meta);
-	    }
-	    MP4Close(toFile);
-	  }
-	}
-	MP4Close(mp4File);
+    //printf("trying %s\n", Mp4FileName);
+    bool found = false;
+    struct stat statbuf;
+    strcpy(toFileName, Mp4FileName);
+    toFileName[strlen(toFileName) - 1] = 'a';
+    if (stat(toFileName, &statbuf) == 0 &&
+        S_ISREG(statbuf.st_mode)) {
+      found = true;
+    } else {
+      char *lastslash = strrchr(toFileName, '/');
+      if (lastslash == NULL) {
+        lastslash = toFileName;
+      } else
+        lastslash++;
+      if (lastslash[2] != ' ') {
+        char *nextspace = lastslash;
+        while (!isspace(*nextspace)) nextspace++;
+        char *to = lastslash + 2;
+        do {
+          *to++ = *nextspace++;
+        } while (*nextspace != '\0');
+        *to = '\0';
+      }
+      for (uint32_t ix = 1; ix < 36 && found == false; ix++) {
+        lastslash[0] = (ix / 10) + '0';
+        lastslash[1] = (ix % 10) + '0';
+        if (stat(toFileName, &statbuf) == 0 &&
+        S_ISREG(statbuf.st_mode)) {
+          found = true;
+        }
+      }
+    }
+    if (found == false) {
+      printf("Couldn't find %s\n", Mp4FileName);
+    } else {
+      MP4FileHandle toFile = MP4Read(toFileName, verbosity);
+      if (!toFile) {
+        printf("Cannot open %s\n", toFileName);
+      } else {
+        if (compare_duration(toFileName, toFile, Mp4FileName, mp4File) == false) {
+          MP4Close(toFile);
+          sync_duration(toFileName, mp4File);
+          toFile = MP4Read(toFileName, verbosity);
+        }
+        if (force_meta || compare_meta(toFileName, toFile, Mp4FileName, mp4File) == false) {
+          printf("need meta fixup %s\n", Mp4FileName);
+          MP4Close(toFile);
+          toFile = MP4Modify(toFileName, verbosity);
+          if (toFile == MP4_INVALID_FILE_HANDLE) {
+        printf("can't open %s for modify\n", toFileName);
+          }
+          copy_meta(toFileName, toFile, Mp4FileName, mp4File, force_meta);
+        }
+        MP4Close(toFile);
+      }
+    }
+    MP4Close(mp4File);
       }
     }
     fclose(lfile);
@@ -571,3 +565,6 @@ int main(int argc, char** argv)
   return(0);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
+}} // namespace mp4v2::util

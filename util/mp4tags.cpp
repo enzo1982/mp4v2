@@ -14,8 +14,11 @@
  * by Christopher League <league@contrapunctus.net>
  */
 
-#include "mp4.h"
-#include "getopt.h"
+#include "impl.h"
+
+namespace mp4v2 { namespace util {
+
+///////////////////////////////////////////////////////////////////////////////
 
 /* One-letter options -- if you want to rearrange these, change them
    here, immediately below in OPT_STRING, and in the help text. */
@@ -66,29 +69,29 @@ static const char* help_text =
 "\n";
 
 
-int 
+extern "C" int 
 main(int argc, char** argv)
 {
   static struct option long_options[] = {
-    { "help",    0, 0, OPT_HELP    },
-    { "version", 0, 0, OPT_VERSION },
-    { "album",   1, 0, OPT_ALBUM   },
-    { "artist",  1, 0, OPT_ARTIST  },
-    { "comment", 1, 0, OPT_COMMENT },
-    { "disk",    1, 0, OPT_DISK    },
-    { "disks",   1, 0, OPT_DISKS   },
-    { "genre",   1, 0, OPT_GENRE   },
-    { "grouping",1, 0, OPT_GROUPING},
-    { "picture", 1, 0, OPT_PICTURE },
-    { "song",    1, 0, OPT_SONG    },
-    { "tempo",   1, 0, OPT_TEMPO   },
-    { "track",   1, 0, OPT_TRACK   },
-    { "tracks",  1, 0, OPT_TRACKS  },
-    { "writer",  1, 0, OPT_WRITER  },
-    { "year",    1, 0, OPT_YEAR    },
-    { "remove",  1, 0, OPT_REMOVE  },
-    { "albumartist", 1, 0, OPT_ALBUM_ARTIST },
-    { NULL,      0, 0, 0 }
+    { "help",        no_argument,       0, OPT_HELP         },
+    { "version",     no_argument,       0, OPT_VERSION      },
+    { "album",       required_argument, 0, OPT_ALBUM        },
+    { "artist",      required_argument, 0, OPT_ARTIST       },
+    { "comment",     required_argument, 0, OPT_COMMENT      },
+    { "disk",        required_argument, 0, OPT_DISK         },
+    { "disks",       required_argument, 0, OPT_DISKS        },
+    { "genre",       required_argument, 0, OPT_GENRE        },
+    { "grouping",    required_argument, 0, OPT_GROUPING     },
+    { "picture",     required_argument, 0, OPT_PICTURE      },
+    { "song",        required_argument, 0, OPT_SONG         },
+    { "tempo",       required_argument, 0, OPT_TEMPO        },
+    { "track",       required_argument, 0, OPT_TRACK        },
+    { "tracks",      required_argument, 0, OPT_TRACKS       },
+    { "writer",      required_argument, 0, OPT_WRITER       },
+    { "year",        required_argument, 0, OPT_YEAR         },
+    { "remove",      required_argument, 0, OPT_REMOVE       },
+    { "albumartist", required_argument, 0, OPT_ALBUM_ARTIST },
+    { NULL, 0, 0, 0 }
   };
 
   /* Sparse arrays of tag data: some space is wasted, but it's more
@@ -118,8 +121,7 @@ main(int argc, char** argv)
       fprintf(stderr, "usage %s %s", argv[0], help_text);
       return 0;
     case OPT_VERSION:
-      fprintf(stderr, "%s - %s version %s\n", argv[0], MP4V2_PACKAGE, 
-	      MP4V2_VERSION);
+      fprintf(stderr, "%s - %s\n", argv[0], MP4V2_PROJECT_name_formal);
       return 0;
 
       /* Numeric arguments: convert them using sscanf(). */
@@ -191,8 +193,8 @@ main(int argc, char** argv)
         case OPT_TEMPO:   MP4DeleteMetadataTempo(h); break;
         case OPT_TRACK:   MP4DeleteMetadataTrack(h); break;
         case OPT_TRACKS:  MP4DeleteMetadataTrack(h); break;
-	case OPT_PICTURE: MP4DeleteMetadataCoverArt(h); break;
-	case OPT_ALBUM_ARTIST: MP4DeleteMetadataAlbumArtist(h); break ;
+    case OPT_PICTURE: MP4DeleteMetadataCoverArt(h); break;
+    case OPT_ALBUM_ARTIST: MP4DeleteMetadataAlbumArtist(h); break ;
         }
       }
     }
@@ -231,26 +233,26 @@ main(int argc, char** argv)
         case OPT_WRITER:  MP4SetMetadataWriter(h, tags[i]); break;
         case OPT_YEAR:    MP4SetMetadataYear(h, tags[i]); break;
         case OPT_TEMPO:   MP4SetMetadataTempo(h, nums[i]); break;
-	case OPT_ALBUM_ARTIST: MP4SetMetadataAlbumArtist(h, tags[i]); break;
-	case OPT_PICTURE: {
-	  FILE *artFile = fopen(tags[i], FOPEN_READ_BINARY);
-	  if (artFile != NULL) {
-	    uint64_t artSize;
-	    fseek(artFile, 0, SEEK_END);
-	    artSize = ftell(artFile);
-	    uint8_t *art;
-	    art = (uint8_t *)malloc(artSize);
-	    fseek(artFile, 0, SEEK_SET);
-	    clearerr(artFile);
-	    if (fread(art, artSize, 1, artFile) == 1) {
-	      MP4SetMetadataCoverArt(h, art, artSize);
-	    }
-	    free(art);
-	    fclose(artFile);
-	  } else {
-	    fprintf(stderr, "Art file %s not found\n", tags[i]);
-	  }
-	}
+    case OPT_ALBUM_ARTIST: MP4SetMetadataAlbumArtist(h, tags[i]); break;
+    case OPT_PICTURE: {
+      FILE *artFile = fopen(tags[i], "rb");
+      if (artFile != NULL) {
+        uint64_t artSize;
+        fseek(artFile, 0, SEEK_END);
+        artSize = ftell(artFile);
+        uint8_t *art;
+        art = (uint8_t *)malloc(artSize);
+        fseek(artFile, 0, SEEK_SET);
+        clearerr(artFile);
+        if (fread(art, artSize, 1, artFile) == 1) {
+          MP4SetMetadataCoverArt(h, art, artSize);
+        }
+        free(art);
+        fclose(artFile);
+      } else {
+        fprintf(stderr, "Art file %s not found\n", tags[i]);
+      }
+    }
         }
       }
     }
@@ -261,3 +263,6 @@ main(int argc, char** argv)
   return 0;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
+}} // namespace mp4v2::util

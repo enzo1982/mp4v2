@@ -1,0 +1,16 @@
+@set PROJECT_name @PACKAGE_NAME@
+@set PROJECT_name_lower @PACKAGE@
+@set PROJECT_name_formal @PACKAGE_STRING@
+@set PROJECT_website @PROJECT_website@
+@set PROJECT_irc @PROJECT_irc@
+@set PROJECT_version @PACKAGE_VERSION@
+@set PROJECT_version_hex @PROJECT_version_hex@
+@set PROJECT_version_major @PROJECT_version_major@
+@set PROJECT_version_minor @PROJECT_version_minor@
+@set PROJECT_version_point @PROJECT_version_point@
+@set PROJECT_build @PROJECT_build@
+@set PROJECT_repo_url @PROJECT_repo_url@
+@set PROJECT_repo_uuid @PROJECT_repo_uuid@
+@set PROJECT_repo_rev @PROJECT_repo_rev@
+@set PROJECT_repo_date @PROJECT_repo_date@
+@set PROJECT_repo_type @PROJECT_repo_type@
