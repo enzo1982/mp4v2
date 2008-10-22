@@ -3,31 +3,32 @@
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is MPEG4IP.
- * 
+ *
  * The Initial Developer of the Original Code is Cisco Systems Inc.
  * Portions created by Cisco Systems Inc. are
  * Copyright (C) Cisco Systems Inc. 2001.  All Rights Reserved.
- * 
+ *
  * 3GPP features implementation is based on 3GPP's TS26.234-v5.60,
  * and was contributed by Ximpo Group Ltd.
  *
  * Portions created by Ximpo Group Ltd. are
  * Copyright (C) Ximpo Group Ltd. 2003, 2004.  All Rights Reserved.
  *
- * Contributor(s): 
+ * Contributor(s):
  *              Ximpo Group Ltd.          mp4v2@ximpo.com
  */
 
 #include "impl.h"
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -38,7 +39,7 @@ void MP4File::Make3GPCompliant(const char* fileName,  char* majorBrand, uint32_t
 {
     char brand[5] = "3gp5";
     char* _3gpSupportedBrands[1] = { (char*)&brand };
-    
+
     if (majorBrand) {
         if (!supportedBrands || !supportedBrandsCount) {
             throw new MP4Error("Invalid parameters", "MP4File::Make3GPCompliant");
@@ -46,10 +47,10 @@ void MP4File::Make3GPCompliant(const char* fileName,  char* majorBrand, uint32_t
     }
 
     MakeFtypAtom(
-            majorBrand ? majorBrand : (char*)brand,
-            majorBrand ? minorVersion  : _3GP_MINOR_VERSION,
-            majorBrand ? supportedBrands : (char**)_3gpSupportedBrands,
-            majorBrand ? supportedBrandsCount : 1);
+        majorBrand ? majorBrand : (char*)brand,
+        majorBrand ? minorVersion  : _3GP_MINOR_VERSION,
+        majorBrand ? supportedBrands : (char**)_3gpSupportedBrands,
+        majorBrand ? supportedBrandsCount : 1);
 
     if (deleteIodsAtom) {
         // Delete the iods atom, if it exists....
@@ -70,44 +71,44 @@ void MP4File::MakeFtypAtom(char* majorBrand, uint32_t minorVersion, char** suppo
     uint32_t currentSupportedBrandsCount;
     uint32_t i;
 
-        
+
     MP4Atom* ftypAtom = m_pRootAtom->FindAtom("ftyp");
     if (ftypAtom == NULL) {
-      ftypAtom = InsertChildAtom(m_pRootAtom, "ftyp", 0);
+        ftypAtom = InsertChildAtom(m_pRootAtom, "ftyp", 0);
     }
     if (majorBrand == NULL)
-      return;
+        return;
     MP4StringProperty* pMajorBrandProperty;
     if (!ftypAtom->FindProperty(
-                   "ftyp.majorBrand",
-                   (MP4Property**)&pMajorBrandProperty))
-      return;
+                "ftyp.majorBrand",
+                (MP4Property**)&pMajorBrandProperty))
+        return;
 
     pMajorBrandProperty->SetValue(majorBrand);
 
 
     MP4Integer32Property* pMinorVersionProperty;
     if (!ftypAtom->FindProperty(
-                   "ftype.minorVersion",
-                   (MP4Property**)&pMinorVersionProperty))
-      return;
+                "ftype.minorVersion",
+                (MP4Property**)&pMinorVersionProperty))
+        return;
 
     pMinorVersionProperty->SetValue(minorVersion);
 
     MP4Integer32Property* pCompatibleBrandsCountProperty;
     if (!ftypAtom->FindProperty(
-        "ftyp.compatibleBrandsCount",
-        (MP4Property**)&pCompatibleBrandsCountProperty)) return;
+                "ftyp.compatibleBrandsCount",
+                (MP4Property**)&pCompatibleBrandsCountProperty)) return;
 
     currentSupportedBrandsCount = pCompatibleBrandsCountProperty->GetValue();
 
     MP4TableProperty* pCompatibleBrandsProperty;
     if (!ftypAtom->FindProperty(
-        "ftyp.compatibleBrands",
-        (MP4Property**)&pCompatibleBrandsProperty)) return;
+                "ftyp.compatibleBrands",
+                (MP4Property**)&pCompatibleBrandsProperty)) return;
 
     MP4StringProperty* pBrandProperty = (MP4StringProperty*)
-        pCompatibleBrandsProperty->GetProperty(0);
+                                        pCompatibleBrandsProperty->GetProperty(0);
     ASSERT(pBrandProperty);
 
     for (i = 0 ; i < ((currentSupportedBrandsCount > supportedBrandsCount) ? supportedBrandsCount : currentSupportedBrandsCount) ; i++) {
@@ -133,4 +134,5 @@ void MP4File::MakeFtypAtom(char* majorBrand, uint32_t minorVersion, char** suppo
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl

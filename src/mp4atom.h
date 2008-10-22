@@ -3,25 +3,25 @@
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is MPEG4IP.
- * 
+ *
  * The Initial Developer of the Original Code is Cisco Systems Inc.
  * Portions created by Cisco Systems Inc. are
  * Copyright (C) Cisco Systems Inc. 2001 - 2004.  All Rights Reserved.
- * 
+ *
  * 3GPP features implementation is based on 3GPP's TS26.234-v5.60,
  * and was contributed by Ximpo Group Ltd.
  *
  * Portions created by Ximpo Group Ltd. are
  * Copyright (C) Ximpo Group Ltd. 2003, 2004.  All Rights Reserved.
  *
- * Contributor(s): 
+ * Contributor(s):
  *      Dave Mackie     dmackie@cisco.com
  *              Ximpo Group Ltd.        mp4v2@ximpo.com
  */
@@ -29,7 +29,8 @@
 #ifndef MP4V2_IMPL_MP4ATOM_H
 #define MP4V2_IMPL_MP4ATOM_H
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -100,7 +101,7 @@ public:
     };
     void SetType(const char* type) {
         if (type && *type != '\0') {
-          // not needed ASSERT(strlen(type) == 4);
+            // not needed ASSERT(strlen(type) == 4);
             memcpy(m_type, type, 4);
             m_type[4] = '\0';
         } else {
@@ -185,8 +186,8 @@ public:
 
     MP4Atom* FindChildAtom(const char* name);
 
-    bool FindProperty(const char* name, 
-        MP4Property** ppProperty, uint32_t* pIndex = NULL);
+    bool FindProperty(const char* name,
+                      MP4Property** ppProperty, uint32_t* pIndex = NULL);
 
     uint32_t GetFlags();
     void SetFlags(uint32_t flags);
@@ -210,15 +211,15 @@ protected:
 
     void AddReserved(char* name, uint32_t size);
 
-    void ExpectChildAtom(const char* name, 
-        bool mandatory, bool onlyOne = true);
+    void ExpectChildAtom(const char* name,
+                         bool mandatory, bool onlyOne = true);
 
     MP4AtomInfo* FindAtomInfo(const char* name);
 
     bool IsMe(const char* name);
 
-    bool FindContainedProperty(const char* name, 
-        MP4Property** ppProperty, uint32_t* pIndex);
+    bool FindContainedProperty(const char* name,
+                               MP4Property** ppProperty, uint32_t* pIndex);
 
     void ReadProperties(
         uint32_t startIndex = 0, uint32_t count = 0xFFFFFFFF);
@@ -262,6 +263,7 @@ inline void IDATOM(uint32_t type, char *s) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl
 
 #endif // MP4V2_IMPL_MP4ATOM_H

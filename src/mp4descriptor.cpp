@@ -3,25 +3,26 @@
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is MPEG4IP.
- * 
+ *
  * The Initial Developer of the Original Code is Cisco Systems Inc.
  * Portions created by Cisco Systems Inc. are
  * Copyright (C) Cisco Systems Inc. 2001.  All Rights Reserved.
- * 
- * Contributor(s): 
+ *
+ * Contributor(s):
  *      Dave Mackie     dmackie@cisco.com
  */
 
 #include "impl.h"
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -33,14 +34,14 @@ MP4Descriptor::MP4Descriptor(uint8_t tag) {
     m_readMutatePoint = 0;
 }
 
-MP4Descriptor::~MP4Descriptor() 
+MP4Descriptor::~MP4Descriptor()
 {
     for (uint32_t i = 0; i < m_pProperties.Size(); i++) {
         delete m_pProperties[i];
     }
 }
 
-void MP4Descriptor::AddProperty(MP4Property* pProperty) 
+void MP4Descriptor::AddProperty(MP4Property* pProperty)
 {
     ASSERT(pProperty);
     m_pProperties.Add(pProperty);
@@ -48,12 +49,12 @@ void MP4Descriptor::AddProperty(MP4Property* pProperty)
 }
 
 bool MP4Descriptor::FindContainedProperty(const char *name,
-    MP4Property** ppProperty, uint32_t* pIndex)
+        MP4Property** ppProperty, uint32_t* pIndex)
 {
     uint32_t numProperties = m_pProperties.Size();
 
     for (uint32_t i = 0; i < numProperties; i++) {
-        if (m_pProperties[i]->FindProperty(name, ppProperty, pIndex)) { 
+        if (m_pProperties[i]->FindProperty(name, ppProperty, pIndex)) {
             return true;
         }
     }
@@ -85,8 +86,8 @@ void MP4Descriptor::Read(MP4File* pFile)
 void MP4Descriptor::ReadHeader(MP4File* pFile)
 {
     VERBOSE_READ(pFile->GetVerbosity(),
-        printf("ReadDescriptor: pos = 0x%" PRIx64 "\n", 
-            pFile->GetPosition()));
+                 printf("ReadDescriptor: pos = 0x%" PRIx64 "\n",
+                        pFile->GetPosition()));
 
     // read tag and length
     uint8_t tag = pFile->ReadUInt8();
@@ -99,18 +100,18 @@ void MP4Descriptor::ReadHeader(MP4File* pFile)
     m_start = pFile->GetPosition();
 
     VERBOSE_READ(pFile->GetVerbosity(),
-        printf("ReadDescriptor: tag 0x%02x data size %u (0x%x)\n", 
-            m_tag, m_size, m_size));
+                 printf("ReadDescriptor: tag 0x%02x data size %u (0x%x)\n",
+                        m_tag, m_size, m_size));
 }
 
-void MP4Descriptor::ReadProperties(MP4File* pFile, 
-    uint32_t propStartIndex, uint32_t propCount)
+void MP4Descriptor::ReadProperties(MP4File* pFile,
+                                   uint32_t propStartIndex, uint32_t propCount)
 {
-    uint32_t numProperties = min(propCount, 
-        m_pProperties.Size() - propStartIndex);
+    uint32_t numProperties = min(propCount,
+                                 m_pProperties.Size() - propStartIndex);
 
-    for (uint32_t i = propStartIndex; 
-      i < propStartIndex + numProperties; i++) {
+    for (uint32_t i = propStartIndex;
+            i < propStartIndex + numProperties; i++) {
 
         MP4Property* pProperty = m_pProperties[i];
 
@@ -128,20 +129,20 @@ void MP4Descriptor::ReadProperties(MP4File* pFile,
                 pProperty->Read(pFile);
 
                 if (pProperty->GetType() == TableProperty) {
-                    VERBOSE_READ_TABLE(pFile->GetVerbosity(), 
-                        printf("Read: "); pProperty->Dump(stdout, 0, true));
+                    VERBOSE_READ_TABLE(pFile->GetVerbosity(),
+                                       printf("Read: "); pProperty->Dump(stdout, 0, true));
                 } else {
-                    VERBOSE_READ(pFile->GetVerbosity(), 
-                        printf("Read: "); pProperty->Dump(stdout, 0, true));
+                    VERBOSE_READ(pFile->GetVerbosity(),
+                                 printf("Read: "); pProperty->Dump(stdout, 0, true));
                 }
             } else {
                 VERBOSE_ERROR(pFile->GetVerbosity(),
-                    printf("Overran descriptor, tag %u data size %u property %u\n",
-                    m_tag, m_size, i));
+                              printf("Overran descriptor, tag %u data size %u property %u\n",
+                                     m_tag, m_size, i));
                 throw new MP4Error("overran descriptor",
-                     "MP4Descriptor::ReadProperties");
+                                   "MP4Descriptor::ReadProperties");
             }
-        } 
+        }
     }
 }
 
@@ -178,7 +179,7 @@ void MP4Descriptor::Write(MP4File* pFile)
 }
 
 void MP4Descriptor::WriteToMemory(MP4File* pFile,
-    uint8_t** ppBytes, uint64_t* pNumBytes)
+                                  uint8_t** ppBytes, uint64_t* pNumBytes)
 {
     // use memory buffer to save descriptor in memory
     // instead of going directly to disk
@@ -206,7 +207,7 @@ void MP4Descriptor::Dump(FILE* pFile, uint8_t indent, bool dumpImplicits)
     }
 }
 
-uint8_t MP4Descriptor::GetDepth() 
+uint8_t MP4Descriptor::GetDepth()
 {
     if (m_pParentAtom) {
         return m_pParentAtom->GetDepth();
@@ -216,4 +217,5 @@ uint8_t MP4Descriptor::GetDepth()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl

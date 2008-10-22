@@ -5,7 +5,8 @@
 
 #include "impl.h"
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -19,36 +20,36 @@ namespace mp4v2 { namespace impl {
 */
 class OhdrMP4StringProperty: public MP4StringProperty {
 public:
-  /*! \brief Constructor.
-  
-      \param name                name of the property.
-      \param useCountedFormat    counted format flag.
-      \param useUnicode          unicode flag.
-  */
+    /*! \brief Constructor.
+
+        \param name                name of the property.
+        \param useCountedFormat    counted format flag.
+        \param useUnicode          unicode flag.
+    */
     OhdrMP4StringProperty(char* name, bool useCountedFormat = false,
-    bool useUnicode = false): MP4StringProperty(name, useCountedFormat,
-    useUnicode) {
-  }
-    
-  /*! \brief Read property from file.
-  
-      \param pFile                input, file handle.
-      \param index                input, index to read.
-  */
+                          bool useUnicode = false): MP4StringProperty(name, useCountedFormat,
+                                          useUnicode) {
+    }
+
+    /*! \brief Read property from file.
+
+        \param pFile                input, file handle.
+        \param index                input, index to read.
+    */
     void Read(MP4File* pFile, uint32_t index = 0) {
-      MP4Free(m_values[index]);
-      m_values[index] = (char*)MP4Calloc(m_fixedLength + 1);
-      (void)pFile->ReadBytes((uint8_t*)m_values[index], m_fixedLength);
-  }
-    
-  /*! \brief Write property to file.
-  
-      \param pFile                input, file handle.
-      \param index                input, index to write.
-  */
+        MP4Free(m_values[index]);
+        m_values[index] = (char*)MP4Calloc(m_fixedLength + 1);
+        (void)pFile->ReadBytes((uint8_t*)m_values[index], m_fixedLength);
+    }
+
+    /*! \brief Write property to file.
+
+        \param pFile                input, file handle.
+        \param index                input, index to write.
+    */
     void Write(MP4File* pFile, uint32_t index = 0) {
-    pFile->WriteBytes((uint8_t*)m_values[index], m_fixedLength);
-  }
+        pFile->WriteBytes((uint8_t*)m_values[index], m_fixedLength);
+    }
 };
 
 /*! \brief OMA DRM headers atom.
@@ -77,24 +78,25 @@ MP4OhdrAtom::~MP4OhdrAtom() {
 /*! \brief Read atom.
 */
 void MP4OhdrAtom::Read() {
-  ReadProperties(0, 8);
-  MP4Property* lProperty;
-  MP4Property* property;
-  lProperty = GetProperty(5);
-  property = GetProperty(8);
-  ((OhdrMP4StringProperty*)property)->SetFixedLength(
-    ((MP4Integer16Property*)lProperty)->GetValue());
-  lProperty = GetProperty(6);
-  property = GetProperty(9);
-  ((OhdrMP4StringProperty*)property)->SetFixedLength(
-    ((MP4Integer16Property*)lProperty)->GetValue());
-  lProperty = GetProperty(7);
-  property = GetProperty(10);
-  ((MP4BytesProperty*)property)->SetFixedSize(
-    ((MP4Integer16Property*)lProperty)->GetValue());
-  ReadProperties(8, 3);
+    ReadProperties(0, 8);
+    MP4Property* lProperty;
+    MP4Property* property;
+    lProperty = GetProperty(5);
+    property = GetProperty(8);
+    ((OhdrMP4StringProperty*)property)->SetFixedLength(
+        ((MP4Integer16Property*)lProperty)->GetValue());
+    lProperty = GetProperty(6);
+    property = GetProperty(9);
+    ((OhdrMP4StringProperty*)property)->SetFixedLength(
+        ((MP4Integer16Property*)lProperty)->GetValue());
+    lProperty = GetProperty(7);
+    property = GetProperty(10);
+    ((MP4BytesProperty*)property)->SetFixedSize(
+        ((MP4Integer16Property*)lProperty)->GetValue());
+    ReadProperties(8, 3);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl

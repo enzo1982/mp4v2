@@ -3,26 +3,27 @@
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is MPEG4IP.
- * 
+ *
  * Contributer has declined to give copyright information, and gives
  * it freely to the world.
  */
 
 #include "impl.h"
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MP4TextAtom::MP4TextAtom() 
-    : MP4Atom("text") 
+MP4TextAtom::MP4TextAtom()
+        : MP4Atom("text")
 {
     // The atom type "text" is used in two complete unrelated ways
     // i.e. it's real two atoms with the same name
@@ -83,12 +84,12 @@ void MP4TextAtom::Generate()
         GenerateGmhdType();
     } else {
         VERBOSE_WARNING(m_pFile->GetVerbosity(),
-            printf("Warning: text atom in unexpected context, can not generate"));
+                        printf("Warning: text atom in unexpected context, can not generate"));
     }
 
 }
 
-void MP4TextAtom::GenerateStsdType() 
+void MP4TextAtom::GenerateStsdType()
 {
     // generate children
     MP4Atom::Generate();
@@ -100,46 +101,47 @@ void MP4TextAtom::GenerateStsdType()
 
 }
 
-void MP4TextAtom::GenerateGmhdType() 
+void MP4TextAtom::GenerateGmhdType()
 {
     MP4Atom::Generate();
 
     // property 0 has non-zero fixed values
     static uint8_t textData[36] = {
-        0x00, 0x01, 
+        0x00, 0x01,
         0x00, 0x00,
         0x00, 0x00,
         0x00, 0x00,
-        0x00, 0x00, 
         0x00, 0x00,
-        0x00, 0x00, 
         0x00, 0x00,
-        0x00, 0x01, 
         0x00, 0x00,
-        0x00, 0x00, 
         0x00, 0x00,
-        0x00, 0x00, 
+        0x00, 0x01,
         0x00, 0x00,
-        0x00, 0x00, 
         0x00, 0x00,
-        0x40, 0x00, 
-        0x00, 0x00, 
+        0x00, 0x00,
+        0x00, 0x00,
+        0x00, 0x00,
+        0x00, 0x00,
+        0x00, 0x00,
+        0x40, 0x00,
+        0x00, 0x00,
     };
     ((MP4BytesProperty*)m_pProperties[0])->SetValue(textData, sizeof(textData));
-    
+
 }
 
 void MP4TextAtom::Read ()
 {
-  if (ATOMID(m_pParentAtom->GetType()) == ATOMID("stsd")) {
-    AddPropertiesStsdType();
-  } else if (ATOMID(m_pParentAtom->GetType()) == ATOMID("gmhd")) {
-    AddPropertiesGmhdType();
-  }
-   
-  MP4Atom::Read();
+    if (ATOMID(m_pParentAtom->GetType()) == ATOMID("stsd")) {
+        AddPropertiesStsdType();
+    } else if (ATOMID(m_pParentAtom->GetType()) == ATOMID("gmhd")) {
+        AddPropertiesGmhdType();
+    }
+
+    MP4Atom::Read();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl

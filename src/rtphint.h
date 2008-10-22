@@ -3,26 +3,27 @@
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is MPEG4IP.
- * 
+ *
  * The Initial Developer of the Original Code is Cisco Systems Inc.
  * Portions created by Cisco Systems Inc. are
  * Copyright (C) Cisco Systems Inc. 2001.  All Rights Reserved.
- * 
- * Contributor(s): 
+ *
+ * Contributor(s):
  *      Dave Mackie     dmackie@cisco.com
  */
 
 #ifndef MP4V2_IMPL_RTPHINT_H
 #define MP4V2_IMPL_RTPHINT_H
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -83,20 +84,20 @@ public:
     MP4RtpSampleData(MP4RtpPacket* pPacket);
 
     ~MP4RtpSampleData(void) {
-      CHECK_AND_FREE(m_pRefData);
+        CHECK_AND_FREE(m_pRefData);
     };
 
     void SetEmbeddedImmediate(
-        MP4SampleId sampleId, 
+        MP4SampleId sampleId,
         uint8_t* pData, uint16_t dataLength);
 
     void SetReferenceSample(
-        MP4SampleId refSampleId, uint32_t refSampleOffset, 
+        MP4SampleId refSampleId, uint32_t refSampleOffset,
         uint16_t sampleLength);
 
     void SetEmbeddedSample(
-        MP4SampleId sampleId, MP4Track* pRefTrack, 
-        MP4SampleId refSampleId, uint32_t refSampleOffset, 
+        MP4SampleId sampleId, MP4Track* pRefTrack,
+        MP4SampleId refSampleId, uint32_t refSampleOffset,
         uint16_t sampleLength);
 
     uint16_t GetDataSize();
@@ -118,7 +119,7 @@ public:
     MP4RtpSampleDescriptionData(MP4RtpPacket* pPacket);
 
     void Set(uint32_t sampleDescrIndex,
-        uint32_t offset, uint16_t length);
+             uint32_t offset, uint16_t length);
 
     uint16_t GetDataSize();
 
@@ -283,7 +284,7 @@ public:
 
     void ReadPacket(
         uint16_t packetIndex,
-        uint8_t** ppBytes, 
+        uint8_t** ppBytes,
         uint32_t* pNumBytes,
         uint32_t ssrc,
         bool includeHeader = true,
@@ -300,7 +301,7 @@ public:
     void AddImmediateData(const uint8_t* pBytes, uint32_t numBytes);
 
     void AddSampleData(MP4SampleId sampleId,
-         uint32_t dataOffset, uint32_t dataLength);
+                       uint32_t dataOffset, uint32_t dataLength);
 
     void AddESConfigurationPacket();
 
@@ -355,6 +356,7 @@ protected:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl
 
 #endif // MP4V2_IMPL_RTPHINT_H

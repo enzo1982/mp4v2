@@ -23,19 +23,20 @@
 
 #include "impl.h"
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
 MP4SmiAtom::MP4SmiAtom()
-    : MP4Atom("meta")
+        : MP4Atom("meta")
 {
 
-  AddProperty( new MP4BytesProperty("metadata"));
+    AddProperty( new MP4BytesProperty("metadata"));
 
 }
 
-void MP4SmiAtom::Read() 
+void MP4SmiAtom::Read()
 {
     // calculate size of the metadata from the atom size
     ((MP4BytesProperty*)m_pProperties[0])->SetValueSize(m_size);
@@ -45,4 +46,5 @@ void MP4SmiAtom::Read()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl

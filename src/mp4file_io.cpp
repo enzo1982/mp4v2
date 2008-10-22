@@ -3,25 +3,26 @@
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is MPEG4IP.
- * 
+ *
  * The Initial Developer of the Original Code is Cisco Systems Inc.
  * Portions created by Cisco Systems Inc. are
  * Copyright (C) Cisco Systems Inc. 2001.  All Rights Reserved.
- * 
- * Contributor(s): 
+ *
+ * Contributor(s):
  *      Dave Mackie     dmackie@cisco.com
  */
 
 #include "impl.h"
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -40,7 +41,7 @@ uint64_t MP4File::GetPosition(FILE* pFile)
         } else {
 #if 0
             fpos_t fpos;
-            if (fgetpos(pFile, &fpos) < 0) { 
+            if (fgetpos(pFile, &fpos) < 0) {
                 throw new MP4Error(errno, "MP4GetPosition");
             }
             uint64_t ret;
@@ -71,7 +72,7 @@ void MP4File::SetPosition(uint64_t pos, FILE* pFile)
 #if 0
             fpos_t fpos;
             VAR_TO_FPOS(fpos, pos);
-            if (fsetpos(pFile, &fpos) < 0) { 
+            if (fsetpos(pFile, &fpos) < 0) {
                 throw new MP4Error(errno, "MP4SetPosition");
             }
 #else
@@ -83,7 +84,7 @@ void MP4File::SetPosition(uint64_t pos, FILE* pFile)
         }
     } else {
         if (pos >= m_memoryBufferSize) {
-          //          abort();
+            //          abort();
             throw new MP4Error("position out of range", "MP4SetPosition");
         }
         m_memoryBufferPosition = pos;
@@ -120,8 +121,8 @@ void MP4File::ReadBytes(uint8_t* pBytes, uint32_t numBytes, FILE* pFile)
                 throw new MP4Error("not enough bytes, reached end-of-file",     "MP4ReadBytes");
             }
         }   else {
-            if (fread(pBytes, 1, numBytes, pFile) != numBytes) { 
-                if (feof(pFile)) { 
+            if (fread(pBytes, 1, numBytes, pFile) != numBytes) {
+                if (feof(pFile)) {
                     throw new MP4Error(
                         "not enough bytes, reached end-of-file",
                         "MP4ReadBytes");
@@ -149,7 +150,7 @@ void MP4File::PeekBytes(uint8_t* pBytes, uint32_t numBytes, FILE* pFile)
     SetPosition(pos, pFile);
 }
 
-void MP4File::EnableMemoryBuffer(uint8_t* pBytes, uint64_t numBytes) 
+void MP4File::EnableMemoryBuffer(uint8_t* pBytes, uint64_t numBytes)
 {
     ASSERT(m_memoryBuffer == NULL);
 
@@ -157,7 +158,7 @@ void MP4File::EnableMemoryBuffer(uint8_t* pBytes, uint64_t numBytes)
         m_memoryBuffer = pBytes;
         m_memoryBufferSize = numBytes;
     } else {
-        if (numBytes) { 
+        if (numBytes) {
             m_memoryBufferSize = numBytes;
         } else {
             m_memoryBufferSize = 4096;
@@ -167,7 +168,7 @@ void MP4File::EnableMemoryBuffer(uint8_t* pBytes, uint64_t numBytes)
     m_memoryBufferPosition = 0;
 }
 
-void MP4File::DisableMemoryBuffer(uint8_t** ppBytes, uint64_t* pNumBytes) 
+void MP4File::DisableMemoryBuffer(uint8_t** ppBytes, uint64_t* pNumBytes)
 {
     ASSERT(m_memoryBuffer != NULL);
 
@@ -198,7 +199,7 @@ void MP4File::WriteBytes(uint8_t* pBytes, uint32_t numBytes, FILE* pFile)
                 throw new MP4Error("error writing bytes via virtual I/O", "MP4WriteBytes");
             }
         } else {
-            uint32_t rc = fwrite(pBytes, 1, numBytes, pFile); 
+            uint32_t rc = fwrite(pBytes, 1, numBytes, pFile);
             if (rc != numBytes) {
                 throw new MP4Error(errno, "MP4WriteBytes");
             }
@@ -207,7 +208,7 @@ void MP4File::WriteBytes(uint8_t* pBytes, uint32_t numBytes, FILE* pFile)
         if (m_memoryBufferPosition + numBytes > m_memoryBufferSize) {
             m_memoryBufferSize = 2 * (m_memoryBufferSize + numBytes);
             m_memoryBuffer = (uint8_t*)
-                MP4Realloc(m_memoryBuffer, m_memoryBufferSize);
+                             MP4Realloc(m_memoryBuffer, m_memoryBufferSize);
         }
         memcpy(&m_memoryBuffer[m_memoryBufferPosition], pBytes, numBytes);
         m_memoryBufferPosition += numBytes;
@@ -320,7 +321,7 @@ uint64_t MP4File::ReadUInt64()
     uint64_t temp;
 
     ReadBytes(&data[0], 8);
-    
+
     for (int i = 0; i < 8; i++) {
         temp = data[i];
         result |= temp << ((7 - i) * 8);
@@ -444,9 +445,9 @@ char* MP4File::ReadCountedString(uint8_t charSize, bool allowExpandedCount)
             b = ReadUInt8();
             charLength += b;
             ix++;
-            if (ix > 25) 
-              throw new MP4Error(ERANGE, 
-                         "Counted string too long 25 * 255");
+            if (ix > 25)
+                throw new MP4Error(ERANGE,
+                                   "Counted string too long 25 * 255");
         } while (b == 255);
     } else {
         charLength = ReadUInt8();
@@ -461,8 +462,8 @@ char* MP4File::ReadCountedString(uint8_t charSize, bool allowExpandedCount)
     return data;
 }
 
-void MP4File::WriteCountedString(char* string, 
-                                 uint8_t charSize, bool allowExpandedCount, 
+void MP4File::WriteCountedString(char* string,
+                                 uint8_t charSize, bool allowExpandedCount,
                                  uint8_t fixedLength)
 {
     uint32_t byteLength;
@@ -483,14 +484,14 @@ void MP4File::WriteCountedString(char* string,
         while (charLength >= 0xFF) {
             WriteUInt8(0xFF);
             charLength -= 0xFF;
-        }       
-                // Write the count
+        }
+        // Write the count
         WriteUInt8(charLength);
     } else {
         if (charLength > 255) {
             throw new MP4Error(ERANGE, "Length is %d", "MP4WriteCountedString", charLength);
         }
-                // Write the count
+        // Write the count
         WriteUInt8(charLength);
     }
 
@@ -538,9 +539,9 @@ void MP4File::WriteBits(uint64_t bits, uint8_t numBits)
     ASSERT(numBits <= 64);
 
     for (uint8_t i = numBits; i > 0; i--) {
-        m_bufWriteBits |= 
+        m_bufWriteBits |=
             (((bits >> (i - 1)) & 1) << (8 - ++m_numWriteBits));
-    
+
         if (m_numWriteBits == 8) {
             FlushWriteBits();
         }
@@ -613,4 +614,5 @@ void MP4File::WriteMpegLength(uint32_t value, bool compact)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl

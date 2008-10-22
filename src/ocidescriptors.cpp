@@ -3,30 +3,31 @@
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is MPEG4IP.
- * 
+ *
  * The Initial Developer of the Original Code is Cisco Systems Inc.
  * Portions created by Cisco Systems Inc. are
  * Copyright (C) Cisco Systems Inc. 2001.  All Rights Reserved.
- * 
- * Contributor(s): 
+ *
+ * Contributor(s):
  *      Dave Mackie     dmackie@cisco.com
  */
 
 #include "impl.h"
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
 MP4ContentClassDescriptor::MP4ContentClassDescriptor()
-    : MP4Descriptor()
+        : MP4Descriptor()
 {
     AddProperty( /* 0 */
         new MP4Integer32Property("classificationEntity"));
@@ -47,7 +48,7 @@ void MP4ContentClassDescriptor::Read(MP4File* pFile)
 }
 
 MP4KeywordDescriptor::MP4KeywordDescriptor()
-    : MP4Descriptor()
+        : MP4Descriptor()
 {
     AddProperty( /* 0 */
         new MP4BytesProperty("languageCode", 3));
@@ -55,7 +56,7 @@ MP4KeywordDescriptor::MP4KeywordDescriptor()
         new MP4BitfieldProperty("isUTF8String", 1));
     AddProperty( /* 2 */
         new MP4BitfieldProperty("reserved", 7));
-    MP4Integer8Property* pCount = 
+    MP4Integer8Property* pCount =
         new MP4Integer8Property("keywordCount");
     AddProperty(pCount); /* 3 */
 
@@ -78,7 +79,7 @@ void MP4KeywordDescriptor::Mutate()
 }
 
 MP4RatingDescriptor::MP4RatingDescriptor()
-    : MP4Descriptor()
+        : MP4Descriptor()
 {
     AddProperty( /* 0 */
         new MP4Integer32Property("ratingEntity"));
@@ -99,14 +100,14 @@ void MP4RatingDescriptor::Read(MP4File* pFile)
 }
 
 MP4LanguageDescriptor::MP4LanguageDescriptor()
-    : MP4Descriptor()
+        : MP4Descriptor()
 {
     AddProperty( /* 0 */
         new MP4BytesProperty("languageCode", 3));
 }
 
 MP4ShortTextDescriptor::MP4ShortTextDescriptor()
-    : MP4Descriptor()
+        : MP4Descriptor()
 {
     AddProperty( /* 0 */
         new MP4BytesProperty("languageCode", 3));
@@ -130,7 +131,7 @@ void MP4ShortTextDescriptor::Mutate()
 }
 
 MP4ExpandedTextDescriptor::MP4ExpandedTextDescriptor()
-    : MP4Descriptor()
+        : MP4Descriptor()
 {
     AddProperty( /* 0 */
         new MP4BytesProperty("languageCode", 3));
@@ -138,7 +139,7 @@ MP4ExpandedTextDescriptor::MP4ExpandedTextDescriptor()
         new MP4BitfieldProperty("isUTF8String", 1));
     AddProperty( /* 2 */
         new MP4BitfieldProperty("reserved", 7));
-    MP4Integer8Property* pCount = 
+    MP4Integer8Property* pCount =
         new MP4Integer8Property("itemCount");
     AddProperty(pCount); /* 3 */
 
@@ -176,7 +177,7 @@ void MP4ExpandedTextDescriptor::Mutate()
 class MP4CreatorTableProperty : public MP4TableProperty {
 public:
     MP4CreatorTableProperty(char* name, MP4Integer8Property* pCountProperty) :
-        MP4TableProperty(name, pCountProperty) {
+            MP4TableProperty(name, pCountProperty) {
     };
 protected:
     void ReadEntry(MP4File* pFile, uint32_t index);
@@ -184,9 +185,9 @@ protected:
 };
 
 MP4CreatorDescriptor::MP4CreatorDescriptor(uint8_t tag)
-    : MP4Descriptor(tag)
+        : MP4Descriptor(tag)
 {
-    MP4Integer8Property* pCount = 
+    MP4Integer8Property* pCount =
         new MP4Integer8Property("creatorCount");
     AddProperty(pCount); /* 0 */
 
@@ -224,17 +225,17 @@ void MP4CreatorTableProperty::WriteEntry(MP4File* pFile, uint32_t index)
 }
 
 MP4CreationDescriptor::MP4CreationDescriptor(uint8_t tag)
-    : MP4Descriptor(tag)
+        : MP4Descriptor(tag)
 {
     AddProperty( /* 0 */
         new MP4BitfieldProperty("contentCreationDate", 40));
 }
 
 MP4SmpteCameraDescriptor::MP4SmpteCameraDescriptor()
-    : MP4Descriptor()
+        : MP4Descriptor()
 {
-    MP4Integer8Property* pCount = 
-        new MP4Integer8Property("parameterCount"); 
+    MP4Integer8Property* pCount =
+        new MP4Integer8Property("parameterCount");
     AddProperty(pCount);
 
     MP4TableProperty* pTable = new MP4TableProperty("parameters", pCount);
@@ -247,7 +248,7 @@ MP4SmpteCameraDescriptor::MP4SmpteCameraDescriptor()
 }
 
 MP4UnknownOCIDescriptor::MP4UnknownOCIDescriptor()
-    : MP4Descriptor()
+        : MP4Descriptor()
 {
     AddProperty( /* 0 */
         new MP4BytesProperty("data"));
@@ -263,7 +264,7 @@ void MP4UnknownOCIDescriptor::Read(MP4File* pFile)
     ReadProperties(pFile);
 }
 
-MP4Descriptor* CreateOCIDescriptor(uint8_t tag) 
+MP4Descriptor* CreateOCIDescriptor(uint8_t tag)
 {
     MP4Descriptor* pDescriptor = NULL;
 
@@ -311,4 +312,5 @@ MP4Descriptor* CreateOCIDescriptor(uint8_t tag)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl

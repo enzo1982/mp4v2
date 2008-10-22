@@ -3,25 +3,26 @@
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is MPEG4IP.
- * 
+ *
  * The Initial Developer of the Original Code is Cisco Systems Inc.
  * Portions created by Cisco Systems Inc. are
  * Copyright (C) Cisco Systems Inc. 2001.  All Rights Reserved.
- * 
- * Contributor(s): 
+ *
+ * Contributor(s):
  *      Dave Mackie     dmackie@cisco.com
  */
 
 #include "impl.h"
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -32,14 +33,14 @@ MP4Container::~MP4Container()
     }
 }
 
-void MP4Container::AddProperty(MP4Property* pProperty) 
+void MP4Container::AddProperty(MP4Property* pProperty)
 {
     ASSERT(pProperty);
     m_pProperties.Add(pProperty);
 }
 
 bool MP4Container::FindProperty(const char *name,
-    MP4Property** ppProperty, uint32_t* pIndex)
+                                MP4Property** ppProperty, uint32_t* pIndex)
 {
     if (pIndex) {
         *pIndex = 0;    // set the default answer for index
@@ -48,19 +49,19 @@ bool MP4Container::FindProperty(const char *name,
     uint32_t numProperties = m_pProperties.Size();
 
     for (uint32_t i = 0; i < numProperties; i++) {
-        if (m_pProperties[i]->FindProperty(name, ppProperty, pIndex)) { 
+        if (m_pProperties[i]->FindProperty(name, ppProperty, pIndex)) {
             return true;
         }
     }
     return false;
 }
 
-void MP4Container::FindIntegerProperty(const char* name, 
-    MP4Property** ppProperty, uint32_t* pIndex)
+void MP4Container::FindIntegerProperty(const char* name,
+                                       MP4Property** ppProperty, uint32_t* pIndex)
 {
     if (!FindProperty(name, ppProperty, pIndex)) {
-        throw new MP4Error("no such property", 
-            "MP4Container::FindIntegerProperty");
+        throw new MP4Error("no such property",
+                           "MP4Container::FindIntegerProperty");
     }
 
     switch ((*ppProperty)->GetType()) {
@@ -71,8 +72,8 @@ void MP4Container::FindIntegerProperty(const char* name,
     case Integer64Property:
         break;
     default:
-        throw new MP4Error("type mismatch", 
-            "MP4Container::FindIntegerProperty");
+        throw new MP4Error("type mismatch",
+                           "MP4Container::FindIntegerProperty");
     }
 }
 
@@ -96,16 +97,16 @@ void MP4Container::SetIntegerProperty(const char* name, uint64_t value)
     ((MP4IntegerProperty*)pProperty)->SetValue(value, index);
 }
 
-void MP4Container::FindFloatProperty(const char* name, 
-    MP4Property** ppProperty, uint32_t* pIndex)
+void MP4Container::FindFloatProperty(const char* name,
+                                     MP4Property** ppProperty, uint32_t* pIndex)
 {
     if (!FindProperty(name, ppProperty, pIndex)) {
         throw new MP4Error("no such property",
-             "MP4Container::FindFloatProperty");
+                           "MP4Container::FindFloatProperty");
     }
     if ((*ppProperty)->GetType() != Float32Property) {
-        throw new MP4Error("type mismatch", 
-            "MP4Container::FindFloatProperty");
+        throw new MP4Error("type mismatch",
+                           "MP4Container::FindFloatProperty");
     }
 }
 
@@ -129,16 +130,16 @@ void MP4Container::SetFloatProperty(const char* name, float value)
     ((MP4Float32Property*)pProperty)->SetValue(value, index);
 }
 
-void MP4Container::FindStringProperty(const char* name, 
-    MP4Property** ppProperty, uint32_t* pIndex)
+void MP4Container::FindStringProperty(const char* name,
+                                      MP4Property** ppProperty, uint32_t* pIndex)
 {
     if (!FindProperty(name, ppProperty, pIndex)) {
         throw new MP4Error("no such property",
-            "MP4Container::FindStringProperty");
+                           "MP4Container::FindStringProperty");
     }
     if ((*ppProperty)->GetType() != StringProperty) {
-        throw new MP4Error("type mismatch", 
-            "MP4Container::FindStringProperty");
+        throw new MP4Error("type mismatch",
+                           "MP4Container::FindStringProperty");
     }
 }
 
@@ -162,21 +163,21 @@ void MP4Container::SetStringProperty(const char* name, const char* value)
     ((MP4StringProperty*)pProperty)->SetValue(value, index);
 }
 
-void MP4Container::FindBytesProperty(const char* name, 
-    MP4Property** ppProperty, uint32_t* pIndex)
+void MP4Container::FindBytesProperty(const char* name,
+                                     MP4Property** ppProperty, uint32_t* pIndex)
 {
     if (!FindProperty(name, ppProperty, pIndex)) {
         throw new MP4Error("no such property",
-            "MP4Container::FindBytesProperty");
+                           "MP4Container::FindBytesProperty");
     }
     if ((*ppProperty)->GetType() != BytesProperty) {
         throw new MP4Error("type mismatch",
-            "MP4Container::FindBytesProperty");
+                           "MP4Container::FindBytesProperty");
     }
 }
 
-void MP4Container::GetBytesProperty(const char* name, 
-    uint8_t** ppValue, uint32_t* pValueSize)
+void MP4Container::GetBytesProperty(const char* name,
+                                    uint8_t** ppValue, uint32_t* pValueSize)
 {
     MP4Property* pProperty;
     uint32_t index;
@@ -186,8 +187,8 @@ void MP4Container::GetBytesProperty(const char* name,
     ((MP4BytesProperty*)pProperty)->GetValue(ppValue, pValueSize, index);
 }
 
-void MP4Container::SetBytesProperty(const char* name, 
-    const uint8_t* pValue, uint32_t valueSize)
+void MP4Container::SetBytesProperty(const char* name,
+                                    const uint8_t* pValue, uint32_t valueSize)
 {
     MP4Property* pProperty;
     uint32_t index;
@@ -231,4 +232,5 @@ void MP4Container::Dump(FILE* pFile, uint8_t indent, bool dumpImplicits)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl

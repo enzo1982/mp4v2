@@ -23,19 +23,20 @@
 
 #include "impl.h"
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
 MP4Meta1Atom::MP4Meta1Atom(const char *name)
-    : MP4Atom(name)
+        : MP4Atom(name)
 {
-  AddVersionAndFlags(); /* 0, 1 */
+    AddVersionAndFlags(); /* 0, 1 */
 
-  AddProperty(new MP4BytesProperty("metadata")); /* 2 */
+    AddProperty(new MP4BytesProperty("metadata")); /* 2 */
 }
 
-void MP4Meta1Atom::Read() 
+void MP4Meta1Atom::Read()
 {
     // calculate size of the metadata from the atom size
     ((MP4BytesProperty*)m_pProperties[2])->SetValueSize(m_size - 4);
@@ -44,7 +45,7 @@ void MP4Meta1Atom::Read()
 }
 
 MP4DataAtom::MP4DataAtom()
-    : MP4Atom("data")
+        : MP4Atom("data")
 {
     AddVersionAndFlags(); /* 0, 1 */
     AddReserved("reserved2", 4); /* 2 */
@@ -53,7 +54,7 @@ MP4DataAtom::MP4DataAtom()
         new MP4BytesProperty("metadata")); /* 3 */
 }
 
-void MP4DataAtom::Read() 
+void MP4DataAtom::Read()
 {
     // calculate size of the metadata from the atom size
     ((MP4BytesProperty*)m_pProperties[3])->SetValueSize(m_size - 8);
@@ -63,7 +64,7 @@ void MP4DataAtom::Read()
 
 
 // MP4Meta2Atom is for \251nam and \251cmt flags, which appear differently
-// in .mov and in itunes file.  In .movs, they appear under udata, in 
+// in .mov and in itunes file.  In .movs, they appear under udata, in
 // itunes, they appear under ilst.
 MP4Meta2Atom::MP4Meta2Atom (const char *name) : MP4Atom(name)
 {
@@ -71,31 +72,31 @@ MP4Meta2Atom::MP4Meta2Atom (const char *name) : MP4Atom(name)
 
 void MP4Meta2Atom::Read ()
 {
-  MP4Atom *parent = GetParentAtom();
-  if (ATOMID(parent->GetType()) == ATOMID("udta")) {
-    // add data property
-    AddReserved("reserved2", 4); /* 0 */
+    MP4Atom *parent = GetParentAtom();
+    if (ATOMID(parent->GetType()) == ATOMID("udta")) {
+        // add data property
+        AddReserved("reserved2", 4); /* 0 */
 
-    AddProperty(
-        new MP4BytesProperty("metadata")); /* 1 */
-    ((MP4BytesProperty*)m_pProperties[1])->SetValueSize(m_size - 4);
-  } else {
-    ExpectChildAtom("data", Required, OnlyOne);
-  }
-  MP4Atom::Read();
+        AddProperty(
+            new MP4BytesProperty("metadata")); /* 1 */
+        ((MP4BytesProperty*)m_pProperties[1])->SetValueSize(m_size - 4);
+    } else {
+        ExpectChildAtom("data", Required, OnlyOne);
+    }
+    MP4Atom::Read();
 }
 
 MP4NameAtom::MP4NameAtom()
-    : MP4Atom("name")
+        : MP4Atom("name")
 {
- 
+
 }
 
-void MP4NameAtom::Read() 
+void MP4NameAtom::Read()
 {
     if (ATOMID(m_pParentAtom->GetType()) != ATOMID("udta")) {
-    // calculate size of the metadata from the atom size
-    ((MP4BytesProperty*)m_pProperties[2])->SetValueSize(m_size - 4);
+        // calculate size of the metadata from the atom size
+        ((MP4BytesProperty*)m_pProperties[2])->SetValueSize(m_size - 4);
     }
 
     MP4Atom::Read();
@@ -106,14 +107,15 @@ void MP4NameAtom::Generate()
     if (ATOMID(m_pParentAtom->GetType()) == ATOMID("udta")) {
         AddProperty(new MP4BytesProperty("value"));
     } else {
-    AddVersionAndFlags(); /* 0, 1 */
-        
+        AddVersionAndFlags(); /* 0, 1 */
+
         AddProperty(
             new MP4BytesProperty("metadata")); /* 2 */
     }
     MP4Atom::Generate();
-}  
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl

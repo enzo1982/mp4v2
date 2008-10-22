@@ -27,12 +27,13 @@
 
 #include "impl.h"
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MP4AmrAtom::MP4AmrAtom(const char *type) 
-    : MP4Atom(type) 
+MP4AmrAtom::MP4AmrAtom(const char *type)
+        : MP4Atom(type)
 {
     AddReserved("reserved1", 6); /* 0 */
 
@@ -57,17 +58,18 @@ void MP4AmrAtom::Generate()
 
     // property reserved2 has non-zero fixed values
     static uint8_t reserved2[16] = {
-        0x00, 0x00, 0x00, 0x00, 
-        0x00, 0x00, 0x00, 0x00, 
+        0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00,
         0x00, 0x02, 0x00, 0x10,
-        0x00, 0x00, 0x00, 0x00, 
+        0x00, 0x00, 0x00, 0x00,
     };
     m_pProperties[2]->SetReadOnly(false);
     ((MP4BytesProperty*)m_pProperties[2])->
-        SetValue(reserved2, sizeof(reserved2));
+    SetValue(reserved2, sizeof(reserved2));
     m_pProperties[2]->SetReadOnly(true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl

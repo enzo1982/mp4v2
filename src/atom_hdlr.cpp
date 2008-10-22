@@ -3,30 +3,31 @@
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is MPEG4IP.
- * 
+ *
  * The Initial Developer of the Original Code is Cisco Systems Inc.
  * Portions created by Cisco Systems Inc. are
  * Copyright (C) Cisco Systems Inc. 2001.  All Rights Reserved.
- * 
- * Contributor(s): 
+ *
+ * Contributor(s):
  *      Dave Mackie     dmackie@cisco.com
  */
 
 #include "impl.h"
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MP4HdlrAtom::MP4HdlrAtom() 
-    : MP4Atom("hdlr")
+MP4HdlrAtom::MP4HdlrAtom()
+        : MP4Atom("hdlr")
 {
     AddVersionAndFlags(); /* 0, 1 */
     AddReserved("reserved1", 4); /* 2 */
@@ -42,7 +43,7 @@ MP4HdlrAtom::MP4HdlrAtom()
 // QT says name field is a counted string
 // MP4 says name field is a null terminated string
 // Here we attempt to make all things work
-void MP4HdlrAtom::Read() 
+void MP4HdlrAtom::Read()
 {
     // read all the properties but the "name" field
     ReadProperties(0, 5);
@@ -56,7 +57,7 @@ void MP4HdlrAtom::Read()
     // if the value matches the remaining atom length
     if (pos + strLength + 1 == end) {
         // read a counted string
-        MP4StringProperty* pNameProp = 
+        MP4StringProperty* pNameProp =
             (MP4StringProperty*)m_pProperties[5];
         pNameProp->SetCountedFormat(true);
         ReadProperties(5);
@@ -71,4 +72,5 @@ void MP4HdlrAtom::Read()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl

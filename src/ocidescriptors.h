@@ -3,33 +3,34 @@
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is MPEG4IP.
- * 
+ *
  * The Initial Developer of the Original Code is Cisco Systems Inc.
  * Portions created by Cisco Systems Inc. are
  * Copyright (C) Cisco Systems Inc. 2001.  All Rights Reserved.
- * 
- * Contributor(s): 
+ *
+ * Contributor(s):
  *      Dave Mackie     dmackie@cisco.com
  */
 
 #ifndef MP4V2_IMPL_OCIDESCRIPTORS_H
 #define MP4V2_IMPL_OCIDESCRIPTORS_H
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const uint8_t MP4OCIDescrTagsStart          = 0x40; 
-const uint8_t MP4ContentClassDescrTag       = 0x40; 
-const uint8_t MP4KeywordDescrTag            = 0x41; 
-const uint8_t MP4RatingDescrTag             = 0x42; 
+const uint8_t MP4OCIDescrTagsStart          = 0x40;
+const uint8_t MP4ContentClassDescrTag       = 0x40;
+const uint8_t MP4KeywordDescrTag            = 0x41;
+const uint8_t MP4RatingDescrTag             = 0x42;
 const uint8_t MP4LanguageDescrTag           = 0x43;
 const uint8_t MP4ShortTextDescrTag          = 0x44;
 const uint8_t MP4ExpandedTextDescrTag       = 0x45;
@@ -38,7 +39,7 @@ const uint8_t MP4ContentCreationDescrTag    = 0x47;
 const uint8_t MP4OCICreatorDescrTag     = 0x48;
 const uint8_t MP4OCICreationDescrTag        = 0x49;
 const uint8_t MP4SmpteCameraDescrTag        = 0x4A;
-const uint8_t MP4OCIDescrTagsEnd            = 0x5F; 
+const uint8_t MP4OCIDescrTagsEnd            = 0x5F;
 
 class MP4ContentClassDescriptor : public MP4Descriptor {
 public:
@@ -104,6 +105,7 @@ extern MP4Descriptor *CreateOCIDescriptor(uint8_t tag);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl
 
 #endif // MP4V2_IMPL_OCIDESCRIPTORS_H

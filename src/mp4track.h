@@ -3,25 +3,25 @@
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is MPEG4IP.
- * 
+ *
  * The Initial Developer of the Original Code is Cisco Systems Inc.
  * Portions created by Cisco Systems Inc. are
  * Copyright (C) Cisco Systems Inc. 2001 - 2004.  All Rights Reserved.
- * 
+ *
  * 3GPP features implementation is based on 3GPP's TS26.234-v5.60,
  * and was contributed by Ximpo Group Ltd.
  *
  * Portions created by Ximpo Group Ltd. are
  * Copyright (C) Ximpo Group Ltd. 2003, 2004.  All Rights Reserved.
- * 
- * Contributor(s): 
+ *
+ * Contributor(s):
  *      Dave Mackie     dmackie@cisco.com
  *              Ximpo Group Ltd.        mp4v2@ximpo.com
  */
@@ -29,7 +29,8 @@
 #ifndef MP4V2_IMPL_MP4TRACK_H
 #define MP4V2_IMPL_MP4TRACK_H
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -71,18 +72,18 @@ public:
         // input parameters
         MP4SampleId sampleId,
         // output parameters
-        uint8_t** ppBytes, 
-        uint32_t* pNumBytes, 
-        MP4Timestamp* pStartTime = NULL, 
+        uint8_t** ppBytes,
+        uint32_t* pNumBytes,
+        MP4Timestamp* pStartTime = NULL,
         MP4Duration* pDuration = NULL,
-        MP4Duration* pRenderingOffset = NULL, 
+        MP4Duration* pRenderingOffset = NULL,
         bool* pIsSyncSample = NULL);
 
     void WriteSample(
-        const uint8_t* pBytes, 
+        const uint8_t* pBytes,
         uint32_t numBytes,
         MP4Duration duration = 0,
-        MP4Duration renderingOffset = 0, 
+        MP4Duration renderingOffset = 0,
         bool isSyncSample = true);
 
     virtual void FinishWrite();
@@ -100,17 +101,17 @@ public:
     void        SetFixedSampleDuration(MP4Duration duration);
 
     void        GetSampleTimes(MP4SampleId sampleId,
-                    MP4Timestamp* pStartTime, MP4Duration* pDuration);
+                               MP4Timestamp* pStartTime, MP4Duration* pDuration);
 
     bool        IsSyncSample(MP4SampleId sampleId);
 
     MP4SampleId GetSampleIdFromTime(
-        MP4Timestamp when, 
+        MP4Timestamp when,
         bool wantSyncSample = false);
 
     MP4Duration GetSampleRenderingOffset(MP4SampleId sampleId);
     void        SetSampleRenderingOffset(MP4SampleId sampleId,
-                    MP4Duration renderingOffset);
+                                         MP4Duration renderingOffset);
 
     MP4EditId   AddEdit(
         MP4EditId editId = MP4_INVALID_EDIT_ID);
@@ -125,8 +126,8 @@ public:
         MP4EditId editId);
 
     MP4SampleId GetSampleIdFromEditTime(
-        MP4Timestamp editWhen, 
-        MP4Timestamp* pStartTime = NULL, 
+        MP4Timestamp editWhen,
+        MP4Timestamp* pStartTime = NULL,
         MP4Duration* pDuration = NULL);
 
     // special operation for use during hint track packet assembly
@@ -142,11 +143,11 @@ public:
 
     MP4Timestamp GetChunkTime(MP4ChunkId chunkId);
 
-    void ReadChunk(MP4ChunkId chunkId, 
-        uint8_t** ppChunk, uint32_t* pChunkSize);
+    void ReadChunk(MP4ChunkId chunkId,
+                   uint8_t** ppChunk, uint32_t* pChunkSize);
 
-    void RewriteChunk(MP4ChunkId chunkId, 
-        uint8_t* pChunk, uint32_t chunkSize);
+    void RewriteChunk(MP4ChunkId chunkId,
+                      uint8_t* pChunk, uint32_t chunkSize);
 
 protected:
     bool        InitEditListProperties();
@@ -156,21 +157,21 @@ protected:
     uint32_t    GetSampleStscIndex(MP4SampleId sampleId);
     uint32_t    GetChunkStscIndex(MP4ChunkId chunkId);
     uint32_t    GetChunkSize(MP4ChunkId chunkId);
-    uint32_t    GetSampleCttsIndex(MP4SampleId sampleId, 
-                    MP4SampleId* pFirstSampleId = NULL);
+    uint32_t    GetSampleCttsIndex(MP4SampleId sampleId,
+                                   MP4SampleId* pFirstSampleId = NULL);
     MP4SampleId GetNextSyncSample(MP4SampleId sampleId);
 
-    void UpdateSampleSizes(MP4SampleId sampleId, 
-        uint32_t numBytes);
+    void UpdateSampleSizes(MP4SampleId sampleId,
+                           uint32_t numBytes);
     bool IsChunkFull(MP4SampleId sampleId);
     void UpdateSampleToChunk(MP4SampleId sampleId,
-         MP4ChunkId chunkId, uint32_t samplesPerChunk);
+                             MP4ChunkId chunkId, uint32_t samplesPerChunk);
     void UpdateChunkOffsets(uint64_t chunkOffset);
     void UpdateSampleTimes(MP4Duration duration);
-    void UpdateRenderingOffsets(MP4SampleId sampleId, 
-        MP4Duration renderingOffset);
-    void UpdateSyncSamples(MP4SampleId sampleId, 
-        bool isSyncSample);
+    void UpdateRenderingOffsets(MP4SampleId sampleId,
+                                MP4Duration renderingOffset);
+    void UpdateSyncSamples(MP4SampleId sampleId,
+                           bool isSyncSample);
 
     MP4Atom* AddAtom(char* parentName, char* childName);
 
@@ -222,7 +223,7 @@ protected:
 
     MP4Integer32Property* m_pStszFixedSampleSizeProperty;
     MP4Integer32Property* m_pStszSampleCountProperty;
-    
+
     void SampleSizePropertyAddValue(uint32_t bytes);
     uint8_t m_stsz_sample_bits;
     bool m_have_stz2_4bit_sample;
@@ -265,6 +266,7 @@ MP4ARRAY_DECL(MP4Track, MP4Track*);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl
 
 #endif // MP4V2_IMPL_MP4TRACK_H

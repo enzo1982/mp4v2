@@ -3,30 +3,31 @@
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is MPEG4IP.
- * 
+ *
  * The Initial Developer of the Original Code is Cisco Systems Inc.
  * Portions created by Cisco Systems Inc. are
  * Copyright (C) Cisco Systems Inc. 2001.  All Rights Reserved.
- * 
- * Contributor(s): 
+ *
+ * Contributor(s):
  *      Dave Mackie     dmackie@cisco.com
  */
 
 #include "impl.h"
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MP4RtpAtom::MP4RtpAtom() 
-    : MP4Atom("rtp ")
+MP4RtpAtom::MP4RtpAtom()
+        : MP4Atom("rtp ")
 {
     // The atom type "rtp " is used in two complete unrelated ways
     // i.e. it's real two atoms with the same name
@@ -65,7 +66,7 @@ void MP4RtpAtom::AddPropertiesHntiType()
         new MP4StringProperty("sdpText"));
 }
 
-void MP4RtpAtom::Generate() 
+void MP4RtpAtom::Generate()
 {
     if (!strcmp(m_pParentAtom->GetType(), "stsd")) {
         AddPropertiesStsdType();
@@ -75,11 +76,11 @@ void MP4RtpAtom::Generate()
         GenerateHntiType();
     } else {
         VERBOSE_WARNING(m_pFile->GetVerbosity(),
-            printf("Warning: rtp atom in unexpected context, can not generate"));
+                        printf("Warning: rtp atom in unexpected context, can not generate"));
     }
 }
 
-void MP4RtpAtom::GenerateStsdType() 
+void MP4RtpAtom::GenerateStsdType()
 {
     // generate children
     MP4Atom::Generate();
@@ -89,7 +90,7 @@ void MP4RtpAtom::GenerateStsdType()
     ((MP4Integer16Property*)m_pProperties[3])->SetValue(1);
 }
 
-void MP4RtpAtom::GenerateHntiType() 
+void MP4RtpAtom::GenerateHntiType()
 {
     MP4Atom::Generate();
 
@@ -106,7 +107,7 @@ void MP4RtpAtom::Read()
         ReadHntiType();
     } else {
         VERBOSE_READ(m_pFile->GetVerbosity(),
-            printf("rtp atom in unexpected context, can not read"));
+                     printf("rtp atom in unexpected context, can not read"));
     }
 
     Skip(); // to end of atom
@@ -117,7 +118,7 @@ void MP4RtpAtom::ReadStsdType()
     MP4Atom::Read();
 }
 
-void MP4RtpAtom::ReadHntiType() 
+void MP4RtpAtom::ReadHntiType()
 {
     ReadProperties(0, 1);
 
@@ -152,4 +153,5 @@ void MP4RtpAtom::WriteHntiType()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl

@@ -3,26 +3,27 @@
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is MPEG4IP.
- * 
+ *
  * The Initial Developer of the Original Code is Cisco Systems Inc.
  * Portions created by Cisco Systems Inc. are
  * Copyright (C) Cisco Systems Inc. 2001.  All Rights Reserved.
- * 
- * Contributor(s): 
+ *
+ * Contributor(s):
  *      Dave Mackie     dmackie@cisco.com
  */
 
 #ifndef MP4V2_IMPL_MP4UTIL_H
 #define MP4V2_IMPL_MP4UTIL_H
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -98,13 +99,13 @@ inline void Indent(FILE* pFile, uint8_t depth) {
     fprintf(pFile, "%*c", depth, ' ');
 }
 
-static inline void MP4Printf(const char* fmt, ...) 
+static inline void MP4Printf(const char* fmt, ...)
 #ifndef _WIN32
- __attribute__((format(__printf__, 1, 2)))
+__attribute__((format(__printf__, 1, 2)))
 #endif
 ;
 
-static inline void MP4Printf(const char* fmt, ...) 
+static inline void MP4Printf(const char* fmt, ...)
 {
     va_list ap;
     va_start(ap, fmt);
@@ -122,9 +123,9 @@ public:
         m_free = 0;
     }
     ~MP4Error() {
-      if (m_free != 0) {
-        free((void *)m_errstring);
-      }
+        if (m_free != 0) {
+            free((void *)m_errstring);
+        }
     }
     MP4Error(int err, const char* where = NULL) {
         m_errno = err;
@@ -133,38 +134,38 @@ public:
         m_free = 0;
     }
     MP4Error(const char *format, const char *where, ...) {
-      char *string;
-      m_errno = 0;
-      string = (char *)malloc(512);
-      m_where = where;
-      if (string) {
-        va_list ap;
-        va_start(ap, where);
-        vsnprintf(string, 512, format, ap);
-        va_end(ap);
-        m_errstring = string;
-        m_free = 1;
-      } else {
-        m_errstring = format;
-        m_free = 0;
-      }
+        char *string;
+        m_errno = 0;
+        string = (char *)malloc(512);
+        m_where = where;
+        if (string) {
+            va_list ap;
+            va_start(ap, where);
+            vsnprintf(string, 512, format, ap);
+            va_end(ap);
+            m_errstring = string;
+            m_free = 1;
+        } else {
+            m_errstring = format;
+            m_free = 0;
+        }
     }
     MP4Error(int err, const char* format, const char* where, ...) {
-      char *string;
-      m_errno = err;
-      string = (char *)malloc(512);
-      m_where = where;
-      if (string) {
-        va_list ap;
-        va_start(ap, where);
-        vsnprintf(string, 512, format, ap);
-        va_end(ap);
-        m_errstring = string;
-        m_free = 1;
-      } else {
-        m_errstring = format;
-        m_free = 0;
-      }
+        char *string;
+        m_errno = err;
+        string = (char *)malloc(512);
+        m_where = where;
+        if (string) {
+            va_list ap;
+            va_start(ap, where);
+            vsnprintf(string, 512, format, ap);
+            va_end(ap);
+            m_errstring = string;
+            m_free = 1;
+        } else {
+            m_errstring = format;
+            m_free = 0;
+        }
     }
 
     void Print(FILE* pFile = stderr);
@@ -179,7 +180,7 @@ void MP4HexDump(
     FILE* pFile = stdout, uint8_t indent = 0);
 
 inline void* MP4Malloc(size_t size) {
-  if (size == 0) return NULL;
+    if (size == 0) return NULL;
     void* p = malloc(size);
     if (p == NULL && size > 0) {
         throw new MP4Error(errno);
@@ -188,7 +189,7 @@ inline void* MP4Malloc(size_t size) {
 }
 
 inline void* MP4Calloc(size_t size) {
-  if (size == 0) return NULL;
+    if (size == 0) return NULL;
     return memset(MP4Malloc(size), 0, size);
 }
 
@@ -219,12 +220,12 @@ inline void* MP4Realloc(void* p, uint32_t newSize) {
 }
 
 inline uint32_t STRTOINT32(const char* s) {
-  return ntohl(*(uint32_t *)s);
+    return ntohl(*(uint32_t *)s);
 }
 
 inline void INT32TOSTR(uint32_t i, char* s) {
-  *(uint32_t *)s = htonl(i);
-  s[4] = 0;
+    *(uint32_t *)s = htonl(i);
+    s[4] = 0;
 }
 
 inline MP4Timestamp MP4GetAbsTimestamp() {
@@ -237,8 +238,8 @@ inline MP4Timestamp MP4GetAbsTimestamp() {
     // 208284480 is (((1970 - 1904) * 365) + 17) * 24 * 60 * 60
 }
 
-uint64_t MP4ConvertTime(uint64_t t, 
-    uint32_t oldTimeScale, uint32_t newTimeScale);
+uint64_t MP4ConvertTime(uint64_t t,
+                        uint32_t oldTimeScale, uint32_t newTimeScale);
 
 bool MP4NameFirstMatches(const char* s1, const char* s2);
 
@@ -253,10 +254,11 @@ char* MP4ToBase16(const uint8_t* pData, uint32_t dataSize);
 char* MP4ToBase64(const uint8_t* pData, uint32_t dataSize);
 
 const char* MP4NormalizeTrackType(const char* type,
-                  uint32_t verbosity);
+                                  uint32_t verbosity);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl
 
 #endif // MP4V2_IMPL_MP4UTIL_H

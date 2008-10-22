@@ -22,35 +22,35 @@
  */
 
 #ifndef FALSE
-    #define FALSE 0
+#define FALSE 0
 #endif
 
 #ifndef TRUE
-    #define TRUE 1
+#define TRUE 1
 #endif
 
 #if !defined( __cplusplus )
-    #ifndef bool
-        #if SIZEOF_BOOL == 8
-            typedef uint64_t bool;
-        #else
-            #if SIZEOF_BOOL == 4
-                typedef uint32_t bool;
-            #else
-                #if SIZEOF_BOOL == 2
-                    typedef uint16_t bool;
-                #else
-                    typedef unsigned char bool;
-                #endif
-            #endif
-        #endif
-        #ifndef false
-            #define false FALSE
-        #endif
-        #ifndef true
-            #define true TRUE
-        #endif
-    #endif
+#ifndef bool
+#if SIZEOF_BOOL == 8
+typedef uint64_t bool;
+#else
+#if SIZEOF_BOOL == 4
+typedef uint32_t bool;
+#else
+#if SIZEOF_BOOL == 2
+typedef uint16_t bool;
+#else
+typedef unsigned char bool;
+#endif
+#endif
+#endif
+#ifndef false
+#define false FALSE
+#endif
+#ifndef true
+#define true TRUE
+#endif
+#endif
 #endif
 
 /*****************************************************************************/

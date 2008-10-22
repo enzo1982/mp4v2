@@ -3,32 +3,33 @@
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is MPEG4IP.
- * 
+ *
  * The Initial Developer of the Original Code is Cisco Systems Inc.
  * Portions created by Cisco Systems Inc. are
  * Copyright (C) Cisco Systems Inc. 2001.  All Rights Reserved.
- * 
- * Contributor(s): 
+ *
+ * Contributor(s):
  *      Dave Mackie     dmackie@cisco.com
  */
 
 #include "impl.h"
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /* rtp hint track operations */
 
 MP4RtpHintTrack::MP4RtpHintTrack(MP4File* pFile, MP4Atom* pTrakAtom)
-    : MP4Track(pFile, pTrakAtom)
+        : MP4Track(pFile, pTrakAtom)
 {
     m_pRefTrack = NULL;
 
@@ -86,7 +87,7 @@ void MP4RtpHintTrack::InitRefTrack()
     }
 }
 
-void MP4RtpHintTrack::InitRtpStart() 
+void MP4RtpHintTrack::InitRtpStart()
 {
     struct timeval tv;
     (void)gettimeofday(&tv, NULL);
@@ -133,8 +134,8 @@ void MP4RtpHintTrack::ReadHint(
 
     // read the desired hint sample into memory
     ReadSample(
-        hintSampleId, 
-        &m_pReadHintSample, 
+        hintSampleId,
+        &m_pReadHintSample,
         &m_readHintSampleSize,
         &m_readHintTimestamp);
 
@@ -154,7 +155,7 @@ uint16_t MP4RtpHintTrack::GetHintNumberOfPackets()
 {
     if (m_pReadHint == NULL) {
         throw new MP4Error("no hint has been read",
-            "MP4GetRtpHintNumberOfPackets");
+                           "MP4GetRtpHintNumberOfPackets");
     }
     return m_pReadHint->GetNumberOfPackets();
 }
@@ -163,7 +164,7 @@ bool MP4RtpHintTrack::GetPacketBFrame(uint16_t packetIndex)
 {
     if (m_pReadHint == NULL) {
         throw new MP4Error("no hint has been read",
-            "MP4GetRtpPacketBFrame");
+                           "MP4GetRtpPacketBFrame");
     }
     MP4RtpPacket* pPacket =
         m_pReadHint->GetPacket(packetIndex);
@@ -175,7 +176,7 @@ uint16_t MP4RtpHintTrack::GetPacketTransmitOffset(uint16_t packetIndex)
 {
     if (m_pReadHint == NULL) {
         throw new MP4Error("no hint has been read",
-            "MP4GetRtpPacketTransmitOffset");
+                           "MP4GetRtpPacketTransmitOffset");
     }
 
     MP4RtpPacket* pPacket =
@@ -186,7 +187,7 @@ uint16_t MP4RtpHintTrack::GetPacketTransmitOffset(uint16_t packetIndex)
 
 void MP4RtpHintTrack::ReadPacket(
     uint16_t packetIndex,
-    uint8_t** ppBytes, 
+    uint8_t** ppBytes,
     uint32_t* pNumBytes,
     uint32_t ssrc,
     bool addHeader,
@@ -194,11 +195,11 @@ void MP4RtpHintTrack::ReadPacket(
 {
     if (m_pReadHint == NULL) {
         throw new MP4Error("no hint has been read",
-            "MP4ReadRtpPacket");
+                           "MP4ReadRtpPacket");
     }
     if (!addHeader && !addPayload) {
         throw new MP4Error("no data requested",
-            "MP4ReadRtpPacket");
+                           "MP4ReadRtpPacket");
     }
 
     MP4RtpPacket* pPacket =
@@ -230,15 +231,15 @@ void MP4RtpHintTrack::ReadPacket(
             *pDest++ =
                 (pPacket->GetMBit() << 7) | pPacket->GetPayload();
 
-            *((uint16_t*)pDest) = 
+            *((uint16_t*)pDest) =
                 htons(m_rtpSequenceStart + pPacket->GetSequenceNumber());
-            pDest += 2; 
+            pDest += 2;
 
-            *((uint32_t*)pDest) = 
+            *((uint32_t*)pDest) =
                 htonl(m_rtpTimestampStart + (uint32_t)m_readHintTimestamp);
-            pDest += 4; 
+            pDest += 4;
 
-            *((uint32_t*)pDest) = 
+            *((uint32_t*)pDest) =
                 htonl(ssrc);
             pDest += 4;
         }
@@ -256,8 +257,8 @@ void MP4RtpHintTrack::ReadPacket(
     }
 
     VERBOSE_READ_HINT(m_pFile->GetVerbosity(),
-        printf("ReadPacket: %u ", packetIndex);
-        MP4HexDump(*ppBytes, *pNumBytes););
+                      printf("ReadPacket: %u ", packetIndex);
+                      MP4HexDump(*ppBytes, *pNumBytes););
 }
 
 MP4Timestamp MP4RtpHintTrack::GetRtpTimestampStart()
@@ -279,7 +280,7 @@ void MP4RtpHintTrack::SetRtpTimestampStart(MP4Timestamp start)
         ASSERT(pTsroAtom);
 
         (void)pTsroAtom->FindProperty("offset",
-            (MP4Property**)&m_pTsroProperty);
+                                      (MP4Property**)&m_pTsroProperty);
 
         ASSERT(m_pTsroProperty);
     }
@@ -293,19 +294,19 @@ void MP4RtpHintTrack::InitPayload()
     ASSERT(m_pTrakAtom);
 
     if (m_pRtpMapProperty == NULL) {
-      (void)m_pTrakAtom->FindProperty(
+        (void)m_pTrakAtom->FindProperty(
             "trak.udta.hinf.payt.rtpMap",
             (MP4Property**)&m_pRtpMapProperty);
     }
 
     if (m_pPayloadNumberProperty == NULL) {
-      (void)m_pTrakAtom->FindProperty(
+        (void)m_pTrakAtom->FindProperty(
             "trak.udta.hinf.payt.payloadNumber",
             (MP4Property**)&m_pPayloadNumberProperty);
     }
 
     if (m_pMaxPacketSizeProperty == NULL) {
-      (void)m_pTrakAtom->FindProperty(
+        (void)m_pTrakAtom->FindProperty(
             "trak.mdia.minf.stbl.stsd.rtp .maxPacketSize",
             (MP4Property**)&m_pMaxPacketSizeProperty);
     }
@@ -317,16 +318,16 @@ void MP4RtpHintTrack::GetPayload(
     uint16_t* pMaxPayloadSize,
     char **ppEncodingParams)
 {
-  const char* pRtpMap;
-  const char* pSlash;
-  uint32_t length;
+    const char* pRtpMap;
+    const char* pSlash;
+    uint32_t length;
     InitPayload();
 
     if (ppPayloadName || ppEncodingParams) {
-      if (ppPayloadName) 
-        *ppPayloadName = NULL;
-      if (ppEncodingParams)
-        *ppEncodingParams = NULL;
+        if (ppPayloadName)
+            *ppPayloadName = NULL;
+        if (ppEncodingParams)
+            *ppEncodingParams = NULL;
         if (m_pRtpMapProperty) {
             pRtpMap = m_pRtpMapProperty->GetValue();
             pSlash = strchr(pRtpMap, '/');
@@ -338,22 +339,22 @@ void MP4RtpHintTrack::GetPayload(
             }
 
             if (ppPayloadName) {
-              *ppPayloadName = (char*)MP4Calloc(length + 1);
-              strncpy(*ppPayloadName, pRtpMap, length); 
+                *ppPayloadName = (char*)MP4Calloc(length + 1);
+                strncpy(*ppPayloadName, pRtpMap, length);
             }
             if (pSlash && ppEncodingParams) {
-              pSlash++;
-              pSlash = strchr(pSlash, '/');
-              if (pSlash != NULL) {
                 pSlash++;
-                if (pSlash != '\0') {
-                  length = strlen(pRtpMap) - (pSlash - pRtpMap);
-                  *ppEncodingParams = (char *)MP4Calloc(length + 1);
-                  strncpy(*ppEncodingParams, pSlash, length);
+                pSlash = strchr(pSlash, '/');
+                if (pSlash != NULL) {
+                    pSlash++;
+                    if (pSlash != '\0') {
+                        length = strlen(pRtpMap) - (pSlash - pRtpMap);
+                        *ppEncodingParams = (char *)MP4Calloc(length + 1);
+                        strncpy(*ppEncodingParams, pSlash, length);
+                    }
                 }
-              }
             }
-        } 
+        }
     }
 
     if (pPayloadNumber) {
@@ -376,7 +377,7 @@ void MP4RtpHintTrack::GetPayload(
 void MP4RtpHintTrack::SetPayload(
     const char* payloadName,
     uint8_t payloadNumber,
-    uint16_t maxPayloadSize, 
+    uint16_t maxPayloadSize,
     const char *encoding_parms,
     bool include_rtp_map,
     bool include_mpeg4_esid)
@@ -387,30 +388,30 @@ void MP4RtpHintTrack::SetPayload(
     ASSERT(m_pRtpMapProperty);
     ASSERT(m_pPayloadNumberProperty);
     ASSERT(m_pMaxPacketSizeProperty);
-    
+
     size_t len = strlen(payloadName) + 16;
     if (encoding_parms != NULL) {
-      size_t temp = strlen(encoding_parms);
-      if (temp == 0) {
-        encoding_parms = NULL;
-      } else {
-        len += temp;
-      }
+        size_t temp = strlen(encoding_parms);
+        if (temp == 0) {
+            encoding_parms = NULL;
+        } else {
+            len += temp;
+        }
     }
 
     char* rtpMapBuf = (char*)MP4Malloc(len);
-    snprintf(rtpMapBuf, len, "%s/%u%c%s", 
-        payloadName, 
-        GetTimeScale(),
-        encoding_parms != NULL ? '/' : '\0',
-        encoding_parms == NULL ? "" : encoding_parms);
+    snprintf(rtpMapBuf, len, "%s/%u%c%s",
+             payloadName,
+             GetTimeScale(),
+             encoding_parms != NULL ? '/' : '\0',
+             encoding_parms == NULL ? "" : encoding_parms);
     m_pRtpMapProperty->SetValue(rtpMapBuf);
-    
+
     m_pPayloadNumberProperty->SetValue(payloadNumber);
 
     if (maxPayloadSize == 0) {
         maxPayloadSize = 1460;
-    } 
+    }
     m_pMaxPacketSizeProperty->SetValue(maxPayloadSize);
 
     // set sdp media type
@@ -420,34 +421,34 @@ void MP4RtpHintTrack::SetPayload(
     } else if (!strcmp(m_pRefTrack->GetType(), MP4_VIDEO_TRACK_TYPE)) {
         sdpMediaType = "video";
     } else if (!strcmp(m_pRefTrack->GetType(), MP4_CNTL_TRACK_TYPE)) {
-      sdpMediaType = "control";
+        sdpMediaType = "control";
     } else {
         sdpMediaType = "application";
     }
 
-    uint32_t maxlen = 
-      strlen(sdpMediaType) + strlen(rtpMapBuf) + 256;
+    uint32_t maxlen =
+        strlen(sdpMediaType) + strlen(rtpMapBuf) + 256;
     char* sdpBuf = (char*)MP4Malloc(maxlen);
     uint32_t buflen;
     buflen = snprintf(sdpBuf, maxlen,
-             "m=%s 0 RTP/AVP %u\015\012"
-             "a=control:trackID=%u\015\012",
-             sdpMediaType, payloadNumber,
-             m_trackId);
+                      "m=%s 0 RTP/AVP %u\015\012"
+                      "a=control:trackID=%u\015\012",
+                      sdpMediaType, payloadNumber,
+                      m_trackId);
     if (include_rtp_map) {
-      buflen += snprintf(sdpBuf + buflen, maxlen - buflen, 
-                "a=rtpmap:%u %s\015\012",
-                payloadNumber, rtpMapBuf);
+        buflen += snprintf(sdpBuf + buflen, maxlen - buflen,
+                           "a=rtpmap:%u %s\015\012",
+                           payloadNumber, rtpMapBuf);
     }
     if (include_mpeg4_esid) {
-      snprintf(sdpBuf + buflen, maxlen - buflen,
-          "a=mpeg4-esid:%u\015\012",
-          m_pRefTrack->GetId());
+        snprintf(sdpBuf + buflen, maxlen - buflen,
+                 "a=mpeg4-esid:%u\015\012",
+                 m_pRefTrack->GetId());
     }
 
     MP4StringProperty* pSdpProperty = NULL;
     (void)m_pTrakAtom->FindProperty("trak.udta.hnti.sdp .sdpText",
-        (MP4Property**)&pSdpProperty);
+                                    (MP4Property**)&pSdpProperty);
     ASSERT(pSdpProperty);
     pSdpProperty->SetValue(sdpBuf);
 
@@ -487,8 +488,8 @@ void MP4RtpHintTrack::AddPacket(bool setMbit, int32_t transmitOffset)
     ASSERT(m_pPayloadNumberProperty);
 
     pPacket->Set(
-        m_pPayloadNumberProperty->GetValue(), 
-        m_writePacketId++, 
+        m_pPayloadNumberProperty->GetValue(),
+        m_writePacketId++,
         setMbit);
     pPacket->SetTransmitOffset(transmitOffset);
 
@@ -516,11 +517,11 @@ void MP4RtpHintTrack::AddImmediateData(
 
     if (pBytes == NULL || numBytes == 0) {
         throw new MP4Error("no data",
-            "AddImmediateData");
+                           "AddImmediateData");
     }
     if (numBytes > 14) {
         throw new MP4Error("data size is larger than 14 bytes",
-            "AddImmediateData");
+                           "AddImmediateData");
     }
 
     MP4RtpImmediateData* pData = new MP4RtpImmediateData(pPacket);
@@ -565,15 +566,15 @@ void MP4RtpHintTrack::AddSampleData(
 void MP4RtpHintTrack::AddESConfigurationPacket()
 {
     if (m_pWriteHint == NULL) {
-        throw new MP4Error("no hint pending", 
-            "MP4RtpAddESConfigurationPacket");
+        throw new MP4Error("no hint pending",
+                           "MP4RtpAddESConfigurationPacket");
     }
 
     uint8_t* pConfig = NULL;
     uint32_t configSize = 0;
 
     m_pFile->GetTrackESConfiguration(m_pRefTrack->GetId(),
-        &pConfig, &configSize);
+                                     &pConfig, &configSize);
 
     if (pConfig == NULL) {
         return;
@@ -583,19 +584,19 @@ void MP4RtpHintTrack::AddESConfigurationPacket()
 
     if (configSize > m_pMaxPacketSizeProperty->GetValue()) {
         throw new MP4Error("ES configuration is too large for RTP payload",
-            "MP4RtpAddESConfigurationPacket");
+                           "MP4RtpAddESConfigurationPacket");
     }
 
     AddPacket(false);
 
     MP4RtpPacket* pPacket = m_pWriteHint->GetCurrentPacket();
     ASSERT(pPacket);
-    
+
     // This is ugly!
     // To get the ES configuration data somewhere known
-    // we create a sample data reference that points to 
+    // we create a sample data reference that points to
     // this hint track (not the media track)
-    // and this sample of the hint track 
+    // and this sample of the hint track
     // the offset into this sample is filled in during the write process
     MP4RtpSampleData* pData = new MP4RtpSampleData(pPacket);
 
@@ -680,27 +681,27 @@ void MP4RtpHintTrack::InitStats()
 
     ASSERT(pHinfAtom);
 
-    (void)pHinfAtom->FindProperty("hinf.trpy.bytes", (MP4Property**)&m_pTrpy); 
-    (void)pHinfAtom->FindProperty("hinf.nump.packets", (MP4Property**)&m_pNump); 
-    (void)pHinfAtom->FindProperty("hinf.tpyl.bytes", (MP4Property**)&m_pTpyl); 
-    (void)pHinfAtom->FindProperty("hinf.maxr.bytes", (MP4Property**)&m_pMaxr); 
-    (void)pHinfAtom->FindProperty("hinf.dmed.bytes", (MP4Property**)&m_pDmed); 
-    (void)pHinfAtom->FindProperty("hinf.dimm.bytes", (MP4Property**)&m_pDimm); 
-    (void)pHinfAtom->FindProperty("hinf.pmax.bytes", (MP4Property**)&m_pPmax); 
-    (void)pHinfAtom->FindProperty("hinf.dmax.milliSecs", (MP4Property**)&m_pDmax); 
+    (void)pHinfAtom->FindProperty("hinf.trpy.bytes", (MP4Property**)&m_pTrpy);
+    (void)pHinfAtom->FindProperty("hinf.nump.packets", (MP4Property**)&m_pNump);
+    (void)pHinfAtom->FindProperty("hinf.tpyl.bytes", (MP4Property**)&m_pTpyl);
+    (void)pHinfAtom->FindProperty("hinf.maxr.bytes", (MP4Property**)&m_pMaxr);
+    (void)pHinfAtom->FindProperty("hinf.dmed.bytes", (MP4Property**)&m_pDmed);
+    (void)pHinfAtom->FindProperty("hinf.dimm.bytes", (MP4Property**)&m_pDimm);
+    (void)pHinfAtom->FindProperty("hinf.pmax.bytes", (MP4Property**)&m_pPmax);
+    (void)pHinfAtom->FindProperty("hinf.dmax.milliSecs", (MP4Property**)&m_pDmax);
 
     MP4Atom* pHmhdAtom = m_pTrakAtom->FindAtom("trak.mdia.minf.hmhd");
 
     ASSERT(pHmhdAtom);
 
-    (void)pHmhdAtom->FindProperty("hmhd.maxPduSize", (MP4Property**)&m_pMaxPdu); 
-    (void)pHmhdAtom->FindProperty("hmhd.avgPduSize", (MP4Property**)&m_pAvgPdu); 
-    (void)pHmhdAtom->FindProperty("hmhd.maxBitRate", (MP4Property**)&m_pMaxBitRate); 
-    (void)pHmhdAtom->FindProperty("hmhd.avgBitRate", (MP4Property**)&m_pAvgBitRate); 
+    (void)pHmhdAtom->FindProperty("hmhd.maxPduSize", (MP4Property**)&m_pMaxPdu);
+    (void)pHmhdAtom->FindProperty("hmhd.avgPduSize", (MP4Property**)&m_pAvgPdu);
+    (void)pHmhdAtom->FindProperty("hmhd.maxBitRate", (MP4Property**)&m_pMaxBitRate);
+    (void)pHmhdAtom->FindProperty("hmhd.avgBitRate", (MP4Property**)&m_pAvgBitRate);
 
     MP4Integer32Property* pMaxrPeriod = NULL;
     (void)pHinfAtom->FindProperty("hinf.maxr.granularity",
-         (MP4Property**)&pMaxrPeriod); 
+                                  (MP4Property**)&pMaxrPeriod);
     if (pMaxrPeriod) {
         pMaxrPeriod->SetValue(1000);    // 1 second
     }
@@ -724,7 +725,7 @@ MP4RtpHint::~MP4RtpHint()
     }
 }
 
-MP4RtpPacket* MP4RtpHint::AddPacket() 
+MP4RtpPacket* MP4RtpHint::AddPacket()
 {
     MP4RtpPacket* pPacket = new MP4RtpPacket(this);
     m_rtpPackets.Add(pPacket);
@@ -755,7 +756,7 @@ void MP4RtpHint::Read(MP4File* pFile)
     }
 
     VERBOSE_READ_HINT(pFile->GetVerbosity(),
-        printf("ReadHint:\n"); Dump(stdout, 10, false););
+                      printf("ReadHint:\n"); Dump(stdout, 10, false););
 }
 
 void MP4RtpHint::Write(MP4File* pFile)
@@ -791,7 +792,7 @@ void MP4RtpHint::Write(MP4File* pFile)
     pFile->SetPosition(endPos);
 
     VERBOSE_WRITE_HINT(pFile->GetVerbosity(),
-        printf("WriteRtpHint:\n"); Dump(stdout, 14, false));
+                       printf("WriteRtpHint:\n"); Dump(stdout, 14, false));
 }
 
 void MP4RtpHint::Dump(FILE* pFile, uint8_t indent, bool dumpImplicits)
@@ -836,7 +837,7 @@ MP4RtpPacket::MP4RtpPacket(MP4RtpHint* pHint)
     AddProperty( /* 12 */
         new MP4Integer16Property("entryCount"));
 }
- 
+
 MP4RtpPacket::~MP4RtpPacket()
 {
     for (uint32_t i = 0; i < m_rtpData.Size(); i++) {
@@ -849,8 +850,8 @@ void MP4RtpPacket::AddExtraProperties()
     AddProperty( /* 13 */
         new MP4Integer32Property("extraInformationLength"));
 
-    // This is a bit of a hack, since the tlv entries are really defined 
-    // as atoms but there is only one type defined now, rtpo, and getting 
+    // This is a bit of a hack, since the tlv entries are really defined
+    // as atoms but there is only one type defined now, rtpo, and getting
     // our atom code hooked up here would be a major pain with little gain
 
     AddProperty( /* 14 */
@@ -902,7 +903,7 @@ void MP4RtpPacket::Read(MP4File* pFile)
             break;
         default:
             throw new MP4Error("unknown packet data entry type",
-                "MP4ReadHint");
+                               "MP4ReadHint");
         }
 
         m_rtpData.Add(pData);
@@ -920,7 +921,7 @@ void MP4RtpPacket::ReadExtra(MP4File* pFile)
 
     if (extraLength < 4) {
         throw new MP4Error("bad packet extra info length",
-            "MP4RtpPacket::ReadExtra");
+                           "MP4RtpPacket::ReadExtra");
     }
     extraLength -= 4;
 
@@ -930,7 +931,7 @@ void MP4RtpPacket::ReadExtra(MP4File* pFile)
 
         if (entryLength < 8) {
             throw new MP4Error("bad packet extra info entry length",
-                "MP4RtpPacket::ReadExtra");
+                               "MP4RtpPacket::ReadExtra");
         }
 
         if (entryTag == STRTOINT32("rtpo") && entryLength == 12) {
@@ -946,12 +947,12 @@ void MP4RtpPacket::ReadExtra(MP4File* pFile)
 
     if (extraLength < 0) {
         throw new MP4Error("invalid packet extra info length",
-            "MP4RtpPacket::ReadExtra");
+                           "MP4RtpPacket::ReadExtra");
     }
 }
 
-void MP4RtpPacket::Set(uint8_t payloadNumber, 
-    uint32_t packetId, bool setMbit)
+void MP4RtpPacket::Set(uint8_t payloadNumber,
+                       uint32_t packetId, bool setMbit)
 {
     ((MP4BitfieldProperty*)m_pProperties[5])->SetValue(setMbit);
     ((MP4BitfieldProperty*)m_pProperties[6])->SetValue(payloadNumber);
@@ -1105,17 +1106,17 @@ MP4Track* MP4RtpData::FindTrackFromRefIndex(uint8_t refIndex)
             (MP4Property**)&pTrackIdProperty);
         ASSERT(pTrackIdProperty);
 
-        uint32_t refTrackId = 
+        uint32_t refTrackId =
             pTrackIdProperty->GetValue(refIndex - 1);
 
-        pTrack = pHintTrack->GetFile()->GetTrack(refTrackId); 
+        pTrack = pHintTrack->GetFile()->GetTrack(refTrackId);
     }
 
     return pTrack;
 }
 
 MP4RtpNullData::MP4RtpNullData(MP4RtpPacket* pPacket)
-    : MP4RtpData(pPacket)
+        : MP4RtpData(pPacket)
 {
     ((MP4Integer8Property*)m_pProperties[0])->SetValue(0);
 
@@ -1126,7 +1127,7 @@ MP4RtpNullData::MP4RtpNullData(MP4RtpPacket* pPacket)
 }
 
 MP4RtpImmediateData::MP4RtpImmediateData(MP4RtpPacket* pPacket)
-    : MP4RtpData(pPacket)
+        : MP4RtpData(pPacket)
 {
     ((MP4Integer8Property*)m_pProperties[0])->SetValue(1);
 
@@ -1160,7 +1161,7 @@ void MP4RtpImmediateData::GetData(uint8_t* pDest)
 }
 
 MP4RtpSampleData::MP4RtpSampleData(MP4RtpPacket* pPacket)
-    : MP4RtpData(pPacket)
+        : MP4RtpData(pPacket)
 {
     ((MP4Integer8Property*)m_pProperties[0])->SetValue(2);
 
@@ -1186,19 +1187,19 @@ MP4RtpSampleData::MP4RtpSampleData(MP4RtpPacket* pPacket)
     m_refSampleOffset = 0;
 }
 
-void MP4RtpSampleData::SetEmbeddedImmediate(MP4SampleId sampleId, 
-    uint8_t* pData, uint16_t dataLength)
+void MP4RtpSampleData::SetEmbeddedImmediate(MP4SampleId sampleId,
+        uint8_t* pData, uint16_t dataLength)
 {
     ((MP4Integer8Property*)m_pProperties[1])->SetValue((uint8_t)-1);
     ((MP4Integer16Property*)m_pProperties[2])->SetValue(dataLength);
     ((MP4Integer32Property*)m_pProperties[3])->SetValue(sampleId);
-    ((MP4Integer32Property*)m_pProperties[4])->SetValue(0); 
+    ((MP4Integer32Property*)m_pProperties[4])->SetValue(0);
     CHECK_AND_FREE(m_pRefData);
     m_pRefData = pData;
 }
 
 void MP4RtpSampleData::SetReferenceSample(
-    MP4SampleId refSampleId, uint32_t refSampleOffset, 
+    MP4SampleId refSampleId, uint32_t refSampleOffset,
     uint16_t sampleLength)
 {
     ((MP4Integer8Property*)m_pProperties[1])->SetValue(0);
@@ -1209,7 +1210,7 @@ void MP4RtpSampleData::SetReferenceSample(
 
 void MP4RtpSampleData::SetEmbeddedSample(
     MP4SampleId sampleId, MP4Track* pRefTrack,
-    MP4SampleId refSampleId, uint32_t refSampleOffset, 
+    MP4SampleId refSampleId, uint32_t refSampleOffset,
     uint16_t sampleLength)
 {
     ((MP4Integer8Property*)m_pProperties[1])->SetValue((uint8_t)-1);
@@ -1228,14 +1229,14 @@ uint16_t MP4RtpSampleData::GetDataSize()
 
 void MP4RtpSampleData::GetData(uint8_t* pDest)
 {
-    uint8_t trackRefIndex = 
+    uint8_t trackRefIndex =
         ((MP4Integer8Property*)m_pProperties[1])->GetValue();
 
     MP4Track* pSampleTrack =
         FindTrackFromRefIndex(trackRefIndex);
 
     pSampleTrack->ReadSampleFragment(
-        ((MP4Integer32Property*)m_pProperties[3])->GetValue(),  // sampleId 
+        ((MP4Integer32Property*)m_pProperties[3])->GetValue(),  // sampleId
         ((MP4Integer32Property*)m_pProperties[4])->GetValue(),  // sampleOffset
         ((MP4Integer16Property*)m_pProperties[2])->GetValue(),  // sampleLength
         pDest);
@@ -1250,7 +1251,7 @@ void MP4RtpSampleData::WriteEmbeddedData(MP4File* pFile, uint64_t startPos)
 
     // figure out the offset within this hint sample for this embedded data
     uint64_t offset = pFile->GetPosition() - startPos;
-    ASSERT(offset <= 0xFFFFFFFF);   
+    ASSERT(offset <= 0xFFFFFFFF);
     ((MP4Integer32Property*)m_pProperties[4])->SetValue((uint32_t)offset);
 
     uint16_t length = ((MP4Integer16Property*)m_pProperties[2])->GetValue();
@@ -1258,7 +1259,7 @@ void MP4RtpSampleData::WriteEmbeddedData(MP4File* pFile, uint64_t startPos)
     if (m_pRefData) {
         pFile->WriteBytes(m_pRefData, length);
         return;
-    } 
+    }
 
     if (m_refSampleId != MP4_INVALID_SAMPLE_ID) {
         uint8_t* pSample = NULL;
@@ -1277,7 +1278,7 @@ void MP4RtpSampleData::WriteEmbeddedData(MP4File* pFile, uint64_t startPos)
 }
 
 MP4RtpSampleDescriptionData::MP4RtpSampleDescriptionData(MP4RtpPacket* pPacket)
-    : MP4RtpData(pPacket)
+        : MP4RtpData(pPacket)
 {
     ((MP4Integer8Property*)m_pProperties[0])->SetValue(3);
 
@@ -1294,7 +1295,7 @@ MP4RtpSampleDescriptionData::MP4RtpSampleDescriptionData(MP4RtpPacket* pPacket)
 }
 
 void MP4RtpSampleDescriptionData::Set(uint32_t sampleDescrIndex,
-    uint32_t offset, uint16_t length)
+                                      uint32_t offset, uint16_t length)
 {
     ((MP4Integer16Property*)m_pProperties[2])->SetValue(length);
     ((MP4Integer32Property*)m_pProperties[3])->SetValue(sampleDescrIndex);
@@ -1309,7 +1310,7 @@ uint16_t MP4RtpSampleDescriptionData::GetDataSize()
 void MP4RtpSampleDescriptionData::GetData(uint8_t* pDest)
 {
     // we start with the index into our track references
-    uint8_t trackRefIndex = 
+    uint8_t trackRefIndex =
         ((MP4Integer8Property*)m_pProperties[1])->GetValue();
 
     // from which we can find the track structure
@@ -1332,18 +1333,18 @@ void MP4RtpSampleDescriptionData::GetData(uint8_t* pDest)
     // bad reference
     if (pSdAtom == NULL) {
         throw new MP4Error("invalid sample description index",
-            "MP4RtpSampleDescriptionData::GetData");
+                           "MP4RtpSampleDescriptionData::GetData");
     }
 
     // check validity of the upcoming copy
-    uint16_t length = 
+    uint16_t length =
         ((MP4Integer16Property*)m_pProperties[2])->GetValue();
     uint32_t offset =
         ((MP4Integer32Property*)m_pProperties[4])->GetValue();
 
     if (offset + length > pSdAtom->GetSize()) {
-        throw new MP4Error("offset and/or length are too large", 
-            "MP4RtpSampleDescriptionData::GetData");
+        throw new MP4Error("offset and/or length are too large",
+                           "MP4RtpSampleDescriptionData::GetData");
     }
 
     // now we use the raw file to get the desired bytes
@@ -1352,9 +1353,9 @@ void MP4RtpSampleDescriptionData::GetData(uint8_t* pDest)
 
     uint64_t orgPos = pFile->GetPosition();
 
-    // It's not entirely clear from the spec whether the offset is from 
+    // It's not entirely clear from the spec whether the offset is from
     // the start of the sample descirption atom, or the start of the atom's
-    // data. I believe it is the former, but the commented out code will 
+    // data. I believe it is the former, but the commented out code will
     // realize the latter interpretation if I turn out to be wrong.
     uint64_t dataPos = pSdAtom->GetStart();
     //uint64_t dataPos = pSdAtom->GetEnd() - pSdAtom->GetSize();
@@ -1368,4 +1369,5 @@ void MP4RtpSampleDescriptionData::GetData(uint8_t* pDest)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl

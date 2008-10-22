@@ -3,31 +3,32 @@
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is MPEG4IP.
- * 
+ *
  * The Initial Developer of the Original Code is Cisco Systems Inc.
  * Portions created by Cisco Systems Inc. are
  * Copyright (C) Cisco Systems Inc. 2001.  All Rights Reserved.
- * 
- * Contributor(s): 
+ *
+ * Contributor(s):
  *      Dave Mackie         dmackie@cisco.com
  *      Alix Marchandise-Franquet   alix@cisco.com
  */
 
 #include "impl.h"
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MP4EncaAtom::MP4EncaAtom() 
-    : MP4Atom("enca") 
+MP4EncaAtom::MP4EncaAtom()
+        : MP4Atom("enca")
 {
     AddReserved("reserved1", 6); /* 0 */
 
@@ -53,17 +54,18 @@ void MP4EncaAtom::Generate()
 
     // property reserved2 has non-zero fixed values
     static uint8_t reserved2[16] = {
-        0x00, 0x00, 0x00, 0x00, 
-        0x00, 0x00, 0x00, 0x00, 
+        0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00,
         0x00, 0x02, 0x00, 0x10,
-        0x00, 0x00, 0x00, 0x00, 
+        0x00, 0x00, 0x00, 0x00,
     };
     m_pProperties[2]->SetReadOnly(false);
     ((MP4BytesProperty*)m_pProperties[2])->
-        SetValue(reserved2, sizeof(reserved2));
+    SetValue(reserved2, sizeof(reserved2));
     m_pProperties[2]->SetReadOnly(true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl

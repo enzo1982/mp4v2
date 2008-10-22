@@ -3,42 +3,43 @@
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is MPEG4IP.
- * 
+ *
  * The Initial Developer of the Original Code is Cisco Systems Inc.
  * Portions created by Cisco Systems Inc. are
  * Copyright (C) Cisco Systems Inc. 2001.  All Rights Reserved.
- * 
- * Contributor(s): 
+ *
+ * Contributor(s):
  *      Dave Mackie     dmackie@cisco.com
  */
 
 #include "impl.h"
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MP4ElstAtom::MP4ElstAtom() 
-    : MP4Atom("elst") 
-{ 
+MP4ElstAtom::MP4ElstAtom()
+        : MP4Atom("elst")
+{
     AddVersionAndFlags();
 
-    MP4Integer32Property* pCount = 
-        new MP4Integer32Property("entryCount"); 
+    MP4Integer32Property* pCount =
+        new MP4Integer32Property("entryCount");
     AddProperty(pCount);
 
     MP4TableProperty* pTable = new MP4TableProperty("entries", pCount);
     AddProperty(pTable);
 }
 
-void MP4ElstAtom::AddProperties(uint8_t version) 
+void MP4ElstAtom::AddProperties(uint8_t version)
 {
     MP4TableProperty* pTable = (MP4TableProperty*)m_pProperties[3];
 
@@ -60,7 +61,7 @@ void MP4ElstAtom::AddProperties(uint8_t version)
         new MP4Integer16Property("reserved"));
 }
 
-void MP4ElstAtom::Generate() 
+void MP4ElstAtom::Generate()
 {
     SetVersion(0);
     AddProperties(GetVersion());
@@ -68,7 +69,7 @@ void MP4ElstAtom::Generate()
     MP4Atom::Generate();
 }
 
-void MP4ElstAtom::Read() 
+void MP4ElstAtom::Read()
 {
     /* read atom version */
     ReadProperties(0, 1);
@@ -84,4 +85,5 @@ void MP4ElstAtom::Read()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl

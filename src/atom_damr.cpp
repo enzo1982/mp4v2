@@ -27,14 +27,15 @@
 
 #include "impl.h"
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
 #define AMR_VENDOR 0x6d346970
 
-MP4DamrAtom::MP4DamrAtom() 
-    : MP4Atom("damr") 
+MP4DamrAtom::MP4DamrAtom()
+        : MP4Atom("damr")
 {
     AddProperty( /* 0 */
         new MP4Integer32Property("vendor"));
@@ -57,11 +58,12 @@ void MP4DamrAtom::Generate()
 {
     MP4Atom::Generate();
 
-       ((MP4Integer32Property*)m_pProperties[0])->SetValue(AMR_VENDOR);
-       ((MP4Integer8Property*)m_pProperties[1])->SetValue(1);
+    ((MP4Integer32Property*)m_pProperties[0])->SetValue(AMR_VENDOR);
+    ((MP4Integer8Property*)m_pProperties[1])->SetValue(1);
 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl

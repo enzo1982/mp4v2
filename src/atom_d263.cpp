@@ -27,14 +27,15 @@
 
 #include "impl.h"
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
 #define H263_VENDOR 0x6d346970
 
-MP4D263Atom::MP4D263Atom() 
-    : MP4Atom("d263") 
+MP4D263Atom::MP4D263Atom()
+        : MP4Atom("d263")
 {
     AddProperty( /* 0 */
         new MP4Integer32Property("vendor"));
@@ -56,8 +57,8 @@ void MP4D263Atom::Generate()
 {
     MP4Atom::Generate();
 
-       ((MP4Integer32Property*)m_pProperties[0])->SetValue(H263_VENDOR);
-       ((MP4Integer8Property*)m_pProperties[1])->SetValue(1);
+    ((MP4Integer32Property*)m_pProperties[0])->SetValue(H263_VENDOR);
+    ((MP4Integer8Property*)m_pProperties[1])->SetValue(1);
 
 }
 
@@ -72,18 +73,18 @@ void MP4D263Atom::Write()
 
         MP4Integer32Property* pProp;
         bitrAtom->FindProperty("bitr.avgBitrate",
-            (MP4Property**)&pProp,
-            NULL);
+                               (MP4Property**)&pProp,
+                               NULL);
         ASSERT(pProp);
         avgBitrate = pProp->GetValue();
 
         bitrAtom->FindProperty("bitr.maxBitrate",
-            (MP4Property**)&pProp,
-            NULL);
+                               (MP4Property**)&pProp,
+                               NULL);
         ASSERT(pProp);
         maxBitrate = pProp->GetValue();
 
-        if(!maxBitrate && !avgBitrate) {
+        if (!maxBitrate && !avgBitrate) {
             DeleteChildAtom(bitrAtom);
         }
     }
@@ -93,4 +94,5 @@ void MP4D263Atom::Write()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl

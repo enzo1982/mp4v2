@@ -3,28 +3,29 @@
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is MPEG4IP.
- * 
+ *
  * Contributer has declined to give copyright information, and gives
  * it freely to the world.
- * 
- * Contributor(s): 
+ *
+ * Contributor(s):
  */
 
 #include "impl.h"
 
-namespace mp4v2 { namespace impl {
+namespace mp4v2 {
+namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MP4ColrAtom::MP4ColrAtom() 
-    : MP4Atom("colr") 
+MP4ColrAtom::MP4ColrAtom()
+        : MP4Atom("colr")
 {
     MP4StringProperty* cpt = new MP4StringProperty("colorParameterType");
     cpt->SetFixedLength(4);
@@ -32,9 +33,9 @@ MP4ColrAtom::MP4ColrAtom()
 
     AddProperty( /* 1 */ new MP4Integer16Property("primariesIndex"));
 
-    AddProperty( /* 2 */ new MP4Integer16Property("transferFunctionIndex")); 
+    AddProperty( /* 2 */ new MP4Integer16Property("transferFunctionIndex"));
 
-    AddProperty( /* 3 */ new MP4Integer16Property("matrixIndex")); 
+    AddProperty( /* 3 */ new MP4Integer16Property("matrixIndex"));
 }
 
 void MP4ColrAtom::Generate()
@@ -50,4 +51,5 @@ void MP4ColrAtom::Generate()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}} // namespace mp4v2::impl
+}
+} // namespace mp4v2::impl
