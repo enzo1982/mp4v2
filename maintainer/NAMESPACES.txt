@@ -1,0 +1,33 @@
+Maintainer C++ Namespace Notes
+******************************
+
+Namespaces have been employed to help organize source and push all private
+symbols (those which are not part of the public C API) to a location
+that is unlikely to be accidentially used by anyone. It also virtually
+eliminates any chance that private impl symbols will cause symbol collisions
+at compile or link-time.
+
+The global namespace is used by C API which generally prefixes all
+of its symobls with MP4 to avoid collisions. This space is used by
+src/mp4.cpp and include/mp4v2/mp4v2.h .
+
+The namespace 'mp4v2' is reserved for future C++ API. There is no code
+today which uses it.
+
+The namespace 'mp4v2::impl' is a private namespace for our C++ implementation
+code. We are nominating ourselves as the defacto owners of 'mp4v2' and can
+pretty much guarantee our impl will never collide with anything.
+
+The namespace 'mp4v2::platform' is private and used for code which abstracts
+various plaform differences or implements missing features.
+
+The namespace 'mp4v2::util' is private and used only for util/ programs.
+
+
+    NAMESPACE                SOURCES or DIR
+    -----------------------------------------------------------
+    ::                       src/mp4.cpp, include/mp4v2/mp4v2.h
+    mp4v2::impl              src/*.cpp
+    mp4v2::platform::posix   src/platform/posix/
+    mp4v2::platform::win32   src/platform/win32/
+    mp4v2::util              util/
