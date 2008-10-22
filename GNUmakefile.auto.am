@@ -164,3 +164,8 @@ EXTRA_DIST = \
     project/README.texi         \
     project/project.defs        \
     project/project.texi.in
+
+###############################################################################
+
+distclean-local:
+	rm -f $(top_builddir)/README

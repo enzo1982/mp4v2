@@ -1,0 +1,64 @@
+Release Instructions
+********************
+
+Official releases are made by creating a 'dist' bundle as supported by
+the autotools framework. This is not a normal target for users building
+the library to use, and as such it may introduce extra tool requirements.
+For example, 'makeinfo' is required to generate some documentation before
+a bundle can be created.
+
+Steps for an Official Release
+=============================
+
+We will make some assumptions here such as the release is being created from
+the head of trunk branch and the version of the release is to be 1.0.0 .
+This project uses a version tuple of MAJOR.MINOR.POINT and every release
+must increment some portion of the tuple. General rules to follow are if any
+public interface changes, bump MINOR and reset POINT. If a bug fix or other
+change does not effect the public interface, then only bump POINT. The
+MAJOR component should never be bumped except in the case of a significnt
+public interface change.
+
+    # checkout trunk as local-name 1.0.0
+    svn co https://mp4v2.googlecode.com/svn/trunk 1.0.0
+    cd 1.0.0
+
+    # bump version: edit AC_INIT() macro so 2nd arg is [1.0.0]
+    vi configure.ac
+
+    # rebuild autotools
+    autoreconf -v
+
+    # checkin configure.ac and files which autoreconf may have updated
+    svn status
+    svn ci -m "MILESTONE: release 1.0.0"
+
+    # branch release
+    svn cp -m "BRANCHED: release 1.0.0" \
+        https://mp4v2.googlecode.com/svn/trunk \
+        https://mp4v2.googlecode.com/svn/release/1.0.0
+
+    # switch local working-dir trunk -> release
+    svn info
+    svn switch https://mp4v2.googlecode.com/svn/release/1.0.0
+    svn info
+
+    # clean-room
+    #   at this point there should be no pending changes in working dir
+    #   if there are, you're probably just working out kinks in the
+    #   autotool system but in the final run, all files should be
+    #   checked in at this point. do a final svn update to make sure
+    #   repo metadata has been updated.
+    svn status
+    svn update
+
+    # make distcheck || make dist (the latter if you're in a hurry)
+    rm -fr build/
+    mkdir build
+    cd build/
+    ../configure
+    make distcheck
+
+    # upload bundle somewhere
+    mkdir -p ~/OUTGOING
+    cp mp4v2-*.tar.bz2 ~/OUTGOING/.

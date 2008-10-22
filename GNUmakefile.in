@@ -50,6 +50,6 @@ am__vpath_adj = case $$p in \
 
 ###############################################################################
 
-$(top_srcdir)/README: $(top_builddir)/project/project.texi
-$(top_srcdir)/README: $(top_srcdir)/project/README.texi
+$(top_builddir)/README: $(top_builddir)/project/project.texi
+$(top_builddir)/README: $(top_srcdir)/project/README.texi
 	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<

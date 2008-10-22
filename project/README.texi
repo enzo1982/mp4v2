@@ -37,8 +37,8 @@ Detailed API documentation is available as a set of man pages found
 in doc/ . The MP4.3 page gives an overview of the API. Alternately you may
 refer to include/mp4v2/mp4v2.h which specifies the official API.
 
-The file INTERNALS.txt provides an overview of what is happening behind
-the API. Note that the library is implemented using C++, this is hidden
+The file maintainer/INTERNALS.txt provides an overview of what is happening
+behind the API. Note that the library is implemented using C++, this is hidden
 from the public interface, which is a C API.
 
 @section Utilities

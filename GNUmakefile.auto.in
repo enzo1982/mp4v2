@@ -40,7 +40,7 @@ bin_PROGRAMS = $(am__EXEEXT_1)
 @ADD_GETTIMEOFDAY_TRUE@am__append_1 = src/platform/win32/gettimeofday.cpp
 @ADD_UTIL_TRUE@am__append_2 = mp4art mp4dump mp4extract mp4info mp4syncfiles mp4tags mp4trackdump
 subdir = .
-DIST_COMMON = README $(am__configure_deps) $(nobase_include_HEADERS) \
+DIST_COMMON = $(am__configure_deps) $(nobase_include_HEADERS) \
 	$(srcdir)/GNUmakefile.auto.am $(srcdir)/GNUmakefile.auto.in \
 	$(srcdir)/GNUmakefile.in $(top_srcdir)/configure \
 	$(top_srcdir)/include/mp4v2/project.h.in \
@@ -1357,7 +1357,7 @@ distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -f GNUmakefile.auto
 distclean-am: clean-am distclean-compile distclean-generic \
-	distclean-hdr distclean-libtool distclean-tags
+	distclean-hdr distclean-libtool distclean-local distclean-tags
 
 dvi: dvi-am
 
@@ -1418,13 +1418,13 @@ uninstall-am: uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
 	clean-libtool ctags dist dist-all dist-bzip2 dist-gzip \
 	dist-lzma dist-shar dist-tarZ dist-zip distcheck distclean \
 	distclean-compile distclean-generic distclean-hdr \
-	distclean-libtool distclean-tags distcleancheck distdir \
-	distuninstallcheck dvi dvi-am html html-am info info-am \
-	install install-am install-binPROGRAMS install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-libLTLIBRARIES install-man \
-	install-nobase_includeHEADERS \
+	distclean-libtool distclean-local distclean-tags \
+	distcleancheck distdir distuninstallcheck dvi dvi-am html \
+	html-am info info-am install install-am install-binPROGRAMS \
+	install-data install-data-am install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am install-libLTLIBRARIES \
+	install-man install-nobase_includeHEADERS \
 	install-nobase_nodist_includeHEADERS install-pdf \
 	install-pdf-am install-ps install-ps-am install-strip \
 	installcheck installcheck-am installdirs maintainer-clean \
@@ -1434,6 +1434,11 @@ uninstall-am: uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
 	uninstall-libLTLIBRARIES uninstall-nobase_includeHEADERS \
 	uninstall-nobase_nodist_includeHEADERS
 
+
+###############################################################################
+
+distclean-local:
+	rm -f $(top_builddir)/README
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
