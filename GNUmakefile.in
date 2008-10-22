@@ -53,3 +53,11 @@ am__vpath_adj = case $$p in \
 $(top_builddir)/README: $(top_builddir)/project/project.texi
 $(top_builddir)/README: $(top_srcdir)/project/README.texi
 	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<
+
+###############################################################################
+
+SNAPSHOT = $(PROJECT_version_major).$(PROJECT_version_minor)-$(shell date +%Y%m%d)
+
+.PHONY: snapshot
+snapshot: distdir=$(PACKAGE)-$(SNAPSHOT)
+snapshot: dist

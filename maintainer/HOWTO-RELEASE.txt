@@ -17,21 +17,26 @@ This project uses a version tuple of MAJOR.MINOR.POINT and every release
 must increment some portion of the tuple. General rules to follow are if any
 public interface changes, bump MINOR and reset POINT. If a bug fix or other
 change does not effect the public interface, then only bump POINT. The
-MAJOR component should never be bumped except in the case of a significnt
-public interface change.
+MAJOR component should never be bumped except in rare cases such as a
+significant public interface change.
 
-A release is branched from either the trunk or an earlier release where
-only the version POINT is bumped. These are termed, respetively,
-TRUNK-RELEASE and POINT-RELEASE. They follow this URL convention:
+A release is branched from either the trunk or an earlier release and
+are termed TRUNK-RELEASE and POINT-RELEASE, respectively. A TRUNK-RELEASE
+will typically bump the MINOR component and a POINT-RELEASE will bump
+the POINT component. All releases follow this URL convention:
 
     https://mp4v2.googlecode.com/svn/release/MAJOR.MINOR.POINT
 
-A snapshot is branched from the trunk and differs primarily in stability,
-and only MAJOR.MINOR components are significant for trunk and snapshots.
-There is no need to support more than one daily snapshot. They follow
-this URL convention:
+Snapshots are a different beast. As they are never expected to be patched,
+there is no need to create a branch for them, except for maybe tracking
+purposes but that is overkill. It is desirable to provide some indicator
+of the version number a snapshot is chasing, which is essentially what trunk
+is: the main development branch chasing the next release. And we know
+that the POINT component is meaningless to trunk, so a snapshot should
+incorporate MAJOR.MINOR plus a reasonable serial number based on date. This
+is similar to GNU gcc snapshots and bundle naming follows this convention:
 
-    https://mp4v2.googlecode.com/svn/snapshot/MAJOR.MINOR-YYYYMMDD
+    mp4v2-MAJOR.MINOR-YYYYMMDD.tar.bz2
 
 
 WORKFLOW - Official TRUNK-release
@@ -124,3 +129,19 @@ point-release.
     make distcheck
     cp mp4v2-1.0.1.tar.bz2 ~/OUTGOING/.
     # FINISHED - CLOSED: https://mp4v2.googlecode.com/svn/release/1.0.1
+
+
+WORKFLOW - Official snapshot
+----------------------------
+
+Pay particular attention to the special requirements of making a snapshot.
+You must set an environment variable before running configure, and use
+the special target which overrides package naming to use snapshot the
+convention.
+
+    cd /work/mp4v2/
+    svn co https://mp4v2.googlecode.com/svn/trunk/
+    cd trunk/
+    setenv SNAPSHOT 1 # sh syntax: export SNAPSHOT=1
+    ../configure
+    make snapshot

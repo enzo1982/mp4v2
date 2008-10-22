@@ -4,6 +4,9 @@
 
 /^URL: ?/                { printf("%srepo_url=\"%s\"\n", prefix, $2); rtype="developer" }
 /^URL: .+\/release\/.+/  { rtype="release" }
-/^URL: .+\/snapshot\/.+/ { rtype="snapshot" }
 
-END                      { printf("%srepo_type=\"%s\"\n", prefix, rtype) }
+END {
+    if (ENVIRON["SNAPSHOT"] == "1")
+        rtype="snapshot";
+    printf("%srepo_type=\"%s\"\n", prefix, rtype);
+}
