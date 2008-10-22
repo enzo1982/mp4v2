@@ -1154,6 +1154,21 @@ MP4TrackId MP4AddTextTrack(
     return MP4_INVALID_TRACK_ID;
 }
 
+MP4TrackId MP4AddSubtitleTrack(
+    MP4FileHandle hFile, MP4TrackId refTrackId)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+       try {
+           return ((MP4File*)hFile)->AddSubtitleTrack(refTrackId);
+       }
+       catch (MP4Error* e) {
+           PRINT_ERROR(e);
+           delete e;
+       }
+   }
+   return MP4_INVALID_TRACK_ID;
+}
+
 MP4TrackId MP4AddChapterTextTrack(
     MP4FileHandle hFile, MP4TrackId refTrackId)
 {
