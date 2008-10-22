@@ -1,0 +1,14 @@
+Maintainer Add Source Files
+***************************
+
+Almost any new .cpp or .h files will have to be added to GNUmakefile.auto.am .
+It is trivial to add hand-written source files. Just add them to the list
+for the particular library or program which already exists. For example,
+to add a source file to the libmp4v2:
+
+    libmp4v2_la_SOURCES = ...
+
+If you desire a header file to installed during 'make install' such
+as 'mp4v2.h' it should be taken out of _SOURCES and added to:
+
+    nobase_include_HEADERS = ...

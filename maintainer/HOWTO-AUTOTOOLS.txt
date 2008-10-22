@@ -1,0 +1,49 @@
+Autotools Instructions
+**********************
+
+This project uses Autotools and activates option AM_MAINTAINER_MODE
+which makes it easier for casual build of the project but slightly more
+difficult for a maintainer. The general rule a maintainer needs to follow
+if they intend to modify any autotool source files such as *.am or *.ac
+files is to use configure with an extra option:
+
+    ../configure --enable-maintainer-mode
+
+As such, the project's goal is to pre-generates all the files and religiously
+checks them into the repository. While this is not a universal approach,
+one of the (current) project goals is to permit casual builds from the
+repository without requiring use of autoconf, automake and such tools.
+If this goal is dropped then substantial cleanup of the the repository
+source could be done -- approximately 9 files could be removed. And
+the tedious maintenance (making sure the generated files are checked-in)
+can be done away with. The trade off is simple: if we want to make it
+easier for people to use the repository for builds, then we stay the
+course and take the pain. Otherwise, we simply recommend to people who
+do not the rich set of autotools installed to use our source bundles,
+and stay awsay from the repository.
+
+Today, if you edit any .ac or .am files, you must either be in maintainer
+mode, and/or if you're paranoid, you can run the autoreconf tool at
+the top of the source tree. Take note that autoreconf is NOT autoconf.
+Consequently, files will be modified, and will require check-in at
+some point. Never, ever, manually-merge or resolve any conflicts with these
+generated files. You can always over-write them. It's the source-files
+that matter.
+
+    autoreconf -v
+
+Where is Makefile.am? And what is this GNUmakefile stuff?
+Simple, we already have a sophisticated project which requires enough
+GNU-tools at build-time that it makes no sense to hope-and-pray that
+BSD flavors of make will work. As such, the files are renamed to be
+those which are only recognized by GNU make. This helps avoid confusion
+when people run the wrong make flavor -- it's better to see Makefile not
+found, rather than 100 obscure make incompatibility-errors. So
+we have GNUmakefile.in which is our source for some very local
+customizations. This file will rarely need to be edited. We also have
+GNUmakefile.auto.am which is our name for the old Makefile.am .
+Post configure, we end up with GNUmakefile which includes GNUmakefile.auto
+
+Care has been taken to avoid subdir makefiles. And while they may
+eventually become part of this project, it's nice to avoid them when
+possible.
