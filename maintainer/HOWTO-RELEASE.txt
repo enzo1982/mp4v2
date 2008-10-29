@@ -142,6 +142,10 @@ convention.
     cd /work/mp4v2/
     svn co https://mp4v2.googlecode.com/svn/trunk/
     cd trunk/
+    autoreconf -v
+    rm -fr build/
+    mkdir build
+    cd build/
     setenv SNAPSHOT 1 # sh syntax: export SNAPSHOT=1
     ../configure
     make snapshot
