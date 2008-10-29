@@ -464,7 +464,7 @@ char* MP4File::ReadCountedString(uint8_t charSize, bool allowExpandedCount)
 
 void MP4File::WriteCountedString(char* string,
                                  uint8_t charSize, bool allowExpandedCount,
-                                 uint8_t fixedLength)
+                                 uint32_t fixedLength)
 {
     uint32_t byteLength;
     uint8_t zero[1];

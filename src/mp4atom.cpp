@@ -125,7 +125,10 @@ MP4Atom* MP4Atom::CreateAtom(const char* type)
             }
             else if (ATOMID(type) == ATOMID("data")) { /* Apple iTunes */
                 pAtom = new MP4DataAtom();
-            }
+            } 
+            else if (ATOMID(type) == ATOMID("dac3")) { 
+                pAtom = new MP4DAc3Atom();
+            } 
             break;
         case 'e':
             if (ATOMID(type) == ATOMID("elst")) {

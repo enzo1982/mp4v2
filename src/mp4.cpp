@@ -684,14 +684,18 @@ extern "C" {
 
     MP4TrackId MP4AddAC3AudioTrack(
         MP4FileHandle hFile,
-        uint32_t timeScale,
-        MP4Duration sampleDuration,
-        uint8_t audioType)
+        uint32_t samplingRate,
+        uint8_t fscod,
+        uint8_t bsid,
+        uint8_t bsmod,
+        uint8_t acmod,
+        uint8_t lfeon,
+        uint8_t bit_rate_code)
     {
         if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
             try {
                 return ((MP4File*)hFile)->
-                       AddAC3AudioTrack(timeScale, sampleDuration, audioType);
+                    AddAC3AudioTrack(samplingRate, fscod, bsid, bsmod, acmod, lfeon, bit_rate_code);
             }
             catch (MP4Error* e) {
                 PRINT_ERROR(e);

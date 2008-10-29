@@ -489,9 +489,13 @@ extern "C" {
 
     MP4TrackId MP4AddAC3AudioTrack(
         MP4FileHandle hFile,
-        uint32_t      timeScale,
-        MP4Duration   sampleDuration,
-        uint8_t       audioType DEFAULT(MP4_MPEG4_AUDIO_TYPE) );
+        uint32_t samplingRate,
+        uint8_t fscod,
+        uint8_t bsid,
+        uint8_t bsmod,
+        uint8_t acmod,
+        uint8_t lfeon,
+        uint8_t bit_rate_code);
 
     typedef struct mp4v2_ismacryp_session_params {
         uint32_t    scheme_type;

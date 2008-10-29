@@ -1470,16 +1470,16 @@ MP4TrackId MP4File::AddAudioTrack(
     return trackId;
 }
 
-/*
- * Hacky initial attempt at AC3 in MP4 prior to the standard being published,
- * this is to be rewritten.
- */
 MP4TrackId MP4File::AddAC3AudioTrack(
-    uint32_t timeScale,
-    MP4Duration sampleDuration,
-    uint8_t audioType)
+    uint32_t samplingRate,
+    uint8_t fscod,
+    uint8_t bsid,
+    uint8_t bsmod,
+    uint8_t acmod,
+    uint8_t lfeon,
+    uint8_t bit_rate_code)
 {
-    MP4TrackId trackId = AddTrack(MP4_AUDIO_TRACK_TYPE, timeScale);
+    MP4TrackId trackId = AddTrack(MP4_AUDIO_TRACK_TYPE, samplingRate);
 
     AddTrackToOd(trackId);
 
@@ -1488,6 +1488,73 @@ MP4TrackId MP4File::AddAC3AudioTrack(
     InsertChildAtom(MakeTrackName(trackId, "mdia.minf"), "smhd", 0);
 
     AddChildAtom(MakeTrackName(trackId, "mdia.minf.stbl.stsd"), "ac-3");
+
+    // Set Ac3 settings
+    MP4Integer16Property* pSampleRateProperty = NULL;
+    FindIntegerProperty(
+        MakeTrackName(trackId, "mdia.minf.stbl.stsd.ac-3.samplingRate"),
+        (MP4Property**)&pSampleRateProperty);
+    if (pSampleRateProperty) {
+        pSampleRateProperty->SetValue(samplingRate);
+    } else {
+        throw new MP4Error("no property", "ac-3.samplingRate");
+    }
+
+    MP4BitfieldProperty* pBitfieldProperty = NULL;
+
+    FindProperty(MakeTrackName(trackId, "mdia.minf.stbl.stsd.ac-3.dac3.fscod"),
+                               (MP4Property**)&pBitfieldProperty);
+    if (pBitfieldProperty) {
+        pBitfieldProperty->SetValue(fscod);
+        pBitfieldProperty = NULL;
+    } else {
+        throw new MP4Error("no property", "dac3.fscod");
+    }
+
+    FindProperty(MakeTrackName(trackId, "mdia.minf.stbl.stsd.ac-3.dac3.bsid"),
+                               (MP4Property**)&pBitfieldProperty);
+    if (pBitfieldProperty) {
+        pBitfieldProperty->SetValue(bsid);
+        pBitfieldProperty = NULL;
+    } else {
+        throw new MP4Error("no property", "dac3.bsid");
+    }
+
+    FindProperty(MakeTrackName(trackId, "mdia.minf.stbl.stsd.ac-3.dac3.bsmod"),
+                               (MP4Property**)&pBitfieldProperty);
+    if (pBitfieldProperty) {
+        pBitfieldProperty->SetValue(bsmod);
+        pBitfieldProperty = NULL;
+    } else {
+        throw new MP4Error("no property", "dac3.bsmod");
+    }
+
+    FindProperty(MakeTrackName(trackId, "mdia.minf.stbl.stsd.ac-3.dac3.acmod"),
+                               (MP4Property**)&pBitfieldProperty);
+    if (pBitfieldProperty) {
+        pBitfieldProperty->SetValue(acmod);
+        pBitfieldProperty = NULL;
+    } else {
+        throw new MP4Error("no property", "dac3.acmod");
+    }
+
+    FindProperty(MakeTrackName(trackId, "mdia.minf.stbl.stsd.ac-3.dac3.lfeon"),
+                               (MP4Property**)&pBitfieldProperty);
+    if (pBitfieldProperty) {
+        pBitfieldProperty->SetValue(lfeon);
+        pBitfieldProperty = NULL;
+    } else {
+        throw new MP4Error("no property", "dac3.lfeon");
+    }
+
+    FindProperty(MakeTrackName(trackId, "mdia.minf.stbl.stsd.ac-3.dac3.bit_rate_code"),
+                               (MP4Property**)&pBitfieldProperty);
+    if (pBitfieldProperty) {
+        pBitfieldProperty->SetValue(bit_rate_code);
+        pBitfieldProperty = NULL;
+    } else {
+        throw new MP4Error("no property", "dac3.bit_rate_code");
+    }
 
     AddDescendantAtoms(MakeTrackName(trackId, NULL), "udta.name");
 
@@ -1500,7 +1567,7 @@ MP4TrackId MP4File::AddAC3AudioTrack(
     pStsdCountProperty->IncrementValue();
 
     m_pTracks[FindTrackIndex(trackId)]->
-    SetFixedSampleDuration(sampleDuration);
+        SetFixedSampleDuration(1536);
 
     return trackId;
 }

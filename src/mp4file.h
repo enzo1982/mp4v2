@@ -213,9 +213,13 @@ public: /* equivalent to MP4 library API */
         uint8_t audioType);
 
     MP4TrackId AddAC3AudioTrack(
-        uint32_t timeScale,
-        MP4Duration sampleDuration,
-        uint8_t audioType);
+        uint32_t samplingRate,
+        uint8_t fscod,
+        uint8_t bsid,
+        uint8_t bsmod,
+        uint8_t acmod,
+        uint8_t lfeon,
+        uint8_t bit_rate_code);
 
     MP4TrackId AddEncAudioTrack( // ismacryp
         uint32_t timeScale,
@@ -651,7 +655,7 @@ public:
     void WriteCountedString(char* string,
                             uint8_t charSize = 1,
                             bool allowExpandedCount = false,
-                            uint8_t fixedLength = 0);
+                            uint32_t fixedLength = 0);
     void WriteBits(uint64_t bits, uint8_t numBits);
     void PadWriteBits(uint8_t pad = 0);
     void FlushWriteBits();

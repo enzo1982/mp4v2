@@ -157,6 +157,12 @@ public:
     void Generate();
 };
 
+class MP4DAc3Atom : public MP4Atom {
+public:
+    MP4DAc3Atom();
+    void Generate();
+};
+
 class MP4Mp4sAtom : public MP4Atom {
 public:
     MP4Mp4sAtom();

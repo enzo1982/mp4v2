@@ -15,6 +15,8 @@
  * Portions created by Cisco Systems Inc. are
  * Copyright (C) Cisco Systems Inc. 2001.  All Rights Reserved.
  *
+ * See ETSI TS 102 366 V1.2.1 Annex F for how to put Ac3 in MP4.
+ * 
  * Contributor(s):
  *      Edward Groenendaal      egroenen@cisco.com
  */
@@ -29,32 +31,38 @@ namespace impl {
 MP4Ac3Atom::MP4Ac3Atom()
         : MP4Atom("ac-3")
 {
-    AddProperty( new MP4BytesProperty("data", 47));
+    AddReserved("reserved1", 6); /* 0 */
+
+    AddProperty( /* 1 */
+        new MP4Integer16Property("data-reference-index"));
+
+    AddReserved("reserved2", 8); /* 2 */
+
+    AddProperty( /* 3 */
+        new MP4Integer16Property("channelCount"));
+
+    AddProperty( /* 4 */
+        new MP4Integer16Property("sampleSize"));
+
+    AddReserved("reserved3", 4); /* 5 */
+
+    AddProperty( /* 6 */
+        new MP4Integer16Property("samplingRate"));
+
+    AddReserved("reserved4", 2); /* 7 */
+
+    ExpectChildAtom("dac3", Required, OnlyOne);
 }
 
 void MP4Ac3Atom::Generate()
 {
     MP4Atom::Generate();
 
-    // This is a nasty nasty hack because Apple haven't told us what is
-    // in the AC3 atom. So I've just copied this raw data from a sample
-    // file.
-    // I believe most of this is actually the same as the mp4a atom.
-    // I can play with this later to get it 100% right, for now this works.
-    //
-    // Note that the format of this atom is now well known and will be
-    // filled in properly soon using the correct AC3 values.
-    //
-    static uint8_t ac3[39] = {
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x02, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0xbb,
-        0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0b,
-        0x64, 0x61, 0x63, 0x33, 0x10, 0x3d, 0x40,
-    };
+    ((MP4Integer16Property*)m_pProperties[1])->SetValue(1); // data-reference-index
+    ((MP4Integer16Property*)m_pProperties[3])->SetValue(2); // channelCount - ignored
+    ((MP4Integer16Property*)m_pProperties[4])->SetValue(0x0010); // sampleSize - ignored
 
-    m_pProperties[0]->SetReadOnly(false);
-    ((MP4BytesProperty*)m_pProperties[0])->SetValue(ac3, sizeof(ac3));
+    // The user should set the samplingRate as appropriate - and create the dac3 atom
 }
 
 ///////////////////////////////////////////////////////////////////////////////
