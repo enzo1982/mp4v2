@@ -12,3 +12,16 @@ If you desire a header file to installed during 'make install' such
 as 'mp4v2.h' it should be taken out of _SOURCES and added to:
 
     nobase_include_HEADERS = ...
+
+Once done, autotool file such as configure will need to be regenerated.
+If the project is in maintainer-mode, this will likely be done for you
+automagically at the next 'make'. If you're not in maintainer mode or
+would like to do it manually, then issue the following command:
+
+    autoreconf -v
+
+And eventually you will be checking in your local changes. Don't be
+alarmed if generated autotool files such as configure, aclocal.m4
+are changed and marked for check-in, as this is expected. We do not
+desire to add autom4te.cache as these are temporary files created
+as a side-effect from autoreconf.

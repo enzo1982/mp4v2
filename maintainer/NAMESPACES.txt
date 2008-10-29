@@ -3,7 +3,7 @@ Maintainer C++ Namespace Notes
 
 Namespaces have been employed to help organize source and push all private
 symbols (those which are not part of the public C API) to a location
-that is unlikely to be accidentially used by anyone. It also virtually
+that is unlikely to be accidentally used by anyone. It also virtually
 eliminates any chance that private impl symbols will cause symbol collisions
 at compile or link-time.
 

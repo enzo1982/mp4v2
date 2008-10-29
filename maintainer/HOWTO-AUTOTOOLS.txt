@@ -19,8 +19,8 @@ the tedious maintenance (making sure the generated files are checked-in)
 can be done away with. The trade off is simple: if we want to make it
 easier for people to use the repository for builds, then we stay the
 course and take the pain. Otherwise, we simply recommend to people who
-do not the rich set of autotools installed to use our source bundles,
-and stay awsay from the repository.
+do not have the prerequisite set of autotools installed to use our source
+bundles, and stay away from the repository.
 
 Today, if you edit any .ac or .am files, you must either be in maintainer
 mode, and/or if you're paranoid, you can run the autoreconf tool at
@@ -28,7 +28,9 @@ the top of the source tree. Take note that autoreconf is NOT autoconf.
 Consequently, files will be modified, and will require check-in at
 some point. Never, ever, manually-merge or resolve any conflicts with these
 generated files. You can always over-write them. It's the source-files
-that matter.
+that matter. Again, for those who like to do things manually or are
+not in maintainer mode, this is the way to make sure all autotool
+files are generated from their dependencies:
 
     autoreconf -v
 
