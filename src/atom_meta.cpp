@@ -89,29 +89,16 @@ void MP4Meta2Atom::Read ()
 MP4NameAtom::MP4NameAtom()
         : MP4Atom("name")
 {
-
+    AddProperty(new MP4BytesProperty("value"));
 }
 
 void MP4NameAtom::Read()
 {
-    if (ATOMID(m_pParentAtom->GetType()) != ATOMID("udta")) {
-        // calculate size of the metadata from the atom size
-        ((MP4BytesProperty*)m_pProperties[2])->SetValueSize(m_size - 4);
-    }
-
     MP4Atom::Read();
 }
 
 void MP4NameAtom::Generate()
 {
-    if (ATOMID(m_pParentAtom->GetType()) == ATOMID("udta")) {
-        AddProperty(new MP4BytesProperty("value"));
-    } else {
-        AddVersionAndFlags(); /* 0, 1 */
-
-        AddProperty(
-            new MP4BytesProperty("metadata")); /* 2 */
-    }
     MP4Atom::Generate();
 }
 
