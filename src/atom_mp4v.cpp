@@ -52,7 +52,9 @@ MP4Mp4vAtom::MP4Mp4vAtom()
 
     AddReserved("reserved4", 4); /* 7 */
 
+    ExpectChildAtom("colr", Optional, OnlyOne);
     ExpectChildAtom("esds", Required, OnlyOne);
+    ExpectChildAtom("pasp", Optional, OnlyOne);
 }
 
 void MP4Mp4vAtom::Generate()

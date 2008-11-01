@@ -54,6 +54,8 @@ MP4Avc1Atom::MP4Avc1Atom()
 
     ExpectChildAtom("avcC", Required, OnlyOne);
     ExpectChildAtom("btrt", Optional, OnlyOne);
+    ExpectChildAtom("colr", Optional, OnlyOne);
+    ExpectChildAtom("pasp", Optional, OnlyOne);
     // for now ExpectChildAtom("m4ds", Optional, OnlyOne);
 }
 
