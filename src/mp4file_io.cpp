@@ -434,7 +434,7 @@ void MP4File::WriteString(char* string)
     }
 }
 
-char* MP4File::ReadCountedString(uint8_t charSize, bool allowExpandedCount)
+char* MP4File::ReadCountedString(uint8_t charSize, bool allowExpandedCount, uint8_t fixedLength)
 {
     uint32_t charLength;
     if (allowExpandedCount) {
@@ -459,6 +459,17 @@ char* MP4File::ReadCountedString(uint8_t charSize, bool allowExpandedCount)
         ReadBytes((uint8_t*)data, byteLength);
     }
     data[byteLength] = '\0';
+
+    // read padding
+    if (fixedLength) {
+        const uint8_t padsize = fixedLength - byteLength -1U;
+        if( padsize ) {
+            uint8_t* padbuf = (uint8_t*)malloc( padsize );
+            ReadBytes( padbuf, padsize );
+            free( padbuf );
+        }
+    }
+
     return data;
 }
 

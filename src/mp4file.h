@@ -634,7 +634,7 @@ public:
     float ReadFloat();
     char* ReadString();
     char* ReadCountedString(
-        uint8_t charSize = 1, bool allowExpandedCount = false);
+        uint8_t charSize = 1, bool allowExpandedCount = false, uint8_t fixedLength = 0);
     uint64_t ReadBits(uint8_t numBits);
     void FlushReadBits();
     uint32_t ReadMpegLength();

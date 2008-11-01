@@ -378,7 +378,9 @@ void MP4StringProperty::Read(MP4File* pFile, uint32_t index)
     }
     if (m_useCountedFormat) {
         m_values[index] = pFile->ReadCountedString(
-                              (m_useUnicode ? 2 : 1), m_useExpandedCount);
+                              (m_useUnicode ? 2 : 1),
+                              m_useExpandedCount,
+                              m_fixedLength);
     } else if (m_fixedLength) {
         MP4Free(m_values[index]);
         m_values[index] = (char*)MP4Calloc(m_fixedLength + 1);
