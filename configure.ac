@@ -2,7 +2,7 @@
 # prelude
 ###############################################################################
 
-AC_PREREQ([2.62])
+AC_PREREQ([2.61])
 AC_INIT([MP4v2], [1.0.0], [eddyg@myreflection.org])
 
 AC_MSG_NOTICE([
@@ -12,7 +12,7 @@ AC_MSG_NOTICE([
 
 AM_MAINTAINER_MODE
 AC_CONFIG_AUX_DIR([autoaux])
-AM_INIT_AUTOMAKE([1.10.1 foreign -Wall -Werror subdir-objects nostdinc no-dependencies no-dist-gzip dist-bzip2])
+AM_INIT_AUTOMAKE([1.10 foreign -Wall -Werror subdir-objects nostdinc no-dependencies no-dist-gzip dist-bzip2])
 
 AC_CONFIG_SRCDIR([src/mp4.cpp])
 
@@ -108,7 +108,7 @@ fi
 
 if test "$enable_largefile" != "no" -a "$ac_cv_header_unistd_h" = "yes"; then
     case ${host_cpu} in
-        i386|ppc)
+        i?86|ppc)
             AC_LANG(C++)
             AC_MSG_CHECKING([for LFS (large file support) conformance])
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
