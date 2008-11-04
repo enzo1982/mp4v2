@@ -209,7 +209,7 @@ protected:
 
     void AddVersionAndFlags();
 
-    void AddReserved(char* name, uint32_t size);
+    void AddReserved(const char* name, uint32_t size);
 
     void ExpectChildAtom(const char* name,
                          bool mandatory, bool onlyOne = true);

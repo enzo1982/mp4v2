@@ -723,7 +723,7 @@ void MP4File::Rename(const char* oldFileName, const char* newFileName)
     }
 }
 
-void MP4File::ProtectWriteOperation(char* where)
+void MP4File::ProtectWriteOperation(const char* where)
 {
     if (m_mode == 'r') {
         throw new MP4Error("operation not permitted in read mode", where);
@@ -2415,11 +2415,11 @@ uint32_t MP4File::GetNumberOfTracks(const char* type, uint8_t subType)
     for (uint32_t i = 0; i < m_pTracks.Size(); i++) {
         if (!strcmp(normType, m_pTracks[i]->GetType())) {
             if (subType) {
-                if (normType == MP4_AUDIO_TRACK_TYPE) {
+                if (strcmp(normType, MP4_AUDIO_TRACK_TYPE) == 0) {
                     if (subType != GetTrackEsdsObjectTypeId(m_pTracks[i]->GetId())) {
                         continue;
                     }
-                } else if (normType == MP4_VIDEO_TRACK_TYPE) {
+                } else if (strcmp(normType, MP4_VIDEO_TRACK_TYPE)) {
                     if (subType != GetTrackEsdsObjectTypeId(m_pTracks[i]->GetId())) {
                         continue;
                     }
@@ -2482,11 +2482,11 @@ MP4TrackId MP4File::FindTrackId(uint16_t trackIndex,
     for (uint32_t i = 0; i < m_pTracks.Size(); i++) {
         if (!strcmp(normType, m_pTracks[i]->GetType())) {
             if (subType) {
-                if (normType == MP4_AUDIO_TRACK_TYPE) {
+                if (strcmp(normType, MP4_AUDIO_TRACK_TYPE) == 0) {
                     if (subType != GetTrackEsdsObjectTypeId(m_pTracks[i]->GetId())) {
                         continue;
                     }
-                } else if (normType == MP4_VIDEO_TRACK_TYPE) {
+                } else if (strcmp(normType, MP4_VIDEO_TRACK_TYPE) == 0) {
                     if (subType != GetTrackEsdsObjectTypeId(m_pTracks[i]->GetId())) {
                         continue;
                     }

@@ -47,7 +47,7 @@ static void sync_duration (char *toFileName,
   MP4FileHandle tofile;
   char newname[PATH_MAX];
   todur = MP4GetTrackDuration(durfile, 1) + 1024;
-  tmpnam(newname);
+  mkstemp(newname);
   MP4FileHandle fromfile;
   uint32_t numTracks;
 

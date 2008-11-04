@@ -35,7 +35,7 @@ namespace impl {
 class MP4HalfSizeTableProperty : public MP4TableProperty
 {
 public:
-    MP4HalfSizeTableProperty(char *name, MP4IntegerProperty *pCountProperty) :
+    MP4HalfSizeTableProperty(const char *name, MP4IntegerProperty *pCountProperty) :
             MP4TableProperty(name, pCountProperty) {};
 
     // The count is half the actual size

@@ -105,7 +105,7 @@ MP4ARRAY_DECL(MP4Property, MP4Property*);
 
 class MP4IntegerProperty : public MP4Property {
 protected:
-    MP4IntegerProperty(char* name)
+    MP4IntegerProperty(const char* name)
             : MP4Property(name) { };
 
 public:
@@ -123,7 +123,7 @@ public:
 #define MP4INTEGER_PROPERTY_DECL2(isize, xsize) \
     class MP4Integer##xsize##Property : public MP4IntegerProperty { \
     public: \
-        MP4Integer##xsize##Property(char* name) \
+        MP4Integer##xsize##Property(const char* name) \
             : MP4IntegerProperty(name) { \
             SetCount(1); \
             m_values[0] = 0; \
@@ -193,7 +193,7 @@ MP4INTEGER_PROPERTY_DECL(64);
 
 class MP4BitfieldProperty : public MP4Integer64Property {
 public:
-    MP4BitfieldProperty(char* name, uint8_t numBits)
+    MP4BitfieldProperty(const char* name, uint8_t numBits)
             : MP4Integer64Property(name) {
         ASSERT(numBits != 0);
         ASSERT(numBits <= 64);
@@ -218,7 +218,7 @@ protected:
 
 class MP4Float32Property : public MP4Property {
 public:
-    MP4Float32Property(char* name)
+    MP4Float32Property(const char* name)
             : MP4Property(name) {
         m_useFixed16Format = false;
         m_useFixed32Format = false;
@@ -285,7 +285,7 @@ protected:
 
 class MP4StringProperty : public MP4Property {
 public:
-    MP4StringProperty(char* name,
+    MP4StringProperty(const char* name,
                       bool useCountedFormat = false, bool useUnicode = false);
 
     ~MP4StringProperty();
@@ -360,7 +360,7 @@ protected:
 
 class MP4BytesProperty : public MP4Property {
 public:
-    MP4BytesProperty(char* name, uint32_t valueSize = 0,
+    MP4BytesProperty(const char* name, uint32_t valueSize = 0,
                      uint32_t defaultValueSize = 0);
 
     ~MP4BytesProperty();
@@ -424,7 +424,7 @@ protected:
 
 class MP4TableProperty : public MP4Property {
 public:
-    MP4TableProperty(char* name, MP4IntegerProperty* pCountProperty);
+    MP4TableProperty(const char* name, MP4IntegerProperty* pCountProperty);
 
     ~MP4TableProperty();
 
@@ -474,7 +474,7 @@ protected:
 
 class MP4DescriptorProperty : public MP4Property {
 public:
-    MP4DescriptorProperty(char* name = NULL,
+    MP4DescriptorProperty(const char* name = NULL,
                           uint8_t tagsStart = 0, uint8_t tagsEnd = 0,
                           bool mandatory = false, bool onlyOne = false);
 
@@ -536,7 +536,7 @@ protected:
 
 class MP4QosQualifierProperty : public MP4DescriptorProperty {
 public:
-    MP4QosQualifierProperty(char* name = NULL,
+    MP4QosQualifierProperty(const char* name = NULL,
                             uint8_t tagsStart = 0, uint8_t tagsEnd = 0,
                             bool mandatory = false, bool onlyOne = false) :
             MP4DescriptorProperty(name, tagsStart, tagsEnd, mandatory, onlyOne) { }

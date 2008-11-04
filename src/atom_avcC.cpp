@@ -34,7 +34,7 @@ namespace impl {
 class SizeTableProperty : public MP4TableProperty
 {
 public:
-    SizeTableProperty(char *name, MP4IntegerProperty *pCountProperty) :
+    SizeTableProperty(const char *name, MP4IntegerProperty *pCountProperty) :
             MP4TableProperty(name, pCountProperty) {};
 protected:
     void ReadEntry(MP4File *pFile, uint32_t index) {

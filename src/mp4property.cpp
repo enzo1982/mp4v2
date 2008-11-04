@@ -318,7 +318,7 @@ void MP4Float32Property::Dump(FILE* pFile, uint8_t indent,
 
 // MP4StringProperty
 
-MP4StringProperty::MP4StringProperty(char* name,
+MP4StringProperty::MP4StringProperty(const char* name,
                                      bool useCountedFormat, bool useUnicode)
         : MP4Property(name)
 {
@@ -429,7 +429,7 @@ void MP4StringProperty::Dump(FILE* pFile, uint8_t indent,
 
 // MP4BytesProperty
 
-MP4BytesProperty::MP4BytesProperty(char* name, uint32_t valueSize,
+MP4BytesProperty::MP4BytesProperty(const char* name, uint32_t valueSize,
                                    uint32_t defaultValueSize)
         : MP4Property(name)
 {
@@ -558,7 +558,7 @@ void MP4BytesProperty::Dump(FILE* pFile, uint8_t indent,
 
 // MP4TableProperty
 
-MP4TableProperty::MP4TableProperty(char* name, MP4IntegerProperty* pCountProperty)
+MP4TableProperty::MP4TableProperty(const char* name, MP4IntegerProperty* pCountProperty)
         : MP4Property(name)
 {
     m_pCountProperty = pCountProperty;
@@ -734,7 +734,7 @@ void MP4TableProperty::Dump(FILE* pFile, uint8_t indent,
 
 // MP4DescriptorProperty
 
-MP4DescriptorProperty::MP4DescriptorProperty(char* name,
+MP4DescriptorProperty::MP4DescriptorProperty(const char* name,
         uint8_t tagsStart, uint8_t tagsEnd, bool mandatory, bool onlyOne)
         : MP4Property(name)
 {

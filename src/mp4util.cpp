@@ -27,7 +27,7 @@ namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-enum {
+enum _LogLevel {
     _LOGLEVEL_UNDEFINED = -1,
 
     LOGLEVEL_EMERG,

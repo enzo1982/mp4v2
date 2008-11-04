@@ -27,7 +27,7 @@ namespace mp4v2 { namespace util {
 
 extern "C" int main(int argc, char** argv)
 {
-    char* usageString = "[-verbose=[<level>]] <file-name>\n";
+    const char* usageString = "[-verbose=[<level>]] <file-name>\n";
     uint32_t verbosity = MP4_DETAILS_ERROR;
     bool dumpImplicits = false;
 
