@@ -178,18 +178,17 @@ nobase_nodist_include_HEADERS = include/mp4v2/project.h
 ###############################################################################
 
 EXTRA_DIST = \
-    BUILD.dist               \
+    BUILD                    \
     BUILD.repo               \
     README                   \
-    doc/html/                \
+    doc/html/api/            \
     doxygen/Doxyfile.in      \
-    project/BUILD/           \
-    project/README.texi      \
     project/project.m4       \
     project/project.texi.in  \
     unit/impl.h              \
-    util/impl.h              \
-    \
+    util/impl.h
+
+EXTRA_DIST += \
     vstudio9.0/include/mp4v2/project.h           \
     vstudio9.0/libmp4v2/libmp4v2.vcproj          \
     vstudio9.0/libplatform/libplatform.vcproj    \
@@ -202,9 +201,33 @@ EXTRA_DIST = \
     vstudio9.0/mp4trackdump/mp4trackdump.vcproj  \
     vstudio9.0/mp4v2.sln
 
+EXTRA_DIST += \
+    project/BUILD/introduction.texi                  \
+    project/BUILD/main.repo.texi                     \
+    project/BUILD/main.texi                          \
+    project/BUILD/overview.texi                      \
+    project/BUILD/platform.common.bundled.texi       \
+    project/BUILD/platform.common.conf.bi.texi       \
+    project/BUILD/platform.common.conf.default.texi  \
+    project/BUILD/platform.cygwin.texi               \
+    project/BUILD/platform.freebsd.texi              \
+    project/BUILD/platform.linux.texi                \
+    project/BUILD/platform.osx.texi                  \
+    project/BUILD/platform.solaris.texi              \
+    project/BUILD/platform.windows.texi              \
+    project/BUILD/platforms.texi                     \
+    project/BUILD/process.autoreconf.texi            \
+    project/BUILD/process.build.texi                 \
+    project/BUILD/process.checkout.texi              \
+    project/BUILD/process.configure.texi             \
+    project/BUILD/process.dist.texi                  \
+    project/BUILD/process.extract.texi               \
+    project/BUILD/process.install.texi               \
+    project/README.texi
+
 ###############################################################################
 
 distclean-local:
-	rm -f $(top_builddir)/BUILD.*
-	rm -f $(top_builddir)/README
-	rm -fr $(top_builddir)/doc/html
+	rm -f $(top_builddir)/BUILD*
+	rm -f $(top_builddir)/README*
+	rm -fr $(top_builddir)/doc/

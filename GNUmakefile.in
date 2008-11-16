@@ -48,14 +48,14 @@ am__vpath_adj = case $$p in \
 
 ###############################################################################
 
-$(top_builddir)/BUILD.dist: $(top_builddir)/project/project.texi
-$(top_builddir)/BUILD.dist: $(top_srcdir)/project/BUILD/
-$(top_builddir)/BUILD.dist: $(top_srcdir)/project/BUILD/main.dist.texi
+$(top_builddir)/BUILD: $(top_builddir)/project/project.texi
+$(top_builddir)/BUILD: $(top_srcdir)/project/BUILD/
+$(top_builddir)/BUILD: $(top_srcdir)/project/BUILD/main.texi
 	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<
 
-$(top_builddir)/BUILD.dist.html: $(top_builddir)/project/project.texi
-$(top_builddir)/BUILD.dist.html: $(top_srcdir)/project/BUILD/
-$(top_builddir)/BUILD.dist.html: $(top_srcdir)/project/BUILD/main.dist.texi
+$(top_builddir)/BUILD.html: $(top_builddir)/project/project.texi
+$(top_builddir)/BUILD.html: $(top_srcdir)/project/BUILD/
+$(top_builddir)/BUILD.html: $(top_srcdir)/project/BUILD/main.texi
 	makeinfo -I$(top_builddir)/project/ --no-split --no-headers --html -o $@ $<
 
 $(top_builddir)/BUILD.repo: $(top_builddir)/project/project.texi
@@ -74,5 +74,6 @@ $(top_builddir)/README: $(top_srcdir)/project/README.texi
 
 ###############################################################################
 
-$(top_builddir)/doc/html:
+$(top_builddir)/doc/html/api:
+	$(MKDIR_P) $@
 	doxygen $(top_builddir)/doxygen/Doxyfile

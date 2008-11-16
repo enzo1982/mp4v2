@@ -9,5 +9,20 @@ not necessarily the only configuration that is possible:
 @item gcc 3.4.0 or higher is reported to work
 @end itemize
 
+@quotation Note
+As of this writing, Cygwin has available to it several versions of gcc;
+only one of which may be found and used in the path as
+@code{gcc} and @code{g++}. Configure will thus find what is probably
+the older more stable version of gcc in a typical Cygwin environment.
+If you desire to build with the newer gcc, it is found in the path as
+@code{gcc-4} and @code{g++-4} respectively and you must indicate to
+configure the desired versions. Defining the following variables
+beforing running configure should do the trick:
+@example
+setenv CC gcc-4
+setenv CXX gcc-4
+../configure
+@end example
+@end quotation
+
 @include platform.common.conf.default.texi
-@include platform.common.conf.bi.texi
