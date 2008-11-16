@@ -19,11 +19,16 @@ DLL and several command-line executables. Enabling things such as
 debugging, optimization, etc, are all left as an excercise to the user.
 
 @quotation Warning
-Project meta-data such as versioning is found in
-@file{vstudio9.0/include/mp4v2/project.h} and may be out of date.
-If you are building from a @value{PROJECT_name} bundle
-(not the repository!) then you can simply overwrite it with
-@file{include/mp4v2/project.h} but if you are building from the project
-repository, you may need to obtain that file via other means, such as
-from a similar-versioned bundle (ie: latest snapshot).
+Project meta-data is stored in header @file{project.h}. A proper source
+distribution is built using autotools and generates
+@file{TOP/include/mp4v2/project.h} correctly, which is then bundled
+with our source distribution. This is adequate for building on the
+Windows platform.
+
+However, if you are building from the repository, be warned that there
+is no method to automatically generate @file{project.h}. Instead, we
+periodically checkin a copy of this file as
+@file{vstudio9.0/include/mp4v2/project.h} which may from time to
+time get out of date. If it is significantly out of date, you should find
+the latest source distribution and copy the @file{project.h} from there.
 @end quotation
