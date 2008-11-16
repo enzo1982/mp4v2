@@ -2179,13 +2179,17 @@ MP4TrackId MP4File::AddSubtitleTrack(MP4TrackId refTrackId)
     return trackId;
 }
 
-MP4TrackId MP4File::AddChapterTextTrack(MP4TrackId refTrackId)
+MP4TrackId MP4File::AddChapterTextTrack(MP4TrackId refTrackId, uint32_t timescale)
 {
     // validate reference track id
     (void)FindTrackIndex(refTrackId);
 
-    MP4TrackId trackId =
-        AddTrack(MP4_TEXT_TRACK_TYPE, GetTrackTimeScale(refTrackId));
+    if (0 == timescale)
+    {
+        timescale = GetTrackTimeScale(refTrackId);
+    }
+
+    MP4TrackId trackId = AddTrack(MP4_TEXT_TRACK_TYPE, timescale);
 
     (void)InsertChildAtom(MakeTrackName(trackId, "mdia.minf"), "gmhd", 0);
 
@@ -2271,6 +2275,453 @@ MP4TrackId MP4File::AddColr(MP4TrackId trackId,
 
     return trackId;
 }
+
+
+void MP4File::AddChapter(MP4TrackId chapterTrackId, MP4Duration chapterDuration, const char *chapterTitle)
+{
+    if (MP4_INVALID_TRACK_ID == chapterTrackId)
+    {
+        throw new MP4Error("No chapter track given","AddChapter");
+    }
+
+    uint32_t sampleLength = 0;
+    uint8_t  sample[1040] = {0};
+    int textLen = 0;
+    char *text = (char *)&(sample[2]);
+
+    if(chapterTitle != NULL)
+    {
+        textLen = min((int)strlen(chapterTitle), MP4V2_CHAPTER_TITLE_MAX);
+        if (0 < textLen)
+        {
+            strncpy(text, chapterTitle, textLen);
+        }
+    }
+    else
+    {
+        MP4Track * pChapterTrack = GetTrack(chapterTrackId);
+        snprintf( text, 1023, "Chapter %03d", pChapterTrack->GetNumberOfSamples() + 1 );
+        textLen = strlen(text);
+    }
+
+    sampleLength = textLen + 2 + 12; // Account for text length code and other marker
+
+    // 2-byte length marker
+    sample[0] = (textLen >> 8) & 0xff;
+    sample[1] = textLen & 0xff;
+
+    int x = 2 + textLen;
+
+    // Modifier Length Marker
+    sample[x] = 0x00;
+    sample[x+1] = 0x00;
+    sample[x+2] = 0x00;
+    sample[x+3] = 0x0C;
+
+    // Modifier Type Code
+    sample[x+4] = 'e';
+    sample[x+5] = 'n';
+    sample[x+6] = 'c';
+    sample[x+7] = 'd';
+
+    // Modifier Value
+    sample[x+8] = 0x00;
+    sample[x+9] = 0x00;
+    sample[x+10] = (256 >> 8) & 0xff;
+    sample[x+11] = 256 & 0xff;
+
+    WriteSample(chapterTrackId, sample, sampleLength, chapterDuration);
+}
+
+void MP4File::AddNeroChapter(MP4Timestamp chapterStart, const char * chapterTitle)
+{
+    MP4Atom * pChpl = FindAtom("moov.udta.chpl");
+    if (!pChpl)
+    {
+        pChpl = AddDescendantAtoms("", "moov.udta.chpl");
+    }
+
+    MP4Integer32Property * pCount = (MP4Integer32Property*)pChpl->GetProperty(3);
+    pCount->IncrementValue();
+
+    char buffer[256];
+
+    if (0 == chapterTitle)
+    {
+        snprintf( buffer, 255, "Chapter %03d", pCount->GetValue() );
+    }
+    else
+    {
+        int len = min((int)strlen(chapterTitle), 255);
+        strncpy( buffer, chapterTitle, len );
+        buffer[len] = 0;
+    }
+
+    MP4TableProperty * pTable;
+    if (pChpl->FindProperty("chpl.chapters", (MP4Property **)&pTable))
+    {
+        MP4Integer64Property * pStartTime = (MP4Integer64Property *) pTable->GetProperty(0);
+        MP4StringProperty * pName = (MP4StringProperty *) pTable->GetProperty(1);
+        if (pStartTime && pTable)
+        {
+            pStartTime->AddValue(chapterStart);
+            pName->AddValue(buffer);
+        }
+    }
+}
+
+MP4TrackId MP4File::FindChapterReferenceTrack(MP4TrackId chapterTrackId, char * trackName, int trackNameSize)
+{
+    for (uint32_t i = 0; i < m_pTracks.Size(); i++)
+    {
+        if (!strcmp(MP4_AUDIO_TRACK_TYPE, m_pTracks[i]->GetType()))
+        {
+            MP4TrackId refTrackId = m_pTracks[i]->GetId();
+            char *name = MakeTrackName(refTrackId, "tref.chap");
+            if (FindTrackReference(name, chapterTrackId))
+            {
+                if (0 != trackName)
+                {
+                    int nameLen = min((int)strlen(name), trackNameSize);
+                    strncpy(trackName, name, nameLen);
+                    trackName[nameLen] = 0;
+                }
+
+                return m_pTracks[i]->GetId();
+            }
+        }
+    }
+
+    return MP4_INVALID_TRACK_ID;
+}
+
+MP4TrackId MP4File::FindChapterTrack(char * trackName, int trackNameSize)
+{
+    for (uint32_t i = 0; i < m_pTracks.Size(); i++)
+    {
+        if (!strcmp(MP4_TEXT_TRACK_TYPE, m_pTracks[i]->GetType()))
+        {
+            MP4TrackId refTrackId = FindChapterReferenceTrack(m_pTracks[i]->GetId(), trackName, trackNameSize);
+            if (MP4_INVALID_TRACK_ID != refTrackId)
+            {
+                return m_pTracks[i]->GetId();
+            }
+        }
+    }
+
+    return MP4_INVALID_TRACK_ID;
+}
+
+MP4ChapterType MP4File::DeleteChapters(MP4ChapterType chapterType, MP4TrackId chapterTrackId)
+{
+    MP4ChapterType deletedType = MP4ChapterTypeNone;
+
+    if (MP4ChapterTypeAny == chapterType || MP4ChapterTypeNero == chapterType)
+    {
+        MP4Atom * pChpl = FindAtom("moov.udta.chpl");
+        if (pChpl)
+        {
+            MP4Atom * pParent = pChpl->GetParentAtom();
+            pParent->DeleteChildAtom(pChpl);
+            deletedType = MP4ChapterTypeNero;
+        }
+    }
+
+    if (MP4ChapterTypeAny == chapterType || MP4ChapterTypeQt == chapterType)
+    {
+        char trackName[128] = {0};
+
+        // no text track given, find a suitable
+        if (MP4_INVALID_TRACK_ID == chapterTrackId)
+        {
+            chapterTrackId = FindChapterTrack(trackName, 127);
+        }
+
+        if (MP4_INVALID_TRACK_ID != chapterTrackId)
+        {
+            FindChapterReferenceTrack(chapterTrackId, trackName, 127);
+        }
+
+        if (MP4_INVALID_TRACK_ID != chapterTrackId && 0 != trackName[0])
+        {
+            // remove the reference
+            RemoveTrackReference(trackName, chapterTrackId);
+
+            // remove the chapter track
+            DeleteTrack(chapterTrackId);
+            deletedType = MP4ChapterTypeNone == deletedType ? MP4ChapterTypeQt : MP4ChapterTypeAny;
+        }
+    }
+    return deletedType;
+}
+
+MP4ChapterType MP4File::GetChapters(MP4Chapter_t ** chapterList, uint32_t * chapterCount, MP4ChapterType fromChapterType)
+{
+    *chapterList = 0;
+    *chapterCount = 0;
+
+    if (MP4ChapterTypeAny == fromChapterType || MP4ChapterTypeQt == fromChapterType)
+    {
+        uint8_t * sample = 0;
+        uint32_t sampleSize = 0;
+        MP4Timestamp startTime = 0;
+        MP4Duration duration = 0;
+
+        // get the chapter track
+        MP4TrackId chapterTrackId = FindChapterTrack();
+        if (MP4_INVALID_TRACK_ID == chapterTrackId)
+        {
+            if (MP4ChapterTypeQt == fromChapterType)
+            {
+                return MP4ChapterTypeNone;
+            }
+        }
+        else
+        {
+            // get infos about the chapters
+            MP4Track * pChapterTrack = GetTrack(chapterTrackId);
+            uint32_t counter = pChapterTrack->GetNumberOfSamples();
+
+            if (0 < counter)
+            {
+                uint32_t timescale = pChapterTrack->GetTimeScale();
+                MP4Chapter_t * chapters = (MP4Chapter_t*)MP4Malloc(sizeof(MP4Chapter_t) * counter);
+
+                // process all chapter sample
+                for (uint32_t i = 0; i < counter; ++i)
+                {
+                    // get the sample corresponding to the starttime
+                    MP4SampleId sampleId = pChapterTrack->GetSampleIdFromTime(startTime + duration, true);
+                    pChapterTrack->ReadSample(sampleId, &sample, &sampleSize);
+
+                    // get the starttime and duration
+                    pChapterTrack->GetSampleTimes(sampleId, &startTime, &duration);
+
+                    // we know that sample+2 contains the title (sample[0] and sample[1] is the length)
+                    const char * title = (const char *)&(sample[2]);
+                    int titleLen = min((sample[0] << 8) | sample[1], MP4V2_CHAPTER_TITLE_MAX);
+                    strncpy(chapters[i].title, title, titleLen);
+                    chapters[i].title[titleLen] = 0;
+
+                    // write the duration (in milliseconds)
+                    chapters[i].duration = MP4ConvertTime(duration, timescale, MP4_MILLISECONDS_TIME_SCALE);
+
+                    // we're done with this sample
+                    MP4Free(sample);
+                    sample = 0;
+                }
+
+                *chapterList = chapters;
+                *chapterCount = counter;
+
+                // we got chapters so we are done
+                return MP4ChapterTypeQt;
+            }
+        }
+    }
+
+    if (MP4ChapterTypeAny == fromChapterType || MP4ChapterTypeNero == fromChapterType)
+    {
+        MP4Atom * pChpl = FindAtom("moov.udta.chpl");
+        if (!pChpl)
+        {
+            return MP4ChapterTypeNone;
+        }
+
+        MP4Integer32Property * pCounter = 0;
+        if (!pChpl->FindProperty("chpl.chaptercount", (MP4Property **)&pCounter))
+        {
+            VERBOSE_WARNING(GetVerbosity(), printf("Nero chapter count does not exist"));
+            return MP4ChapterTypeNone;
+        }
+
+        uint32_t counter = pCounter->GetValue();
+        if (0 == counter)
+        {
+            VERBOSE_WARNING(GetVerbosity(), printf("No Nero chapters available"));
+            return MP4ChapterTypeNone;
+        }
+
+        MP4TableProperty * pTable = 0;
+        MP4Integer64Property * pStartTime = 0;
+        MP4StringProperty * pName = 0;
+        MP4Duration chapterDurationSum = 0;
+        const char * name = 0;
+
+        if (!pChpl->FindProperty("chpl.chapters", (MP4Property **)&pTable))
+        {
+            VERBOSE_WARNING(GetVerbosity(), printf("Nero chapter list does not exist"));
+            return MP4ChapterTypeNone;
+        }
+
+        if (0 == (pStartTime = (MP4Integer64Property *) pTable->GetProperty(0)))
+        {
+            VERBOSE_WARNING(GetVerbosity(), printf("List of Chapter starttimes does not exist"));
+            return MP4ChapterTypeNone;
+        }
+        if (0 == (pName = (MP4StringProperty *) pTable->GetProperty(1)))
+        {
+            VERBOSE_WARNING(GetVerbosity(), printf("List of Chapter titles does not exist"));
+            return MP4ChapterTypeNone;
+        }
+
+        MP4Chapter_t * chapters = (MP4Chapter_t*)MP4Malloc(sizeof(MP4Chapter_t) * counter);
+
+        // get the name of the first chapter
+        name = pName->GetValue();
+
+        // process remaining chapters
+        uint32_t i, j;
+        for (i = 0, j = 1; i < counter; ++i, ++j)
+        {
+            // insert the chapter title
+            uint32_t len = min((int)strlen(name), MP4V2_CHAPTER_TITLE_MAX);
+            strncpy(chapters[i].title, name, len);
+            chapters[i].title[len] = 0;
+
+            // calculate the duration
+            MP4Duration duration = 0;
+            if (j < counter)
+            {
+                duration = MP4ConvertTime(pStartTime->GetValue(j),
+                                          (MP4_NANOSECONDS_TIME_SCALE / 100),
+                                          MP4_MILLISECONDS_TIME_SCALE) - chapterDurationSum;
+
+                // now get the name of the chapter (to be written next)
+                name = pName->GetValue(j);
+            }
+            else
+            {
+                // last chapter
+                duration = MP4ConvertTime(GetDuration(), GetTimeScale(), MP4_MILLISECONDS_TIME_SCALE) - chapterDurationSum;
+            }
+
+            // sum up the chapter duration
+            chapterDurationSum += duration;
+
+            // insert the chapter duration
+            chapters[i].duration = duration;
+        }
+
+        *chapterList = chapters;
+        *chapterCount = counter;
+
+        return MP4ChapterTypeNero;
+    }
+
+    return MP4ChapterTypeNone;
+}
+
+MP4ChapterType MP4File::SetChapters(MP4Chapter_t * chapterList, uint32_t chapterCount, MP4ChapterType toChapterType)
+{
+    MP4ChapterType setType = MP4ChapterTypeNone;
+
+    // first remove any existing chapters
+    DeleteChapters(toChapterType, MP4_INVALID_TRACK_ID);
+
+    if (MP4ChapterTypeAny == toChapterType || MP4ChapterTypeNero == toChapterType)
+    {
+        MP4Duration duration = 0;
+        for (uint32_t i = 0; i < chapterCount; ++i)
+        {
+            AddNeroChapter(duration, chapterList[i].title);
+            duration += 10 * MP4_MILLISECONDS_TIME_SCALE * chapterList[i].duration;
+        }
+
+        setType = MP4ChapterTypeNero;
+    }
+
+    if (MP4ChapterTypeAny == toChapterType || MP4ChapterTypeQt == toChapterType)
+    {
+        // create the chapter track
+        MP4TrackId refTrack = FindTrackId(0, MP4_AUDIO_TRACK_TYPE);
+        MP4TrackId chapterTrack = AddChapterTextTrack(refTrack, MP4_MILLISECONDS_TIME_SCALE);
+
+        for (uint32_t i = 0 ; i < chapterCount; ++i)
+        {
+            // create and write the chapter track sample
+            AddChapter( chapterTrack, chapterList[i].duration, chapterList[i].title );
+        }
+
+        setType = MP4ChapterTypeNone == setType ? MP4ChapterTypeQt : MP4ChapterTypeAny;
+    }
+
+    return setType;
+}
+
+MP4ChapterType MP4File::ConvertChapters(MP4ChapterType toChapterType)
+{
+    MP4ChapterType resultType = MP4ChapterTypeNone;
+
+    if (MP4ChapterTypeQt == toChapterType)
+    {
+        MP4Chapter_t * chapters = 0;
+        uint32_t chapterCount = 0;
+
+        GetChapters(&chapters, &chapterCount, MP4ChapterTypeNero);
+        if (0 == chapterCount)
+        {
+            VERBOSE_READ(GetVerbosity(), printf("Could not find Nero chapter markers"));
+            return MP4ChapterTypeNone;
+        }
+
+        SetChapters(chapters, chapterCount, toChapterType);
+
+        MP4Free(chapters);
+
+        resultType = toChapterType;
+    }
+    else if (MP4ChapterTypeNero == toChapterType)
+    {
+        MP4Chapter_t * chapters = 0;
+        uint32_t chapterCount = 0;
+
+        GetChapters(&chapters, &chapterCount, MP4ChapterTypeQt);
+        if (0 == chapterCount)
+        {
+            VERBOSE_READ(GetVerbosity(), printf("Could not find QuickTime chapter markers"));
+            return MP4ChapterTypeNone;
+        }
+
+        SetChapters(chapters, chapterCount, toChapterType);
+
+        MP4Free(chapters);
+
+        resultType = toChapterType;
+    }
+
+    return resultType;
+}
+
+void MP4File::ChangeMovieTimeScale(uint32_t timescale)
+{
+    uint32_t origTimeScale = GetTimeScale();
+    if (timescale == origTimeScale) {
+        // already done
+        return;
+    }
+
+    MP4Duration movieDuration = GetDuration();
+
+    // set movie header timescale and duration
+    SetTimeScale(timescale);
+    SetDuration(MP4ConvertTime(movieDuration, origTimeScale, timescale));
+
+    // set track header duration (calculated with movie header timescale)
+    uint32_t trackCount = GetNumberOfTracks();
+    for (uint32_t i = 0; i < trackCount; ++i)
+    {
+        MP4Track * track = GetTrack(FindTrackId(i));
+        MP4Atom * trackAtom = track->GetTrakAtom();
+        MP4IntegerProperty * duration;
+
+        if (trackAtom->FindProperty("trak.tkhd.duration", (MP4Property**)&duration))
+        {
+            duration->SetValue(MP4ConvertTime(duration->GetValue(), origTimeScale, timescale));
+        }
+    }
+}
+
 
 void MP4File::DeleteTrack(MP4TrackId trackId)
 {

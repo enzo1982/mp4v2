@@ -105,6 +105,19 @@ typedef void (*lib_message_func_t)(
 /** Invalid MP4EditId constant. */
 #define MP4_INVALID_EDIT_ID ((MP4EditId)0)
 
+/* MP4 verbosity levels - e.g. MP4SetVerbosity() */
+#define MP4_DETAILS_ALL     0xFFFFFFFF  /**< Verbosity level all. */
+#define MP4_DETAILS_ERROR   0x00000001  /**< Verbosity level error. */
+#define MP4_DETAILS_WARNING 0x00000002  /**< Verbosity level warning. */
+#define MP4_DETAILS_READ    0x00000004  /**< Verbosity level read. */
+#define MP4_DETAILS_WRITE   0x00000008  /**< Verbosity level write. */
+#define MP4_DETAILS_FIND    0x00000010  /**< Verbosity level find. */
+#define MP4_DETAILS_TABLE   0x00000020  /**< Verbosity level table. */
+#define MP4_DETAILS_SAMPLE  0x00000040  /**< Verbosity level sample. */
+#define MP4_DETAILS_HINT    0x00000080  /**< Verbosity level hint. */
+#define MP4_DETAILS_ISMA    0x00000100  /**< Verbosity level isma. */
+#define MP4_DETAILS_EDIT    0x00000200  /**< Verbosity level edit. */
+
 /** @} */
 
 /* Macros to test for API type validity */
@@ -114,19 +127,6 @@ typedef void (*lib_message_func_t)(
 #define MP4_IS_VALID_TIMESTAMP(x)   ((x) != MP4_INVALID_TIMESTAMP)
 #define MP4_IS_VALID_DURATION(x)    ((x) != MP4_INVALID_DURATION)
 #define MP4_IS_VALID_EDIT_ID(x)     ((x) != MP4_INVALID_EDIT_ID)
-
-/* MP4 verbosity levels - e.g. MP4SetVerbosity() */
-#define MP4_DETAILS_ALL             0xFFFFFFFF
-#define MP4_DETAILS_ERROR           0x00000001
-#define MP4_DETAILS_WARNING         0x00000002
-#define MP4_DETAILS_READ            0x00000004
-#define MP4_DETAILS_WRITE           0x00000008
-#define MP4_DETAILS_FIND            0x00000010
-#define MP4_DETAILS_TABLE           0x00000020
-#define MP4_DETAILS_SAMPLE          0x00000040
-#define MP4_DETAILS_HINT            0x00000080
-#define MP4_DETAILS_ISMA            0x00000100
-#define MP4_DETAILS_EDIT            0x00000200
 
 #define MP4_DETAILS_READ_ALL        \
     (MP4_DETAILS_READ | MP4_DETAILS_TABLE | MP4_DETAILS_SAMPLE)
@@ -328,6 +328,29 @@ typedef void (*lib_message_func_t)(
 #define MPEG4_FGSP_L4 (0xfc)
 #define MPEG4_FGSP_L5 (0xfd)
 
+/*! The maximum length of a QuickTime chapter title (in 8-bit chars)
+ */
+#define MP4V2_CHAPTER_TITLE_MAX 1023
+
+/** Chapter item.
+ *  This item defines various attributes for a chapter.
+ *  @ingroup mp4_chapter
+ */
+typedef struct MP4Chapter_s {
+    MP4Duration duration; /**< duration of chapter in milliseconds */
+    char title[MP4V2_CHAPTER_TITLE_MAX+1]; /**< title of chapter */
+} MP4Chapter_t;
+
+/** Known chapter types.
+ *  @ingroup mp4_chapter
+ */
+enum MP4ChapterType {
+    MP4ChapterTypeNone = 0, /**< no chapters found return value */
+    MP4ChapterTypeAny  = 1, /**< any or all known chapter types */
+    MP4ChapterTypeQt   = 2, /**< QuickTime chapter type */
+    MP4ChapterTypeNero = 4  /**< Nero chapter type */
+};
+
 /*
  * MP4 API declarations
  * All symbols must be marked for export otherwise they will be hidden
@@ -363,7 +386,7 @@ extern "C" {
  *  writable with MP4Create() or MP4Modify(), then MP4Close() will write
  *  out all pending information to disk.
  *
- *  @param hFile filehandle of mp4 file to close.
+ *  @param hFile handle of file to close.
  */
 MP4V2_EXPORT
 void MP4Close(
@@ -386,7 +409,7 @@ void MP4Close(
  *          @li #MP4_CREATE_64BIT_DATA
  *          @li #MP4_CREATE_64BIT_TIME
  *
- *  @return On success a handle to the newly created file for use in
+ *  @return On success a handle of the newly created file for use in
  *      subsequent calls to the library.
  *      On error, #MP4_INVALID_FILE_HANDLE is returned.
  */
@@ -417,7 +440,7 @@ MP4FileHandle MP4Create(
  *  @param compatibleBrandsCount is the count of items specified in
  *      compatibleBrands.
  *
- *  @return On success a handle to the newly created file for use in
+ *  @return On success a handle of the newly created file for use in
  *      subsequent calls to the library.
  *      On error, #MP4_INVALID_FILE_HANDLE is returned.
  */
@@ -445,7 +468,7 @@ MP4FileHandle MP4CreateEx(
  *  includes the flag #MP4_DETAILS_TABLE. See MP4SetVerbosity() for how to set
  *  this flag.
  *
- *  @param hFile filehandle of mp4 file to dump.
+ *  @param hFile handle of file to dump.
  *  @param pDumpFile dump destination. If NULL stdout will be used.
  *  @param dumpImplicits prints properties which would not actually be
  *      written to the mp4 file, but still exist in mp4 control structures.
@@ -517,7 +540,7 @@ Track  Type   Info
 6      scene  BIFS
 @endverbatim
  *
- *  @param hFile filehandle of mp4 file to summarize.
+ *  @param hFile handle of file to summarize.
  *  @param trackId specifies track to summarize. If the value is
  *      #MP4_INVALID_TRACK_ID, the summary info is created for all
  *      tracks in the file.
@@ -546,7 +569,7 @@ char* MP4Info(
  *      See MP4SetVerbosity() for values.
  *  @param flags currently ignored.
  *
- *  @return On success a handle to the target file for use in subsequent calls
+ *  @return On success a handle of the target file for use in subsequent calls
  *      to the library.
  *      On error, #MP4_INVALID_FILE_HANDLE is returned.
  */
@@ -610,7 +633,7 @@ bool MP4Optimize(
  *      should print to stdout during its functioning.
  *      See MP4SetVerbosity() for values.
  *
- *  @return On success a handle to the file for use in subsequent calls to
+ *  @return On success a handle of the file for use in subsequent calls to
  *      the library.
  *      On error, #MP4_INVALID_FILE_HANDLE is returned.
  */
@@ -631,7 +654,7 @@ MP4FileHandle MP4Read(
  *      should print to stdout during its functioning.
  *      See MP4SetVerbosity() for values.
  *
- *  @return On success a handle to the file for use in subsequent calls to
+ *  @return On success a handle of the file for use in subsequent calls to
  *      the library.
  *      On error, #MP4_INVALID_FILE_HANDLE is returned.
  */
@@ -641,6 +664,152 @@ MP4FileHandle MP4ReadEx(
     void*         user,
     Virtual_IO_t* virtual_IO,
     uint32_t      verbosity DEFAULT(0) );
+
+/** @} */
+
+/** @defgroup mp4_chapter MP4v2 Chapter Support
+ *  @{
+ */
+
+/** Add a QuickTime chapter.
+ *
+ *  This function adds a QuickTime chapter to file <b>hFile</b>.
+ *
+ *  @param hFile handle of file to add chapter.
+ *  @param chapterTrackId ID of chapter track or #MP4_INVALID_TRACK_ID
+ *      if unknown.
+ *  @param chapterDuration duration (in the timescale of the chapter track).
+ *  @param chapterTitle title text for the chapter or NULL to use default
+ *      title format ("Chapter %03d", n) where n is the chapter number.
+ */
+MP4V2_EXPORT
+void MP4AddChapter(
+    MP4FileHandle hFile,
+    MP4TrackId    chapterTrackId,
+    MP4Duration   chapterDuration,
+    const char*   chapterTitle DEFAULT(0));
+
+/** Add a QuickTime chapter track.
+ *
+ *  This function adds a chapter (text) track to file <b>hFile</b>.
+ *  The optional parameter <b>timescale</b> may be supplied to give the new
+ *  chapter a specific timescale. Otherwise the chapter track will have
+ *  the same timescale as the reference track defined in parameter refTrackId.
+ *
+ *  @param hFile handle of file to add chapter track.
+ *  @param refTrackId ID of the track that will reference the chapter track.
+ *  @param timescale the timescale of the chapter track or 0 to use the
+ *      timescale of track specified by <b>refTrackId</b>.
+ *
+ *  @return ID of the created chapter track.
+ */
+MP4V2_EXPORT
+MP4TrackId MP4AddChapterTextTrack(
+    MP4FileHandle hFile,
+    MP4TrackId    refTrackId,
+    uint32_t      timescale DEFAULT(0) );
+
+/** Add a Nero chapter.
+ *
+ *  This function adds a Nero chapter to file <b>hFile</b>.
+ *
+ *  @param hFile handle of file to add chapter.
+ *  @param chapterStart the start time of the chapter in 100 nanosecond units
+ *  @param chapterTitle title text for the chapter or NULL to use default
+ *      title format ("Chapter %03d", n) where n is the chapter number.
+ */
+MP4V2_EXPORT
+void MP4AddNeroChapter(
+    MP4FileHandle hFile,
+    MP4Timestamp  chapterStart,
+    const char*   chapterTitle DEFAULT(0));
+
+/** Convert chapters to another type.
+ *
+ *  This function converts existing chapters in file <b>hFile</b>
+ *  from one type to another type.
+ *  Conversion from Nero to QuickTime or QuickTime to Nero is supported.
+ *
+ *  @param hFile handle of file to convert.
+ *  @param toChapterType the chapter type to convert to:
+ *      @li #MP4ChapterTypeQt (convert from Nero to Qt)
+ *      @li #MP4ChapterTypeNero (convert from Qt to Nero)
+ *
+ *  @return the chapter type before conversion or #MP4ChapterTypeNone
+ *      if the source chapters do not exist
+ *      or invalid <b>toChapterType</b> was specified.
+ */
+MP4V2_EXPORT
+MP4ChapterType MP4ConvertChapters(
+    MP4FileHandle  hFile,
+    MP4ChapterType toChapterType DEFAULT(MP4ChapterTypeQt));
+
+/** Delete chapters.
+ *
+ *  This function deletes existing chapters in file <b>hFile</b>.
+ *
+ *  @param hFile handle of file to delete chapters.
+ *  @param chapterType the type of chapters to delete:
+ *      @li #MP4ChapterTypeAny (delete all known chapter types)
+ *      @li #MP4ChapterTypeQt
+ *      @li #MP4ChapterTypeNero
+ *  @param chapterTrackId ID of the chapter track if known,
+ *      or #MP4_INVALID_TRACK_ID.
+ *      Only applies when <b>chapterType</b>=#MP4ChapterTypeQt.
+ *
+ *  @return the type of deleted chapters
+ */
+MP4V2_EXPORT
+MP4ChapterType MP4DeleteChapters(
+    MP4FileHandle  hFile,
+    MP4ChapterType chapterType DEFAULT(MP4ChapterTypeQt),
+    MP4TrackId     chapterTrackId DEFAULT(MP4_INVALID_TRACK_ID) );
+
+/** Get list of chapters.
+ *
+ *  This function gets a chpter list from file <b>hFile</b>.
+ *
+ *  @param hFile handle of file to read.
+ *  @param chapterList address receiving array of chapter items.
+ *      If a non-NULL is received the caller is responsible for freeing the
+ *      memory with MP4Free().
+ *  @param chapterCount address receiving count of items in array.
+ *  @param chapterType the type of chapters to read:
+ *      @li #MP4ChapterTypeAny (any chapters, searched in order of Qt, Nero)
+ *      @li #MP4ChapterTypeQt
+ *      @li #MP4ChapterTypeNero
+ *
+ *  @result the first type of chapters found.
+ */
+MP4V2_EXPORT
+MP4ChapterType MP4GetChapters(
+    MP4FileHandle  hFile,
+    MP4Chapter_t** chapterList,
+    uint32_t*      chapterCount,
+    MP4ChapterType chapterType DEFAULT(MP4ChapterTypeQt));
+
+/** Set list of chapters.
+ *
+ *  This functions sets the complete chapter list in file <b>hFile</b>.
+ *  If any chapters of the same type already exist they will first
+ *  be deleted.
+ *
+ *  @param hFile handle of file to modify.
+ *  @param chapterList array of chapters items.
+ *  @param chapterCount count of items in array.
+ *  @param chapterType type of chapters to write:
+ *      @li #MP4ChapterTypeAny (chapters of all types are written)
+ *      @li #MP4ChapterTypeQt
+ *      @li #MP4ChapterTypeNero
+ *
+ *  @return the type of chapters written.
+ */
+MP4V2_EXPORT
+MP4ChapterType MP4SetChapters(
+    MP4FileHandle hFile,
+    MP4Chapter_t* chapterList,
+    uint32_t       chapterCount,
+    MP4ChapterType chapterType DEFAULT(MP4ChapterTypeQt));
 
 /** @} */
 
@@ -662,6 +831,22 @@ uint32_t MP4GetTimeScale( MP4FileHandle hFile );
 
 MP4V2_EXPORT
 bool MP4SetTimeScale( MP4FileHandle hFile, uint32_t value );
+
+/** Change the general timescale of file hFile.
+ *
+ *  This function changes the general timescale of the file <b>hFile</b>
+ *  to the new timescale <b>value</b> by recalculating all values that depend
+ *  on the timescale in "moov.mvhd".
+ *
+ *  If the timescale is already equal to value nothing is done.
+ *
+ *  @param hFile handle of file to change.
+ *  @param value the new timescale.
+ *
+ *  @ingroup mp4_general
+ */
+MP4V2_EXPORT
+void MP4ChangeMovieTimeScale( MP4FileHandle hFile, uint32_t value );
 
 MP4V2_EXPORT
 uint8_t MP4GetODProfileLevel( MP4FileHandle hFile );
@@ -954,11 +1139,6 @@ MP4TrackId MP4AddHintTrack(
 
 MP4V2_EXPORT
 MP4TrackId MP4AddTextTrack(
-    MP4FileHandle hFile,
-    MP4TrackId    refTrackId );
-
-MP4V2_EXPORT
-MP4TrackId MP4AddChapterTextTrack(
     MP4FileHandle hFile,
     MP4TrackId    refTrackId );
 

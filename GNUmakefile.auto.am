@@ -12,6 +12,7 @@ libmp4v2_la_SOURCES = \
     src/atom_amr.cpp                     \
     src/atom_avc1.cpp                    \
     src/atom_avcC.cpp                    \
+    src/atom_chpl.cpp                    \
     src/atom_colr.cpp                    \
     src/atom_d263.cpp                    \
     src/atom_dac3.cpp                    \
@@ -140,9 +141,10 @@ endif
 libmp4v2_la_LIBADD = libplatform.la
 
 if ADD_UTIL
-    bin_PROGRAMS += mp4art mp4dump mp4extract mp4info mp4syncfiles mp4tags mp4trackdump
+    bin_PROGRAMS += mp4art mp4chaps mp4dump mp4extract mp4info mp4syncfiles mp4tags mp4trackdump
 
     mp4art_SOURCES       = util/mp4art.cpp
+    mp4chaps_SOURCES     = util/mp4chaps.cpp
     mp4dump_SOURCES      = util/mp4dump.cpp
     mp4extract_SOURCES   = util/mp4extract.cpp
     mp4info_SOURCES      = util/mp4info.cpp
@@ -151,6 +153,7 @@ if ADD_UTIL
     mp4trackdump_SOURCES = util/mp4trackdump.cpp
 
     mp4art_LDADD       = libmp4v2.la libplatform.la $(X_LDFLAGS)
+    mp4chaps_LDADD     = libmp4v2.la libplatform.la $(X_LDFLAGS)
     mp4dump_LDADD      = libmp4v2.la libplatform.la $(X_LDFLAGS)
     mp4extract_LDADD   = libmp4v2.la libplatform.la $(X_LDFLAGS)
     mp4info_LDADD      = libmp4v2.la libplatform.la $(X_LDFLAGS)

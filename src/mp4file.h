@@ -319,11 +319,156 @@ public: /* equivalent to MP4 library API */
     MP4TrackId AddHintTrack(MP4TrackId refTrackId);
 
     MP4TrackId AddTextTrack(MP4TrackId refTrackId);
-    MP4TrackId AddChapterTextTrack(MP4TrackId refTrackId);
+
+    /** Add a QuickTime chapter track.
+     *
+     *  This function adds a chapter (text) track.
+     *  The optional parameter <b>timescale</b> may be supplied to give the new
+     *  chapter a specific timescale. Otherwise the chapter track will have
+     *  the same timescale as the reference track defined in parameter refTrackId.
+     *
+     *  @param refTrackId ID of the track that will reference the chapter track.
+     *  @param timescale the timescale of the chapter track or 0 to use the
+     *      timescale of track specified by <b>refTrackId</b>.
+     *
+     *  @return ID of the created chapter track.
+     */
+    MP4TrackId AddChapterTextTrack(
+        MP4TrackId refTrackId,
+        uint32_t   timescale = 0 );
+
     MP4TrackId AddSubtitleTrack(MP4TrackId refTrackId);
 
     MP4TrackId AddPixelAspectRatio(MP4TrackId trackId, uint32_t hSpacing, uint32_t vSpacing);
     MP4TrackId AddColr(MP4TrackId trackId, uint16_t pri, uint16_t tran, uint16_t mat);
+
+    /** Add a QuickTime chapter.
+     *
+     *  @param chapterTrackId ID of chapter track or #MP4_INVALID_TRACK_ID
+     *      if unknown.
+     *  @param chapterDuration duration (in the timescale of the chapter track).
+     *  @param chapterTitle title text for the chapter or NULL to use default
+     *      title format ("Chapter %03d", n) where n is the chapter number.
+     */
+    void AddChapter(
+        MP4TrackId  chapterTrackId,
+        MP4Duration chapterDuration,
+        const char* chapterTitle = 0 );
+
+    /** Add a Nero chapter.
+     *
+     *  @param chapterStart the start time of the chapter in 100 nanosecond units
+     *  @param chapterTitle title text for the chapter or NULL to use default
+     *      title format ("Chapter %03d", n) where n is the chapter number.
+     */
+    void AddNeroChapter(
+        MP4Timestamp chapterStart,
+        const char*  chapterTitle = 0 );
+
+    /*! Returns the ID of the track referencing the chapter track chapterTrackId.
+     *  This function searches for a track of type MP4_AUDIO_TRACK_TYPE that references
+     *  the track chapterTrackId through the atom "tref.chap".
+     *
+     * @param chapterTrackId the ID of the chapter track
+     * @param trackName receives the name of the referencing track if not null
+     * @param trackNameSize the size of the memory pointed to by trackName
+     * @return the ID if the track referencing the chapter track or MP4_INVALID_TRACK_ID
+     */
+    MP4TrackId FindChapterReferenceTrack(MP4TrackId chapterTrackId,
+                                         char *trackName = 0,
+                                         int trackNameSize = 0);
+
+    /*! Find the QuickTime chapter track in the current file.
+     * This function searches for a track of type text.
+     *
+     * @param trackName receives the name of the chapter track if not null
+     * @param trackNameSize the size of the memory pointed to by trackName
+     * @return the ID of the chapter track or MP4_INVALID_TRACK_ID
+     */
+    MP4TrackId FindChapterTrack(char *trackName = 0, int trackNameSize = 0);
+
+    /** Delete chapters.
+     *
+     *  @param chapterType the type of chapters to delete:
+     *      @li #MP4ChapterTypeAny (delete all known chapter types)
+     *      @li #MP4ChapterTypeQt
+     *      @li #MP4ChapterTypeNero
+     *  @param chapterTrackId ID of the chapter track if known,
+     *      or #MP4_INVALID_TRACK_ID.
+     *      Only applies when <b>chapterType</b>=#MP4ChapterTypeQt.
+     *
+     * @return the type of deleted chapters
+     */
+    MP4ChapterType DeleteChapters(
+        MP4ChapterType chapterType = MP4ChapterTypeQt,
+        MP4TrackId chapterTrackId = 0 );
+
+    /** Get list of chapters.
+     *
+     *  @param chapterList address receiving array of chapter items.
+     *      If a non-NULL is received the caller is responsible for freeing the
+     *      memory with MP4Free().
+     *  @param chapterCount address receiving count of items in array.
+     *  @param chapterType the type of chapters to read:
+     *      @li #MP4ChapterTypeAny (any chapters, searched in order of Qt, Nero)
+     *      @li #MP4ChapterTypeQt
+     *      @li #MP4ChapterTypeNero
+     *
+     *  @result the first type of chapters found.
+     */
+
+    MP4ChapterType GetChapters(
+        MP4Chapter_t** chapterList,
+        uint32_t*      chapterCount,
+        MP4ChapterType fromChapterType = MP4ChapterTypeQt );
+
+    /** Set list of chapters.
+     *
+     *  This functions sets the complete chapter list.
+     *  If any chapters of the same type already exist they will first
+     *  be deleted.
+     *
+     *  @param chapterList array of chapters items.
+     *  @param chapterCount count of items in array.
+     *  @param chapterType type of chapters to write:
+     *      @li #MP4ChapterTypeAny (chapters of all types are written)
+     *      @li #MP4ChapterTypeQt
+     *      @li #MP4ChapterTypeNero
+     *
+     *  @return the type of chapters written.
+     */
+    MP4ChapterType SetChapters(
+        MP4Chapter_t*  chapterList,
+        uint32_t       chapterCount,
+        MP4ChapterType toChapterType = MP4ChapterTypeQt );
+
+    /** Convert chapters to another type.
+     *
+     *  This function converts existing chapters
+     *  from one type to another type.
+     *  Conversion from Nero to QuickTime or QuickTime to Nero is supported.
+     *
+     *  @param toChapterType the chapter type to convert to:
+     *      @li #MP4ChapterTypeQt (convert from Nero to Qt)
+     *      @li #MP4ChapterTypeNero (convert from Qt to Nero)
+     *
+     *  @return the chapter type before conversion or #MP4ChapterTypeNone
+     *      if the source chapters do not exist
+     *      or invalid <b>toChapterType</b> was specified.
+     */
+    MP4ChapterType ConvertChapters(MP4ChapterType toChapterType = MP4ChapterTypeQt);
+
+    /** Change the general timescale.
+     *
+     *  This function changes the general timescale to the new timescale
+     *  <b>value</b> by recalculating all values that depend on the timescale
+     *  in "moov.mvhd".
+     *
+     *  If the timescale is already equal to value nothing is done.
+     *
+     *  @param value the new timescale.
+     */
+    void ChangeMovieTimeScale(uint32_t timescale);
 
     MP4SampleId GetTrackNumberOfSamples(MP4TrackId trackId);
 

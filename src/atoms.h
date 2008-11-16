@@ -461,6 +461,33 @@ public:
     MP4NmhdAtom();
 };
 
+/*! Nero Chapter List.
+ * This atom defines the structure of a Nero chapter list.
+ * Although it is not completely clear if this structure is
+ * correct it is complete enough to successfully read and write
+ * the chapter list so that even Nero's software accepts it.
+ *
+ * The assumed format is as follows:
+ * - MP4Integer8Property("version")
+ * - MP4Integer24Property("flags")
+ * - MP4BytesProperty("reserved", 1)
+ * - MP4Integer32Property("chaptercount")\n
+ * - MP4TableProperty("chapters", "ref to chaptercount");
+ *     - MP4Integer64Property("starttime")\n
+ *       The start time of the chapter expressed in 100 nanosecond units
+ *     - MP4StringProperty("title", true)\n
+ *       The title of the chapter encoded in UTF-8
+ *
+ * The chapter title only accepts strings of 255 bytes so if a string
+ * only contains simple (two-byte) UTF-8 chars the maximum length is
+ * 127 chars.
+ */
+class MP4ChplAtom : public MP4Atom {
+public:
+    MP4ChplAtom();
+    void Generate();
+};
+
 ///////////////////////////////////////////////////////////////////////////////
 
 }

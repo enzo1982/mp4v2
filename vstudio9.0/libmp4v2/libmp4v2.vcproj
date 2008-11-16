@@ -207,6 +207,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\atom_chpl.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\atom_colr.cpp"
 				>
 			</File>

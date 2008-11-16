@@ -29,6 +29,7 @@ namespace impl {
 MP4UdtaAtom::MP4UdtaAtom()
         : MP4Atom("udta")
 {
+    ExpectChildAtom("chpl", Optional, OnlyOne);
     ExpectChildAtom("cprt", Optional, Many);
     ExpectChildAtom("hnti", Optional, OnlyOne);
     ExpectChildAtom("meta", Optional, OnlyOne);

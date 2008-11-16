@@ -1174,11 +1174,11 @@ extern "C" {
     }
 
     MP4TrackId MP4AddChapterTextTrack(
-        MP4FileHandle hFile, MP4TrackId refTrackId)
+        MP4FileHandle hFile, MP4TrackId refTrackId, uint32_t timescale)
     {
         if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
             try {
-                return ((MP4File*)hFile)->AddChapterTextTrack(refTrackId);
+                return ((MP4File*)hFile)->AddChapterTextTrack(refTrackId, timescale);
             }
             catch (MP4Error* e) {
                 PRINT_ERROR(e);
@@ -1201,6 +1201,109 @@ extern "C" {
             }
         }
         return MP4_INVALID_TRACK_ID;
+    }
+
+    void MP4AddChapter(
+        MP4FileHandle hFile, MP4TrackId chapterTrackId, MP4Duration chapterDuration, const char *chapterTitle)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                ((MP4File*)hFile)->AddChapter(chapterTrackId, chapterDuration, chapterTitle);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+    }
+
+    void MP4AddNeroChapter(
+        MP4FileHandle hFile, MP4Timestamp chapterStart, const char *chapterTitle)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                ((MP4File*)hFile)->AddNeroChapter(chapterStart, chapterTitle);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+    }
+
+    MP4ChapterType MP4ConvertChapters(
+        MP4FileHandle hFile, MP4ChapterType toChapterType)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile))
+        {
+            try {
+                return ((MP4File*)hFile)->ConvertChapters(toChapterType);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return MP4ChapterTypeNone;
+    }
+
+    MP4ChapterType MP4DeleteChapters(
+        MP4FileHandle hFile, MP4ChapterType fromChapterType, MP4TrackId chapterTrackId)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->DeleteChapters(fromChapterType, chapterTrackId);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return MP4ChapterTypeNone;
+    }
+
+    MP4ChapterType MP4GetChapters(
+        MP4FileHandle hFile, MP4Chapter_t ** chapterList, uint32_t * chapterCount, MP4ChapterType fromChapterType)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->GetChapters(chapterList, chapterCount, fromChapterType);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return MP4ChapterTypeNone;
+    }
+
+    MP4ChapterType MP4SetChapters(
+        MP4FileHandle hFile, MP4Chapter_t * chapterList, uint32_t chapterCount, MP4ChapterType toChapterType)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->SetChapters(chapterList, chapterCount, toChapterType);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return MP4ChapterTypeNone;
+    }
+
+    void MP4ChangeMovieTimeScale(
+        MP4FileHandle hFile, uint32_t value)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                ((MP4File*)hFile)->ChangeMovieTimeScale(value);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
     }
 
     MP4TrackId MP4CloneTrack (MP4FileHandle srcFile,

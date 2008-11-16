@@ -106,6 +106,9 @@ MP4Atom* MP4Atom::CreateAtom(const char* type)
             if (ATOMID(type) == ATOMID("chap")) {
                 pAtom = new MP4TrefTypeAtom(type);
             }
+            else if (ATOMID(type) == ATOMID("chpl")) {
+                pAtom = new MP4ChplAtom();
+            }
             else if (ATOMID(type) == ATOMID("colr")) {
                 pAtom = new MP4ColrAtom();
             }
@@ -128,7 +131,7 @@ MP4Atom* MP4Atom::CreateAtom(const char* type)
             } 
             else if (ATOMID(type) == ATOMID("dac3")) { 
                 pAtom = new MP4DAc3Atom();
-            } 
+            }
             break;
         case 'e':
             if (ATOMID(type) == ATOMID("elst")) {
@@ -346,11 +349,13 @@ MP4Atom* MP4Atom::CreateAtom(const char* type)
                 static const char cpy[5]  = { (char)0251, 'c', 'p', 'y', '\0' };
                 static const char des[5]  = { (char)0251, 'd', 'e', 's', '\0' };
                 static const char prd[5]  = { (char)0251, 'p', 'r', 'd', '\0' };
+                static const char lyr[5]  = { (char)0251, 'l', 'y', 'r', '\0' };
                 if( ATOMID(type) == ATOMID(name) ||
                     ATOMID(type) == ATOMID(cmt) ||
                     ATOMID(type) == ATOMID(cpy) ||
                     ATOMID(type) == ATOMID(prd) ||
-                    ATOMID(type) == ATOMID(des) )
+                    ATOMID(type) == ATOMID(des) ||
+                    ATOMID(type) == ATOMID(lyr) )
                 {
                     pAtom = new MP4Meta2Atom(type);
                 }
