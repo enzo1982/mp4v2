@@ -6,8 +6,8 @@
 @paragraphindent none
 @c %**end of header
 
-@node Top
-@top @value{PROJECT_name} Build Instructions - Distribution
+@majorheading @value{PROJECT_name} Build Instructions - Distribution
+@contents
 
 @chapter Overview
 @anchor{overview}
@@ -40,3 +40,7 @@ is not for you.
 @section Install
 @anchor{process.install}
 @include process.install.texi
+
+@chapter Platforms
+@anchor{platforms}
+@include platforms.texi
