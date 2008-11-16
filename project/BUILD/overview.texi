@@ -1,0 +1,4 @@
+The official method to build @value{PROJECT_name} uses
+the GNU build system (also known as the Autotools).
+Certain Platforms (such as Windows) do not support Autotools and in its
+place we supply an alternative build method.

@@ -2,25 +2,23 @@ include GNUmakefile.auto
 
 ###############################################################################
 
-AM_CPPFLAGS = $(strip \
-    $(MK_CXX_ARCH) $(AC_CXX_ARCH) \
-    $(MK_CXX_CYGWIN) $(AC_CXX_CYGWIN) \
-    $(MK_CXX_I) $(AC_CXX_I))
+AM_CPPFLAGS = $(strip $(MK_CXX_ARCH) $(X_CXX_ARCH) $(MK_CXX_I) $(X_CXX_I))
 
-AM_LDFLAGS = $(strip \
-    $(MK_CXX_ARCH) $(AC_CXX_ARCH) \
-    $(MK_CXX_CYGWIN) $(AC_CXX_CYGWIN))
+AM_LDFLAGS = $(strip $(MK_CXX_ARCH) $(X_CXX_ARCH))
 
-AM_CXXFLAGS = $(strip \
-    $(MK_CXX_W) $(AC_CXX_W))
+AM_CXXFLAGS = $(strip $(MK_CXX_W) $(X_CXX_W))
+
+LIBS := $(LIBS) $(X_MINGW_LIBS)
 
 ###############################################################################
 
-MK_CXX_ARCH   =
-MK_CXX_CYGWIN =
-MK_CXX_W      = -Wall
-MK_CXX_D      =
-MK_CXX_I      = -I$(top_builddir)/include -I$(top_srcdir)/include
+MK_CXX_ARCH =
+MK_CXX_W    = -Wall
+MK_CXX_D    =
+
+MK_CXX_I = \
+    -I$(top_builddir)/include -I$(top_srcdir)/include \
+    -I$(top_builddir) -I$(top_srcdir)
 
 ###############################################################################
 
@@ -50,14 +48,31 @@ am__vpath_adj = case $$p in \
 
 ###############################################################################
 
+$(top_builddir)/BUILD.dist: $(top_builddir)/project/project.texi
+$(top_builddir)/BUILD.dist: $(top_srcdir)/project/BUILD/
+$(top_builddir)/BUILD.dist: $(top_srcdir)/project/BUILD/main.dist.texi
+	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<
+
+$(top_builddir)/BUILD.dist.html: $(top_builddir)/project/project.texi
+$(top_builddir)/BUILD.dist.html: $(top_srcdir)/project/BUILD/
+$(top_builddir)/BUILD.dist.html: $(top_srcdir)/project/BUILD/main.dist.texi
+	makeinfo -I$(top_builddir)/project/ --no-split --no-headers --html -o $@ $<
+
+$(top_builddir)/BUILD.repo: $(top_builddir)/project/project.texi
+$(top_builddir)/BUILD.repo: $(top_srcdir)/project/BUILD/
+$(top_builddir)/BUILD.repo: $(top_srcdir)/project/BUILD/main.repo.texi
+	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<
+
+$(top_builddir)/BUILD.repo.html: $(top_builddir)/project/project.texi
+$(top_builddir)/BUILD.repo.html: $(top_srcdir)/project/BUILD/
+$(top_builddir)/BUILD.repo.html: $(top_srcdir)/project/BUILD/main.repo.texi
+	makeinfo -I$(top_builddir)/project/ --no-split --no-headers --html -o $@ $<
+
 $(top_builddir)/README: $(top_builddir)/project/project.texi
 $(top_builddir)/README: $(top_srcdir)/project/README.texi
 	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<
 
 ###############################################################################
 
-SNAPSHOT = $(PROJECT_version_major).$(PROJECT_version_minor)-$(shell date +%Y%m%d)
-
-.PHONY: snapshot
-snapshot: distdir=$(PACKAGE)-$(SNAPSHOT)
-snapshot: dist
+$(top_builddir)/doc/html:
+	doxygen $(top_builddir)/doxygen/Doxyfile

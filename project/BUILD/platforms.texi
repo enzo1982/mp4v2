@@ -1,0 +1,15 @@
+@value{PROJECT_name} builds on many unix-style platforms, also commonly
+referred to posix-style. Building on
+Mac OS X, Linux, FreeBSD, Solaris, Cygwin and native Windows
+are known to work.
+
+Similar platforms should also build.
+Please see the following platform specific notes for instructions on commonly
+used options for various platforms.
+
+@include platform.osx.texi
+@include platform.linux.texi
+@include platform.freebsd.texi
+@include platform.solaris.texi
+@include platform.cygwin.texi
+@include platform.windows.texi

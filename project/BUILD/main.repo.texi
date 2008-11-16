@@ -1,0 +1,54 @@
+\input texinfo @c -*- Texinfo -*-
+@c %**start of header
+@setfilename BUILD.repo.info
+@include project.texi
+
+@paragraphindent none
+@c %**end of header
+
+@majorheading @value{PROJECT_name} Build Instructions - Repository
+@contents
+
+@chapter Overview
+@anchor{overview}
+@include overview.texi
+
+@chapter Introduction
+@anchor{introduction}
+This document describes the official process to build @value{PROJECT_name}
+from the project's Subversion repository.
+This process is a superset of the steps and requirements to build
+from a distribution bundle (dist-bundle).
+If you are interested in building from a dist-bundle then this document
+is not for you.
+
+@chapter Build Process
+@anchor{process}
+
+@section Checkout Sources
+@anchor{process.checkout}
+@include process.checkout.texi
+
+@section Autotools Generation
+@anchor{process.autoreconf}
+@include process.autoreconf.texi
+
+@section Configure
+@anchor{process.configure}
+@include process.configure.texi
+
+@section Build
+@anchor{process.build}
+@include process.build.texi
+
+@section Install
+@anchor{process.install}
+@include process.install.texi
+
+@section Create Distribution
+@anchor{process.dist}
+@include process.dist.texi
+
+@chapter Platforms
+@anchor{platforms}
+@include platforms.texi

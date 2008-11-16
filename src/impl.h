@@ -3,20 +3,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "platform/platform.h"
+#include "libplatform/platform.h"
 #include <mp4v2/mp4v2.h>
 
-// we are forced to bring platform because of inline funcs in headers
-// TODO: uninline those silly functions as it dirties up everything
-#ifndef HAVE_GETTIMEOFDAY
-namespace mp4v2 {
-namespace impl {
-using namespace mp4v2::platform;
-}
-} // namespace mp4v2::impl
-#endif
+///////////////////////////////////////////////////////////////////////////////
 
-#include "type.h"
+namespace mp4v2 { namespace impl {
+    using namespace platform;
+}} // namspace mp4v2::impl
+
+///////////////////////////////////////////////////////////////////////////////
+
 #include "util.h"
 #include "mp4util.h"
 #include "mp4array.h"

@@ -1,18 +1,8 @@
-AC_CXX_ARCH   = @AC_CXX_ARCH@
-AC_CXX_CYGWIN = @AC_CXX_CYGWIN@
-AC_CXX_W      = @AC_CXX_W@
-AC_CXX_D      = @AC_CXX_D@
-AC_CXX_I      = @AC_CXX_I@
-
-AC_LIB_WINSOCK2 = @AC_LIB_WINSOCK2@
-
-###############################################################################
-
-bin_PROGRAMS =
-
 lib_LTLIBRARIES = libmp4v2.la
 
-libmp4v2_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_builddir)/src -I$(top_srcdir)/src
+noinst_LTLIBRARIES = libplatform.la
+
+bin_PROGRAMS =
 
 ###############################################################################
 
@@ -100,26 +90,54 @@ libmp4v2_la_SOURCES = \
     src/ocidescriptors.h                 \
     src/odcommands.cpp                   \
     src/odcommands.h                     \
-    src/platform/platform.h              \
-    src/platform/posix/impl.h            \
-    src/platform/posix/posix.h           \
-    src/platform/win32/gettimeofday.h    \
-    src/platform/win32/impl.h            \
-    src/platform/win32/win32.h           \
     src/qosqualifiers.cpp                \
     src/qosqualifiers.h                  \
     src/rtphint.cpp                      \
     src/rtphint.h                        \
-    src/type.h                           \
     src/util.h                           \
     src/virtual_io.cpp                   \
     src/virtual_io.h
 
+libplatform_la_SOURCES = \
+    libplatform/endian.h                 \
+    libplatform/impl.h                   \
+    libplatform/io/File.cpp              \
+    libplatform/io/File.h                \
+    libplatform/io/FileSystem.cpp        \
+    libplatform/io/FileSystem.h          \
+    libplatform/number/random.h          \
+    libplatform/platform.h               \
+    libplatform/platform_posix.h         \
+    libplatform/platform_win32.h         \
+    libplatform/process/process.h        \
+    libplatform/prog/option.cpp          \
+    libplatform/prog/option.h            \
+    libplatform/sys/error.cpp            \
+    libplatform/sys/error.h              \
+    libplatform/time/time.cpp            \
+    libplatform/time/time.h              \
+    libplatform/warning.h
+
+if ADD_PLATFORM_POSIX
+    libplatform_la_SOURCES += \
+        libplatform/io/File_posix.cpp          \
+        libplatform/io/FileSystem_posix.cpp    \
+        libplatform/number/random_posix.cpp    \
+        libplatform/process/process_posix.cpp  \
+        libplatform/time/time_posix.cpp
+endif
+if ADD_PLATFORM_WIN32
+    libplatform_la_SOURCES += \
+        libplatform/io/File_win32.cpp          \
+        libplatform/io/FileSystem_win32.cpp    \
+        libplatform/number/random_win32.cpp    \
+        libplatform/process/process_win32.cpp  \
+        libplatform/time/time_win32.cpp
+endif
+
 ###############################################################################
 
-if ADD_GETTIMEOFDAY
-    libmp4v2_la_SOURCES += src/platform/win32/gettimeofday.cpp
-endif
+libmp4v2_la_LIBADD = libplatform.la
 
 if ADD_UTIL
     bin_PROGRAMS += mp4art mp4dump mp4extract mp4info mp4syncfiles mp4tags mp4trackdump
@@ -132,21 +150,21 @@ if ADD_UTIL
     mp4tags_SOURCES      = util/mp4tags.cpp
     mp4trackdump_SOURCES = util/mp4trackdump.cpp
 
-    mp4art_CPPFLAGS       = $(AM_CPPFLAGS) -I$(top_builddir)/src -I$(top_srcdir)/src
-    mp4dump_CPPFLAGS      = $(AM_CPPFLAGS) -I$(top_builddir)/src -I$(top_srcdir)/src
-    mp4extract_CPPFLAGS   = $(AM_CPPFLAGS) -I$(top_builddir)/src -I$(top_srcdir)/src
-    mp4info_CPPFLAGS      = $(AM_CPPFLAGS) -I$(top_builddir)/src -I$(top_srcdir)/src
-    mp4syncfiles_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_builddir)/src -I$(top_srcdir)/src
-    mp4tags_CPPFLAGS      = $(AM_CPPFLAGS) -I$(top_builddir)/src -I$(top_srcdir)/src
-    mp4trackdump_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_builddir)/src -I$(top_srcdir)/src
+    mp4art_LDADD       = libmp4v2.la libplatform.la $(X_LDFLAGS)
+    mp4dump_LDADD      = libmp4v2.la libplatform.la $(X_LDFLAGS)
+    mp4extract_LDADD   = libmp4v2.la libplatform.la $(X_LDFLAGS)
+    mp4info_LDADD      = libmp4v2.la libplatform.la $(X_LDFLAGS)
+    mp4syncfiles_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
+    mp4tags_LDADD      = libmp4v2.la libplatform.la $(X_LDFLAGS)
+    mp4trackdump_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
 
-    mp4art_LDADD       = libmp4v2.la $(AC_LIB_WINSOCK2)
-    mp4dump_LDADD      = libmp4v2.la $(AC_LIB_WINSOCK2)
-    mp4extract_LDADD   = libmp4v2.la $(AC_LIB_WINSOCK2)
-    mp4info_LDADD      = libmp4v2.la $(AC_LIB_WINSOCK2)
-    mp4syncfiles_LDADD = libmp4v2.la $(AC_LIB_WINSOCK2)
-    mp4tags_LDADD      = libmp4v2.la $(AC_LIB_WINSOCK2)
-    mp4trackdump_LDADD = libmp4v2.la $(AC_LIB_WINSOCK2)
+    bin_PROGRAMS += unitcreate unitdump
+
+    unitcreate_SOURCES = unit/unitcreate.cpp
+    unitdump_SOURCES   = unit/unitdump.cpp
+
+    unitcreate_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
+    unitdump_LDADD   = libmp4v2.la libplatform.la $(X_LDFLAGS)
 endif
 
 ###############################################################################
@@ -160,13 +178,33 @@ nobase_nodist_include_HEADERS = include/mp4v2/project.h
 ###############################################################################
 
 EXTRA_DIST = \
-    README                      \
-    autoaux/svninfo.awk         \
-    project/README.texi         \
-    project/project.defs        \
-    project/project.texi.in
+    BUILD.dist               \
+    BUILD.repo               \
+    README                   \
+    doc/html/                \
+    doxygen/Doxyfile.in      \
+    project/BUILD/           \
+    project/README.texi      \
+    project/project.m4       \
+    project/project.texi.in  \
+    unit/impl.h              \
+    util/impl.h              \
+    \
+    vstudio9.0/include/mp4v2/project.h           \
+    vstudio9.0/libmp4v2/libmp4v2.vcproj          \
+    vstudio9.0/libplatform/libplatform.vcproj    \
+    vstudio9.0/mp4art/mp4art.vcproj              \
+    vstudio9.0/mp4dump/mp4dump.vcproj            \
+    vstudio9.0/mp4extract/mp4extract.vcproj      \
+    vstudio9.0/mp4info/mp4info.vcproj            \
+    vstudio9.0/mp4syncfiles/mp4syncfiles.vcproj  \
+    vstudio9.0/mp4tags/mp4tags.vcproj            \
+    vstudio9.0/mp4trackdump/mp4trackdump.vcproj  \
+    vstudio9.0/mp4v2.sln
 
 ###############################################################################
 
 distclean-local:
+	rm -f $(top_builddir)/BUILD.*
 	rm -f $(top_builddir)/README
+	rm -fr $(top_builddir)/doc/html

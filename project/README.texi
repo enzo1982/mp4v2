@@ -30,23 +30,25 @@ any type of media.
 Once upon a time, @value{PROJECT_name} was bundled with the mpeg4ip library,
 but has been branched into its own discrete library due in part to the
 cessation of mpeg4ip support and also due to the usefullness of making
-this a stand-alone library.
+this a stand-alone library. @value{PROJECT_name} was branched from
+mpeg4ip version 1.6.1 .
 
 @section C API
 Detailed API documentation is available as a set of man pages found
-in doc/ . The MP4.3 page gives an overview of the API. Alternately you may
-refer to include/mp4v2/mp4v2.h which specifies the official API.
+in @file{doc/}. The MP4.3 page gives an overview of the API. Alternately you
+may refer to @file{include/mp4v2/mp4v2.h} which specifies the official API.
 
-The file maintainer/INTERNALS.txt provides an overview of what is happening
-behind the API. Note that the library is implemented using C++, this is hidden
-from the public interface, which is a C API.
+The file @file{maintainer/INTERNALS.txt} provides an overview of what is
+happening behind the API. Note that the library is implemented using C++,
+this is hidden from the public interface, which is a C API.
 
 @section Utilities
-The util/ subdirectory contains some simple programs that use this library
-and are built as part of the normal INSTALL process of this package
+The @file{util/} subdirectory contains some simple programs that use this
+library and are built as part of the normal INSTALL process of this package
 (on supported platforms). They also serve to illustrate basic usage
 of the API and make good examples.
 
-@section Installation
-@value{PROJECT_name} uses GNU Autoconf build tools. The installation
-procedure is described in INSTALL.txt .
+@section Building and Installation
+@* See INSTALL for general GNU autoconf installation instructions.
+@* See BUILD.dist for building from a release bundle.
+@* See BUILD.repo for building from the project's repository.

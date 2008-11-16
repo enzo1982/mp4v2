@@ -1,0 +1,42 @@
+\input texinfo @c -*- Texinfo -*-
+@c %**start of header
+@setfilename BUILD.dist.info
+@include project.texi
+
+@paragraphindent none
+@c %**end of header
+
+@node Top
+@top @value{PROJECT_name} Build Instructions - Distribution
+
+@chapter Overview
+@anchor{overview}
+@include overview.texi
+
+@chapter Introduction
+@anchor{introduction}
+This document describes the official process to build @value{PROJECT_name}
+from a distribution bundle (dist-bundle).
+This process is a subset of the steps and requirements to build
+from the project's Subversion repository.
+If you are interested in building from the repository then this document
+is not for you.
+
+@chapter Build Process
+@anchor{process}
+
+@section Extract
+@anchor{process.extract}
+@include process.extract.texi
+
+@section Configure
+@anchor{process.configure}
+@include process.configure.texi
+
+@section Build
+@anchor{process.build}
+@include process.build.texi
+
+@section Install
+@anchor{process.install}
+@include process.install.texi

@@ -38,9 +38,6 @@ namespace impl {
 MP4File::MP4File(uint32_t verbosity)
 {
     m_fileName = NULL;
-#ifdef _WIN32
-    m_fileName_w = NULL;
-#endif
     m_pFile = NULL;
     m_virtual_IO = NULL;
     m_orgFileSize = 0;
@@ -66,18 +63,13 @@ MP4File::MP4File(uint32_t verbosity)
     m_numWriteBits = 0;
     m_bufWriteBits = 0;
     m_editName = NULL;
-#ifndef _WIN32
     m_tempFileName[0] = '\0';
-#endif
     m_trakName[0] = '\0';
 }
 
 MP4File::~MP4File()
 {
     MP4Free(m_fileName);
-#ifdef _WIN32
-    MP4Free(m_fileName_w);
-#endif
     if (m_pFile != NULL) {
         // not closed ?
         m_virtual_IO->Close(m_pFile);
@@ -103,20 +95,6 @@ void MP4File::Read(const char* fileName)
 
     CacheProperties();
 }
-
-#ifdef _WIN32
-void MP4File::Read(const wchar_t* fileName)
-{
-    m_fileName_w = MP4Stralloc(fileName);
-    m_mode = 'r';
-
-    Open(L"rb");
-
-    ReadFromFile();
-
-    CacheProperties();
-}
-#endif
 
 // benski>
 void MP4File::ReadEx(const char *fileName, void *user, Virtual_IO *virtual_IO)
@@ -307,9 +285,6 @@ void MP4File::Optimize(const char* orgFileName, const char* newFileName)
 
     // now switch over to writing the new file
     MP4Free(m_fileName);
-#ifdef _WIN32
-    MP4Free(m_fileName_w);
-#endif
 
     // create a temporary file if necessary
     if (newFileName == NULL) {
@@ -475,52 +450,6 @@ void MP4File::Open(const char* fmode)
     }
 }
 
-#ifdef _WIN32
-void MP4File::Open(const wchar_t* fmode)
-{
-    ASSERT(m_pFile == NULL);
-    FILE *openFile = NULL;
-#ifdef O_LARGEFILE
-    // UGH! fopen doesn't open a file in 64-bit mode, period.
-    // So we need to use open() and then fdopen()
-    int fd;
-    int flags = O_LARGEFILE;
-
-    if (strchr(fmode, '+')) {
-        flags |= O_CREAT | O_RDWR;
-        if (fmode[0] == 'w') {
-            flags |= O_TRUNC;
-        }
-    } else {
-        if (fmode[0] == 'w') {
-            flags |= O_CREAT | O_TRUNC | O_WRONLY;
-        } else {
-            flags |= O_RDONLY;
-        }
-    }
-    fd = _wopen(m_fileName_w, flags, 0666);
-
-    if (fd >= 0) {
-        openFile = _wfdopen(fd, fmode);
-    }
-#else
-    openFile = _wfopen(m_fileName_w, fmode);
-#endif
-    m_pFile = openFile;
-
-    if (m_pFile == NULL) {
-        throw new MP4Error(errno, "failed", "MP4Open");
-    }
-
-    m_virtual_IO = &FILE_virtual_IO;
-    if (m_mode == 'r') {
-        m_orgFileSize = m_fileSize = m_virtual_IO->GetFileLength(m_pFile); // benski
-    } else {
-        m_orgFileSize = m_fileSize = 0;
-    }
-}
-#endif
-
 void MP4File::ReadFromFile()
 {
     // ensure we start at beginning of file
@@ -682,45 +611,16 @@ void MP4File::Close()
 
 const char* MP4File::TempFileName()
 {
-    // there are so many attempts in libc to get this right
-    // that for portablity reasons, it's best just to roll our own
-#ifndef _WIN32
-    uint32_t i;
-    for (i = getpid(); i < 0xFFFFFFFF; i++) {
-        snprintf(m_tempFileName, sizeof(m_tempFileName),
-                 "./tmp%u.mp4", i);
-        if (access(m_tempFileName, F_OK) != 0) {
-            break;
-        }
-    }
-    if (i == 0xFFFFFFFF) {
-        throw new MP4Error("can't create temporary file", "TempFileName");
-    }
-#else
-    GetTempFileNameA(".", // dir. for temp. files
-                     "mp4",                // temp. filename prefix
-                     0,                    // create unique name
-                     m_tempFileName);        // buffer for name
-#endif
-
-    return (char *)m_tempFileName;
+    string s;
+    if( io::FileSystem::tempFilename( s, ".", "tmp", ".mp4" ))
+        throw new MP4Error( "can't create temporary file", "TempFileName" );
+    return strncpy( m_tempFileName, s.c_str(), sizeof(m_tempFileName) );
 }
 
 void MP4File::Rename(const char* oldFileName, const char* newFileName)
 {
-    int rc;
-
-#ifdef _WIN32
-    rc = remove(newFileName);
-    if (rc == 0) {
-        rc = rename(oldFileName, newFileName);
-    }
-#else
-    rc = rename(oldFileName, newFileName);
-#endif
-    if (rc != 0) {
-        throw new MP4Error(errno, "can't overwrite existing file", "Rename");
-    }
+    if( io::FileSystem::rename( oldFileName, newFileName ))
+        throw new MP4Error( sys::getLastError(), sys::getLastErrorStr(), "MP4Rename" );
 }
 
 void MP4File::ProtectWriteOperation(const char* where)

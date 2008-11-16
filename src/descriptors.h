@@ -57,8 +57,8 @@ public:
     MP4BytesDescriptor(uint8_t tag);
     void Read(MP4File* pFile);
 protected:
-    uint32 m_size_offset; // size to adjust the size for the bytes property
-    uint32 m_bytes_index; // index into properties for bytes property
+    uint32_t m_size_offset; // size to adjust the size for the bytes property
+    uint32_t m_bytes_index; // index into properties for bytes property
 };
 
 class MP4IODescriptor : public MP4Descriptor {

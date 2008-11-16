@@ -559,16 +559,17 @@ static char* PrintTrackInfo(
     return trackInfo;
 }
 
-extern "C" char* MP4Info(
+extern "C" MP4V2_EXPORT
+char* MP4Info(
         MP4FileHandle mp4File,
-        MP4TrackId trackId)
+        MP4TrackId    trackId )
 {
     char* info = NULL;
 
     if (MP4_IS_VALID_FILE_HANDLE(mp4File)) {
         try {
             if (trackId == MP4_INVALID_TRACK_ID) {
-                uint32 buflen = 4 * 1024;
+                uint32_t buflen = 4 * 1024;
                 info = (char*)MP4Calloc(buflen);
 
                 buflen -= snprintf(info, buflen,
@@ -580,7 +581,7 @@ extern "C" char* MP4Info(
                     trackId = MP4FindTrackId(mp4File, i);
                     char* trackInfo = PrintTrackInfo(mp4File, trackId);
                     strncat(info, trackInfo, buflen);
-                    uint32 newlen = strlen(trackInfo);
+                    uint32_t newlen = strlen(trackInfo);
                     if (newlen > buflen) buflen = 0;
                     else buflen -= newlen;
                     MP4Free(trackInfo);
@@ -597,12 +598,12 @@ extern "C" char* MP4Info(
     return info;
 }
 
-extern "C" char* MP4FileInfo(
-        const char* fileName,
-        MP4TrackId trackId)
+extern "C" MP4V2_EXPORT
+char* MP4FileInfo(
+    const char* fileName,
+    MP4TrackId  trackId )
 {
-    MP4FileHandle mp4File =
-        MP4Read(fileName);
+    MP4FileHandle mp4File = MP4Read(fileName);
 
     if (!mp4File) {
         return NULL;

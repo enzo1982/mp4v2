@@ -22,12 +22,11 @@
 
 #include "impl.h"
 
-namespace mp4v2 {
-namespace impl {
+namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-enum _LogLevel {
+enum LogLevel {
     _LOGLEVEL_UNDEFINED = -1,
 
     LOGLEVEL_EMERG,
@@ -40,12 +39,14 @@ enum _LogLevel {
     LOGLEVEL_DEBUG,
 
     _LOGLEVEL_MAX,
-} LogLevel;
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
 static lib_message_func_t libfunc = NULL;
-extern "C"   void MP4SetLibFunc(lib_message_func_t libf)
+
+extern "C" MP4V2_EXPORT
+void MP4SetLibFunc( lib_message_func_t libf )
 {
     libfunc = libf;
 }
@@ -185,7 +186,7 @@ char* MP4ToBase16(const uint8_t* pData, uint32_t dataSize)
     if (dataSize) {
         ASSERT(pData);
     }
-    uint32 size = 2 * dataSize + 1;
+    uint32_t size = 2 * dataSize + 1;
     char* s = (char*)MP4Calloc(size);
 
     uint32_t i, j;
@@ -383,7 +384,42 @@ const char* MP4NormalizeTrackType (const char* type,
     return type;
 }
 
+MP4Timestamp MP4GetAbsTimestamp() {
+    /* MP4 epoch is midnight, January 1, 1904
+     * offset from midnight, January 1, 1970 is 2082844800 seconds
+     * 208284480 is (((1970 - 1904) * 365) + 17) * 24 * 60 * 60
+     */
+    return time::getLocalTimeSeconds() + 2082844800;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
+uint32_t STRTOINT32( const char* s )
+{
+#if defined( MP4V2_INTSTRING_ALIGNMENT )
+    // it seems ARM integer instructions require 4-byte alignment so we
+    // manually copy string-data into the integer before performing ops
+    uint32_t tmp;
+    memcpy( &tmp, s, sizeof(tmp) );
+    return MP4V2_NTOHL( tmp );
+#else
+    return MP4V2_NTOHL(*(uint32_t *)s);
+#endif
 }
-} // namespace mp4v2::impl
+
+void INT32TOSTR( uint32_t i, char* s )
+{
+#if defined( MP4V2_INTSTRING_ALIGNMENT )
+    // it seems ARM integer instructions require 4-byte alignment so we
+    // manually copy string-data into the integer before performing ops
+    uint32_t tmp = MP4V2_HTONL( i );
+    memcpy( s, &tmp, sizeof(tmp) );
+#else
+    *(uint32_t *)s = MP4V2_HTONL(i);
+#endif
+    s[4] = 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+}} // namespace mp4v2::impl

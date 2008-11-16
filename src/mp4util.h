@@ -22,8 +22,7 @@
 #ifndef MP4V2_IMPL_MP4UTIL_H
 #define MP4V2_IMPL_MP4UTIL_H
 
-namespace mp4v2 {
-namespace impl {
+namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -99,11 +98,7 @@ inline void Indent(FILE* pFile, uint8_t depth) {
     fprintf(pFile, "%*c", depth, ' ');
 }
 
-static inline void MP4Printf(const char* fmt, ...)
-#ifndef _WIN32
-__attribute__((format(__printf__, 1, 2)))
-#endif
-;
+static inline void MP4Printf(const char* fmt, ...) MP4V2_WFORMAT_PRINTF(1,2);
 
 static inline void MP4Printf(const char* fmt, ...)
 {
@@ -199,14 +194,6 @@ inline char* MP4Stralloc(const char* s1) {
     return s2;
 }
 
-#ifdef _WIN32
-inline wchar_t* MP4Stralloc(const wchar_t* s1) {
-    wchar_t* s2 = (wchar_t*)MP4Malloc((wcslen(s1) + 1)*sizeof(wchar_t));
-    wcscpy(s2, s1);
-    return s2;
-}
-#endif
-
 inline void* MP4Realloc(void* p, uint32_t newSize) {
     // workaround library bug
     if (p == NULL && newSize == 0) {
@@ -219,24 +206,10 @@ inline void* MP4Realloc(void* p, uint32_t newSize) {
     return p;
 }
 
-inline uint32_t STRTOINT32(const char* s) {
-    return ntohl(*(uint32_t *)s);
-}
+uint32_t STRTOINT32( const char* );
+void     INT32TOSTR( uint32_t, char* );
 
-inline void INT32TOSTR(uint32_t i, char* s) {
-    *(uint32_t *)s = htonl(i);
-    s[4] = 0;
-}
-
-inline MP4Timestamp MP4GetAbsTimestamp() {
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    MP4Timestamp ret;
-    ret = tv.tv_sec;
-    ret += 2082844800;
-    return ret; // MP4 start date is 1/1/1904
-    // 208284480 is (((1970 - 1904) * 365) + 17) * 24 * 60 * 60
-}
+MP4Timestamp MP4GetAbsTimestamp();
 
 uint64_t MP4ConvertTime(uint64_t t,
                         uint32_t oldTimeScale, uint32_t newTimeScale);
@@ -258,7 +231,6 @@ const char* MP4NormalizeTrackType(const char* type,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}
-} // namespace mp4v2::impl
+}} // namespace mp4v2::impl
 
 #endif // MP4V2_IMPL_MP4UTIL_H

@@ -32,44 +32,26 @@ namespace impl {
 
 uint64_t FILE_GetFileLength(void *user)
 {
-    FILE *fp = (FILE *)user;
-    struct stat s;
-    if (fstat(fileno(fp), &s) < 0) {
-        throw new MP4Error(errno, "stat failed", "MP4Open");
-    }
-    return s.st_size;
+    // TODO-KB: test io::StdioFile
+    io::File::Size i;
+    if( io::StdioFile::getSize( (FILE*)user, i ))
+        throw new MP4Error( sys::getLastError(), "getSize failed", "MP4-FILE_GetFileLength" );
+    return i;
 }
 
-int FILE_SetPosition(void *user, uint64_t position)
+int FILE_SetPosition(void *user, uint64_t pos)
 {
-    FILE *fp = (FILE *)user;
-#if 0
-    fpos_t fpos;
-    VAR_TO_FPOS(fpos, position);
-    return fsetpos(fp, &fpos);
-#else
-    off_t fpos = (off_t)position;
-    return fseeko(fp, fpos, SEEK_SET);
-#endif
+    // TODO-KB: test io::StdioFile
+    return io::StdioFile::setPosition( (FILE*)user, pos );
 }
 
-int FILE_GetPosition(void *user, uint64_t *position)
+int FILE_GetPosition(void *user, uint64_t* pos)
 {
-    FILE *fp = (FILE *)user;
-#if 0
-    fpos_t fpos;
-    if (fgetpos(fp, &fpos) < 0) {
-        throw new MP4Error(errno, "MP4-FILE_GetPosition");
-    }
-
-    FPOS_TO_VAR(fpos, uint64_t, *position);
-#else
-    off_t fpos = ftello(fp);
-    if (fpos == -1) {
-        throw new MP4Error(errno, "MP4-FILE_GetPosition");
-    }
-    *position = (uint64_t)fpos;
-#endif
+    // TODO-KB: test io::StdioFile
+    io::File::Size i;
+    if( io::StdioFile::getPosition( (FILE*)user, i ))
+        throw new MP4Error( sys::getLastError(), "MP4-FILE_GetPosition" );
+    *pos = i;
     return 0;
 }
 

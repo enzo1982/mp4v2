@@ -390,7 +390,7 @@ void GenreToString(char** GenreStr, const int genre)
     if (genre > 0 &&
             genre <= (int)(sizeof(ID3v1GenreList)/sizeof(*ID3v1GenreList)))
     {
-        uint32 len = strlen(ID3v1GenreList[genre-1])+1;
+        uint32_t len = strlen(ID3v1GenreList[genre-1])+1;
         *GenreStr = (char*)malloc(len);
         if (*GenreStr == NULL) return;
         // no need for strncpy; enough was malloced

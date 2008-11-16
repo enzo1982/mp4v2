@@ -462,7 +462,7 @@ void MP4SLConfigDescriptor::Mutate()
     for (i = 22; i <= 23; i++) {
         m_pProperties[i]->SetImplicit(useTimeStampsFlag);
 
-        uint8_t timeStampLength = min((uint8)64,
+        uint8_t timeStampLength = min((uint8_t)64,
                                       ((MP4Integer8Property*)m_pProperties[11])->GetValue());
 
         ((MP4BitfieldProperty*)m_pProperties[i])->SetNumBits(timeStampLength);

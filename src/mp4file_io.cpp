@@ -30,32 +30,24 @@ namespace impl {
 
 uint64_t MP4File::GetPosition(FILE* pFile)
 {
-    if (m_memoryBuffer == NULL) {
-        if (pFile == NULL) {
-            ASSERT(m_pFile);
+    if( m_memoryBuffer == NULL ) {
+        if( pFile == NULL ) {
+            ASSERT( m_pFile );
             uint64_t fpos;
-            if (m_virtual_IO->GetPosition(m_pFile, &fpos) != 0) {
-                throw new MP4Error("getting position via Virtual I/O", "MP4GetPosition");
+            if( m_virtual_IO->GetPosition( m_pFile, &fpos ) != 0 ) {
+                throw new MP4Error( "getting position via Virtual I/O", "MP4GetPosition" );
             }
             return fpos;
-        } else {
-#if 0
-            fpos_t fpos;
-            if (fgetpos(pFile, &fpos) < 0) {
-                throw new MP4Error(errno, "MP4GetPosition");
-            }
-            uint64_t ret;
-            FPOS_TO_VAR(fpos, uint64_t, ret);
-            return ret;
-#else
-            off_t fpos = ftello(pFile);
-            if (fpos == -1) {
-                throw new MP4Error(errno, "MP4GetPosition");
-            }
-            return (uint64_t)fpos;
-#endif
         }
-    } else {
+        else {
+            // TODO-KB: test io::StdioFile
+            int64_t pos;
+            if( io::StdioFile::getPosition( pFile, pos ))
+                throw new MP4Error( sys::getLastError(), "MP4GetPosition" );
+            return pos;
+        }
+    }
+    else {
         return m_memoryBufferPosition;
     }
 }
@@ -68,19 +60,10 @@ void MP4File::SetPosition(uint64_t pos, FILE* pFile)
             if (m_virtual_IO->SetPosition(m_pFile, pos) != 0) {
                 throw new MP4Error("setting position via Virtual I/O", "MP4SetPosition");
             }
-        }   else {
-#if 0
-            fpos_t fpos;
-            VAR_TO_FPOS(fpos, pos);
-            if (fsetpos(pFile, &fpos) < 0) {
-                throw new MP4Error(errno, "MP4SetPosition");
-            }
-#else
-            off_t fpos = (off_t)pos;
-            if (fseeko(pFile, fpos, SEEK_SET) == -1) {
-                throw new MP4Error(errno, "MP4SetPosition");
-            }
-#endif
+        } else {
+            // TODO-KB: test io::StdioFile
+            if( io::StdioFile::setPosition( pFile, pos ))
+                throw new MP4Error(sys::getLastError(), "MP4SetPosition");
         }
     } else {
         if (pos >= m_memoryBufferSize) {
@@ -439,7 +422,7 @@ char* MP4File::ReadCountedString(uint8_t charSize, bool allowExpandedCount, uint
     uint32_t charLength;
     if (allowExpandedCount) {
         uint8_t b;
-        uint32 ix = 0;
+        uint32_t ix = 0;
         charLength = 0;
         do {
             b = ReadUInt8();
@@ -514,7 +497,7 @@ void MP4File::WriteCountedString(char* string,
     // Write any padding if this is a fixed length counted string
     if (fixedLength) {
         zero[0] = 0;
-        while (byteLength < fixedLength-1) {
+        while (byteLength < fixedLength-1U) {
             WriteBytes(zero, 1);
             byteLength++;
         }

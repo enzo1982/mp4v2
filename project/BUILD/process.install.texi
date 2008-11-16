@@ -1,0 +1,5 @@
+The following command will install @value{PROJECT_name}.
+
+@example
+make install
+@end example

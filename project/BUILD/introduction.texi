@@ -1,0 +1,40 @@
+The supported method of building @value{PROJECT_name} is described in this
+document. The process is divided into distinct phases.
+
+obtain sources
+pre-configure
+configure
+build
+install
+produce source distribution
+
+The first step in building @value{PROJECT_name} is to download the latest
+source distribution, usually made available in tarballs or zip format.
+This contains all files necessary to configure, build and install
+@value{PROJECT_name}.
+
+Alternately, project maintainers and ambitious users build directly from
+@value{PROJECT_name}'s repository. This of course is more complex and
+is not recommended for the novice.
+
+Building is explained as several distinct phases.
+
+@section Pre-Configuration
+This phase is only required when building directly from the respository.
+Typically only project maintainers build from the repository but also
+some ambitious users may want to try the latest sources.
+
+@quotation Note
+This phase is not applicable when not using GNU autotools, such as
+building on the Windows platform.
+@end quotation
+
+GNU autotools are generated from repository files such as @file{configure.ac}.
+Once a makefile is built it does a good job of automatically regenerating
+files but it is unaware of high-level @value{PROJECT_name} meta-data found
+in @file{project/project.m4}. While this data rarely changes, it is important
+to note that you must manually autoreconf when the file changes.
+
+@example
+autoreconf -fiv
+@end example

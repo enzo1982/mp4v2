@@ -345,7 +345,7 @@ extern "C" {
                                                    &bufsize)) {
                         uint8_t *ptr = foo;
                         while (bufsize > 0) {
-                            if (htonl(*(uint32_t *)ptr) == 0x1b0) {
+                            if (MP4V2_HTONL(*(uint32_t *)ptr) == 0x1b0) {
                                 uint8_t ret = ptr[4];
                                 free(foo);
                                 return ret;

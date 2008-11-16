@@ -30,8 +30,7 @@
 #ifndef MP4V2_IMPL_MP4FILE_H
 #define MP4V2_IMPL_MP4FILE_H
 
-namespace mp4v2 {
-namespace impl {
+namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -51,9 +50,6 @@ public: /* equivalent to MP4 library API */
 
     /* file operations */
     void Read(const char* fileName);
-#ifdef _WIN32
-    void Read(const wchar_t* fileName);
-#endif
     void ReadEx(const char *fileName, void *user, Virtual_IO *virtual_IO); //benski>
     void Create(const char* fileName, uint32_t flags,
                 int add_ftyp = 1, int add_iods = 1,
@@ -704,9 +700,6 @@ public:
 
 protected:
     void Open(const char* fmode);
-#ifdef _WIN32
-    void Open(const wchar_t* fmode);
-#endif
     void ReadFromFile();
     void GenerateTracks();
     void BeginWrite();
@@ -812,11 +805,8 @@ protected:
 
 protected:
     char*           m_fileName;
-#ifdef _WIN32
-    wchar_t*        m_fileName_w;
-#endif
     void*           m_pFile;
-    Virtual_IO             *m_virtual_IO;
+    Virtual_IO*     m_virtual_IO;
     uint64_t        m_orgFileSize;
     uint64_t        m_fileSize;
     MP4Atom*        m_pRootAtom;
@@ -844,18 +834,13 @@ protected:
     uint8_t m_numWriteBits;
     uint8_t m_bufWriteBits;
 
-#ifndef _WIN32
-    char m_tempFileName[64];
-#else
-    char m_tempFileName[MAX_PATH + 3];
-#endif
+    char m_tempFileName[MP4V2_PATH_MAX];
     char m_trakName[1024];
     char *m_editName;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}
-} // namespace mp4v2::impl
+}} // namespace mp4v2::impl
 
 #endif // MP4V2_IMPL_MP4FILE_H

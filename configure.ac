@@ -2,33 +2,72 @@
 # prelude
 ###############################################################################
 
+m4_include([project/project.m4])
+
+m4_define([SVNINFO],m4_esyscmd([svn info 2>/dev/null]))
+
+m4_define([PRJ_repo_url],m4_bregexp(SVNINFO,[^URL: *\(.+\)],[\1]))
+m4_define([PRJ_repo_uuid],m4_bregexp(SVNINFO,[^Repository UUID: *\(.+\)],[\1]))
+m4_define([PRJ_repo_rev],m4_bregexp(SVNINFO,[^Last Changed Rev: *\(.+\)],[\1]))
+m4_define([PRJ_repo_date],m4_bregexp(SVNINFO,[^Last Changed Date: *\(.+\)],[\1]))
+m4_define([PRJ_repo_type],ifelse(m4_bregexp(PRJ_repo_url,[/releases/]),[-1],[developer],[release]))
+
+m4_define([PRJ_version_hex],m4_format([0x%04x%02x%02x],PRJ_version_major,PRJ_version_minor,PRJ_version_point))
+
+m4_define([PRJ_snapshot],
+    m4_bregexp(m4_esyscmd([(test "$SNAPSHOT" = "1" && date +%Y%m%d) 2>/dev/null]),[\([0-9]+\)],[\1]))
+m4_define([PRJ_repo_type],ifelse(m4_len(PRJ_snapshot),8,[snapshot],PRJ_repo_type))
+
+m4_define([PRJ_version],ifelse(
+    PRJ_repo_type,[release],m4_format([%d.%d.%d],PRJ_version_major,PRJ_version_minor,PRJ_version_point),
+    PRJ_repo_type,[snapshot],m4_format([%d.%d-%s],PRJ_version_major,PRJ_version_minor,PRJ_snapshot),
+    PRJ_repo_type,[developer],m4_format([%d.%d-r%d],PRJ_version_major,PRJ_version_minor,PRJ_repo_rev),
+    m4_format([%d.%d-r%d],PRJ_version_major,PRJ_version_minor,PRJ_repo_rev)))
+
+###############################################################################
+# initialization
+###############################################################################
+
 AC_PREREQ([2.61])
-AC_INIT([MP4v2], [1.0.0], [eddyg@myreflection.org])
+AC_INIT(PRJ_name,PRJ_version,PRJ_bugreport)
 
 AC_MSG_NOTICE([
   -->
   --> Configuring ]AC_PACKAGE_STRING[
   -->])
 
-AM_MAINTAINER_MODE
 AC_CONFIG_AUX_DIR([autoaux])
-AM_INIT_AUTOMAKE([1.10 foreign -Wall -Werror subdir-objects nostdinc no-dependencies no-dist-gzip dist-bzip2])
+AM_INIT_AUTOMAKE([1.10 foreign -Wall -Werror subdir-objects nostdinc no-dependencies no-dist-gzip dist-bzip2 dist-zip])
 
 AC_CONFIG_SRCDIR([src/mp4.cpp])
-
-AC_ARG_ENABLE([debug],
-    [AS_HELP_STRING([--disable-debug],[disable debugging compilation])])
-AC_ARG_ENABLE([optimize],
-    [AS_HELP_STRING([--disable-optimize],[disable optimizing compilation])])
-AC_ARG_ENABLE([largefile],
-    [AS_HELP_STRING([--disable-largefile],[disable LFS check (large file support)])])
-AC_ARG_ENABLE([cygwin-mwin32],
-    [AS_HELP_STRING([--enable-cygwin-mwin32],[enable WIN32 mode when building with Cygwin)])])
 
 # disable unused langs (improves config speed, reduces configure file size)
 AC_DEFUN([_LT_AC_LANG_F77_CONFIG], [:])
 AC_DEFUN([_LT_AC_LANG_GCJ_CONFIG], [:])
 AC_DEFUN([_LT_AC_LANG_RC_CONFIG], [:])
+
+AC_CANONICAL_HOST
+
+###############################################################################
+# add configure options
+###############################################################################
+
+AC_ARG_ENABLE([debug],
+    [AS_HELP_STRING([--disable-debug],[disable debugging compilation])])
+AC_ARG_ENABLE([optimize],
+    [AS_HELP_STRING([--disable-optimize],[disable optimizing compilation])])
+AC_ARG_ENABLE([fvisibility],
+    [AS_HELP_STRING([--disable-fvisibility],[disable use of -fvisibility])])
+AC_ARG_ENABLE([largefile],
+    [AS_HELP_STRING([--disable-largefile],[disable LFS (large file support)])])
+AC_ARG_ENABLE([bi],
+    [AS_HELP_STRING([--enable-bi=ARCH],[enable -mARCH for bi-arch compilation])])
+AC_ARG_ENABLE([ub],
+    [AS_HELP_STRING([--enable-ub@<:@=ARCHS@:>@],[enable -arch ARCH for universal-binaries (OSX only)])])
+AC_ARG_ENABLE([cygwin_win32],
+    [AS_HELP_STRING([--enable-cygwin-win32],[when building with Cygwin use -mwin32])])
+AC_ARG_ENABLE([mingw_mt],
+    [AS_HELP_STRING([--enable-mingw-threads],[when building with MinGW use -mthreads])])
 
 ###############################################################################
 # checks for programs
@@ -41,47 +80,83 @@ AC_PROG_LIBTOOL
 AC_CHECK_PROG([HAVE_SVN],[svn],[yes],[no])
 
 ###############################################################################
+# top-level platform check
+###############################################################################
+
+AC_MSG_CHECKING([$PACKAGE_NAME platform portability])
+X_PLATFORM=posix
+case ${host} in
+*-*-cygwin)
+    X_CXX_W="$X_CXX_W -Wno-format"
+    if test "$enable_cygwin_win32" = "yes"; then
+        X_PLATFORM=win32
+        X_CXX_ARCH="$X_CXX_ARCH -mwin32"
+    fi
+    ;;
+*-*-mingw32)
+    X_PLATFORM=win32
+    X_MINGW_LIBS="$X_MINGW_LIBS -lmsvcr80"
+    X_CXX_W="$X_CXX_W -Wno-format"
+    if test "$enable_mingw_threads" = "yes"; then
+        X_CXX_ARCH="$X_CXX_ARCH -mthreads"
+    fi
+    ;;
+esac
+AC_MSG_RESULT([$X_PLATFORM])
+
+###############################################################################
 # prepare project metadata
 ###############################################################################
 
-PROJECT_version_hex=`echo $PACKAGE_VERSION | awk -F. '{ printf("0x%04x%02x%02x", $1, $2, $3 ) }' 2>/dev/null`
-PROJECT_version_major=`echo $PACKAGE_VERSION | awk -F. '{ print $1 }' 2>/dev/null`
-PROJECT_version_minor=`echo $PACKAGE_VERSION | awk -F. '{ print $2 }' 2>/dev/null`
-PROJECT_version_point=`echo $PACKAGE_VERSION | awk -F. '{ print $3 }' 2>/dev/null`
-PROJECT_build=`date`
+PROJECT_name="PRJ_name"
+PROJECT_name_lower="PRJ_name_lower"
+PROJECT_name_upper="PRJ_name_upper"
+PROJECT_name_formal="PRJ_name PRJ_version"
+PROJECT_website="PRJ_website"
+PROJECT_irc="PRJ_irc"
+PROJECT_bugreport="<PRJ_bugreport>"
 
-# pull svn info fields with awk script
-if test "$HAVE_SVN" = "yes"; then
-    changequote(<<,>>)dnl
-    eval `svn info $ac_abs_confdir | awk -F'^[^:]+: *' -f $ac_aux_dir/svninfo.awk prefix=PROJECT_`
-    changequote([,])dnl
-fi
+PROJECT_version="PRJ_version"
+PROJECT_version_hex="PRJ_version_hex"
+PROJECT_version_major="PRJ_version_major"
+PROJECT_version_minor="PRJ_version_minor"
+PROJECT_version_point="PRJ_version_point"
+PROJECT_repo_url="PRJ_repo_url"
+PROJECT_repo_uuid="PRJ_repo_uuid"
+PROJECT_repo_rev="PRJ_repo_rev"
+PROJECT_repo_date="PRJ_repo_date"
+PROJECT_repo_type="PRJ_repo_type"
+PROJECT_build="`date`"
 
-test -z "$PROJECT_version_hex"   && PROJECT_version_hex="0x0"
+test -z "$PROJECT_version_hex"   && PROJECT_version_hex="0x0000000000000000LL"
 test -z "$PROJECT_version_major" && PROJECT_version_major="0"
 test -z "$PROJECT_version_minor" && PROJECT_version_minor="0"
 test -z "$PROJECT_version_point" && PROJECT_version_point="0"
-test -z "$PROJECT_build"         && PROJECT_build="unknown"
 test -z "$PROJECT_repo_url"      && PROJECT_repo_url="svn://nowhere.com/project/unknown"
 test -z "$PROJECT_repo_uuid"     && PROJECT_repo_uuid="00000000-0000-0000-0000-000000000000"
 test -z "$PROJECT_repo_rev"      && PROJECT_repo_rev="0"
-test -z "$PROJECT_repo_date"     && PROJECT_repo_date=$PROJECT_build
+test -z "$PROJECT_repo_date"     && PROJECT_repo_date="unknown"
 test -z "$PROJECT_repo_type"     && PROJECT_repo_type="unknown"
+test -z "$PROJECT_build"         && PROJECT_build="unknown"
 
+AC_SUBST([PROJECT_name])
+AC_SUBST([PROJECT_name_lower])
+AC_SUBST([PROJECT_name_upper])
+AC_SUBST([PROJECT_name_formal])
+AC_SUBST([PROJECT_website])
+AC_SUBST([PROJECT_irc])
+AC_SUBST([PROJECT_bugreport])
+AC_SUBST([PROJECT_version])
 AC_SUBST([PROJECT_version_hex])
 AC_SUBST([PROJECT_version_major])
 AC_SUBST([PROJECT_version_minor])
 AC_SUBST([PROJECT_version_point])
-AC_SUBST([PROJECT_build])
 AC_SUBST([PROJECT_repo_url])
 AC_SUBST([PROJECT_repo_uuid])
 AC_SUBST([PROJECT_repo_rev])
 AC_SUBST([PROJECT_repo_date])
 AC_SUBST([PROJECT_repo_type])
-
-. $srcdir/project/project.defs
-AC_SUBST([PROJECT_website])
-AC_SUBST([PROJECT_irc])
+AC_SUBST([PROJECT_build])
 
 ###############################################################################
 # checks for libraries
@@ -91,16 +166,34 @@ AC_SUBST([PROJECT_irc])
 # checks for header files
 ###############################################################################
 
-AC_CHECK_HEADERS([sys/time.h])
-AC_CHECK_HEADERS([winsock2.h])
-
-if test "$ac_cv_header_winsock2_h" = "yes"; then
-    AC_SUBST([AC_LIB_WINSOCK2],[-lws2_32])
-fi
-
 ###############################################################################
 # checks for typedefs, structures, and compiler characteristics
 ###############################################################################
+
+###############################################################################
+# check for --disable-fvisibility
+###############################################################################
+
+if test "$enable_fvisibility" != "no" -a "$GXX" = "yes"; then
+    case ${host} in
+        *-*-cygwin)
+            ;;
+        *-*-mingw32)
+            ;;
+        *)
+            AC_LANG(C++)
+            AC_CACHE_CHECK([if $CXX supports -fvisibility],[x_cv_fvisibility],[
+                x_save="$CXXFLAGS"
+                CXXFLAGS="$CXXFLAGS -fvisibility=hidden"
+                AC_TRY_COMPILE([],[],[x_cv_fvisibility=yes],[x_cv_fvisibility=no])
+                if test "$x_cv_fvisibility" != "yes"; then
+                    CXXFLAGS="$x_save"
+                fi
+                x_save=
+            ])
+            ;;
+    esac
+fi
 
 ###############################################################################
 # check for --disable-largefile
@@ -110,28 +203,17 @@ if test "$enable_largefile" != "no" -a "$ac_cv_header_unistd_h" = "yes"; then
     case ${host_cpu} in
         i?86|ppc)
             AC_LANG(C++)
-            AC_MSG_CHECKING([for LFS (large file support) conformance])
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+            AC_CACHE_CHECK([if LFS (large file support) is required],[x_cv_largefile],[
+                AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 #include <unistd.h>
 #ifndef _LFS_LARGEFILE
     error: not LFS conformant
 #endif
-]])]
-,AC_MSG_RESULT([yes])
- AC_DEFINE([NEED_LFS_ACTIVATION],[1],[Define to 1 if LFS should be activated])
-,AC_MSG_RESULT([no]))
-            ;;
-    esac
-fi
-
-###############################################################################
-# check for --enable-cygwin-mwin32
-###############################################################################
-
-if test "$enable_cygwin_mwin32" == "yes"; then
-    case ${host} in
-        i?86-*-cygwin)
-            test "$GCC" = "yes" && AC_CXX_CYGWIN="$AC_CXX_CYGWIN -mwin32"
+                ]])],[x_cv_largefile=yes],[x_cv_largefile=no])
+            ])
+            if test "$x_cv_largefile" = "yes"; then
+                AC_DEFINE([NEED_LFS_ACTIVATION],[1],[Define to 1 if LFS should be activated])
+            fi
             ;;
     esac
 fi
@@ -141,26 +223,43 @@ fi
 ###############################################################################
 
 if test "$GXX" = "yes"; then
-    case ${host} in
-        i?86-apple-darwin9*)
-            AC_CXX_ARCH="$AC_CXX_ARCH -arch i386"
+    AC_MSG_CHECKING([arch flags])
+    x_flags=
+    x_save_IFS=$IFS; IFS=,
+    for arch in ${enable_ub}; do
+        case "$arch" in
+            ""|no)
+                ;;
+            yes)
+                case ${host} in
+                    *-*-darwin*)
+                        x_flags="$xflags -arch i386 -arch x86_64 -arch ppc -arch ppc64"
+                        ;;
+                esac
+                ;;
+            *)
+                x_flags="$x_flags -arch $arch"
+                ;;
+        esac
+    done
+    IFS=$x_save_IFS
+
+    case "$enable_bi" in
+        ""|no|yes)
             ;;
-        x86_64-apple-darwin9*)
-            AC_CXX_ARCH="$AC_CXX_ARCH -arch x86_64"
-            ;;
-        powerpc-apple-darwin9*)
-            AC_CXX_ARCH="$AC_CXX_ARCH -arch ppc"
-            ;;
-        powerpc64-apple-darwin9*)
-            AC_CXX_ARCH="$AC_CXX_ARCH -arch ppc64"
-            ;;
-        i?86-*|ppc-*)
-            AC_CXX_ARCH="$AC_CXX_ARCH -m32"
-            ;;
-        x86_64-*|powerpc64-*)
-            AC_CXX_ARCH="$AC_CXX_ARCH -m64"
+        *)
+            x_flags="$x_flags -m${enable_bi}"
             ;;
     esac
+
+    if test -n "$x_flags"; then
+        AC_MSG_RESULT([$x_flags])
+        X_CXX_ARCH="$X_CXX_ARCH $x_flags"
+    else
+        AC_MSG_RESULT([none])
+    fi
+
+    x_flags=
 fi
 
 ###############################################################################
@@ -197,34 +296,34 @@ fi
 # checks for library functions
 ###############################################################################
 
-AC_CHECK_FUNCS([gettimeofday])
-AC_CHECK_FUNCS([getopt_long_only])
-
 ###############################################################################
 # conditional compilation
 ###############################################################################
 
-AM_CONDITIONAL([ADD_GETTIMEOFDAY],[test "$ac_cv_func_gettimeofday" = "no"])
-AM_CONDITIONAL([ADD_UTIL],[test "$ac_cv_func_getopt_long_only" = "yes"])
+AM_CONDITIONAL([ADD_PLATFORM_POSIX],[test "$X_PLATFORM" = "posix"])
+AM_CONDITIONAL([ADD_PLATFORM_WIN32],[test "$X_PLATFORM" = "win32"])
+
+AM_CONDITIONAL([ADD_UTIL],[true])
 
 ###############################################################################
 # declare common substitutions
 ###############################################################################
 
-AC_SUBST([AC_CXX_ARCH])
-AC_SUBST([AC_CXX_CYGWIN])
-AC_SUBST([AC_CXX_W])
-AC_SUBST([AC_CXX_D])
-AC_SUBST([AC_CXX_I])
+AC_SUBST([X_CXX_ARCH])
+AC_SUBST([X_CXX_W])
+AC_SUBST([X_CXX_D])
+AC_SUBST([X_CXX_I])
+AC_SUBST([X_MINGW_LIBS])
 
 ###############################################################################
 # output files
 ###############################################################################
 
-AC_CONFIG_HEADERS([src/platform/config.h])
+AC_CONFIG_HEADERS([libplatform/config.h])
 
 AC_CONFIG_FILES([GNUmakefile GNUmakefile.auto])
 AC_CONFIG_FILES([include/mp4v2/project.h])
 AC_CONFIG_FILES([project/project.texi])
+AC_CONFIG_FILES([doxygen/Doxyfile])
 
 AC_OUTPUT

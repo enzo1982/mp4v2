@@ -89,9 +89,7 @@ void MP4RtpHintTrack::InitRefTrack()
 
 void MP4RtpHintTrack::InitRtpStart()
 {
-    struct timeval tv;
-    (void)gettimeofday(&tv, NULL);
-    srandom((tv.tv_usec << 12) | (tv.tv_sec & 0xFFF));
+    number::srandom( time::getLocalTimeMilliseconds() );
 
     ASSERT(m_pTrakAtom);
 
@@ -102,7 +100,7 @@ void MP4RtpHintTrack::InitRtpStart()
     if (m_pSnroProperty) {
         m_rtpSequenceStart = m_pSnroProperty->GetValue();
     } else {
-        m_rtpSequenceStart = random();
+        m_rtpSequenceStart = number::random32();
     }
 
     (void)m_pTrakAtom->FindProperty(
@@ -112,7 +110,7 @@ void MP4RtpHintTrack::InitRtpStart()
     if (m_pTsroProperty) {
         m_rtpTimestampStart = m_pTsroProperty->GetValue();
     } else {
-        m_rtpTimestampStart = random();
+        m_rtpTimestampStart = number::random32();
     }
 }
 
@@ -232,15 +230,15 @@ void MP4RtpHintTrack::ReadPacket(
                 (pPacket->GetMBit() << 7) | pPacket->GetPayload();
 
             *((uint16_t*)pDest) =
-                htons(m_rtpSequenceStart + pPacket->GetSequenceNumber());
+                MP4V2_HTONS(m_rtpSequenceStart + pPacket->GetSequenceNumber());
             pDest += 2;
 
             *((uint32_t*)pDest) =
-                htonl(m_rtpTimestampStart + (uint32_t)m_readHintTimestamp);
+                MP4V2_HTONL(m_rtpTimestampStart + (uint32_t)m_readHintTimestamp);
             pDest += 4;
 
             *((uint32_t*)pDest) =
-                htonl(ssrc);
+                MP4V2_HTONL(ssrc);
             pDest += 4;
         }
 

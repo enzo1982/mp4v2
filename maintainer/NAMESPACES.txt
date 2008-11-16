@@ -21,13 +21,15 @@ pretty much guarantee our impl will never collide with anything.
 The namespace 'mp4v2::platform' is private and used for code which abstracts
 various plaform differences or implements missing features.
 
+The namespace 'mp4v2::unit' is private and used only for unit/ programs.
+
 The namespace 'mp4v2::util' is private and used only for util/ programs.
 
 
-    NAMESPACE                SOURCES or DIR
-    -----------------------------------------------------------
-    ::                       src/mp4.cpp, include/mp4v2/mp4v2.h
-    mp4v2::impl              src/*.cpp
-    mp4v2::platform::posix   src/platform/posix/
-    mp4v2::platform::win32   src/platform/win32/
-    mp4v2::util              util/
+    NAMESPACE         SOURCES or DIR
+    ----------------------------------------------------
+    ::                src/mp4.cpp, include/mp4v2/mp4v2.h
+    mp4v2::impl       src/
+    mp4v2::platform   libplatform/
+    mp4v2::unit       unit/
+    mp4v2::util       util/
