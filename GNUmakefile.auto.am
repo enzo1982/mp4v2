@@ -180,31 +180,29 @@ nobase_nodist_include_HEADERS = include/mp4v2/project.h
 
 ###############################################################################
 
+PROJECT_TEXI_DIST = \
+    AUTHORS \
+    README
+
 EXTRA_DIST = \
-    BUILD                    \
-    BUILD.repo               \
-    README                   \
-    doc/html/api/            \
-    doxygen/Doxyfile.in      \
-    project/project.m4       \
-    project/project.texi.in  \
-    unit/impl.h              \
+    $(PROJECT_TEXI_DIST) \
+    BUILD                \
+    BUILD.repo           \
+    ChangeLog
+
+EXTRA_DIST += \
+    doc/html/api/        \
+    doxygen/Doxyfile.in  \
+    doxygen/mainpage.h   \
+    unit/impl.h          \
     util/impl.h
 
 EXTRA_DIST += \
-    vstudio9.0/include/mp4v2/project.h           \
-    vstudio9.0/libmp4v2/libmp4v2.vcproj          \
-    vstudio9.0/libplatform/libplatform.vcproj    \
-    vstudio9.0/mp4art/mp4art.vcproj              \
-    vstudio9.0/mp4dump/mp4dump.vcproj            \
-    vstudio9.0/mp4extract/mp4extract.vcproj      \
-    vstudio9.0/mp4info/mp4info.vcproj            \
-    vstudio9.0/mp4syncfiles/mp4syncfiles.vcproj  \
-    vstudio9.0/mp4tags/mp4tags.vcproj            \
-    vstudio9.0/mp4trackdump/mp4trackdump.vcproj  \
-    vstudio9.0/mp4v2.sln
+    project/project.m4 \
+    project/project.texi.in
 
 EXTRA_DIST += \
+    project/AUTHORS.texi                             \
     project/BUILD/introduction.texi                  \
     project/BUILD/main.repo.texi                     \
     project/BUILD/main.texi                          \
@@ -226,11 +224,31 @@ EXTRA_DIST += \
     project/BUILD/process.dist.texi                  \
     project/BUILD/process.extract.texi               \
     project/BUILD/process.install.texi               \
+    project/ChangeLog/main.texi                      \
+    project/ChangeLog/version-1.0.texi               \
+    project/ChangeLog/version-0.0.texi               \
     project/README.texi
+
+EXTRA_DIST += \
+    vstudio9.0/include/mp4v2/project.h           \
+    vstudio9.0/libmp4v2/libmp4v2.vcproj          \
+    vstudio9.0/libplatform/libplatform.vcproj    \
+    vstudio9.0/mp4art/mp4art.vcproj              \
+    vstudio9.0/mp4chaps/mp4chaps.vcproj          \
+    vstudio9.0/mp4dump/mp4dump.vcproj            \
+    vstudio9.0/mp4extract/mp4extract.vcproj      \
+    vstudio9.0/mp4info/mp4info.vcproj            \
+    vstudio9.0/mp4syncfiles/mp4syncfiles.vcproj  \
+    vstudio9.0/mp4tags/mp4tags.vcproj            \
+    vstudio9.0/mp4trackdump/mp4trackdump.vcproj  \
+    vstudio9.0/mp4v2.sln
 
 ###############################################################################
 
 distclean-local:
+	rm -f $(top_builddir)/AUTHORS*
 	rm -f $(top_builddir)/BUILD*
+	rm -f $(top_builddir)/ChangeLog*
 	rm -f $(top_builddir)/README*
+	rm -f $(top_builddir)/NEWS*
 	rm -fr $(top_builddir)/doc/

@@ -1,4 +1,4 @@
-\input texinfo @c -*- Texinfo -*-
+@input texinfo @c -*- Texinfo -*-
 @c %**start of header
 @setfilename BUILD.repo.info
 @include project.texi
@@ -6,7 +6,7 @@
 @paragraphindent none
 @c %**end of header
 
-@majorheading @value{PROJECT_name} Build Instructions - Repository
+@majorheading @value{PROJECT_name_formal} Build Instructions - Repository
 @contents
 
 @chapter Overview

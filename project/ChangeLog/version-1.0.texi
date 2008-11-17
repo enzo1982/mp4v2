@@ -1,0 +1,19 @@
+@heading Version @value{PROJECT_version}
+@enumerate
+@item
+Renamed public API top-level header to @code{<mp4v2/mp4v2.h>}.
+Added namespaces for implementation (private) symbols.
+Only public API symbols are exported for DLL or shared libraries,
+all other symbols are now private.
+
+@item
+Added initial AC3 support.
+
+@item
+Added QuickTime and Nero chapter support.
+@* Contributed by Ullrich Pollähne <u.pollaehne@@gmail.com>.
+
+@item
+Added native Windows port.
+The port targets @code{WINVER 0x0500} which is Windows 2000 or higher.
+@end enumerate

@@ -48,28 +48,27 @@ am__vpath_adj = case $$p in \
 
 ###############################################################################
 
+PROJECT_TEXI_DIST.out = $(PROJECT_TEXI_DIST:%=$(top_builddir)/%)
+
+$(PROJECT_TEXI_DIST.out): $(top_builddir)/project/project.texi
+$(PROJECT_TEXI_DIST.out): $(top_builddir)/%: $(top_srcdir)/project/%.texi
+	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<
+
+###############################################################################
+
 $(top_builddir)/BUILD: $(top_builddir)/project/project.texi
 $(top_builddir)/BUILD: $(top_srcdir)/project/BUILD/
 $(top_builddir)/BUILD: $(top_srcdir)/project/BUILD/main.texi
 	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<
-
-$(top_builddir)/BUILD.html: $(top_builddir)/project/project.texi
-$(top_builddir)/BUILD.html: $(top_srcdir)/project/BUILD/
-$(top_builddir)/BUILD.html: $(top_srcdir)/project/BUILD/main.texi
-	makeinfo -I$(top_builddir)/project/ --no-split --no-headers --html -o $@ $<
 
 $(top_builddir)/BUILD.repo: $(top_builddir)/project/project.texi
 $(top_builddir)/BUILD.repo: $(top_srcdir)/project/BUILD/
 $(top_builddir)/BUILD.repo: $(top_srcdir)/project/BUILD/main.repo.texi
 	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<
 
-$(top_builddir)/BUILD.repo.html: $(top_builddir)/project/project.texi
-$(top_builddir)/BUILD.repo.html: $(top_srcdir)/project/BUILD/
-$(top_builddir)/BUILD.repo.html: $(top_srcdir)/project/BUILD/main.repo.texi
-	makeinfo -I$(top_builddir)/project/ --no-split --no-headers --html -o $@ $<
-
-$(top_builddir)/README: $(top_builddir)/project/project.texi
-$(top_builddir)/README: $(top_srcdir)/project/README.texi
+$(top_builddir)/ChangeLog: $(top_builddir)/project/project.texi
+$(top_builddir)/ChangeLog: $(top_srcdir)/project/ChangeLog/
+$(top_builddir)/ChangeLog: $(top_srcdir)/project/ChangeLog/main.texi
 	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<
 
 ###############################################################################
