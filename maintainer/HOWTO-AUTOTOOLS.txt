@@ -11,7 +11,7 @@ building from the repository.
 
 The maintainer is responsible for generating files associated with
 autotools. These files in turn are distributed with dist-bundles, but
-never should be added or checked-in to the repository.
+never should be added/checked-in to the repository.
 
 Whenever any information for which autotools may depend on is changed,
 then you must issue the following command which will force generation
@@ -25,12 +25,11 @@ at build-time that it makes no sense to hope-and-pray that BSD flavors
 of make will work. As such, the files are renamed to be those which are
 only recognized by GNU make. This helps avoid confusion when people run
 the wrong make flavor -- it's better to see Makefile not found, rather
-than 100 obscure make incompatibility-errors. So we have GNUmakefile.in
-which is our source for some very local customizations. This file will
-rarely need to be edited. We also have GNUmakefile.auto.am which is our
-name for the old Makefile.am . Post configure, we end up with
-GNUmakefile which includes GNUmakefile.auto .
+than 100 obscure make incompatibility-errors. So we have GNUmakefile.am
+which is just like the old Makefile.am only better.
+
+Post configure, we end up with GNUmakefile in your build directory.
 
 Care has been taken to avoid subdir makefiles. And while they may
 eventually become part of this project, it's nice to avoid them when
-possible.
+when possible.

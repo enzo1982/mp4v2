@@ -172,11 +172,12 @@ endif
 
 ###############################################################################
 
-nobase_include_HEADERS = \
-    include/mp4v2/mp4v2.h \
-    include/mp4v2/platform.h
+mp4v2incdir = $(pkgincludedir)
 
-nobase_nodist_include_HEADERS = include/mp4v2/project.h
+mp4v2inc_HEADERS = \
+    include/mp4v2/mp4v2.h     \
+    include/mp4v2/platform.h  \
+    include/mp4v2/project.h
 
 ###############################################################################
 
@@ -252,3 +253,54 @@ distclean-local:
 	rm -f $(top_builddir)/README*
 	rm -f $(top_builddir)/NEWS*
 	rm -fr $(top_builddir)/doc/
+
+###############################################################################
+
+AM_CPPFLAGS = $(strip $(MK_CXX_ARCH) $(X_CXX_ARCH) $(MK_CXX_I) $(X_CXX_I))
+
+AM_LDFLAGS = $(strip $(MK_CXX_ARCH) $(X_CXX_ARCH))
+
+AM_CXXFLAGS = $(strip $(MK_CXX_W) $(X_CXX_W))
+
+LIBS := $(LIBS) $(X_MINGW_LIBS)
+
+###############################################################################
+
+MK_CXX_ARCH =
+MK_CXX_W    = -Wall
+MK_CXX_D    =
+
+MK_CXX_I = \
+    -I$(top_builddir)/include -I$(top_srcdir)/include \
+    -I$(top_builddir) -I$(top_srcdir)
+
+###############################################################################
+
+PROJECT_TEXI_DIST.out = $(PROJECT_TEXI_DIST:%=$(top_builddir)/%)
+
+$(PROJECT_TEXI_DIST.out): $(top_builddir)/project/project.texi
+$(PROJECT_TEXI_DIST.out): $(top_builddir)/%: $(top_srcdir)/project/%.texi
+	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<
+
+###############################################################################
+
+$(top_builddir)/BUILD: $(top_builddir)/project/project.texi
+$(top_builddir)/BUILD: $(top_srcdir)/project/BUILD/
+$(top_builddir)/BUILD: $(top_srcdir)/project/BUILD/main.texi
+	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<
+
+$(top_builddir)/BUILD.repo: $(top_builddir)/project/project.texi
+$(top_builddir)/BUILD.repo: $(top_srcdir)/project/BUILD/
+$(top_builddir)/BUILD.repo: $(top_srcdir)/project/BUILD/main.repo.texi
+	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<
+
+$(top_builddir)/ChangeLog: $(top_builddir)/project/project.texi
+$(top_builddir)/ChangeLog: $(top_srcdir)/project/ChangeLog/
+$(top_builddir)/ChangeLog: $(top_srcdir)/project/ChangeLog/main.texi
+	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<
+
+###############################################################################
+
+$(top_builddir)/doc/html/api:
+	$(MKDIR_P) $@
+	doxygen $(top_builddir)/doxygen/Doxyfile

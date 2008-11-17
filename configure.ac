@@ -37,7 +37,7 @@ AC_MSG_NOTICE([
   -->])
 
 AC_CONFIG_AUX_DIR([autoaux])
-AM_INIT_AUTOMAKE([1.10 foreign -Wall -Werror subdir-objects nostdinc no-dependencies no-dist-gzip dist-bzip2 dist-zip])
+AM_INIT_AUTOMAKE([1.10 foreign -Wall -Wno-portability -Werror subdir-objects nostdinc no-dependencies no-dist-gzip dist-bzip2 dist-zip])
 
 AC_CONFIG_SRCDIR([src/mp4.cpp])
 
@@ -321,7 +321,7 @@ AC_SUBST([X_MINGW_LIBS])
 
 AC_CONFIG_HEADERS([libplatform/config.h])
 
-AC_CONFIG_FILES([GNUmakefile GNUmakefile.auto])
+AC_CONFIG_FILES([GNUmakefile])
 AC_CONFIG_FILES([include/mp4v2/project.h])
 AC_CONFIG_FILES([project/project.texi])
 AC_CONFIG_FILES([doxygen/Doxyfile])
