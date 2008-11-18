@@ -344,12 +344,12 @@ typedef struct MP4Chapter_s {
 /** Known chapter types.
  *  @ingroup mp4_chapter
  */
-enum MP4ChapterType {
+typedef enum {
     MP4ChapterTypeNone = 0, /**< no chapters found return value */
     MP4ChapterTypeAny  = 1, /**< any or all known chapter types */
     MP4ChapterTypeQt   = 2, /**< QuickTime chapter type */
     MP4ChapterTypeNero = 4  /**< Nero chapter type */
-};
+} MP4ChapterType;
 
 /*
  * MP4 API declarations
