@@ -17,8 +17,7 @@
 //  All Rights Reserved.
 //
 //  Contributors:
-//      Dave Mackie, dmackie@cisco.com
-//      Kona Blend,  kona8lend@@gmail.com
+//      Kona Blend, kona8lend@@gmail.com
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -31,11 +30,16 @@ namespace mp4v2 { namespace util {
 extern "C"
 int main( int argc, char** argv )
 {
-    const char* const progname = "mp4dump";
-    const char* const usage = "[OPTION]... file";
+    const char* const progname = "mp4optimize";
+    const char* const usage = "[OPTION]... file [newfile]";
     const char* const help =
-          "The content of an mp4 is parsed and the control structure details"
-        "\nare sent to stdout in a human-readable text format."
+          "The file structure of an mp4 file is optimized by moving control"
+        "\ninformation to the beginning of the file and interleaving track"
+        "\nsamples, eliminating excess seeks during playback. Additionally,"
+        "\nfree blocks and unreferenced data chunks are eliminated."
+        "\n"
+        "\nSpecify newfile to create a new file, otherwise the original file"
+        "\nwill be overwritten."
         "\n"
         "\n  -v, --verbose=LEVEL  add diagnostic information to output"
         "\n      --help           output this help and exit"
@@ -53,8 +57,7 @@ int main( int argc, char** argv )
         { 0, prog::Option::NO_ARG, 0, 0 }
     };
 
-    uint32_t in_verbosity = MP4_DETAILS_ERROR;
-    bool     in_implicits = false;
+    uint32_t verbosity = MP4_DETAILS_ERROR;
 
     for ( ;; ) {
         const int c = prog::getOption( argc, argv, "v", long_options, NULL );
@@ -66,31 +69,25 @@ int main( int argc, char** argv )
                 if( prog::optarg ) {
                     switch ( std::strtoul( prog::optarg, NULL, 0 )) {
                         case 0:
-                            in_verbosity = 0;
-                            in_implicits = false;
+                            verbosity = 0;
                             break;
                         case 1:
-                            in_verbosity = MP4_DETAILS_ERROR;
-                            in_implicits = false;
+                            verbosity = MP4_DETAILS_ERROR;
                             break;
                         case 2:
-                            in_verbosity = MP4_DETAILS_TABLE;
-                            in_implicits = false;
+                            verbosity = MP4_DETAILS_TABLE;
                             break;
                         case 3:
-                            in_verbosity = MP4_DETAILS_TABLE;
-                            in_implicits = true;
+                            verbosity = MP4_DETAILS_TABLE;
                             break;
                         case 4:
                         default:
-                            in_verbosity = MP4_DETAILS_ALL;
-                            in_implicits = true;
+                            verbosity = MP4_DETAILS_ALL;
                             break;
                     }
                 }
                 else {
-                    in_verbosity = MP4_DETAILS_TABLE;
-                    in_implicits = false;
+                    verbosity = MP4_DETAILS_TABLE;
                 }
                 break;
 
@@ -108,23 +105,22 @@ int main( int argc, char** argv )
         }
     }
 
-    // expect exactly 1 remaining argument
-    if( (argc - prog::optind) != 1 ) {
+    // expect 1 or 2 remaining arguments
+    const int nremain = argc - prog::optind;
+    if( nremain < 1 || nremain > 2 ) {
         fprintf( stderr, "Usage: %s %s\n", progname, usage );
         return 1;
     }
 
-    const char* const in_name = argv[prog::optind];
+    const char* const in_name = argv[prog::optind++];
+    const char* const out_name = nremain == 1 ? NULL : argv[prog::optind++];
 
-    MP4FileHandle in = MP4Read( in_name, in_verbosity );
-    if( in == MP4_INVALID_FILE_HANDLE ) {
-        fprintf( stderr, "MP4Read failed: %s\n", sys::getLastErrorStr() );
+    const bool result = MP4Optimize( in_name, out_name, verbosity );
+    if( !result ) {
+        fprintf( stderr, "MP4Optimize failed: %s\n", sys::getLastErrorStr() );
         return 1;
     }
 
-    MP4Dump( in, stdout, in_implicits );
-
-    MP4Close( in );
     return 0;
 }
 

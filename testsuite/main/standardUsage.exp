@@ -1,2 +1,3 @@
 ::command::test_standardUsage test_create
-::command::test_standardUsage test_dump
+::command::test_standardUsage mp4dump
+::command::test_standardUsage mp4optimize

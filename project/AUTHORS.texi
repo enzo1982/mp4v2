@@ -16,7 +16,7 @@ docs, and other files where appropriate.
 @example
 Edward Groenendaal          egroenen@@cisco.com
 Jonathon Rubin              jb.rubin@@gmail.com
-Kona Blend                  Kona8lend@@gmail.com
+Kona Blend                  kona8lend@@gmail.com
 @end example
 
 @heading Original Authors from mpeg4ip/libmp4v2
