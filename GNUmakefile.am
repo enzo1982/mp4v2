@@ -1,10 +1,14 @@
-lib_LTLIBRARIES = libmp4v2.la
-
 noinst_LTLIBRARIES = libplatform.la
+
+lib_LTLIBRARIES = libmp4v2.la
 
 bin_PROGRAMS =
 
+check_PROGRAMS =
+
 ###############################################################################
+
+libmp4v2_la_LIBADD = libplatform.la
 
 libmp4v2_la_SOURCES = \
     src/3gp.cpp                          \
@@ -138,37 +142,43 @@ endif
 
 ###############################################################################
 
-libmp4v2_la_LIBADD = libplatform.la
-
 if ADD_UTIL
     bin_PROGRAMS += mp4art mp4chaps mp4dump mp4extract mp4info mp4syncfiles mp4tags mp4trackdump
-
-    mp4art_SOURCES       = util/mp4art.cpp
-    mp4chaps_SOURCES     = util/mp4chaps.cpp
-    mp4dump_SOURCES      = util/mp4dump.cpp
-    mp4extract_SOURCES   = util/mp4extract.cpp
-    mp4info_SOURCES      = util/mp4info.cpp
-    mp4syncfiles_SOURCES = util/mp4syncfiles.cpp
-    mp4tags_SOURCES      = util/mp4tags.cpp
-    mp4trackdump_SOURCES = util/mp4trackdump.cpp
-
-    mp4art_LDADD       = libmp4v2.la libplatform.la $(X_LDFLAGS)
-    mp4chaps_LDADD     = libmp4v2.la libplatform.la $(X_LDFLAGS)
-    mp4dump_LDADD      = libmp4v2.la libplatform.la $(X_LDFLAGS)
-    mp4extract_LDADD   = libmp4v2.la libplatform.la $(X_LDFLAGS)
-    mp4info_LDADD      = libmp4v2.la libplatform.la $(X_LDFLAGS)
-    mp4syncfiles_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
-    mp4tags_LDADD      = libmp4v2.la libplatform.la $(X_LDFLAGS)
-    mp4trackdump_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
-
-    bin_PROGRAMS += unitcreate unitdump
-
-    unitcreate_SOURCES = unit/unitcreate.cpp
-    unitdump_SOURCES   = unit/unitdump.cpp
-
-    unitcreate_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
-    unitdump_LDADD   = libmp4v2.la libplatform.la $(X_LDFLAGS)
 endif
+
+mp4art_SOURCES       = util/mp4art.cpp
+mp4chaps_SOURCES     = util/mp4chaps.cpp
+mp4dump_SOURCES      = util/mp4dump.cpp
+mp4extract_SOURCES   = util/mp4extract.cpp
+mp4info_SOURCES      = util/mp4info.cpp
+mp4syncfiles_SOURCES = util/mp4syncfiles.cpp
+mp4tags_SOURCES      = util/mp4tags.cpp
+mp4trackdump_SOURCES = util/mp4trackdump.cpp
+
+mp4art_LDADD       = libmp4v2.la libplatform.la $(X_LDFLAGS)
+mp4chaps_LDADD     = libmp4v2.la libplatform.la $(X_LDFLAGS)
+mp4dump_LDADD      = libmp4v2.la libplatform.la $(X_LDFLAGS)
+mp4extract_LDADD   = libmp4v2.la libplatform.la $(X_LDFLAGS)
+mp4info_LDADD      = libmp4v2.la libplatform.la $(X_LDFLAGS)
+mp4syncfiles_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
+mp4tags_LDADD      = libmp4v2.la libplatform.la $(X_LDFLAGS)
+mp4trackdump_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
+
+###############################################################################
+
+check_PROGRAMS += test_create test_dump
+
+test_create_SOURCES = test/create.cpp
+test_create_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
+
+test_dump_SOURCES = test/dump.cpp
+test_dump_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
+
+DEJATOOL = main
+
+TESTLOGDIR = $(builddir)/testlog
+
+override RUNTESTDEFAULTFLAGS = --tool $$tool --srcdir $$srcdir/testsuite --outdir $(TESTLOGDIR)
 
 ###############################################################################
 
@@ -195,7 +205,7 @@ EXTRA_DIST += \
     doc/html/api/        \
     doxygen/Doxyfile.in  \
     doxygen/mainpage.h   \
-    unit/impl.h          \
+    test/impl.h          \
     util/impl.h
 
 EXTRA_DIST += \
@@ -304,3 +314,13 @@ $(top_builddir)/ChangeLog: $(top_srcdir)/project/ChangeLog/main.texi
 $(top_builddir)/doc/html/api:
 	$(MKDIR_P) $@
 	doxygen $(top_builddir)/doxygen/Doxyfile
+
+###############################################################################
+
+##
+## workaround: DejaGNU adds a hard-coded dependency on Makefile
+## and need to create logdir
+##
+Makefile: ${Makefile}
+	touch $@
+	$(MKDIR_P) $(TESTLOGDIR)

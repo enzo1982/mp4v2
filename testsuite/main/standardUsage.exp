@@ -1,0 +1,2 @@
+::command::test_standardUsage test_create
+::command::test_standardUsage test_dump

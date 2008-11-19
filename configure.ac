@@ -37,7 +37,7 @@ AC_MSG_NOTICE([
   -->])
 
 AC_CONFIG_AUX_DIR([autoaux])
-AM_INIT_AUTOMAKE([1.10 foreign -Wall -Wno-portability -Werror subdir-objects nostdinc no-dependencies no-dist-gzip dist-bzip2 dist-zip])
+AM_INIT_AUTOMAKE([1.10 foreign -Wall -Wno-portability -Werror subdir-objects nostdinc no-dependencies no-dist-gzip dist-bzip2 dist-zip dejagnu])
 
 AC_CONFIG_SRCDIR([src/mp4.cpp])
 
@@ -60,6 +60,8 @@ AC_ARG_ENABLE([fvisibility],
     [AS_HELP_STRING([--disable-fvisibility],[disable use of -fvisibility])])
 AC_ARG_ENABLE([largefile],
     [AS_HELP_STRING([--disable-largefile],[disable LFS (large file support)])])
+AC_ARG_ENABLE([util],
+    [AS_HELP_STRING([--disable-util],[disable build of command-line utilities])])
 AC_ARG_ENABLE([bi],
     [AS_HELP_STRING([--enable-bi=ARCH],[enable -mARCH for bi-arch compilation])])
 AC_ARG_ENABLE([ub],
@@ -303,7 +305,7 @@ fi
 AM_CONDITIONAL([ADD_PLATFORM_POSIX],[test "$X_PLATFORM" = "posix"])
 AM_CONDITIONAL([ADD_PLATFORM_WIN32],[test "$X_PLATFORM" = "win32"])
 
-AM_CONDITIONAL([ADD_UTIL],[true])
+AM_CONDITIONAL([ADD_UTIL],[test "$enable_util" != "no"])
 
 ###############################################################################
 # declare common substitutions
