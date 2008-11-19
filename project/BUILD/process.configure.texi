@@ -33,6 +33,11 @@ On some 32-bit platforms or configurations it might be desirable to
 build without largefile (LFS) support. By default configure attempts to
 detect formal LFS support and enables it if found.
 
+@item --disable-util
+Do not build/install utilities.
+This is convenience option for users who desire to skip building the
+utilities (eg. command-line executables) which are enabled by default.
+
 @item --enable-bi=ARCH
 On bi-arch capable platforms it is possible to generate 32 or 64 bit code.
 This is supported by adding arguments @samp{-m32} or @samp{-m64},

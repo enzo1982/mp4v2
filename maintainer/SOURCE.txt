@@ -17,7 +17,8 @@ When in doubt, general suggestions are as follows:
       and loops are perfectly acceptable.
     - make liberal use of TODO comments as necessary. Following the
       pattern of marking *who* placed the TODO with a hyphen followed
-      by your initials or shortname.
+      by your initials or shortname. ie: TODO-XY; note this does not
+      imply the person who marked takes responsibility for the task.
     - move pointer 'astericks' and reference 'ampersands' towards type
     - when defining functions place the name of the function directly
       at the begining of the line; this helps with searching for
