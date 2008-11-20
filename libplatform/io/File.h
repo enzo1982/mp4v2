@@ -203,23 +203,13 @@ public:
     //!         The file is created if it does not exist.
     //!         The stream is positioned at the end of the file.
     //!         Subsequent writes to the file will always end up at the then current end of file.
+    //! @param name filename to open. If empty-string filename is taken from
+    //!     object state.
     //!
     //! @return true on failure, false on success.
     //!
     ///////////////////////////////////////////////////////////////////////////
-    bool open( std::string mode );
-
-    ///////////////////////////////////////////////////////////////////////////
-    //!
-    //! Open file with extended options.
-    //!
-    //! @param mode see StdioFile::open( std::string ) for details.
-    //! @param name filename to open.
-    //!
-    //! @return true on failure, false on success.
-    //!
-    ///////////////////////////////////////////////////////////////////////////
-    bool open( std::string mode, std::string name );
+    bool open( std::string mode, std::string name = "" );
 
 public: // virtual implementation
     bool close();

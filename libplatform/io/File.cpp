@@ -85,20 +85,14 @@ StdioFile::getSize( Handle handle_, Size& size_ )
 ///////////////////////////////////////////////////////////////////////////////
 
 bool
-StdioFile::open( string mode_ )
-{
-    close();
-    _handle = std::fopen( _name.c_str(), mode_.c_str() );
-    return _handle != 0;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool
 StdioFile::open( string mode_, string name_ )
 {
-    _name = name_;
-    return open( mode_ );
+    if( !name_.empty() )
+        _name = name_;
+
+    close();
+    _handle = std::fopen( _name.c_str(), mode_.c_str() );
+    return _handle == 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -123,7 +117,7 @@ StdioFile::read( void* buffer_, Size size_, Size& nin_, Size maxChunkSize_ )
         nin_ += psize;
     }
 
-    return true;
+    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -156,7 +150,7 @@ StdioFile::write( const void* buffer_, Size size_, Size& nout_, Size maxChunkSiz
         nout_ += psize;
     }
 
-    return true;
+    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

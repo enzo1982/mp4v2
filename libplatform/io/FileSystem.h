@@ -15,6 +15,9 @@ namespace mp4v2 { namespace platform { namespace io {
 class FileSystem
 {
 public:
+    static string DIR_SEPARATOR;  //!< separator string used in file pathnames
+    static string PATH_SEPARATOR; //!< separator string used in search-paths
+
     ///////////////////////////////////////////////////////////////////////////
     //!
     //! Query file presence.
