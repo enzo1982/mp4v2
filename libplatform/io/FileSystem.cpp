@@ -8,7 +8,6 @@ namespace mp4v2 { namespace platform { namespace io {
 void
 FileSystem::pathnameCleanup( string& name )
 {
-    string::size_type pos;
     string bad;
 
     // fold repeating directory separators
