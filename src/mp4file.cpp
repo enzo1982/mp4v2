@@ -612,8 +612,7 @@ void MP4File::Close()
 const char* MP4File::TempFileName()
 {
     string s;
-    if( io::FileSystem::tempFilename( s, ".", "tmp", ".mp4" ))
-        throw new MP4Error( "can't create temporary file", "TempFileName" );
+    io::FileSystem::pathnameTemp( s, ".", "tmp", ".mp4" );
     return strncpy( m_tempFileName, s.c_str(), sizeof(m_tempFileName) );
 }
 

@@ -18,6 +18,7 @@ If you desire to build with the newer gcc, it is found in the path as
 @code{gcc-4} and @code{g++-4} respectively and you must indicate to
 configure the desired versions. Defining the following variables
 beforing running configure should do the trick:
+
 @example
 setenv CC gcc-4
 setenv CXX gcc-4

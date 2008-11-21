@@ -68,17 +68,102 @@ public:
 
     ///////////////////////////////////////////////////////////////////////////
     //!
-    //! Generate temporary filename.
+    //! Generate temporary pathname.
     //!
-    //! @param name output containing generated filename.
-    //! @param dir relative or absolute directory of filename.
-    //! @param prefix text prepended to base filename.
-    //! @param suffix text appended to base filename.
-    //!
-    //! @return true if directory, false otherwise.
+    //! @param name output containing generated pathname.
+    //! @param dir relative or absolute directory of pathname.
+    //! @param prefix text prepended to base pathname.
+    //! @param suffix text appended to base pathname.
     //!
     ///////////////////////////////////////////////////////////////////////////
-    static bool tempFilename( std::string& name, string dir = ".", string prefix = "tmp", string suffix = "" );
+    static void pathnameTemp( string& name, string dir = ".", string prefix = "tmp", string suffix = "" );
+
+    ///////////////////////////////////////////////////////////////////////////
+    //!
+    //! Cleanup pathname.
+    //!
+    //! Redundant (repeating) directory-separators are folded into a single
+    //! directory-separator.
+    //!
+    //! Redundant /./ are folded into a single directory-separator.
+    //!
+    //! @param name pathname to modify.
+    //!
+    ///////////////////////////////////////////////////////////////////////////
+    static void pathnameCleanup( string& name );
+
+#if 0
+TODO-KB: implement
+    ///////////////////////////////////////////////////////////////////////////
+    //!
+    //! Remove everything after the last directory component.
+    //!
+    //! A pathname cleanup is always performed. See pathnameCleanup().
+    //! If no directory component is present then "." is assumed.
+    //!
+    //! @param name pathname to modify.
+    //! @param trailing when true all results are suffixed with exactly one
+    //!     directory-separator, otherwise the result is guaranteed to not
+    //!     end in a directory-separator.
+    //!
+    ///////////////////////////////////////////////////////////////////////////
+    static void pathnameOnlyDirectory( string& name, bool trailing = true );
+
+    ///////////////////////////////////////////////////////////////////////////
+    //!
+    //! Remove everything except the file component of pathname.
+    //!
+    //! A pathname cleanup is always performed. See pathnameCleanup().
+    //! If no file component exists then an empty-string is output.
+    //! A file component may include an extension.
+    //!
+    //! @param name pathname to modify.
+    //!
+    ///////////////////////////////////////////////////////////////////////////
+    static void pathnameOnlyFile( string& name );
+
+    ///////////////////////////////////////////////////////////////////////////
+    //!
+    //! Remove everything except file basename.
+    //!
+    //! A pathname cleanup is always performed. See pathnameCleanup().
+    //! A basename is considered to be everything before the last '.'
+    //! in the file component of a pathname.
+    //! If no file extension exists then an empty-string is output.
+    //!
+    //! @param name pathname to modify.
+    //!
+    ///////////////////////////////////////////////////////////////////////////
+    static void pathnameOnlyBasename( string& name );
+#endif
+
+    ///////////////////////////////////////////////////////////////////////////
+    //!
+    //! Remove everything except file extension.
+    //!
+    //! A pathname cleanup is always performed. See pathnameCleanup().
+    //! A file extension is considered to everything <b>after</b>
+    //! the last '.' in the file component of a pathname.
+    //! If no file extension exists then an empty-string is output.
+    //!
+    //! @param name pathname to modify.
+    //!
+    ///////////////////////////////////////////////////////////////////////////
+    static void pathnameOnlyExtension( string& name );
+
+    ///////////////////////////////////////////////////////////////////////////
+    //!
+    //! Remove file extension from pathname.
+    //!
+    //! A pathname cleanup is always performed. See pathnameCleanup().
+    //! A file extension is considered to everything <b>after</b>
+    //! the last '.' in the file component of a pathname.
+    //! The last '.' is also removed.
+    //!
+    //! @param name pathname to modify.
+    //!
+    ///////////////////////////////////////////////////////////////////////////
+    static void pathnameStripExtension( string& name );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

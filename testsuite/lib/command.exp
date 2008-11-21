@@ -138,11 +138,18 @@ proc ::command::test_standardUsage { args } {
     set rv [exec 1 $exe]
     matchListLine {^Usage: \S+} [lindex $rv 1] 0
 
+    # -h
+    set rv [exec 0 $exe -h]
+    matchListLine {^Usage: \S+}   [lindex $rv 1] 0
+    matchListAny  {\s+--help}    [lindex $rv 1]
+    matchListAny  {\s+--version} [lindex $rv 1]
+
     # --help
     set rv [exec 0 $exe --help]
     matchListLine {^Usage: \S+}   [lindex $rv 1] 0
-    matchListAny  {^\s+--help}    [lindex $rv 1]
-    matchListAny  {^\s+--version} [lindex $rv 1]
+    matchListAny  {\s+--help}    [lindex $rv 1]
+    matchListAny  {\s+--version} [lindex $rv 1]
+    matchListAny  {^VERBOSITY LEVELS} [lindex $rv 1]
 
     # --version
     set rv [exec 0 $exe --version]

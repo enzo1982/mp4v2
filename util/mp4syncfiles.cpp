@@ -49,7 +49,7 @@ static void sync_duration( char *toFileName, MP4FileHandle durfile )
     uint32_t numTracks;
 
     string newname;
-    io::FileSystem::tempFilename( newname );
+    io::FileSystem::pathnameTemp( newname );
 
     fromfile = MP4Modify( toFileName );
     if ( fromfile == MP4_INVALID_FILE_HANDLE ) {

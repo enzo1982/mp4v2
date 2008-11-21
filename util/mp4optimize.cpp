@@ -10,10 +10,10 @@
 //  License for the specific language governing rights and limitations
 //  under the License.
 // 
-//  The Original Code is MPEG4IP.
+//  The Original Code is MP4v2.
 // 
-//  The Initial Developer of the Original Code is Cisco Systems Inc.
-//  Portions created by Cisco Systems Inc. are Copyright (C) 2001.
+//  The Initial Developer of the Original Code is Kona Blend.
+//  Portions created by Kona Blend are Copyright (C) 2008.
 //  All Rights Reserved.
 //
 //  Contributors:
@@ -27,101 +27,141 @@ namespace mp4v2 { namespace util {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-extern "C"
-int main( int argc, char** argv )
+class OptimizeUtility : public Utility
 {
-    const char* const progname = "mp4optimize";
-    const char* const usage = "[OPTION]... file [newfile]";
-    const char* const help =
-          "The file structure of an mp4 file is optimized by moving control"
-        "\ninformation to the beginning of the file and interleaving track"
-        "\nsamples, eliminating excess seeks during playback. Additionally,"
-        "\nfree blocks and unreferenced data chunks are eliminated."
-        "\n"
-        "\nSpecify newfile to create a new file, otherwise the original file"
-        "\nwill be overwritten."
-        "\n"
-        "\n  -v, --verbose=LEVEL  add diagnostic information to output"
-        "\n      --help           output this help and exit"
-        "\n      --version        output version information and exit";
+public:
+    OptimizeUtility( int, char** );
 
+protected:
+    // delegates implementation
+    bool utility_process();
+    bool utility_job( JobContext& );
+
+private:
     enum PseudoLong {
-        PL_HELP = 0x00010000,
+        PL_UNDEFINED = 0xf000000, // serves as safe starting value
+        PL_VERBOSE,
+        PL_HELP,
         PL_VERSION,
     };
+};
 
-    const prog::Option long_options[] = {
-        { "verbose", prog::Option::REQUIRED_ARG, 0, 'v' },
-        { "help",    prog::Option::NO_ARG,       0, PL_HELP },
-        { "version", prog::Option::NO_ARG,       0, PL_VERSION },
+///////////////////////////////////////////////////////////////////////////////
+
+OptimizeUtility::OptimizeUtility( int argc, char** argv )
+    : Utility( "mp4optimize", argc, argv )
+{
+    _usage = "[OPTION]... file...";
+    _help =
+        // 79-cols, inclusive, max desired width
+        // |----------------------------------------------------------------------------|
+        "\n"
+        "\nFor each mp4 file specified, optimize the file structure by moving control"
+        "\ninformation to the beginning of the file and interleaving track samples,"
+        "\neliminating excess seeks during playback. Additionally free blocks and"
+        "\nunreferenced data chunks are eliminated, reducing file size."
+        "\n"
+        "\nOPTIONS"
+//      "\n  -y, --dryrun       do not actually create or modify any files"
+        "\n  -k, --keepgoing    continue batch processing even after errors"
+        "\n  -q, --quiet        equivalent to --verbose 0"
+        "\n  -v, --verbose NUM  increase verbosity or long-option to set level NUM"
+        "\n  -h, --help         print help or long-option for extended help"
+        "\n      --version      output version information and exit";
+
+    const prog::Option options[] = {
+        { "dryrun",    prog::Option::NO_ARG,       0, 'y' },
+        { "keepgoing", prog::Option::NO_ARG,       0, 'k' },
+        { "quiet",     prog::Option::NO_ARG,       0, 'q' },
+        { "verbose",   prog::Option::REQUIRED_ARG, 0, PL_VERBOSE },
+
+        { "help",      prog::Option::NO_ARG,       0, PL_HELP },
+        { "version",   prog::Option::NO_ARG,       0, PL_VERSION },
+
         { 0, prog::Option::NO_ARG, 0, 0 }
     };
+    _options = options;
+}
 
-    uint32_t verbosity = MP4_DETAILS_ERROR;
+///////////////////////////////////////////////////////////////////////////////
 
+bool
+OptimizeUtility::utility_job( JobContext& job )
+{
+    verbose1f( "optimizing %s\n", job.file.c_str() );
+    if( !MP4Optimize( job.file.c_str(), NULL ))
+        return herrf( "optimize failed: %s\n", job.file.c_str() );
+
+    return SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+OptimizeUtility::utility_process()
+{
     for ( ;; ) {
-        const int c = prog::getOption( argc, argv, "v", long_options, NULL );
+        const int c = prog::getOption( _argc, _argv, "ykqvh", _options, NULL );
         if( c == -1 )
             break;
 
         switch ( c ) {
-            case 'v':
-                if( prog::optarg ) {
-                    switch ( std::strtoul( prog::optarg, NULL, 0 )) {
-                        case 0:
-                            verbosity = 0;
-                            break;
-                        case 1:
-                            verbosity = MP4_DETAILS_ERROR;
-                            break;
-                        case 2:
-                            verbosity = MP4_DETAILS_TABLE;
-                            break;
-                        case 3:
-                            verbosity = MP4_DETAILS_TABLE;
-                            break;
-                        case 4:
-                        default:
-                            verbosity = MP4_DETAILS_ALL;
-                            break;
-                    }
-                }
-                else {
-                    verbosity = MP4_DETAILS_TABLE;
-                }
+            case 'y':
+                _dryrun = true;
                 break;
 
+            case 'k':
+                _keepgoing = true;
+                break;
+
+            case 'q':
+                _verbosity = 0;
+                break;
+
+            case 'v':
+                _verbosity++;
+                break;
+
+            case 'h':
+                printHelp( false );
+                return SUCCESS;
+
+            case PL_VERBOSE:
+            {
+                const uint32_t level = std::strtoul( prog::optarg, NULL, 0 );
+                _verbosity = ( level < 4 ) ? level : 3;
+                break;
+            }
+
             case PL_HELP:
-                fprintf( stdout, "Usage: %s %s\n\n%s\n", progname, usage, help );
-                return 0;
+                printHelp( true );
+                return SUCCESS;
 
             case PL_VERSION:
-                fprintf( stdout, "%s - %s\n", progname, MP4V2_PROJECT_name_formal );
-                return 0;
+                printVersion();
+                return SUCCESS;
 
             default:
-                fprintf( stderr, "Usage: %s %s\n", progname, usage );
-                return 1;
+                printUsage( true );
+                return FAILURE;
         }
     }
 
-    // expect 1 or 2 remaining arguments
-    const int nremain = argc - prog::optind;
-    if( nremain < 1 || nremain > 2 ) {
-        fprintf( stderr, "Usage: %s %s\n", progname, usage );
-        return 1;
+    if( !(prog::optind < _argc) ) {
+        printUsage( true );
+        return FAILURE;
     }
 
-    const char* const in_name = argv[prog::optind++];
-    const char* const out_name = nremain == 1 ? NULL : argv[prog::optind++];
+    return batch( prog::optind );
+}
 
-    const bool result = MP4Optimize( in_name, out_name, verbosity );
-    if( !result ) {
-        fprintf( stderr, "MP4Optimize failed: %s\n", sys::getLastErrorStr() );
-        return 1;
-    }
+///////////////////////////////////////////////////////////////////////////////
 
-    return 0;
+extern "C"
+int main( int argc, char** argv )
+{
+    OptimizeUtility util( argc, argv );
+    return util.process();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

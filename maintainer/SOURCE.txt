@@ -20,9 +20,6 @@ When in doubt, general suggestions are as follows:
       by your initials or shortname. ie: TODO-XY; note this does not
       imply the person who marked takes responsibility for the task.
     - move pointer 'astericks' and reference 'ampersands' towards type
-    - when defining functions place the name of the function directly
-      at the begining of the line; this helps with searching for
-      function definitions.
 
 
 EXAMPLE IF/ELSE

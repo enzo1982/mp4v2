@@ -1,4 +1,4 @@
-noinst_LTLIBRARIES = libplatform.la
+noinst_LTLIBRARIES = libplatform.la libutil.la
 
 lib_LTLIBRARIES = libmp4v2.la
 
@@ -140,6 +140,10 @@ if ADD_PLATFORM_WIN32
         libplatform/time/time_win32.cpp
 endif
 
+libutil_la_SOURCES = \
+    util/Utility.h   \
+    util/Utility.cpp
+
 ###############################################################################
 
 if ADD_UTIL
@@ -164,22 +168,24 @@ mp4syncfiles_SOURCES = util/mp4syncfiles.cpp
 mp4tags_SOURCES      = util/mp4tags.cpp
 mp4trackdump_SOURCES = util/mp4trackdump.cpp
 
-mp4art_LDADD       = libmp4v2.la libplatform.la $(X_LDFLAGS)
+UTILITY_LDADD = libmp4v2.la libutil.la libplatform.la $(X_LDFLAGS)
+
+mp4art_LDADD       = $(UTILITY_LDADD)
 mp4chaps_LDADD     = libmp4v2.la libplatform.la $(X_LDFLAGS)
-mp4dump_LDADD      = libmp4v2.la libplatform.la $(X_LDFLAGS)
+mp4dump_LDADD      = $(UTILITY_LDADD)
 mp4extract_LDADD   = libmp4v2.la libplatform.la $(X_LDFLAGS)
 mp4info_LDADD      = libmp4v2.la libplatform.la $(X_LDFLAGS)
-mp4optimize_LDADD  = libmp4v2.la libplatform.la $(X_LDFLAGS)
+mp4optimize_LDADD  = $(UTILITY_LDADD)
 mp4syncfiles_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
 mp4tags_LDADD      = libmp4v2.la libplatform.la $(X_LDFLAGS)
 mp4trackdump_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
 
 ###############################################################################
 
-check_PROGRAMS += test_create
-
-test_create_SOURCES = test/create.cpp
-test_create_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
+#check_PROGRAMS += test_create
+#
+#test_create_SOURCES = test/create.cpp
+#test_create_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
 
 DEJATOOL = main
 
@@ -212,7 +218,6 @@ EXTRA_DIST += \
     doc/html/api/        \
     doxygen/Doxyfile.in  \
     doxygen/mainpage.h   \
-    test/impl.h          \
     util/impl.h
 
 EXTRA_DIST += \
@@ -270,6 +275,9 @@ distclean-local:
 	rm -f $(top_builddir)/README*
 	rm -f $(top_builddir)/NEWS*
 	rm -fr $(top_builddir)/doc/
+	rm -f $(top_builddir)/Makefile
+	rm -f $(top_builddir)/testlog/*.log
+	rm -f $(top_builddir)/testlog/*.sum
 
 ###############################################################################
 
@@ -284,7 +292,7 @@ LIBS := $(LIBS) $(X_MINGW_LIBS)
 ###############################################################################
 
 MK_CXX_ARCH =
-MK_CXX_W    = -Wall
+MK_CXX_W    = -Wall -Wformat
 MK_CXX_D    =
 
 MK_CXX_I = \

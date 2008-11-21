@@ -4471,6 +4471,7 @@ extern "C" {
         }
         return false;
     }
+
     bool MP4SetMetadataAlbumArtist (MP4FileHandle hFile,
                                     const char* value)
     {
