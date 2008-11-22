@@ -1,7 +1,8 @@
 The following command will create a @value{PROJECT_name} source distribution.
+It is during this step that most documentation is generated.
 
 @example
-make dist
+@COMMAND.dist{}
 @end example
 
 This step in the build process introduces some significant requirements

@@ -1,15 +1,13 @@
-Configure the project to build.
+The following command configures the project for a build.
 It is highly recommended that you invoke configure from an empty directory.
 
 @example
-rm -fr build/
-mkdir build/
-cd build/
-../configure
+@COMMAND.configure{}
 @end example
 
 Please see @file{INSTALL} for details on configure usage, and standard
-options. Additionally, the following options are available:
+options. Additionally, the following options are have been added
+to @file{configure} for use when building @value{PROJECT_name}:
 
 @table @samp
 

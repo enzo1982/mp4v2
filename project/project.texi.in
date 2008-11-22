@@ -3,6 +3,7 @@
 @set PROJECT_name_upper     @PROJECT_name_upper@
 @set PROJECT_name_formal    @PROJECT_name_formal@
 @set PROJECT_website        @PROJECT_website@
+@set PROJECT_download_url   @PROJECT_download_url@
 @set PROJECT_irc            @PROJECT_irc@
 @set PROJECT_version        @PROJECT_version@
 @set PROJECT_version_hex    @PROJECT_version_hex@

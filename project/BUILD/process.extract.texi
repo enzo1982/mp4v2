@@ -1,11 +1,26 @@
-Extract sources from an @value{PROJECT_name} distribution bundle.
-Releases can be found in the downloads section at @value{PROJECT_website}.
+Extract sources from a @value{TERM.srcdist} bundle. Releases are available
+in the downloads section at @value{PROJECT_website} . At the time of this
+writing the direct download page is @value{PROJECT_download_url} .
 
 @example
-tar xf @value{PROJECT_name_lower}-@value{PROJECT_version}.tar.bz2
-cd @value{PROJECT_name_lower}-@value{PROJECT_version}/
+@COMMAND.extract{}
 @end example
 
-Older versions of @code{tar} may not automatically uncompress the file,
+Older versions of @code{tar} may not automatically uncompress the bundle,
 so you might have to either enter additional flags manually, or first
-decompress the bundle before extracting.
+decompress the bundle before extracting. Some possible command variations
+for uncompressing a @file{bz2} file:
+
+@example
+tar xjf @value{PROJECT_name_lower}-@value{PROJECT_version}.tar.bz2
+bunzip2 -c @value{PROJECT_name_lower}-@value{PROJECT_version}.tar.bz2 | tar xf -
+bzcat @value{PROJECT_name_lower}-@value{PROJECT_version}.tar.bz2 | tar xf -
+@end example
+
+And for a @file{gz} file:
+
+@example
+tar xzf @value{PROJECT_name_lower}-@value{PROJECT_version}.tar.gz
+gunzip -c @value{PROJECT_name_lower}-@value{PROJECT_version}.tar.gz | tar xf -
+gzcat @value{PROJECT_name_lower}-@value{PROJECT_version}.tar.gz | tar xf -
+@end example

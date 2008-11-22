@@ -1,5 +1,5 @@
-@section Linux
-Building on Linux is well supported as it is used by maintainers of this project.
+@section @value{OS.linux}
+Building on @value{OS.linux} is well supported as it is used by maintainers of this project.
 The following are the recommended specifications for this platform; but is
 not necessarily the only configuration that is possible:
 

@@ -115,6 +115,7 @@ PROJECT_name_lower="PRJ_name_lower"
 PROJECT_name_upper="PRJ_name_upper"
 PROJECT_name_formal="PRJ_name PRJ_version"
 PROJECT_website="PRJ_website"
+PROJECT_download_url="PRJ_download_url"
 PROJECT_irc="PRJ_irc"
 PROJECT_bugreport="<PRJ_bugreport>"
 
@@ -146,6 +147,7 @@ AC_SUBST([PROJECT_name_lower])
 AC_SUBST([PROJECT_name_upper])
 AC_SUBST([PROJECT_name_formal])
 AC_SUBST([PROJECT_website])
+AC_SUBST([PROJECT_download_url])
 AC_SUBST([PROJECT_irc])
 AC_SUBST([PROJECT_bugreport])
 AC_SUBST([PROJECT_version])

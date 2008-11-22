@@ -23,12 +23,12 @@ repo type:   @value{PROJECT_repo_type}
 and modify MP4 files as defined by ISO-IEC:14496-1:2001 MPEG-4 Systems.
 The MP4 File Format is directly based upon Apple's QuickTime multimedia
 container format, having been used by a variety of platforms and applications.
-It is a very powerful and extensible format which can accomodate practically
+It is a very powerful and extensible format which can accommodate practically
 any type of media.
 
 Once upon a time, @value{PROJECT_name} was bundled with the mpeg4ip library,
 but has been branched into its own discrete library due in part to the
-cessation of mpeg4ip support and also due to the usefullness of making
+cessation of mpeg4ip support and also due to the usefulness of making
 this a stand-alone library. @value{PROJECT_name} was branched from
 mpeg4ip version 1.6.1 .
 

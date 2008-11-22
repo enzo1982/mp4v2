@@ -9,8 +9,7 @@ If you are a project member, then you may add the appropriate login/password
 information as needed.
 
 @example
-svn checkout @value{PROJECT_repo_url} @value{PROJECT_name_lower}
-cd @value{PROJECT_name_lower}
+@COMMAND.checkout{}
 @end example
 
 It is recommended to use Subversion 1.5.0 or higher.

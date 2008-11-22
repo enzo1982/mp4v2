@@ -20,7 +20,7 @@ is not recommended for the novice.
 Building is explained as several distinct phases.
 
 @section Pre-Configuration
-This phase is only required when building directly from the respository.
+This phase is only required when building directly from the repository.
 Typically only project maintainers build from the repository but also
 some ambitious users may want to try the latest sources.
 

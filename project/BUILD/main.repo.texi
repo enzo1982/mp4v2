@@ -2,6 +2,8 @@
 @c %**start of header
 @setfilename BUILD.repo.info
 @include project.texi
+@include glossary.texi
+@include commands.texi
 
 @paragraphindent none
 @c %**end of header
@@ -10,45 +12,49 @@
 @contents
 
 @chapter Overview
-@anchor{overview}
 @include overview.texi
 
 @chapter Introduction
-@anchor{introduction}
-This document describes the official process to build @value{PROJECT_name}
-from the project's Subversion repository.
-This process is a superset of the steps and requirements to build
-from a distribution bundle (dist-bundle).
-If you are interested in building from a dist-bundle then this document
-is not for you.
+This document describes the recommended process to build @value{PROJECT_name}
+from the repository. This process is a @b{superset} of the process to build
+from a @value{TERM.srcdist} bundle.
+If you are interested in building from a @value{TERM.srcdist} bundle then
+this document is not for you.
 
+@chapter Quickstart
+This chapter is for the impatient or those just looking for a quick summary
+of all the commands used in a typical build. You may skip this summary and
+jump to @ref{Build Process}.
+
+@example
+@COMMAND.checkout{}
+@COMMAND.autoreconf{}
+@COMMAND.configure{}
+@COMMAND.build{}
+@COMMAND.install{}
+@COMMAND.dist{}
+@end example
+
+@anchor{Build Process}
 @chapter Build Process
-@anchor{process}
 
 @section Checkout Sources
-@anchor{process.checkout}
 @include process.checkout.texi
 
 @section Autotools Generation
-@anchor{process.autoreconf}
 @include process.autoreconf.texi
 
 @section Configure
-@anchor{process.configure}
 @include process.configure.texi
 
 @section Build
-@anchor{process.build}
 @include process.build.texi
 
 @section Install
-@anchor{process.install}
 @include process.install.texi
 
 @section Create Distribution
-@anchor{process.dist}
 @include process.dist.texi
 
 @chapter Platforms
-@anchor{platforms}
 @include platforms.texi

@@ -1,7 +1,7 @@
 The following command will build @value{PROJECT_name}.
 
 @example
-make
+@COMMAND.build{}
 @end example
 
 On some platforms @code{make} refers to a BSD-flavor of make which is

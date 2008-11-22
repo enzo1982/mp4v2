@@ -226,6 +226,8 @@ EXTRA_DIST += \
 
 EXTRA_DIST += \
     project/AUTHORS.texi                             \
+    project/BUILD/commands.texi                      \
+    project/BUILD/glossary.texi                      \
     project/BUILD/introduction.texi                  \
     project/BUILD/main.repo.texi                     \
     project/BUILD/main.texi                          \
@@ -309,15 +311,29 @@ $(PROJECT_TEXI_DIST.out): $(top_builddir)/%: $(top_srcdir)/project/%.texi
 
 ###############################################################################
 
-$(top_builddir)/BUILD: $(top_builddir)/project/project.texi
-$(top_builddir)/BUILD: $(top_srcdir)/project/BUILD/
-$(top_builddir)/BUILD: $(top_srcdir)/project/BUILD/main.texi
+XML2WIKI = $(top_srcdir)/project/xml2wiki.py
+
+PBUILD_DEPS = \
+    $(top_builddir)/project/project.texi \
+    $(top_builddir)/project/BUILD/
+
+$(top_builddir)/BUILD: $(top_srcdir)/project/BUILD/main.texi $(PBUILD_DEPS)
 	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<
 
-$(top_builddir)/BUILD.repo: $(top_builddir)/project/project.texi
-$(top_builddir)/BUILD.repo: $(top_srcdir)/project/BUILD/
-$(top_builddir)/BUILD.repo: $(top_srcdir)/project/BUILD/main.repo.texi
+$(top_builddir)/BUILD.xml: $(top_srcdir)/project/BUILD/main.texi $(PBUILD_DEPS)
+	makeinfo -I$(top_builddir)/project/ --xml --no-headers -o $@ $<
+
+$(top_builddir)/BUILD.wiki: $(top_builddir)/BUILD.xml
+	$(XML2WIKI) $< > $@
+
+$(top_builddir)/BUILD.repo: $(top_srcdir)/project/BUILD/main.repo.texi $(PBUILD_DEPS)
 	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<
+
+$(top_builddir)/BUILD.repo.xml: $(top_srcdir)/project/BUILD/main.repo.texi $(PBUILD_DEPS)
+	makeinfo -I$(top_builddir)/project/ --xml --no-headers -o $@ $<
+
+$(top_builddir)/BUILD.repo.wiki: $(top_builddir)/BUILD.repo.xml
+	$(XML2WIKI) $< > $@
 
 $(top_builddir)/ChangeLog: $(top_builddir)/project/project.texi
 $(top_builddir)/ChangeLog: $(top_srcdir)/project/ChangeLog/

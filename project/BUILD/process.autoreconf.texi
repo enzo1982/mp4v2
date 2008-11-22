@@ -1,10 +1,8 @@
-Regenerate Autotools files.
-
-The following command causes forces Autotools to install helper scripts needed
-at configure-time and to regenerate all files.
+The following command causes forces Autotools to regenerate all files and
+install helper scripts needed at configure-time and to regenerate all files.
 
 @example
-autoreconf -fiv
+@COMMAND.autoreconf{}
 @end example
 
 If you are a project member and preparing for a release, it is important to

@@ -1,6 +1,6 @@
 @value{PROJECT_name} builds on many unix-style platforms, also commonly
 referred to posix-style. Building on
-Mac OS X, Linux, FreeBSD, Solaris, Cygwin and native Windows
+@value{OS.osx}, @value{OS.linux}, @value{OS.freebsd}, @value{OS.solaris}, @value{OS.cygwin}, @value{OS.windows}
 are known to work.
 
 Similar platforms should also build.
