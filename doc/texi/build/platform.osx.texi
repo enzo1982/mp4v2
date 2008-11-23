@@ -11,9 +11,9 @@ not necessarily the only configuration that is possible:
 @item gcc 4.2.1 (Apple Inc. build 5564)
 @end itemize
 
-@include platform.common.bundled.texi
+@include build/platform.common.bundled.texi
 
-@include platform.common.conf.default.texi
+@include build/platform.common.conf.default.texi
 
 @subsection Universal Binaries - all architectures
 The preferred method to produce universal binaries for all supported

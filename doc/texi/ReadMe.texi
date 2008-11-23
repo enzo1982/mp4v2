@@ -1,7 +1,7 @@
 @input texinfo @c -*- Texinfo -*-
 @c %**start of header
-@setfilename README.info
-@include project.texi
+@setfilename ReadMe.info
+@include base/project.texi
 
 @paragraphindent none
 @c %**end of header

@@ -182,11 +182,6 @@ mp4trackdump_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
 
 ###############################################################################
 
-#check_PROGRAMS += test_create
-#
-#test_create_SOURCES = test/create.cpp
-#test_create_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
-
 DEJATOOL = main
 
 TESTLOGDIR = $(builddir)/testlog
@@ -204,79 +199,13 @@ mp4v2inc_HEADERS = \
 
 ###############################################################################
 
-PROJECT_TEXI_DIST = \
-    AUTHORS \
-    README
-
 EXTRA_DIST = \
-    $(PROJECT_TEXI_DIST) \
-    BUILD                \
-    BUILD.repo           \
-    ChangeLog
-
-EXTRA_DIST += \
-    doc/html/api/        \
-    doxygen/Doxyfile.in  \
-    doxygen/mainpage.h   \
-    util/impl.h
-
-EXTRA_DIST += \
     project/project.m4 \
-    project/project.texi.in
-
-EXTRA_DIST += \
-    project/AUTHORS.texi                             \
-    project/BUILD/commands.texi                      \
-    project/BUILD/glossary.texi                      \
-    project/BUILD/introduction.texi                  \
-    project/BUILD/main.repo.texi                     \
-    project/BUILD/main.texi                          \
-    project/BUILD/overview.texi                      \
-    project/BUILD/platform.common.bundled.texi       \
-    project/BUILD/platform.common.conf.bi.texi       \
-    project/BUILD/platform.common.conf.default.texi  \
-    project/BUILD/platform.cygwin.texi               \
-    project/BUILD/platform.freebsd.texi              \
-    project/BUILD/platform.linux.texi                \
-    project/BUILD/platform.osx.texi                  \
-    project/BUILD/platform.solaris.texi              \
-    project/BUILD/platform.windows.texi              \
-    project/BUILD/platforms.texi                     \
-    project/BUILD/process.autoreconf.texi            \
-    project/BUILD/process.build.texi                 \
-    project/BUILD/process.checkout.texi              \
-    project/BUILD/process.configure.texi             \
-    project/BUILD/process.dist.texi                  \
-    project/BUILD/process.extract.texi               \
-    project/BUILD/process.install.texi               \
-    project/ChangeLog/main.texi                      \
-    project/ChangeLog/version-1.0.texi               \
-    project/ChangeLog/version-0.0.texi               \
-    project/README.texi
-
-EXTRA_DIST += \
-    vstudio9.0/include/mp4v2/project.h           \
-    vstudio9.0/libmp4v2/libmp4v2.vcproj          \
-    vstudio9.0/libplatform/libplatform.vcproj    \
-    vstudio9.0/mp4art/mp4art.vcproj              \
-    vstudio9.0/mp4chaps/mp4chaps.vcproj          \
-    vstudio9.0/mp4dump/mp4dump.vcproj            \
-    vstudio9.0/mp4extract/mp4extract.vcproj      \
-    vstudio9.0/mp4info/mp4info.vcproj            \
-    vstudio9.0/mp4syncfiles/mp4syncfiles.vcproj  \
-    vstudio9.0/mp4tags/mp4tags.vcproj            \
-    vstudio9.0/mp4trackdump/mp4trackdump.vcproj  \
-    vstudio9.0/mp4v2.sln
+    util/impl.h
 
 ###############################################################################
 
 distclean-local:
-	rm -f $(top_builddir)/AUTHORS*
-	rm -f $(top_builddir)/BUILD*
-	rm -f $(top_builddir)/ChangeLog*
-	rm -f $(top_builddir)/README*
-	rm -f $(top_builddir)/NEWS*
-	rm -fr $(top_builddir)/doc/
 	rm -f $(top_builddir)/Makefile
 	rm -f $(top_builddir)/testlog/*.log
 	rm -f $(top_builddir)/testlog/*.sum
@@ -303,51 +232,6 @@ MK_CXX_I = \
 
 ###############################################################################
 
-PROJECT_TEXI_DIST.out = $(PROJECT_TEXI_DIST:%=$(top_builddir)/%)
-
-$(PROJECT_TEXI_DIST.out): $(top_builddir)/project/project.texi
-$(PROJECT_TEXI_DIST.out): $(top_builddir)/%: $(top_srcdir)/project/%.texi
-	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<
-
-###############################################################################
-
-XML2WIKI = $(top_srcdir)/project/xml2wiki.py
-
-PBUILD_DEPS = \
-    $(top_builddir)/project/project.texi \
-    $(top_builddir)/project/BUILD/
-
-$(top_builddir)/BUILD: $(top_srcdir)/project/BUILD/main.texi $(PBUILD_DEPS)
-	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<
-
-$(top_builddir)/BUILD.xml: $(top_srcdir)/project/BUILD/main.texi $(PBUILD_DEPS)
-	makeinfo -I$(top_builddir)/project/ --xml --no-headers -o $@ $<
-
-$(top_builddir)/BUILD.wiki: $(top_builddir)/BUILD.xml
-	$(XML2WIKI) $< > $@
-
-$(top_builddir)/BUILD.repo: $(top_srcdir)/project/BUILD/main.repo.texi $(PBUILD_DEPS)
-	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<
-
-$(top_builddir)/BUILD.repo.xml: $(top_srcdir)/project/BUILD/main.repo.texi $(PBUILD_DEPS)
-	makeinfo -I$(top_builddir)/project/ --xml --no-headers -o $@ $<
-
-$(top_builddir)/BUILD.repo.wiki: $(top_builddir)/BUILD.repo.xml
-	$(XML2WIKI) $< > $@
-
-$(top_builddir)/ChangeLog: $(top_builddir)/project/project.texi
-$(top_builddir)/ChangeLog: $(top_srcdir)/project/ChangeLog/
-$(top_builddir)/ChangeLog: $(top_srcdir)/project/ChangeLog/main.texi
-	makeinfo -I$(top_builddir)/project/ --no-headers -o $@ $<
-
-###############################################################################
-
-$(top_builddir)/doc/html/api:
-	$(MKDIR_P) $@
-	doxygen $(top_builddir)/doxygen/Doxyfile
-
-###############################################################################
-
 ##
 ## workaround: DejaGNU adds a hard-coded dependency on Makefile
 ## and need to create logdir
@@ -355,3 +239,12 @@ $(top_builddir)/doc/html/api:
 Makefile: ${Makefile}
 	touch $@
 	$(MKDIR_P) $(TESTLOGDIR)
+
+###############################################################################
+
+##
+## include GNUmakefiles which are not full-fledged automake citizens but
+## they are aware of automake variables and targets. Note that we wrap in
+## an eval to prevent automake from parsing GNU make extensions therein.
+##
+$(eval include $(top_srcdir)/doc/GNUmakefile.mk)

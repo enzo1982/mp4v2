@@ -26,4 +26,4 @@ setenv CXX gcc-4
 ../configure
 @end example
 
-@include platform.common.conf.default.texi
+@include build/platform.common.conf.default.texi

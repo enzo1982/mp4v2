@@ -1,5 +1,7 @@
+@section Create Distribution
+
 The following command will create a @value{PROJECT_name} source distribution.
-It is during this step that most documentation is generated.
+It is during this step that shipped documentation is generated.
 
 @example
 @COMMAND.dist{}

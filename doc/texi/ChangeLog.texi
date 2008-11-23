@@ -1,12 +1,12 @@
 input texinfo @c -*- Texinfo -*-
 @c %**start of header
-@setfilename NEWS.info
-@include project.texi
+@setfilename ChangeLog.info
+@include base/project.texi
 
 @paragraphindent none
 @c %**end of header
 
 @majorheading @value{PROJECT_name_formal} ChangeLog
 
-@include version-1.0.texi
-@include version-0.0.texi
+@include changelog/version-1.0.texi
+@include changelog/version-0.0.texi

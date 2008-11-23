@@ -1,3 +1,5 @@
+@section Extract
+
 Extract sources from a @value{TERM.srcdist} bundle. Releases are available
 in the downloads section at @value{PROJECT_website} . At the time of this
 writing the direct download page is @value{PROJECT_download_url} .

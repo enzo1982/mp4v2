@@ -1,3 +1,5 @@
+@section Build
+
 The following command will build @value{PROJECT_name}.
 
 @example

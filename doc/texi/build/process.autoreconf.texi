@@ -1,3 +1,5 @@
+@section Autotools Generation
+
 The following command causes forces Autotools to regenerate all files and
 install helper scripts needed at configure-time and to regenerate all files.
 

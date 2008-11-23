@@ -9,7 +9,7 @@ to add a source file to libmp4v2:
     libmp4v2_la_SOURCES = ...
 
 In the rare situation that you desire to add a header file to be installed
-during 'make install' and used by the public API (suh as mp4v2.h) then it
+during 'make install' and used by the public API (such as mp4v2.h) then it
 should be taken out of libmp4v2_la_SOURCES and added to:
 
     mp4v2inc_HEADERS = ...

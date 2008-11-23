@@ -1,4 +1,4 @@
-@heading Version @value{PROJECT_version}
+@unnumberedsec Version @value{PROJECT_version}
 @enumerate
 @item
 Renamed public API top-level header to @code{<mp4v2/mp4v2.h>}.

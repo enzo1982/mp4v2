@@ -1,18 +1,18 @@
 @input texinfo @c -*- Texinfo -*-
 @c %**start of header
 @setfilename BUILD.repo.info
-@include project.texi
-@include glossary.texi
-@include commands.texi
+@include base/project.texi
+@include build/glossary.texi
+@include build/commands.texi
 
 @paragraphindent none
 @c %**end of header
 
-@majorheading @value{PROJECT_name_formal} Build Instructions - Repository
+@majorheading @value{PROJECT_name_formal} Build Repository
 @contents
 
 @chapter Overview
-@include overview.texi
+@include build/overview.texi
 
 @chapter Introduction
 This document describes the recommended process to build @value{PROJECT_name}
@@ -38,23 +38,12 @@ jump to @ref{Build Process}.
 @anchor{Build Process}
 @chapter Build Process
 
-@section Checkout Sources
-@include process.checkout.texi
+@include build/process.checkout.texi
+@include build/process.autoreconf.texi
+@include build/process.configure.texi
+@include build/process.build.texi
+@include build/process.install.texi
+@include build/process.dist.texi
+@include build/process.doc.texi
 
-@section Autotools Generation
-@include process.autoreconf.texi
-
-@section Configure
-@include process.configure.texi
-
-@section Build
-@include process.build.texi
-
-@section Install
-@include process.install.texi
-
-@section Create Distribution
-@include process.dist.texi
-
-@chapter Platforms
-@include platforms.texi
+@include build/platforms.texi

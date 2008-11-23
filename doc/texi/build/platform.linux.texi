@@ -9,6 +9,6 @@ not necessarily the only configuration that is possible:
 @item gcc 3.4.0 or higher is reported to work
 @end itemize
 
-@include platform.common.bundled.texi
-@include platform.common.conf.default.texi
-@include platform.common.conf.bi.texi
+@include build/platform.common.bundled.texi
+@include build/platform.common.conf.default.texi
+@include build/platform.common.conf.bi.texi

@@ -1,3 +1,5 @@
+@section Checkout Sources
+
 Checkout sources from the project's Subversion repository.
 
 Sources are checked out from either the trunk, release or a branch.

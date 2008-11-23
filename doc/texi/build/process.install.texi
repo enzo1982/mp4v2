@@ -1,3 +1,6 @@
+@anchor{Install}
+@section Install
+
 The following command will install @value{PROJECT_name}.
 
 @example

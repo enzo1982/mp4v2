@@ -9,12 +9,12 @@ not necessarily the only configuration that is possible:
 @item gcc 3.4.0 or higher is reported to work
 @end itemize
 
-@include platform.common.bundled.texi
+@include build/platform.common.bundled.texi
 @quotation Note
 @value{OS.solaris}' does not (yet) really bundle a compiler. The recommendation
 is to use the companion-disk compiler for maximum C++ runtime
 compatibility. It is usually found in @file{/usr/sfw/bin}.
 @end quotation
 
-@include platform.common.conf.default.texi
-@include platform.common.conf.bi.texi
+@include build/platform.common.conf.default.texi
+@include build/platform.common.conf.bi.texi
