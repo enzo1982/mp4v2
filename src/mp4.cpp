@@ -3849,7 +3849,7 @@ extern "C" {
         return false;
     }
 
-    bool MP4SetMetadataWriter(MP4FileHandle hFile,
+    bool MP4SetMetadataComposer(MP4FileHandle hFile,
                               const char* value)
     {
         if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
@@ -3864,7 +3864,7 @@ extern "C" {
         return false;
     }
 
-    bool MP4GetMetadataWriter(MP4FileHandle hFile,
+    bool MP4GetMetadataComposer(MP4FileHandle hFile,
                               char** value)
     {
         if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
@@ -3879,7 +3879,7 @@ extern "C" {
         return false;
     }
 
-    bool MP4DeleteMetadataWriter(MP4FileHandle hFile)
+    bool MP4DeleteMetadataComposer(MP4FileHandle hFile)
     {
         if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
             try {
@@ -3892,7 +3892,27 @@ extern "C" {
         }
         return false;
     }
-
+    
+    /* This function is deprecated and calls it succesor. */
+	bool MP4SetMetadataWriter(MP4FileHandle hFile,
+                              const char* value)
+    {
+		return MP4SetMetadataComposer(hFile, value);
+    }
+    
+    /* This function is deprecated and calls it succesor. */
+    bool MP4GetMetadataWriter(MP4FileHandle hFile,
+                              char** value)
+    {
+    	return MP4GetMetadataComposer(hFile, value);
+    }
+    
+    /* This function is deprecated and calls it succesor. */
+    bool MP4DeleteMetadataWriter(MP4FileHandle hFile)
+    {
+		return MP4DeleteMetadataComposer(hFile);
+    }
+    
     bool MP4SetMetadataAlbum(MP4FileHandle hFile,
                              const char* value)
     {
@@ -4069,7 +4089,7 @@ extern "C" {
         return false;
     }
 
-    bool MP4SetMetadataYear(MP4FileHandle hFile,
+    bool MP4SetMetadataReleaseDate(MP4FileHandle hFile,
                             const char* value)
     {
         if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
@@ -4084,7 +4104,7 @@ extern "C" {
         return false;
     }
 
-    bool MP4GetMetadataYear(MP4FileHandle hFile,
+    bool MP4GetMetadataReleaseDate(MP4FileHandle hFile,
                             char** value)
     {
         if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
@@ -4099,7 +4119,7 @@ extern "C" {
         return false;
     }
 
-    bool MP4DeleteMetadataYear(MP4FileHandle hFile)
+    bool MP4DeleteMetadataReleaseDate(MP4FileHandle hFile)
     {
         if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
             try {
@@ -4111,6 +4131,26 @@ extern "C" {
             }
         }
         return false;
+    }
+    
+    /* This function is deprecated and calls it succesor. */
+    bool MP4SetMetadataYear(MP4FileHandle hFile,
+                            const char* value)
+    {
+    	MP4SetMetadataReleaseDate(hFile, value);
+    }
+    
+    /* This function is deprecated and calls it succesor. */
+    bool MP4GetMetadataYear(MP4FileHandle hFile,
+                            char** value)
+    {
+    	MP4GetMetadataReleaseDate(hFile, value);
+    }
+    
+    /* This function is deprecated and calls it succesor. */
+    bool MP4DeleteMetadataYear(MP4FileHandle hFile)
+    {
+    	MP4DeleteMetadataReleaseDate(hFile);
     }
 
     bool MP4SetMetadataTrack(MP4FileHandle hFile,
@@ -4285,7 +4325,7 @@ extern "C" {
         return false;
     }
 
-    bool MP4SetMetadataTempo(MP4FileHandle hFile, uint16_t tempo)
+    bool MP4SetMetadataBPM(MP4FileHandle hFile, uint16_t tempo)
     {
         if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
             try {
@@ -4299,7 +4339,7 @@ extern "C" {
         return false;
     }
 
-    bool MP4GetMetadataTempo(MP4FileHandle hFile, uint16_t* tempo)
+    bool MP4GetMetadataBPM(MP4FileHandle hFile, uint16_t* tempo)
     {
         if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
             try {
@@ -4313,7 +4353,7 @@ extern "C" {
         return false;
     }
 
-    bool MP4DeleteMetadataTempo(MP4FileHandle hFile)
+    bool MP4DeleteMetadataBPM(MP4FileHandle hFile)
     {
         if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
             try {
@@ -4325,6 +4365,24 @@ extern "C" {
             }
         }
         return false;
+    }
+    
+    /* This function is deprecated and calls it succesor. */
+    bool MP4SetMetadataTempo(MP4FileHandle hFile, uint16_t tempo)
+    {
+		return MP4SetMetadataBPM(hFile, tempo);
+    }
+	
+	/* This function is deprecated and calls it succesor. */
+    bool MP4GetMetadataTempo(MP4FileHandle hFile, uint16_t* tempo)
+    {
+		return MP4GetMetadataBPM(hFile, tempo);
+    }
+	
+	/* This function is deprecated and calls it succesor. */
+    bool MP4DeleteMetadataTempo(MP4FileHandle hFile)
+    {
+		return MP4DeleteMetadataBPM(hFile);
     }
 
     bool MP4SetMetadataCompilation(MP4FileHandle hFile, uint8_t cpl)

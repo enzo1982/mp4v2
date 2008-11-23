@@ -1876,17 +1876,43 @@ bool MP4DeleteMetadataArtist(
     MP4FileHandle hFile );
 
 MP4V2_EXPORT
+MP4V2_DEPRECATED
+/** 
+  * @deprecated scheduled for removal. Use MP4SetMetadataComposer
+  */
 bool MP4SetMetadataWriter(
     MP4FileHandle hFile,
     const char*   value );
 
 MP4V2_EXPORT
+MP4V2_DEPRECATED
+/** 
+  * @deprecated scheduled for removal. Use MP4GetMetadataComposer
+  */
 bool MP4GetMetadataWriter(
     MP4FileHandle hFile,
     char**        value );
 
 MP4V2_EXPORT
+MP4V2_DEPRECATED
+/** 
+  * @deprecated scheduled for removal. Use MP4DeleteMetadataComposer
+  */
 bool MP4DeleteMetadataWriter(
+    MP4FileHandle hFile );
+
+MP4V2_EXPORT
+bool MP4SetMetadataComposer(
+    MP4FileHandle hFile,
+    const char*   value );
+
+MP4V2_EXPORT
+bool MP4GetMetadataComposer(
+    MP4FileHandle hFile,
+    char**        value );
+
+MP4V2_EXPORT
+bool MP4DeleteMetadataComposer(
     MP4FileHandle hFile );
 
 MP4V2_EXPORT
@@ -1918,17 +1944,43 @@ bool MP4DeleteMetadataTool(
     MP4FileHandle hFile );
 
 MP4V2_EXPORT
+MP4V2_DEPRECATED
+/** 
+  * @deprecated scheduled for removal. Use MP4SetMetadataReleaseDate.
+  */
 bool MP4SetMetadataYear(
     MP4FileHandle hFile,
     const char*   value );
 
 MP4V2_EXPORT
+MP4V2_DEPRECATED
+/** 
+  * @deprecated scheduled for removal. Use MP4GetMetadataReleaseDate.
+  */
 bool MP4GetMetadataYear(
     MP4FileHandle hFile,
     char**        value );
 
 MP4V2_EXPORT
+MP4V2_DEPRECATED
+/** 
+  * @deprecated scheduled for removal. Use MP4DeleteMetadataReleaseDate.
+  */
 bool MP4DeleteMetadataYear(
+    MP4FileHandle hFile );
+
+MP4V2_EXPORT
+bool MP4SetMetadataReleaseDate(
+    MP4FileHandle hFile,
+    const char*   value );
+
+MP4V2_EXPORT
+bool MP4GetMetadataReleaseDate(
+    MP4FileHandle hFile,
+    char**        value );
+
+MP4V2_EXPORT
+bool MP4DeleteMetadataReleaseDate(
     MP4FileHandle hFile );
 
 MP4V2_EXPORT
@@ -2006,16 +2058,47 @@ bool MP4DeleteMetadataGrouping(
     MP4FileHandle hFile );
 
 MP4V2_EXPORT
+MP4V2_DEPRECATED
+/** 
+  * @deprecated scheduled for removal. Use MP4SetMetadataBPM.
+  */
 bool MP4SetMetadataTempo(
     MP4FileHandle hFile,
     uint16_t      tempo );
 
 MP4V2_EXPORT
+MP4V2_DEPRECATED
+/** 
+  * @deprecated scheduled for removal. Use MP4GetMetadataBPM.
+  */
 bool MP4GetMetadataTempo(
     MP4FileHandle hFile,
     uint16_t*     tempo );
 
 MP4V2_EXPORT
+MP4V2_DEPRECATED
+/** 
+  * @deprecated scheduled for removal. Use MP4DeleteMetadataBPM.
+  */
+bool MP4DeleteMetadataTempo(
+    MP4FileHandle hFile );
+    
+MP4V2_EXPORT
+bool MP4SetMetadataBPM(
+    MP4FileHandle hFile,
+    uint16_t      tempo );
+
+MP4V2_EXPORT
+bool MP4GetMetadataBPM(
+    MP4FileHandle hFile,
+    uint16_t*     tempo );
+
+MP4V2_EXPORT
+bool MP4DeleteMetadataBPM(
+    MP4FileHandle hFile );
+
+MP4V2_EXPORT
+MP4V2_DEPRECATED
 bool MP4DeleteMetadataTempo(
     MP4FileHandle hFile );
 

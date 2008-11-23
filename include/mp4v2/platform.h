@@ -27,6 +27,12 @@
 #   define MP4V2_EXPORT __attribute__((visibility("default")))
 #endif
 
+#if defined( __GNUC__ )
+#   define MP4V2_DEPRECATED __attribute__((deprecated))
+#else
+#   define MP4V2_DEPRECATED
+#endif
+
 /******************************************************************************
  *
  * TODO-KB: cleanup -- absolutely no need for a C-API to fuss with reserved
