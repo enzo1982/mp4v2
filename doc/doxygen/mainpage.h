@@ -45,5 +45,5 @@ MP4Create( "foo.mp4" ); /* OK in C++, ERROR in C */
 
 @section examples Examples
 
-See @c util/ and @c unit/ for simple programs that use this library.
+See @c util/ source code for programs that use this library.
 */

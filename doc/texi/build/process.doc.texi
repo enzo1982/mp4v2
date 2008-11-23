@@ -2,8 +2,14 @@
 
 Documentation that is shipped with @value{TERM.srcdist} is generated as part
 of the @ref{Build Process} step. This section documents builds all of the
-supported methods to build documentation. There are generally two kinds
-of documentation in this project, articles and API.
+supported methods to build documentation. There are three kinds of
+documentation in this project; man-pages, articles and API.
+
+Man-pages are automatically generated for command-line utilities by
+using @command{html2man} which invokes standard options
+@command{--help} and @command{--version} and gleans the information,
+generating a man-page in @b{nroff} script. Note that the utilities
+will first be built as they are depdendencies of man-page generation.
 
 Artcles are usually hand-written and authored in Texinfo format which
 permits macro-expansions, simple formatting and conversion to several
@@ -30,6 +36,9 @@ The following table describes the various make targets available for
 building docs. Note you must first have completed the @ref{Configure} step.
 
 @table @samp
+
+@item make man
+Generate man-pages for command-line utilities.
 
 @item make html
 Generate articles in HTML format from @file{texi} files.
@@ -58,6 +67,7 @@ And finally all of the document targets have a corresponding @b{clean}
 target which cleans up generated files. Simply prefix as follows:
 
 @example
+make manclean
 make htmlclean
 make txtclean
 make wikiclean

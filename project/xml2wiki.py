@@ -156,8 +156,16 @@ class Document( Element ):
             e = HeadingElement( self._pending, self._chapterLevel + self._sectionLevel )
         elif name == 'unnumbered' or name == 'unnumberedsec':
             self._chapterBegin()
-        elif name == 'xrefnodename':
+        elif name == 'uref':
+            e = UrefInline( self._pending )
+        elif name == 'urefdesc':
+            e = UrefDescInline( self._pending )
+        elif name == 'urefurl':
+            e = UrefUrlInline( self._pending )
+        elif name == 'xref':
             e = XrefInline( self._pending )
+        elif name == 'xrefnodename':
+            e = XrefNodenameInline( self._pending )
 
         if not e:
             self._pushChild( UnknownElement( self._pending ) )
@@ -274,7 +282,31 @@ class TableItemElement( Element ):
 
 ###############################################################################
 
+class UrefInline( Element ):
+    def __init__( self, parent ):
+        Element.__init__( self, parent, text=False, delimBegin='[', delimEnd=']' )
+
+###############################################################################
+
+class UrefDescInline( Element ):
+    def __init__( self, parent ):
+        Element.__init__( self, parent, delimBegin=' ' )
+
+###############################################################################
+
+class UrefUrlInline( Element ):
+    def __init__( self, parent ):
+        Element.__init__( self, parent )
+
+###############################################################################
+
 class XrefInline( Element ):
+    def __init__( self, parent ):
+        Element.__init__( self, parent, text=False )
+
+###############################################################################
+
+class XrefNodenameInline( Element ):
     def __init__( self, parent ):
         Element.__init__( self, parent )
 

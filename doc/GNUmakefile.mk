@@ -19,6 +19,8 @@
 ##              txt/    <-- articles in txt format
 ##              wiki/   <-- articles in Google Code Wiki format
 ##              xml/    <-- articles in xml-texinfo format
+##          man/
+##              man1/   <-- man-pages for utilities
 ##
 ###############################################################################
 
@@ -32,6 +34,10 @@ DOC.out.api/      = $(DOC.out/)api/
 DOC.out.articles/ = $(DOC.out/)articles/
 
 ###############################################################################
+
+HELP2MAN       = help2man
+HELP2MAN.flags = -m "$(PROJECT_name) Utilities" -N
+HELP2MAN.cmd   = $(HELP2MAN) $(HELP2MAN.flags) ./$(1) -o $(2)
 
 MAKEINFO.flags      = -I$(DOC.in/)texi -I$(DOC.out/)texi
 MAKEINFO.flags.html = --html --no-headers --no-split
@@ -49,6 +55,9 @@ DOXYGEN.cmd = $(DOXYGEN) $(1)
 
 ###############################################################################
 
+DOC.man.utils = mp4art mp4dump mp4optimize
+DOC.man.out   = $(DOC.man.utils:%=$(DOC.out/)man/man1/%.1)
+
 DOC.texi.articles = $(wildcard $(DOC.in/)texi/*.texi $(DOC.out/)texi/*.texi)
 
 DOC.texi.includes = \
@@ -63,6 +72,7 @@ DOC.xml2wiki.out  = $(DOC.texi2xml.out:$(DOC.out.articles/)xml/%.xml=$(DOC.out.a
 
 DOC.api.out = $(DOC.out.api/).stamp
 
+MKDIRS += $(DOC.out/)man/man1/
 MKDIRS += $(foreach n,html man texi txt wiki xml,$(DOC.out.articles/)$n)
 MKDIRS += $(DOC.out.api/)
 
@@ -86,20 +96,24 @@ distclean-local: docclean
 
 .PHONY: articles doc
 articles: html txt xml wiki
-doc: articles api
+doc: man articles api
 
 .PHONY: articlesclean apiclean docclean
 articlesclean: htmlclean txtclean xmlclean wikiclean
 docclean: articlesclean apiclean
 
-.PHONY: html txt xml wiki doxygen dox
+.PHONY: man html txt xml wiki api
+man: $(DOC.man.out)
 html: $(DOC.texi2html.out)
 txt: $(DOC.texi2txt.out)
 xml: $(DOC.texi2xml.out)
 wiki: $(DOC.xml2wiki.out)
 api: $(DOC.api.out)
 
-.PHONY: htmlclean txtclean xmlclean wikiclean doxygenclean doxclean
+.PHONY: manclean htmlclean txtclean xmlclean wikiclean apiclean
+manclean:
+	rm -f $(DOC.man.out)
+
 htmlclean:
 	rm -f $(DOC.texi2html.out)
 
@@ -117,6 +131,10 @@ apiclean:
 	rm -fr $(DOC.out.articles/)api/html/ $(DOC.out.articles/)api/xml/
 
 ###############################################################################
+
+$(DOC.man.out): | $(dir $(DOC.man.out))
+$(DOC.man.out): $(DOC.out/)man/man1/%.1: $(BUILD/)%
+	$(call HELP2MAN.cmd,$<,$@)
 
 $(DOC.texi2html.out): $(DOC.texi.includes) | $(dir $(DOC.texi2html.out))
 $(DOC.texi2html.out): $(DOC.out.articles/)html/%.html: $(DOC.in/)texi/%.texi
