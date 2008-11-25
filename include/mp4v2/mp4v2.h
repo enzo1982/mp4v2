@@ -369,7 +369,7 @@ extern "C" {
 /** Bit used with MP4Create() to enable 64-bit data-atoms. */
 #define MP4_CREATE_64BIT_DATA 0x01
 /** Bit used with MP4Create() to enable 64-bit time-atoms.
-  * @warning Quicktime-incompatible
+  * @note QuickTime versions <b>prior</b> to 7.2.1 are incompatible with this extension.
   */
 #define MP4_CREATE_64BIT_TIME 0x02
 /** Convenience bitmask for both data and time atoms.
@@ -1875,29 +1875,29 @@ MP4V2_EXPORT
 bool MP4DeleteMetadataArtist(
     MP4FileHandle hFile );
 
-MP4V2_EXPORT
-MP4V2_DEPRECATED
 /** 
-  * @deprecated scheduled for removal. Use MP4SetMetadataComposer
+  * @deprecated scheduled for removal, use MP4SetMetadataComposer().
   */
+MP4V2_DEPRECATED
+MP4V2_EXPORT
 bool MP4SetMetadataWriter(
     MP4FileHandle hFile,
     const char*   value );
 
-MP4V2_EXPORT
-MP4V2_DEPRECATED
 /** 
-  * @deprecated scheduled for removal. Use MP4GetMetadataComposer
+  * @deprecated scheduled for removal, use MP4GetMetadataComposer().
   */
+MP4V2_DEPRECATED
+MP4V2_EXPORT
 bool MP4GetMetadataWriter(
     MP4FileHandle hFile,
     char**        value );
 
-MP4V2_EXPORT
-MP4V2_DEPRECATED
 /** 
-  * @deprecated scheduled for removal. Use MP4DeleteMetadataComposer
+  * @deprecated scheduled for removal.,use MP4DeleteMetadataComposer().
   */
+MP4V2_DEPRECATED
+MP4V2_EXPORT
 bool MP4DeleteMetadataWriter(
     MP4FileHandle hFile );
 
@@ -1943,29 +1943,29 @@ MP4V2_EXPORT
 bool MP4DeleteMetadataTool(
     MP4FileHandle hFile );
 
-MP4V2_EXPORT
-MP4V2_DEPRECATED
 /** 
-  * @deprecated scheduled for removal. Use MP4SetMetadataReleaseDate.
+  * @deprecated scheduled for removal, use MP4SetMetadataReleaseDate().
   */
+MP4V2_DEPRECATED
+MP4V2_EXPORT
 bool MP4SetMetadataYear(
     MP4FileHandle hFile,
     const char*   value );
 
-MP4V2_EXPORT
-MP4V2_DEPRECATED
 /** 
-  * @deprecated scheduled for removal. Use MP4GetMetadataReleaseDate.
+  * @deprecated scheduled for removal, use MP4GetMetadataReleaseDate().
   */
+MP4V2_DEPRECATED
+MP4V2_EXPORT
 bool MP4GetMetadataYear(
     MP4FileHandle hFile,
     char**        value );
 
-MP4V2_EXPORT
-MP4V2_DEPRECATED
 /** 
-  * @deprecated scheduled for removal. Use MP4DeleteMetadataReleaseDate.
+  * @deprecated scheduled for removal, use MP4DeleteMetadataReleaseDate().
   */
+MP4V2_DEPRECATED
+MP4V2_EXPORT
 bool MP4DeleteMetadataYear(
     MP4FileHandle hFile );
 
@@ -2057,29 +2057,29 @@ MP4V2_EXPORT
 bool MP4DeleteMetadataGrouping(
     MP4FileHandle hFile );
 
-MP4V2_EXPORT
-MP4V2_DEPRECATED
 /** 
-  * @deprecated scheduled for removal. Use MP4SetMetadataBPM.
+  * @deprecated scheduled for removal, use MP4SetMetadataBPM().
   */
+MP4V2_DEPRECATED
+MP4V2_EXPORT
 bool MP4SetMetadataTempo(
     MP4FileHandle hFile,
     uint16_t      tempo );
 
-MP4V2_EXPORT
-MP4V2_DEPRECATED
 /** 
-  * @deprecated scheduled for removal. Use MP4GetMetadataBPM.
+  * @deprecated scheduled for removal, use MP4GetMetadataBPM().
   */
+MP4V2_DEPRECATED
+MP4V2_EXPORT
 bool MP4GetMetadataTempo(
     MP4FileHandle hFile,
     uint16_t*     tempo );
 
-MP4V2_EXPORT
-MP4V2_DEPRECATED
 /** 
-  * @deprecated scheduled for removal. Use MP4DeleteMetadataBPM.
+  * @deprecated scheduled for removal, use MP4DeleteMetadataBPM().
   */
+MP4V2_DEPRECATED
+MP4V2_EXPORT
 bool MP4DeleteMetadataTempo(
     MP4FileHandle hFile );
     

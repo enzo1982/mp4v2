@@ -3894,23 +3894,23 @@ extern "C" {
     }
     
     /* This function is deprecated and calls it succesor. */
-	bool MP4SetMetadataWriter(MP4FileHandle hFile,
+    bool MP4SetMetadataWriter(MP4FileHandle hFile,
                               const char* value)
     {
-		return MP4SetMetadataComposer(hFile, value);
+        return MP4SetMetadataComposer(hFile, value);
     }
     
     /* This function is deprecated and calls it succesor. */
     bool MP4GetMetadataWriter(MP4FileHandle hFile,
                               char** value)
     {
-    	return MP4GetMetadataComposer(hFile, value);
+        return MP4GetMetadataComposer(hFile, value);
     }
     
     /* This function is deprecated and calls it succesor. */
     bool MP4DeleteMetadataWriter(MP4FileHandle hFile)
     {
-		return MP4DeleteMetadataComposer(hFile);
+        return MP4DeleteMetadataComposer(hFile);
     }
     
     bool MP4SetMetadataAlbum(MP4FileHandle hFile,
@@ -4370,19 +4370,19 @@ extern "C" {
     /* This function is deprecated and calls it succesor. */
     bool MP4SetMetadataTempo(MP4FileHandle hFile, uint16_t tempo)
     {
-		return MP4SetMetadataBPM(hFile, tempo);
+        return MP4SetMetadataBPM(hFile, tempo);
     }
-	
-	/* This function is deprecated and calls it succesor. */
+    
+    /* This function is deprecated and calls it succesor. */
     bool MP4GetMetadataTempo(MP4FileHandle hFile, uint16_t* tempo)
     {
-		return MP4GetMetadataBPM(hFile, tempo);
+        return MP4GetMetadataBPM(hFile, tempo);
     }
-	
-	/* This function is deprecated and calls it succesor. */
+    
+    /* This function is deprecated and calls it succesor. */
     bool MP4DeleteMetadataTempo(MP4FileHandle hFile)
     {
-		return MP4DeleteMetadataBPM(hFile);
+        return MP4DeleteMetadataBPM(hFile);
     }
 
     bool MP4SetMetadataCompilation(MP4FileHandle hFile, uint8_t cpl)
