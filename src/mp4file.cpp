@@ -2373,13 +2373,14 @@ MP4TrackId MP4File::FindChapterReferenceTrack(MP4TrackId chapterTrackId, char * 
 {
     for (uint32_t i = 0; i < m_pTracks.Size(); i++)
     {
-        if (!strcmp(MP4_AUDIO_TRACK_TYPE, m_pTracks[i]->GetType()))
+        if( MP4_IS_VIDEO_TRACK_TYPE( m_pTracks[i]->GetType() ) ||
+            MP4_IS_AUDIO_TRACK_TYPE( m_pTracks[i]->GetType() ) )
         {
             MP4TrackId refTrackId = m_pTracks[i]->GetId();
             char *name = MakeTrackName(refTrackId, "tref.chap");
-            if (FindTrackReference(name, chapterTrackId))
+            if( FindTrackReference( name, chapterTrackId ) )
             {
-                if (0 != trackName)
+                if( 0 != trackName )
                 {
                     int nameLen = min((int)strlen(name), trackNameSize);
                     strncpy(trackName, name, nameLen);
@@ -2398,7 +2399,7 @@ MP4TrackId MP4File::FindChapterTrack(char * trackName, int trackNameSize)
 {
     for (uint32_t i = 0; i < m_pTracks.Size(); i++)
     {
-        if (!strcmp(MP4_TEXT_TRACK_TYPE, m_pTracks[i]->GetType()))
+        if( !strcasecmp(MP4_TEXT_TRACK_TYPE, m_pTracks[i]->GetType()) )
         {
             MP4TrackId refTrackId = FindChapterReferenceTrack(m_pTracks[i]->GetId(), trackName, trackNameSize);
             if (MP4_INVALID_TRACK_ID != refTrackId)
@@ -2618,10 +2619,10 @@ MP4ChapterType MP4File::SetChapters(MP4Chapter_t * chapterList, uint32_t chapter
     // first remove any existing chapters
     DeleteChapters(toChapterType, MP4_INVALID_TRACK_ID);
 
-    if (MP4ChapterTypeAny == toChapterType || MP4ChapterTypeNero == toChapterType)
+    if( MP4ChapterTypeAny == toChapterType || MP4ChapterTypeNero == toChapterType )
     {
         MP4Duration duration = 0;
-        for (uint32_t i = 0; i < chapterCount; ++i)
+        for( uint32_t i = 0; i < chapterCount; ++i )
         {
             AddNeroChapter(duration, chapterList[i].title);
             duration += 10 * MP4_MILLISECONDS_TIME_SCALE * chapterList[i].duration;
@@ -2632,11 +2633,21 @@ MP4ChapterType MP4File::SetChapters(MP4Chapter_t * chapterList, uint32_t chapter
 
     if (MP4ChapterTypeAny == toChapterType || MP4ChapterTypeQt == toChapterType)
     {
+        // find the first video or audio track
+        MP4TrackId refTrack = MP4_INVALID_TRACK_ID;
+        for( uint32_t i = 0; i < m_pTracks.Size(); i++ )
+        {
+            if( MP4_IS_VIDEO_TRACK_TYPE( m_pTracks[i]->GetType() ) ||
+                MP4_IS_AUDIO_TRACK_TYPE( m_pTracks[i]->GetType() ) )
+            {
+                refTrack = m_pTracks[i]->GetId();
+            }
+        }
+
         // create the chapter track
-        MP4TrackId refTrack = FindTrackId(0, MP4_AUDIO_TRACK_TYPE);
         MP4TrackId chapterTrack = AddChapterTextTrack(refTrack, MP4_MILLISECONDS_TIME_SCALE);
 
-        for (uint32_t i = 0 ; i < chapterCount; ++i)
+        for( uint32_t i = 0 ; i < chapterCount; ++i )
         {
             // create and write the chapter track sample
             AddChapter( chapterTrack, chapterList[i].duration, chapterList[i].title );
@@ -2650,46 +2661,39 @@ MP4ChapterType MP4File::SetChapters(MP4Chapter_t * chapterList, uint32_t chapter
 
 MP4ChapterType MP4File::ConvertChapters(MP4ChapterType toChapterType)
 {
-    MP4ChapterType resultType = MP4ChapterTypeNone;
+    MP4ChapterType sourceType = MP4ChapterTypeNone;
+    char* errMsg = 0;
 
-    if (MP4ChapterTypeQt == toChapterType)
+    if( MP4ChapterTypeQt == toChapterType )
     {
-        MP4Chapter_t * chapters = 0;
-        uint32_t chapterCount = 0;
-
-        GetChapters(&chapters, &chapterCount, MP4ChapterTypeNero);
-        if (0 == chapterCount)
-        {
-            VERBOSE_READ(GetVerbosity(), printf("Could not find Nero chapter markers"));
-            return MP4ChapterTypeNone;
-        }
-
-        SetChapters(chapters, chapterCount, toChapterType);
-
-        MP4Free(chapters);
-
-        resultType = toChapterType;
+        sourceType = MP4ChapterTypeNero;
+        errMsg = "Could not find Nero chapter markers";
     }
-    else if (MP4ChapterTypeNero == toChapterType)
+    else if( MP4ChapterTypeNero == toChapterType )
     {
-        MP4Chapter_t * chapters = 0;
-        uint32_t chapterCount = 0;
-
-        GetChapters(&chapters, &chapterCount, MP4ChapterTypeQt);
-        if (0 == chapterCount)
-        {
-            VERBOSE_READ(GetVerbosity(), printf("Could not find QuickTime chapter markers"));
-            return MP4ChapterTypeNone;
-        }
-
-        SetChapters(chapters, chapterCount, toChapterType);
-
-        MP4Free(chapters);
-
-        resultType = toChapterType;
+        sourceType = MP4ChapterTypeQt;
+        errMsg = "Could not find QuickTime chapter markers";
+    }
+    else
+    {
+        return MP4ChapterTypeNone;
     }
 
-    return resultType;
+    MP4Chapter_t * chapters = 0;
+    uint32_t chapterCount = 0;
+
+    GetChapters(&chapters, &chapterCount, sourceType);
+    if (0 == chapterCount)
+    {
+        VERBOSE_READ(GetVerbosity(), printf(errMsg));
+        return MP4ChapterTypeNone;
+    }
+
+    SetChapters(chapters, chapterCount, toChapterType);
+
+    MP4Free(chapters);
+
+    return toChapterType;
 }
 
 void MP4File::ChangeMovieTimeScale(uint32_t timescale)
