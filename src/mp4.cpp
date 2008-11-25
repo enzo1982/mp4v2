@@ -4137,20 +4137,20 @@ extern "C" {
     bool MP4SetMetadataYear(MP4FileHandle hFile,
                             const char* value)
     {
-    	MP4SetMetadataReleaseDate(hFile, value);
+        return MP4SetMetadataReleaseDate(hFile, value);
     }
     
     /* This function is deprecated and calls it succesor. */
     bool MP4GetMetadataYear(MP4FileHandle hFile,
                             char** value)
     {
-    	MP4GetMetadataReleaseDate(hFile, value);
+        return MP4GetMetadataReleaseDate(hFile, value);
     }
     
     /* This function is deprecated and calls it succesor. */
     bool MP4DeleteMetadataYear(MP4FileHandle hFile)
     {
-    	MP4DeleteMetadataReleaseDate(hFile);
+        return MP4DeleteMetadataReleaseDate(hFile);
     }
 
     bool MP4SetMetadataTrack(MP4FileHandle hFile,
