@@ -6,6 +6,9 @@
 </head>
 <body>
 <div id="sitebanner">
+    <div id="home">
+        <a href="@PROJECT_website@"></a>
+    </div>
     <span id="slogan">
         C/C++ library and utilities
     </span>

@@ -116,6 +116,16 @@ div#sitebanner {
     text-shadow: black 1px 1px 0px;
 }
 
+div#sitebanner div#home a {
+    display: block;
+    background: none;
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    height: 80px;
+    width: 220px;
+}
+
 div#sitebanner span#slogan {
     color: white;
     position: absolute;
@@ -259,11 +269,11 @@ hr {
 div.memitem {
     border: 1px solid gray;
     -webkit-border-radius: 0.5em;
-    -webkit-box-shadow: 5px 5px 5px black;
+    -webkit-box-shadow: 2px 2px 2px black;
 }
 
 div.memproto {
-    background-color: #CCCB98;
+    background-color: #D7D7D7;
     border-bottom: 1px solid gray;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
@@ -272,7 +282,7 @@ div.memproto {
 }
 
 div.memdoc {
-    background-color: #DCDBA8;
+    background-color: #E7E7E7;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
     -webkit-border-bottom-left-radius: 0.5em;

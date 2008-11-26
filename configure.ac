@@ -329,5 +329,7 @@ AC_CONFIG_FILES([GNUmakefile])
 AC_CONFIG_FILES([include/mp4v2/project.h])
 AC_CONFIG_FILES([doc/texi/base/project.texi])
 AC_CONFIG_FILES([doc/doxygen/Doxyfile])
+AC_CONFIG_FILES([doc/doxygen/header.html])
+AC_CONFIG_FILES([doc/doxygen/footer.html])
 
 AC_OUTPUT

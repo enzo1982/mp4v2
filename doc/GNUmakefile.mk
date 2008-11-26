@@ -153,6 +153,8 @@ $(DOC.xml2wiki.out): $(DOC.out.articles/)wiki/%.wiki: $(DOC.out.articles/)xml/%.
 	$(call XML2WIKI.cmd,$<,$@)
 
 $(DOC.api.out): | $(dir $(DOC.api.out))
+$(DOC.api.out): $(DOC.out/)doxygen/header.html
+$(DOC.api.out): $(DOC.out/)doxygen/footer.html
 $(DOC.api.out): $(DOC.out/)doxygen/Doxyfile
 	$(call DOXYGEN.cmd,$<)
 	$(INSTALL_DATA) $(DOC.in/)doxygen/banner.png $(DOC.out.api/)html/
@@ -162,3 +164,25 @@ $(DOC.api.out): $(DOC.out/)doxygen/Doxyfile
 
 $(sort $(MKDIRS)):
 	$(MKDIR_P) $@
+
+###############################################################################
+
+##
+## this is used for our svn-hosting area for copies of generated doc output
+## we need to set svn properties for Google's HTTP/svn server to host
+##
+## example: make doc.setprops MP4V2_SETPROPS=/work/mp4v2/root/doc/trunk/api
+##
+doc.setprops:
+	@if [ -z "$$MP4V2_SETPROPS" ]; then \
+	    echo "TARGET '$@' requires MP4V2_SETPROPERTIES to be set"; \
+	    exit 1; \
+	fi
+	@if [ ! -f "$$MP4V2_SETPROPS/banner.png" ]; then \
+	    echo "Directory contents appear incorrect; missing: banner.png"; \
+	    exit 1; \
+	fi
+	find $$MP4V2_SETPROPS -type f -a \( -name "*.html" -o -name "*.css" \) -print0 \
+	    | xargs -0 svn propset svn:eol-style native
+	find $$MP4V2_SETPROPS -type f -a -name "*.html" -print0 \
+	    | xargs -0 svn propset svn:mime-type "text/html"
