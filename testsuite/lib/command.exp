@@ -137,6 +137,7 @@ proc ::command::test_standardUsage { args } {
     # noargs
     set rv [exec 1 $exe]
     matchListLine {^Usage: \S+} [lindex $rv 1] 0
+    matchListLine {^Try.*-h.*--help} [lindex $rv 1] 1
 
     # -h
     set rv [exec 0 $exe -h]

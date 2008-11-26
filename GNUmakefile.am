@@ -232,6 +232,13 @@ MK_CXX_I = \
 
 ###############################################################################
 
+man1_MANS = \
+    doc/man/man1/mp4art.1 \
+    doc/man/man1/mp4dump.1 \
+    doc/man/man1/mp4optimize.1
+
+###############################################################################
+
 ##
 ## workaround: DejaGNU adds a hard-coded dependency on Makefile
 ## and need to create logdir

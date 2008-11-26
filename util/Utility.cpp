@@ -193,7 +193,7 @@ Utility::printHelp( bool extended, bool toerr )
                 "\n"
                 "\nCOMPATIBILITY MODES"
                 "\n  none     disable compaitbility checks"
-                "\n  dynamic  determine compatibility based on mp4 filename (default)"
+                "\n  dynamic  determine compatibility based on filename extension (default)"
                 "\n  itunes   force itunes compatibility";
         }
 
@@ -220,7 +220,8 @@ void
 Utility::printUsage( bool toerr )
 {
     ostringstream oss;
-    oss << "Usage: " << _name << " " << _usage;
+    oss <<   "Usage: " << _name << " " << _usage
+        << "\nTry -h or --help for more information";
  
     if( toerr )
         errf( "%s\n", oss.str().c_str() );
