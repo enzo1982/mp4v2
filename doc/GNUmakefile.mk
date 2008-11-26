@@ -155,6 +155,7 @@ $(DOC.xml2wiki.out): $(DOC.out.articles/)wiki/%.wiki: $(DOC.out.articles/)xml/%.
 $(DOC.api.out): | $(dir $(DOC.api.out))
 $(DOC.api.out): $(DOC.out/)doxygen/Doxyfile
 	$(call DOXYGEN.cmd,$<)
+	$(INSTALL_DATA) $(DOC.in/)doxygen/banner.png $(DOC.out.api/)html/
 	touch $@
 
 ###############################################################################
