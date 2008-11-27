@@ -171,6 +171,30 @@
 			Name="include"
 			>
 			<File
+				RelativePath="..\..\include\mp4v2\chapter.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\mp4v2\file.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\mp4v2\file_prop.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\mp4v2\general.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\mp4v2\isma.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\mp4v2\meta.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\mp4v2\mp4v2.h"
 				>
 			</File>
@@ -180,6 +204,22 @@
 			</File>
 			<File
 				RelativePath="..\include\mp4v2\project.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\mp4v2\sample.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\mp4v2\streaming.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\mp4v2\track.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\mp4v2\track_prop.h"
 				>
 			</File>
 		</Filter>
