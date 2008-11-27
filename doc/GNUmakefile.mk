@@ -100,7 +100,7 @@ doc: man articles api
 
 .PHONY: articlesclean apiclean docclean
 articlesclean: htmlclean txtclean xmlclean wikiclean
-docclean: articlesclean apiclean
+docclean: manclean articlesclean apiclean
 
 .PHONY: man html txt xml wiki api
 man: $(DOC.man.out)
@@ -128,7 +128,7 @@ wikiclean:
 
 apiclean:
 	rm -f $(DOC.api.out)
-	rm -fr $(DOC.out.articles/)api/html/ $(DOC.out.articles/)api/xml/
+	rm -fr $(DOC.out.api/)html/ $(DOC.out.api/)xml/
 
 ###############################################################################
 
