@@ -99,7 +99,7 @@ void MP4DAc3Atom::Dump(FILE* pFile, uint8_t indent, bool dumpImplicits)
 
         fscod = fscodProp->GetValue();
 
-        if (fscod <= (sizeof(fscods) / sizeof(fscods[0]))) {
+        if (fscod < (sizeof(fscods) / sizeof(fscods[0]))) {
             fscodString = fscods[fscod];
         } else {
             fscodString = "Invalid value";
@@ -134,7 +134,7 @@ void MP4DAc3Atom::Dump(FILE* pFile, uint8_t indent, bool dumpImplicits)
 
         bsmod = bsmodProp->GetValue();
 
-        if (bsmod <= (sizeof(bsmods) / sizeof(bsmods[0]))) {
+        if (bsmod < (sizeof(bsmods) / sizeof(bsmods[0]))) {
             bsmodString = bsmods[bsmod];
         } else {
             bsmodString = "Invalid value";
@@ -169,7 +169,7 @@ void MP4DAc3Atom::Dump(FILE* pFile, uint8_t indent, bool dumpImplicits)
 
         acmod = acmodProp->GetValue();
 
-        if (acmod <= (sizeof(acmods) / sizeof(acmods[0]))) {
+        if (acmod < (sizeof(acmods) / sizeof(acmods[0]))) {
             acmodString = acmods[acmod];
         } else {
             acmodString = "Invalid value";
@@ -228,7 +228,7 @@ void MP4DAc3Atom::Dump(FILE* pFile, uint8_t indent, bool dumpImplicits)
 
         Indent(pFile, indent);
 
-        if (bit_rate_code <= (sizeof(bit_rate_codes) / sizeof(bit_rate_codes[0]))) {
+        if (bit_rate_code < (sizeof(bit_rate_codes) / sizeof(bit_rate_codes[0]))) {
             bit_rate = bit_rate_codes[bit_rate_code];
         } else {
             bit_rate = 0;
