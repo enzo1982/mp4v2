@@ -161,6 +161,7 @@ class MP4DAc3Atom : public MP4Atom {
 public:
     MP4DAc3Atom();
     void Generate();
+    void Dump(FILE* pFile, uint8_t indent, bool dumpImplicits);
 };
 
 class MP4Mp4sAtom : public MP4Atom {
