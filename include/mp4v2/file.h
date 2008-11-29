@@ -40,7 +40,8 @@
  *  @param hFile handle of file for operation.
  *
  *  @return bitmask of flags of diagnostic information.
- *      See MP4SetVerbosity() for further details.
+ *
+ *  @see MP4SetVerbosity() for further details.
  */
 MP4V2_EXPORT
 uint32_t MP4GetVerbosity( MP4FileHandle hFile );
@@ -65,6 +66,8 @@ uint32_t MP4GetVerbosity( MP4FileHandle hFile );
  *      @li #MP4_DETAILS_HINT
  *      @li #MP4_DETAILS_ISMA
  *      @li #MP4_DETAILS_EDIT
+ *
+ *  @see MP4GetVerbosity().
  */
 MP4V2_EXPORT
 void MP4SetVerbosity( MP4FileHandle hFile, uint32_t verbosity );
@@ -91,7 +94,6 @@ void MP4Close(
  *  @param fileName pathname of the file to be created.
  *  @param verbosity bitmask of diagnostic details the library
  *      should print to stdout during its functioning.
- *      See MP4SetVerbosity() for values.
  *  @param flags bitmask that allows the user to set 64-bit values for
  *      data or time atoms. Valid bits may be any combination of:
  *          @li #MP4_CREATE_64BIT_DATA
@@ -99,7 +101,9 @@ void MP4Close(
  *
  *  @return On success a handle of the newly created file for use in
  *      subsequent calls to the library.
- *      On error, #MP4_INVALID_FILE_HANDLE is returned.
+ *      On error, #MP4_INVALID_FILE_HANDLE.
+ *
+ *  @see MP4SetVerbosity() for <b>verbosity</b> values.
  */
 MP4V2_EXPORT
 MP4FileHandle MP4Create(
@@ -114,7 +118,6 @@ MP4FileHandle MP4Create(
  *  @param fileName pathname of the file to be created.
  *  @param verbosity bitmask of diagnostic details the library
  *      should print to stdout during its functioning.
- *      See MP4SetVerbosity() for values.
  *  @param flags bitmask that allows the user to set 64-bit values for
  *      data or time atoms. Valid bits may be any combination of:
  *          @li #MP4_CREATE_64BIT_DATA
@@ -130,7 +133,9 @@ MP4FileHandle MP4Create(
  *
  *  @return On success a handle of the newly created file for use in
  *      subsequent calls to the library.
- *      On error, #MP4_INVALID_FILE_HANDLE is returned.
+ *      On error, #MP4_INVALID_FILE_HANDLE.
+ *
+ *  @see MP4SetVerbosity() for <b>verbosity</b> values.
  */
 MP4V2_EXPORT
 MP4FileHandle MP4CreateEx(
@@ -153,8 +158,8 @@ MP4FileHandle MP4CreateEx(
  *
  *  Note that MP4Dump() will not print the individual values of control tables,
  *  such as the size of each sample, unless the current verbosity value
- *  includes the flag #MP4_DETAILS_TABLE. See MP4SetVerbosity() for how to set
- *  this flag.
+ *  includes the flag #MP4_DETAILS_TABLE.
+ *  See MP4SetVerbosity() for how to set this flag.
  *
  *  @param hFile handle of file to dump.
  *  @param pDumpFile dump destination. If NULL stdout will be used.
@@ -164,6 +169,8 @@ MP4FileHandle MP4CreateEx(
  *      properties.
  *
  *  @return <b>true</b> on success, <b>false</b> on failure.
+ *
+ *  @see MP4SetVerbosity().
  */
 MP4V2_EXPORT
 bool MP4Dump(
@@ -199,7 +206,9 @@ Track  Type   Info
  *      tracks in the file.
  *
  *  @return On success a malloc'd string containing summary information.
- *      On failre, NULL.
+ *      On failure, <b>NULL</b>.
+ *
+ *  @see MP4Info().
  */
 MP4V2_EXPORT
 char* MP4FileInfo(
@@ -234,7 +243,9 @@ Track  Type   Info
  *      tracks in the file.
  *
  *  @return On success a malloc'd string containing summary information.
- *      On failre, NULL.
+ *      On failure, <b>NULL</b>.
+ *
+ *  @see MP4FileInfo().
  */
 MP4V2_EXPORT
 char* MP4Info(
@@ -254,12 +265,13 @@ char* MP4Info(
  *  @param fileName pathname of the file to be modified.
  *  @param verbosity bitmask of diagnostic details the library
  *      should print to stdout during its functioning.
- *      See MP4SetVerbosity() for values.
  *  @param flags currently ignored.
  *
  *  @return On success a handle of the target file for use in subsequent calls
  *      to the library.
- *      On error, #MP4_INVALID_FILE_HANDLE is returned.
+ *      On error, #MP4_INVALID_FILE_HANDLE.
+ *
+ *  @see MP4SetVerbosity() for <b>verbosity</b> values.
  */
 MP4V2_EXPORT
 MP4FileHandle MP4Modify(
@@ -267,7 +279,7 @@ MP4FileHandle MP4Modify(
     uint32_t    verbosity DEFAULT(0),
     uint32_t    flags DEFAULT(0) );
 
-/** Optimize the layour of an mp4 file.
+/** Optimize the layout of an mp4 file.
  *
  *  MP4Optimize reads an existing mp4 file and writes a new version of the
  *  file with the two important changes:
@@ -298,9 +310,10 @@ MP4FileHandle MP4Modify(
  *      will be over-written upon successful completion.
  *  @param verbosity bitmask of diagnostic details the library
  *      should print to stdout during its functioning.
- *      See MP4SetVerbosity() for values.
  *
  *  @return <b>true</b> on success, <b>false</b> on failure.
+ *
+ *  @see MP4SetVerbosity() for <b>verbosity</b> values.
  */
 MP4V2_EXPORT
 bool MP4Optimize(
@@ -319,11 +332,12 @@ bool MP4Optimize(
  *  @param fileName pathname of the file to be read.
  *  @param verbosity bitmask of diagnostic details the library
  *      should print to stdout during its functioning.
- *      See MP4SetVerbosity() for values.
  *
  *  @return On success a handle of the file for use in subsequent calls to
  *      the library.
- *      On error, #MP4_INVALID_FILE_HANDLE is returned.
+ *      On error, #MP4_INVALID_FILE_HANDLE.
+ *
+ *  @see MP4SetVerbosity() for <b>verbosity</b> values.
  */
 MP4V2_EXPORT
 MP4FileHandle MP4Read(
@@ -340,11 +354,12 @@ MP4FileHandle MP4Read(
  *  @param virtual_IO undocumented.
  *  @param verbosity bitmask of diagnostic details the library
  *      should print to stdout during its functioning.
- *      See MP4SetVerbosity() for values.
  *
  *  @return On success a handle of the file for use in subsequent calls to
  *      the library.
- *      On error, #MP4_INVALID_FILE_HANDLE is returned.
+ *      On error, #MP4_INVALID_FILE_HANDLE.
+ *
+ *  @see MP4SetVerbosity() for <b>verbosity</b> values.
  */
 MP4V2_EXPORT
 MP4FileHandle MP4ReadEx(

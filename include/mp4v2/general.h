@@ -51,6 +51,11 @@ typedef void (*lib_message_func_t)(
 
 /*****************************************************************************/
 
+/** Encryption function pointer.
+ *
+ * @see MP4EncAndCopySample().
+ * @see MP4EncAndCopyTrack().
+ */
 typedef uint32_t (*encryptFunc_t)( uint32_t, uint32_t, uint8_t*, uint32_t*, uint8_t** );
 
 /*****************************************************************************/
@@ -413,6 +418,23 @@ MP4Timestamp MP4ConvertToTrackTimestamp(
     uint64_t      timeStamp,
     uint32_t      timeScale );
 
+/** Convert duration from track time scale to an arbitrary time scale.
+ *
+ *  MP4ConvertFromTrackDuration converts a duration such as a sample duration
+ *  from the track time scale to another time scale. This can be used by a
+ *  player application to map all track samples to a common time scale.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param trackId id of track for operation.
+ *  @param duration value to be converted.
+ *  @param timeScale time scale in ticks per second.
+ *
+ *  @return On success, the duration in arbitrary time scale units.
+ *      On error, <b>0</b>.
+ *
+ *  @see MP4GetSampleDuration().
+ *  @see MP4ConvertToTrackDuration().
+ */
 MP4V2_EXPORT
 uint64_t MP4ConvertFromTrackDuration(
     MP4FileHandle hFile,
@@ -420,6 +442,21 @@ uint64_t MP4ConvertFromTrackDuration(
     MP4Duration   duration,
     uint32_t      timeScale );
 
+/** Convert duration from arbitrary time scale to track time scale.
+ *
+ *  MP4ConvertToTrackDuration converts a duration such as a sample duration
+ *  from the specified time scale to the track time scale.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param trackId id of track for operation.
+ *  @param duration value to be converted.
+ *  @param timeScale time scale in ticks per second.
+ *
+ *  @return On success, the duration in track time scale units.
+ *      On error, #MP4_INVALID_DURATION.
+ *
+ *  @see MP4ConvertFromTrackDuration().
+ */
 MP4V2_EXPORT
 MP4Duration MP4ConvertToTrackDuration(
     MP4FileHandle hFile,
