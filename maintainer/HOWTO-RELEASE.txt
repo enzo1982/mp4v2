@@ -14,7 +14,7 @@ Official Releases
 Releases use a version tuple of pattern MAJOR.MINOR.POINT and changing
 the version is accomplished by editing the corresponding values in:
 
-    project/project.m4
+    project/project.m4sugar
 
 And all releases follow this repository URL convention:
 
@@ -78,7 +78,7 @@ WORKFLOW - MINOR-RELEASE
     cd 1.0.0/
 
     # if needed, edit version, checkin, update, autoreconf.
-    vi project/project.m4
+    vi project/project.m4sugar
     svn ci
     svn update
     autoreconf -fiv
@@ -109,7 +109,7 @@ WORKFLOW - MINOR-RELEASE
     cd /work/mp4v2/
     svn co https://mp4v2.googlecode.com/svn/trunk/
     cd trunk/
-    vi project/project.m4 # bump version to 1.1.0
+    vi project/project.m4sugar # bump version to 1.1.0
     svn ci -m "BUMP: TRUNK 1.1.0"
     svn update
     autoreconf -fiv
@@ -125,7 +125,7 @@ to branch from 1.0.0 (not trunk!). Here is an example 1.0.1 point-release.
         https://mp4v2.googlecode.com/svn/releases/1.0.0 \
         https://mp4v2.googlecode.com/svn/releases/1.0.1
     cd 1.0.1/
-    vi project/project.m4 # bump version to 1.0.1
+    vi project/project.m4sugar # bump version to 1.0.1
     svn ci
     svn update
     autoreconf -fiv
