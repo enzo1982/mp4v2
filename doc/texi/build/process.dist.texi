@@ -1,15 +1,12 @@
 @section Create Distribution
 
-The following command will create a @value{PROJECT_name} source distribution.
-It is during this step that shipped documentation is generated.
+The following command will create a @value{PROJECT.name} source distribution. It is during this step that shipped documentation is generated.
 
 @example
 @COMMAND.dist{}
 @end example
 
-This step in the build process introduces some significant requirements
-to the host system. While most of the following utilities are generally
-available, the GNU texinfo and Doxygen are not as ubiquitous:
+This step in the build process introduces some significant requirements to the host system. While most of the following utilities are generally available, the GNU texinfo and Doxygen are not as ubiquitous:
 
 @itemize
 @item GNU texinfo 4.8 or higher (lower versions should work)

@@ -1,15 +1,15 @@
 @macro COMMAND.checkout{}
-svn checkout @value{PROJECT_repo_url} @value{PROJECT_name_lower}
-cd @value{PROJECT_name_lower}
+svn checkout @value{PROJECT.repo.url} @value{PROJECT.name.lower}
+cd @value{PROJECT.name.lower}
 @end macro
 
-@macro COMMAND.autoreconf{}
+@macro COMMAND.bootstrap{}
 autoreconf -fiv
 @end macro
 
 @macro COMMAND.extract{}
-tar xf @value{PROJECT_name_lower}-@value{PROJECT_version}.tar.bz2
-cd @value{PROJECT_name_lower}-@value{PROJECT_version}/
+tar xf @value{PROJECT.name.lower}-@value{PROJECT.version}.tar.bz2
+cd @value{PROJECT.name.lower}-@value{PROJECT.version}/
 @end macro
 
 @macro COMMAND.configure{}
@@ -25,6 +25,7 @@ make
 
 @macro COMMAND.install{}
 make install
+make install-man
 @end macro
 
 @macro COMMAND.dist{}

@@ -22,9 +22,7 @@ a {
 }
 
 a:hover {
-    background-color: #5382A1;
-    color: yellow;
-    text-shadow: black 1px 1px 0px;
+    color: #9E005D;
 }
 
 h1 {
@@ -116,6 +114,8 @@ div#sitebanner {
     text-shadow: black 1px 1px 0px;
 }
 
+/* enable to make banner logo clickable */
+/*
 div#sitebanner div#home a {
     display: block;
     background: none;
@@ -125,21 +125,41 @@ div#sitebanner div#home a {
     height: 80px;
     width: 220px;
 }
+*/
 
-div#sitebanner span#slogan {
+div#sitebanner div#title {
+    display: none;
+    position: absolute;
+    top: 40%;
+    right: 0;
+    left: 0;
+    text-align: center;
     color: white;
+    color: #C9F08D;
+    font-weight: bold;
+    font-size: 150%;
+}
+
+div#sitebanner div#menu {
     position: absolute;
     top: 16px;
     right: 16px;
+    color: white;
+    text-align: right;
 }
 
-div#sitebanner span#title {
+div#sitebanner div#menu li {
+    list-style-type: none;
+}
+
+div#sitebanner div#menu li a {
+    color: white;
+    font-weight: normal;
+}
+
+div#sitebanner div#menu li.active,
+div#sitebanner div#menu li a:hover {
     color: #C9F08D;
-    font-weight: bold;
-    font-size: 160%;
-    position: absolute;
-    bottom: 16px;
-    right: 16px;
 }
 
 div.navigation {
@@ -186,21 +206,15 @@ div.navigation div.tabs ul li a {
 }
 
 div.navigation div.tabs ul li a:hover {
-    color: #80A8C2;
-    background-color: #5382A1;
-    color: yellow;
-    text-shadow: black 1px 1px 0px;
+    color: #9E005D;
 }
 
 div.navigation div.tabs ul li.current a {
     color: #5382A1;
-    cursor: pointer;
 }
 
 div.navigation div.tabs ul li.current a:hover {
-    background-color: #5382A1;
-    color: yellow;
-    text-shadow: black 1px 1px 0px;
+    color: #9E005D;
 }
 
 /* ----------------------------------*/

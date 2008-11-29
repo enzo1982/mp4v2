@@ -1,3 +1,5 @@
+changequote(<<,>>)dnl
+include(<<project.m4>>)dnl
 # Doxyfile 1.5.7
 
 # This file describes the settings to be used by the documentation system
@@ -25,20 +27,20 @@ DOXYFILE_ENCODING      = UTF-8
 # The PROJECT_NAME tag is a single word (or a sequence of words surrounded 
 # by quotes) that should identify the project.
 
-PROJECT_NAME           = @PROJECT_name_formal@
+PROJECT_NAME           = PROJECT_name
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. 
 # This could be handy for archiving the generated documentation or 
 # if some version control system is used.
 
-#PROJECT_NUMBER         = @PROJECT_version@
+#PROJECT_NUMBER         = PROJECT_version
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 
 # If a relative path is entered, it will be relative to the location 
 # where doxygen was started. If left blank the current directory will be used.
 
-OUTPUT_DIRECTORY       = @abs_top_builddir@/doc/api
+OUTPUT_DIRECTORY       = __MAKE_ABS_TOP_BUILDDIR/doc/api
 
 # If the CREATE_SUBDIRS tag is set to YES, then doxygen will create 
 # 4096 sub-directories (in 2 levels) under the output directory of each output 
@@ -114,7 +116,7 @@ FULL_PATH_NAMES        = YES
 # If left blank the directory from which doxygen is run is used as the 
 # path to strip.
 
-STRIP_FROM_PATH        = @abs_top_srcdir@
+STRIP_FROM_PATH        = __MAKE_ABS_TOP_SRCDIR
 
 # The STRIP_FROM_INC_PATH tag can be used to strip a user-defined part of 
 # the path mentioned in the documentation of a class, which tells 
@@ -552,7 +554,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = @abs_top_srcdir@/doc/doxygen/mainpage.h @abs_top_srcdir@/include @abs_top_srcdir@/libplatform
+INPUT = __MAKE_ABS_TOP_SRCDIR/doc/doxygen/mainpage.h __MAKE_ABS_TOP_SRCDIR/include __MAKE_ABS_TOP_SRCDIR/libplatform
 
 # This tag can be used to specify the character encoding of the source files 
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is 
@@ -753,13 +755,13 @@ HTML_FILE_EXTENSION    = .html
 # each generated HTML page. If it is left blank doxygen will generate a 
 # standard header.
 
-HTML_HEADER            = @abs_top_builddir@/doc/doxygen/header.html
+HTML_HEADER            = __MAKE_ABS_TOP_BUILDDIR/doc/doxygen/header.html
 
 # The HTML_FOOTER tag can be used to specify a personal HTML footer for 
 # each generated HTML page. If it is left blank doxygen will generate a 
 # standard footer.
 
-HTML_FOOTER            = @abs_top_builddir@/doc/doxygen/footer.html
+HTML_FOOTER            = __MAKE_ABS_TOP_BUILDDIR/doc/doxygen/footer.html
 
 # The HTML_STYLESHEET tag can be used to specify a user-defined cascading 
 # style sheet that is used by each HTML page. It can be used to 
@@ -768,7 +770,7 @@ HTML_FOOTER            = @abs_top_builddir@/doc/doxygen/footer.html
 # the style sheet file to the HTML output directory, so don't put your own 
 # stylesheet in the HTML output directory as well, or it will be erased!
 
-HTML_STYLESHEET        = @abs_top_srcdir@/doc/doxygen/project.css
+HTML_STYLESHEET        = __MAKE_ABS_TOP_SRCDIR/doc/doxygen/project.css
 
 # If the HTML_ALIGN_MEMBERS tag is set to YES, the members of classes, 
 # files or namespaces will be aligned in HTML using tables. If set to 
@@ -1203,7 +1205,7 @@ INCLUDE_FILE_PATTERNS  =
 # undefined via #undef or recursively expanded use the := operator 
 # instead of the = operator.
 
-PREDEFINED             =  MP4V2_EXPORT
+PREDEFINED             =  MP4V2_EXPORT MP4V2_DEPRECATED DEFAULT(x)=" =x"
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then 
 # this tag can be used to specify a list of macro names that should be expanded. 

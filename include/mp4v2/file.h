@@ -23,7 +23,7 @@
 /** Bit: enable 64-bit data-atoms. */
 #define MP4_CREATE_64BIT_DATA 0x01
 /** Bit: enable 64-bit time-atoms.
-  * @note QuickTime versions <b>prior</b> to 7.2.1 are incompatible with this extension.
+  * @note Incompatible with QuickTime.
   */
 #define MP4_CREATE_64BIT_TIME 0x02
 /** Bitmask: convenience for both data and time atoms.

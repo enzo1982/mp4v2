@@ -8,8 +8,6 @@ check_PROGRAMS =
 
 ###############################################################################
 
-libmp4v2_la_LIBADD = libplatform.la
-
 libmp4v2_la_SOURCES = \
     src/3gp.cpp                          \
     src/atom_ac3.cpp                     \
@@ -211,7 +209,7 @@ mp4v2inc_HEADERS = \
 ###############################################################################
 
 EXTRA_DIST = \
-    project/project.m4 \
+    project/project.m4  \
     util/impl.h
 
 ###############################################################################
@@ -258,6 +256,8 @@ Makefile: ${Makefile}
 	touch $@
 	$(MKDIR_P) $(TESTLOGDIR)
 
+dist-hook:
+
 ###############################################################################
 
 ##
@@ -265,4 +265,5 @@ Makefile: ${Makefile}
 ## they are aware of automake variables and targets. Note that we wrap in
 ## an eval to prevent automake from parsing GNU make extensions therein.
 ##
-$(eval include $(top_srcdir)/doc/GNUmakefile.mk)
+#-$(eval include $(top_srcdir)/doc/GNUmakefile.mk)
+-include $(top_srcdir)/doc/GNUmakefile.mk

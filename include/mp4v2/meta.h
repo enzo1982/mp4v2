@@ -67,7 +67,7 @@ bool MP4GetMetadataWriter(
     char**        value );
 
 /** 
-  * @deprecated scheduled for removal.,use MP4DeleteMetadataComposer().
+  * @deprecated scheduled for removal,use MP4DeleteMetadataComposer().
   */
 MP4V2_DEPRECATED
 MP4V2_EXPORT

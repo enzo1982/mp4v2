@@ -203,7 +203,7 @@ Utility::printHelp( bool extended, bool toerr )
             "\n"
             "\nVERBOSITY LEVELS"
             "\n  0  warnings and errors"
-            "\n  1  normal informative messages"
+            "\n  1  normal informative messages (default)"
             "\n  2  more informative messages"
             "\n  3  everything";
     }

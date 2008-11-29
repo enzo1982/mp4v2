@@ -1,0 +1,50 @@
+@input texinfo @c -*- Texinfo -*-
+@c %**start of header
+@setfilename ReleaseNotes.info
+@include base/article.texi
+@paragraphindent none
+@c %**end of header
+
+@titlepage
+@end titlepage
+
+@majorheading @value{PROJECT.name.formal} Release Notes
+@include releasenotes/intro.@value{PROJECT.repo.type}.texi
+@contents
+
+@chapter What's New?
+Welcome! This is the inaugural release of @value{PROJECT.name}.
+
+This project's goal is to continue development of a C-library named @file{libmp4v2} which was once a part of the (now defunct) MPEG4IP project. That library, and some related command-line utilities were branched from MPEG4IP version 1.6.1 to seed this project, @value{PROJECT.name}.
+
+@chapter Breaking Changes
+@section Top-level header file
+This release is @b{nearly} 100% API compatible with MPEG4IP, however there are some differences. There single change code using this library @b{must} make is to include the top-level public header file as follows. @b{This is the only supported mechanism to include the library}. We do not support attempts to any sub-level header files; such files are private implementation details and their naming must not be relied upon.
+
+@example
+#include <mp4v2/mp4v2.h>
+@end example
+
+@section Command-line utilities
+The command-line utilities have been totally rewritten and enhanced. Help usage has been made more consistent and enhanced, please invoke the appropriate utility in this fashion for more details:
+
+@example
+@i{command} --help
+@end example
+
+@appendix SCM repository details
+@example
+url:  @value{PROJECT.repo.url}
+root: @value{PROJECT.repo.root}
+uuid: @value{PROJECT.repo.uuid}
+rev:  @value{PROJECT.repo.rev}
+date: @value{PROJECT.repo.date}
+type: @value{PROJECT.repo.type}
+@end example
+
+@appendix Changelog
+@appendixsection Version 2.0
+@include changelog/version-2.0.texi
+
+@appendixsection Version 1.6
+@include changelog/version-1.6.texi

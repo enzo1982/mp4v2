@@ -24,6 +24,19 @@
 ##
 ###############################################################################
 
+VPATH =
+
+vpath COPYING       $(top_srcdir)
+vpath INSTALL       $(top_srcdir)
+vpath README        $(top_srcdir)
+vpath autoaux/%     $(top_srcdir)
+vpath %.cpp         $(top_srcdir)
+vpath %.h           $(top_srcdir)
+vpath %.m4          $(top_srcdir)
+vpath %.1           $(top_srcdir)
+
+###############################################################################
+
 SOURCE/ = $(top_srcdir)/
 BUILD/  = $(top_builddir)/
 
@@ -32,8 +45,14 @@ DOC.out/ = $(BUILD/)doc/
 
 DOC.out.api/      = $(DOC.out/)api/
 DOC.out.articles/ = $(DOC.out/)articles/
+DOC.out.site/     = $(DOC.out/)site/
 
 ###############################################################################
+
+M4       = m4
+M4.flags = -I$(BUILD/)project
+M4.cmd   = $(M4) $(M4.flags) $(1) > $(2)
+M4.deps  = $(BUILD/)project/project.m4
 
 HELP2MAN       = help2man
 HELP2MAN.flags = -m "$(PROJECT_name) Utilities" -N
@@ -45,6 +64,10 @@ MAKEINFO.flags.txt  = --plaintext --no-headers
 MAKEINFO.flags.xml  = --xml --output-indent=4
 MAKEINFO.cmd        = makeinfo $(MAKEINFO.flags) $(MAKEINFO.flags.$(1)) $(2) -o $(3)
 
+HTMLCOMBINE = $(SOURCE/)project/htmlcombine.py
+HTMLCOMBINE.cmd   = $(HTMLCOMBINE) --header $(1) --footer $(2) --body $(3) > $(4)
+HTMLCOMBINE.deps  = $(HTMLCOMBINE)
+
 XML2WIKI       = $(SOURCE/)project/xml2wiki.py
 XML2WIKI.flags = --date --toc
 XML2WIKI.cmd   = $(XML2WIKI) $(XML2WIKI.flags) $(1) > $(2)
@@ -55,13 +78,21 @@ DOXYGEN.cmd = $(DOXYGEN) $(1)
 
 ###############################################################################
 
+DOC.m4.out = \
+    doc/texi/base/project.texi \
+    doc/doxygen/Doxyfile       \
+    doc/doxygen/header.html    \
+    doc/doxygen/footer.html    \
+    doc/html/header.html       \
+    doc/html/footer.html
+
 DOC.man.utils = mp4art mp4dump mp4optimize
 DOC.man.out   = $(DOC.man.utils:%=$(DOC.out/)man/man1/%.1)
 
 DOC.texi.articles = $(wildcard $(DOC.in/)texi/*.texi $(DOC.out/)texi/*.texi)
 
 DOC.texi.includes = \
-    $(DOC.out/)texi/base/project.texi \
+    doc/texi/base/project.texi \
     $(wildcard $(DOC.in/)texi/*/*.texi $(DOC.out/)texi/*/*.texi)
 
 DOC.texi2html.out = $(DOC.texi.articles:$(DOC.in/)texi/%.texi=$(DOC.out.articles/)html/%.html)
@@ -72,18 +103,22 @@ DOC.xml2wiki.out  = $(DOC.texi2xml.out:$(DOC.out.articles/)xml/%.xml=$(DOC.out.a
 
 DOC.api.out = $(DOC.out.api/).stamp
 
-MKDIRS += $(DOC.out/)man/man1/
-MKDIRS += $(foreach n,html man texi txt wiki xml,$(DOC.out.articles/)$n)
-MKDIRS += $(DOC.out.api/)
+DOC.site.out       = $(DOC.out.site/).stamp
+DOC.site.out.copy  = $(patsubst $(DOC.in/)html/%,$(DOC.out.site/)%, \
+    $(filter-out %.in,$(wildcard $(DOC.in/)html/*)))
+DOC.site.out.index = $(DOC.out.site/)index.html
+DOC.site.out.html  = $(patsubst $(DOC.out.articles/)html/%,$(DOC.out.site/)%, \
+    $(filter-out %/Documentation.html,$(DOC.texi2html.out)))
 
 ###############################################################################
 
-EXTRA_DIST += $(SOURCE/)doc/GNUmakefile.mk
+MKDIRS += $(dir $(DOC.m4.out))
+MKDIRS += $(DOC.out/)man/man1/
+MKDIRS += $(foreach n,html man texi txt wiki xml,$(DOC.out.articles/)$n)
+MKDIRS += $(DOC.out.api/)
+MKDIRS += $(DOC.out.site/)
 
-EXTRA_DIST += \
-    $(DOC.in/)texi/base/project.texi.in \
-    $(DOC.texi.articles) \
-    $(DOC.texi.includes)
+###############################################################################
 
 EXTRA_DIST += \
     $(SOURCE/)vstudio9.0/include/mp4v2/project.h \
@@ -92,15 +127,29 @@ EXTRA_DIST += \
 
 ###############################################################################
 
+dist-hook: $(DOC.texi2txt.out) $(DOC.man.out)
+	rm -fr $(distdir)/doc
+	$(MKDIR_P) $(distdir)/doc
+	$(INSTALL_DATA) $(DOC.texi2txt.out) $(distdir)/doc/.
+	$(MKDIR_P) $(distdir)/doc/man/man1
+	$(INSTALL_DATA) $(DOC.man.out) $(distdir)/doc/man/man1
+
 distclean-local: docclean
+
+###############################################################################
+
+$(DOC.m4.out): %: %.m4 $(M4.deps) | $(dir $(DOC.m4.out))
+	$(call M4.cmd,$<,$@)
+
+###############################################################################
 
 .PHONY: articles doc
 articles: html txt xml wiki
-doc: man articles api
+doc: man articles api site
 
 .PHONY: articlesclean apiclean docclean
 articlesclean: htmlclean txtclean xmlclean wikiclean
-docclean: manclean articlesclean apiclean
+docclean: manclean articlesclean apiclean siteclean
 
 .PHONY: man html txt xml wiki api
 man: $(DOC.man.out)
@@ -109,6 +158,7 @@ txt: $(DOC.texi2txt.out)
 xml: $(DOC.texi2xml.out)
 wiki: $(DOC.xml2wiki.out)
 api: $(DOC.api.out)
+site: $(DOC.site.out)
 
 .PHONY: manclean htmlclean txtclean xmlclean wikiclean apiclean
 manclean:
@@ -129,6 +179,9 @@ wikiclean:
 apiclean:
 	rm -f $(DOC.api.out)
 	rm -fr $(DOC.out.api/)html/ $(DOC.out.api/)xml/
+
+siteclean:
+	rm -fr $(DOC.out.site/)
 
 ###############################################################################
 
@@ -153,6 +206,8 @@ $(DOC.xml2wiki.out): $(DOC.out.articles/)wiki/%.wiki: $(DOC.out.articles/)xml/%.
 	$(call XML2WIKI.cmd,$<,$@)
 
 $(DOC.api.out): | $(dir $(DOC.api.out))
+$(DOC.api.out): $(DOC.in/)doxygen/banner.png
+$(DOC.api.out): $(DOC.in/)doxygen/project.css
 $(DOC.api.out): $(DOC.out/)doxygen/header.html
 $(DOC.api.out): $(DOC.out/)doxygen/footer.html
 $(DOC.api.out): $(DOC.out/)doxygen/Doxyfile
@@ -162,27 +217,75 @@ $(DOC.api.out): $(DOC.out/)doxygen/Doxyfile
 
 ###############################################################################
 
-$(sort $(MKDIRS)):
-	$(MKDIR_P) $@
+$(DOC.site.out): | $(DOC.out.site/)articles
+$(DOC.site.out): | $(DOC.out.site/)api
+$(DOC.site.out): $(DOC.site.out.copy)
+$(DOC.site.out): $(DOC.site.out.index)
+$(DOC.site.out): $(DOC.site.out.html)
+
+$(DOC.out.site/)articles: | html $(DOC.out.site/)
+	rm -f $@
+	ln -s ../articles/html $@
+
+$(DOC.out.site/)api: | api $(DOC.out.site/)
+	rm -f $@
+	ln -s ../api/html $@
+
+$(DOC.site.out.copy): $(DOC.out.site/)%: $(DOC.in/)html/%
+	$(INSTALL_DATA) $^ $(@D)/.
+
+$(DOC.site.out.index): $(DOC.out/)html/header.html $(DOC.out/)html/footer.html
+$(DOC.site.out.index): $(HTMLCOMBINE.deps)
+$(DOC.site.out.index): $(DOC.out.articles/)html/Documentation.html
+	$(call HTMLCOMBINE.cmd,$(word 2,$^),$(word 3,$^),$<,$@)
+
+$(DOC.site.out.html): $(DOC.out/)html/header.html $(DOC.out/)html/footer.html
+$(DOC.site.out.html): $(HTMLCOMBINE.deps)
+$(DOC.site.out.html): $(DOC.out.site/)%: $(DOC.out.articles/)html/%
+	$(call HTMLCOMBINE.cmd,$(word 2,$^),$(word 3,$^),$<,$@)
 
 ###############################################################################
 
-##
-## this is used for our svn-hosting area for copies of generated doc output
-## we need to set svn properties for Google's HTTP/svn server to host
-##
-## example: make doc.setprops MP4V2_SETPROPS=/work/mp4v2/root/doc/trunk/api
-##
-doc.setprops:
-	@if [ -z "$$MP4V2_SETPROPS" ]; then \
-	    echo "TARGET '$@' requires MP4V2_SETPROPERTIES to be set"; \
-	    exit 1; \
+GOOGLE.out/      = $(top_builddir)/google/
+GOOGLE.repo.doc  = $(if $(filter release,$(PROJECT_repo_type)),$(PROJECT_version),trunk)
+
+google.post: site wiki
+google.post: | $(GOOGLE.out/)
+google.post: google.rsync google.rm google.add google.propset
+
+$(GOOGLE.out/):
+	svn co --depth immediates $(PROJECT_repo_root) $(GOOGLE.out/)
+	svn update --set-depth immediates google/wiki
+	svn update --set-depth infinity google/doc/$(GOOGLE.repo.doc)
+
+google.rsync:
+	rsync -vrptPL --delete \
+	    --exclude=".svn/*" --exclude=".svn" \
+	    --exclude="*/.svn/*" --exclude="*/.svn" \
+	    --exclude=".stamp" --exclude="*/.stamp" \
+	    $(DOC.out.site/). $(GOOGLE.out/)doc/$(GOOGLE.repo.doc)/.
+	$(INSTALL_DATA) $(DOC.out.articles/)wiki/BuildRepository.wiki $(GOOGLE.out/)wiki/.
+	$(INSTALL_DATA) $(DOC.out.articles/)wiki/BuildSource.wiki $(GOOGLE.out/)wiki/.
+
+google.rm:
+	@files=`svn status $(GOOGLE.out/) | grep '^!' | awk '{ print $$2 }'`; \
+	if [ -n "$$files" ]; then \
+	    svn rm $$files; \
 	fi
-	@if [ ! -f "$$MP4V2_SETPROPS/banner.png" ]; then \
-	    echo "Directory contents appear incorrect; missing: banner.png"; \
-	    exit 1; \
+
+google.add:
+	@files=`svn status $(GOOGLE.out/) | grep '^?' | awk '{ print $$2 }'`; \
+	if [ -n "$$files" ]; then \
+	    svn add $$files; \
 	fi
-	find $$MP4V2_SETPROPS -type f -a \( -name "*.html" -o -name "*.css" \) -print0 \
+
+google.propset:
+	find $(GOOGLE.out/)doc/$(GOOGLE.repo.doc) -type f -a \( -name "*.html" -o -name "*.css" \) -print0 \
 	    | xargs -0 svn propset svn:eol-style native
-	find $$MP4V2_SETPROPS -type f -a -name "*.html" -print0 \
+	find $(GOOGLE.out/)doc/$(GOOGLE.repo.doc) -type f -a -name "*.html" -print0 \
 	    | xargs -0 svn propset svn:mime-type "text/html"
+
+###############################################################################
+
+$(sort $(MKDIRS)):
+	$(MKDIR_P) $@

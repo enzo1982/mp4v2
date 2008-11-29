@@ -2,11 +2,12 @@
 # prelude
 ###############################################################################
 
-m4_include([project/project.m4])
+m4_include([project/project.m4sugar])
 
 m4_define([SVNINFO],m4_esyscmd([svn info 2>/dev/null]))
 
 m4_define([PRJ_repo_url],m4_bregexp(SVNINFO,[^URL: *\(.+\)],[\1]))
+m4_define([PRJ_repo_root],m4_bregexp(SVNINFO,[^Repository Root: *\(.+\)],[\1]))
 m4_define([PRJ_repo_uuid],m4_bregexp(SVNINFO,[^Repository UUID: *\(.+\)],[\1]))
 m4_define([PRJ_repo_rev],m4_bregexp(SVNINFO,[^Last Changed Rev: *\(.+\)],[\1]))
 m4_define([PRJ_repo_date],m4_bregexp(SVNINFO,[^Last Changed Date: *\(.+\)],[\1]))
@@ -19,7 +20,7 @@ m4_define([PRJ_snapshot],
 m4_define([PRJ_repo_type],ifelse(m4_len(PRJ_snapshot),8,[snapshot],PRJ_repo_type))
 
 m4_define([PRJ_version],ifelse(
-    PRJ_repo_type,[release],m4_format([%d.%d.%d],PRJ_version_major,PRJ_version_minor,PRJ_version_point),
+    PRJ_repo_type,[stable],m4_format([%d.%d.%d],PRJ_version_major,PRJ_version_minor,PRJ_version_point),
     PRJ_repo_type,[snapshot],m4_format([%d.%d-%s],PRJ_version_major,PRJ_version_minor,PRJ_snapshot),
     PRJ_repo_type,[developer],m4_format([%d.%d-r%d],PRJ_version_major,PRJ_version_minor,PRJ_repo_rev),
     m4_format([%d.%d-r%d],PRJ_version_major,PRJ_version_minor,PRJ_repo_rev)))
@@ -114,8 +115,9 @@ PROJECT_name="PRJ_name"
 PROJECT_name_lower="PRJ_name_lower"
 PROJECT_name_upper="PRJ_name_upper"
 PROJECT_name_formal="PRJ_name PRJ_version"
-PROJECT_website="PRJ_website"
-PROJECT_download_url="PRJ_download_url"
+PROJECT_url_website="PRJ_url_website"
+PROJECT_url_downloads="PRJ_url_downloads"
+PROJECT_url_discussion="PRJ_url_discussion"
 PROJECT_irc="PRJ_irc"
 PROJECT_bugreport="<PRJ_bugreport>"
 
@@ -125,6 +127,7 @@ PROJECT_version_major="PRJ_version_major"
 PROJECT_version_minor="PRJ_version_minor"
 PROJECT_version_point="PRJ_version_point"
 PROJECT_repo_url="PRJ_repo_url"
+PROJECT_repo_root="PRJ_repo_root"
 PROJECT_repo_uuid="PRJ_repo_uuid"
 PROJECT_repo_rev="PRJ_repo_rev"
 PROJECT_repo_date="PRJ_repo_date"
@@ -136,6 +139,7 @@ test -z "$PROJECT_version_major" && PROJECT_version_major="0"
 test -z "$PROJECT_version_minor" && PROJECT_version_minor="0"
 test -z "$PROJECT_version_point" && PROJECT_version_point="0"
 test -z "$PROJECT_repo_url"      && PROJECT_repo_url="svn://nowhere.com/project/unknown"
+test -z "$PROJECT_repo_root"     && PROJECT_repo_root="svn://nowhere.com/project"
 test -z "$PROJECT_repo_uuid"     && PROJECT_repo_uuid="00000000-0000-0000-0000-000000000000"
 test -z "$PROJECT_repo_rev"      && PROJECT_repo_rev="0"
 test -z "$PROJECT_repo_date"     && PROJECT_repo_date="unknown"
@@ -146,8 +150,9 @@ AC_SUBST([PROJECT_name])
 AC_SUBST([PROJECT_name_lower])
 AC_SUBST([PROJECT_name_upper])
 AC_SUBST([PROJECT_name_formal])
-AC_SUBST([PROJECT_website])
-AC_SUBST([PROJECT_download_url])
+AC_SUBST([PROJECT_url_website])
+AC_SUBST([PROJECT_url_downloads])
+AC_SUBST([PROJECT_url_discussion])
 AC_SUBST([PROJECT_irc])
 AC_SUBST([PROJECT_bugreport])
 AC_SUBST([PROJECT_version])
@@ -156,6 +161,7 @@ AC_SUBST([PROJECT_version_major])
 AC_SUBST([PROJECT_version_minor])
 AC_SUBST([PROJECT_version_point])
 AC_SUBST([PROJECT_repo_url])
+AC_SUBST([PROJECT_repo_root])
 AC_SUBST([PROJECT_repo_uuid])
 AC_SUBST([PROJECT_repo_rev])
 AC_SUBST([PROJECT_repo_date])
@@ -327,9 +333,6 @@ AC_CONFIG_HEADERS([libplatform/config.h])
 
 AC_CONFIG_FILES([GNUmakefile])
 AC_CONFIG_FILES([include/mp4v2/project.h])
-AC_CONFIG_FILES([doc/texi/base/project.texi])
-AC_CONFIG_FILES([doc/doxygen/Doxyfile])
-AC_CONFIG_FILES([doc/doxygen/header.html])
-AC_CONFIG_FILES([doc/doxygen/footer.html])
+AC_CONFIG_FILES([project/project.m4])
 
 AC_OUTPUT

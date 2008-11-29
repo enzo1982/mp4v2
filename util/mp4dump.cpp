@@ -94,6 +94,7 @@ DumpUtility::DumpUtility( int argc, char** argv )
 bool
 DumpUtility::utility_job( JobContext& job )
 {
+printf( "_filedebug: 0x%08x\n", _filedebug );
     job.fileHandle = MP4Read( job.file.c_str(), _filedebug );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
@@ -153,11 +154,11 @@ DumpUtility::utility_process()
                         _implicits = false;
                         break;
                     case 2:
-                        _filedebug = MP4_DETAILS_TABLE;
+                        _filedebug = MP4_DETAILS_ERROR | MP4_DETAILS_TABLE;
                         _implicits = false;
                         break;
                     case 3:
-                        _filedebug = MP4_DETAILS_TABLE;
+                        _filedebug = MP4_DETAILS_ERROR | MP4_DETAILS_TABLE;
                         _implicits = true;
                         break;
                     case 4:
