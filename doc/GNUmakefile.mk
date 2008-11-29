@@ -263,6 +263,7 @@ google.rsync:
 	    --exclude=".svn/*" --exclude=".svn" \
 	    --exclude="*/.svn/*" --exclude="*/.svn" \
 	    --exclude=".stamp" --exclude="*/.stamp" \
+	    --exclude="*.m4" --exclude="*/*.m4" \
 	    $(DOC.out.site/). $(GOOGLE.out/)doc/$(GOOGLE.repo.doc)/.
 	$(INSTALL_DATA) $(DOC.out.articles/)wiki/BuildRepository.wiki $(GOOGLE.out/)wiki/.
 	$(INSTALL_DATA) $(DOC.out.articles/)wiki/BuildSource.wiki $(GOOGLE.out/)wiki/.

@@ -65,8 +65,6 @@ uint32_t MP4GetVerbosity( MP4FileHandle hFile );
  *      @li #MP4_DETAILS_HINT
  *      @li #MP4_DETAILS_ISMA
  *      @li #MP4_DETAILS_EDIT
- *
- * @return 
  */
 MP4V2_EXPORT
 void MP4SetVerbosity( MP4FileHandle hFile, uint32_t verbosity );
