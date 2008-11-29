@@ -105,13 +105,15 @@ div#sitebanner {
     background-image: url(banner.png);
     background-repeat: no-repeat;
     background-position: top left;
-    -webkit-border-top-left-radius: 1em;
-    -webkit-border-top-right-radius: 1em;
-    -webkit-box-shadow: 5px 5px 5px black;
     min-height: 128px;
     max-height: 128px;
     max-width:  1280px;
     text-shadow: black 1px 1px 0px;
+    -webkit-border-top-left-radius: 1em;
+    -webkit-border-top-right-radius: 1em;
+    -webkit-box-shadow: 5px 5px 5px black;
+    -moz-border-radius-topleft: 1em;
+    -moz-border-radius-topright: 1em;
 }
 
 /* enable to make banner logo clickable */
@@ -176,6 +178,8 @@ div.footer {
     padding-bottom: 1em;
     -webkit-border-bottom-left-radius: 1em;
     -webkit-border-bottom-right-radius: 1em;
+    -moz-border-radius-bottomleft: 1em;
+    -moz-border-radius-bottomright: 1em;
 }
 
 div.footer div {
@@ -284,6 +288,7 @@ div.memitem {
     border: 1px solid gray;
     -webkit-border-radius: 0.5em;
     -webkit-box-shadow: 2px 2px 2px black;
+    -moz-border-radius: 0.5em;
 }
 
 div.memproto {
@@ -293,6 +298,8 @@ div.memproto {
     padding-bottom: 0.5em;
     -webkit-border-top-left-radius: 0.5em;
     -webkit-border-top-right-radius: 0.5em;
+    -moz-border-radius-topleft: 0.5em;
+    -moz-border-radius-topright: 0.5em;
 }
 
 div.memdoc {
@@ -301,6 +308,8 @@ div.memdoc {
     padding-bottom: 0.5em;
     -webkit-border-bottom-left-radius: 0.5em;
     -webkit-border-bottom-right-radius: 0.5em;
+    -moz-border-radius-bottomleft: 0.5em;
+    -moz-border-radius-bottomright: 0.5em;
 }
 
 div.memproto, div.memdoc {
@@ -326,4 +335,10 @@ div.memproto td code {
 
 div.memdoc p:first-child {
     margin-top: 0;
+}
+
+/* ----------------------------------*/ 
+
+dl.see p {
+    margin: 0;
 }
