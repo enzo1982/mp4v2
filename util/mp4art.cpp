@@ -34,17 +34,10 @@ public:
 
 protected:
     // delegates implementation
-    bool utility_process();
+    bool utility_option( int, bool& );
     bool utility_job( JobContext& );
 
 private:
-    enum PseudoLong {
-        PL_UNDEFINED = 0xf000000, // serves as safe starting value
-        PL_VERBOSE,
-        PL_HELP,
-        PL_VERSION,
-    };
-
     enum Action {
         ACTION_UNDEFINED,
         ACTION_ADD,
@@ -67,6 +60,7 @@ private:
     bool actionRemove  ( JobContext& );
     bool actionExtract ( JobContext& );
 
+    Group  _artOptions;
     Action _action;
     string _artSource;
 };
@@ -74,58 +68,21 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 
 ArtUtility::ArtUtility( int argc, char** argv )
-    : Utility   ( "mp4art", argc, argv )
-    , _action   ( ACTION_UNDEFINED )
+    : Utility     ( "mp4art", argc, argv )
+    , _artOptions ( "ACTIONS" )
+    , _action     ( ACTION_UNDEFINED )
 {
+    _artOptions.add( 'a', true,  "add",     true,  LC_NONE, "add cover-art from FILE to mp4 file", "FILE" );
+    _artOptions.add( 'r', false, "remove",  false, LC_NONE, "remove cover-art from mp4 file" );
+    _artOptions.add( 'x', false, "extract", false, LC_NONE, "extract cover-art from mp4 file" );
+    _groups.push_back( &_artOptions );
+
     _usage = "[OPTION]... ACTION file...";
-    _help =
+    _description =
         // 79-cols, inclusive, max desired width
         // |----------------------------------------------------------------------------|
-        "\n"
         "\nFor each mp4 (m4a) file specified, perform the specified ACTION. An action"
-        "\nmust be specified. Some options are not applicable for some actions."
-        "\n"
-        "\nACTIONS"
-        "\n  -a, --add FILE     add cover-art from FILE to mp4 file"
-        "\n  -r, --remove       remove cover-art from mp4 file"
-        "\n  -x, --extract      extract cover-art from mp4 file"
-        "\n"
-        "\nOPTIONS"
-        "\n  -c, --compat MODE  specify compatibility mode"
-        "\n  -s, --strict       enable strict compat; treat deprecations as errors"
-//      "\n  -y, --dryrun       do not actually create or modify any files"
-        "\n  -k, --keepgoing    continue batch processing even after errors"
-        "\n  -f, --force        force overwriting even if file is read-only"
-        "\n  -o, --overwrite    overwrite existing image files"
-        "\n  -q, --quiet        equivalent to --verbose 0"
-        "\n  -z, --optimize     optimize mp4 file after modification"
-        "\n  -v, --verbose NUM  increase verbosity or long-option to set level NUM"
-        "\n  -h, --help         print help or long-option for extended help"
-        "\n      --version      output version information and exit";
-
-    const prog::Option options[] = {
-        { "add",       prog::Option::REQUIRED_ARG, 0, 'a' },
-        { "remove",    prog::Option::NO_ARG,       0, 'r' },
-        { "extract",   prog::Option::NO_ARG,       0, 'x' },
-
-        { "compat",    prog::Option::REQUIRED_ARG, 0, 'c' },
-        { "strict",    prog::Option::NO_ARG      , 0, 's' },
-        { "dryrun",    prog::Option::NO_ARG,       0, 'y' },
-        { "keepgoing", prog::Option::NO_ARG,       0, 'k' },
-        { "force",     prog::Option::NO_ARG,       0, 'f' },
-        { "overwrite", prog::Option::NO_ARG,       0, 'o' },
-        { "quiet",     prog::Option::NO_ARG,       0, 'q' },
-        { "optimize",  prog::Option::NO_ARG,       0, 'z' },
-        { "verbose",   prog::Option::REQUIRED_ARG, 0, PL_VERBOSE },
-
-        { "help",      prog::Option::NO_ARG,       0, PL_HELP },
-        { "version",   prog::Option::NO_ARG,       0, PL_VERSION },
-
-        { 0, prog::Option::NO_ARG, 0, 0 }
-    };
-    _options = options;
-
-    _helpCompatibility = true;
+        "\nmust be specified. Some options are not applicable for some actions.";
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -150,17 +107,18 @@ ArtUtility::actionAdd( JobContext& job )
 
     in.close();
 
+    verbose1f( "adding %s -> %s\n", _artSource.c_str(), job.file.c_str() );
+    if( dryrunAbort() )
+        return SUCCESS;
+
     job.fileHandle = MP4Modify( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
-    verbose1f( "adding cover-art from %s to %s\n", _artSource.c_str(), job.file.c_str() );
-
     if( !MP4SetMetadataCoverArt( job.fileHandle, (uint8_t*)data, size ))
         return herrf( "unable to add cover-art: %s\n", job.file.c_str() );
 
-    // mark post processing for optimization
-    job.optimize = true;
+    job.optimizeApplicable = true;
     return SUCCESS;
 }
 
@@ -174,8 +132,9 @@ ArtUtility::actionExtract( JobContext& job )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
 
     const uint32_t artc = MP4GetMetadataCoverArtCount( job.fileHandle );
+    verbose2f( "cover-art %s\n", (artc == 0) ? "not found" : "found" );
     if( artc == 0 ) {
-        verbose2f( "cover-art not found\n" );
+        verbose1f( "skipped: %s\n", job.file.c_str() );
         return SUCCESS;
     }
 
@@ -186,7 +145,7 @@ ArtUtility::actionExtract( JobContext& job )
 
     ArtType type;
     identifyArtType( data, size, type );
-    verbose2f( "found %s cover-art: %d bytes\n", type.name.c_str(), size );
+    verbose2f( "cover-art identified: %d bytes\n", size );
 
     const vector<string>::iterator end = type.cwarns.end();
     for (vector<string>::iterator it = type.cwarns.begin(); it != end; it++ )
@@ -203,7 +162,9 @@ ArtUtility::actionExtract( JobContext& job )
     out_name += type.ext;
     io::StdioFile out( out_name );
 
-    verbose1f( "extracting cover-art to %s\n", out_name.c_str() );
+    verbose1f( "extracting %s -> %s\n", job.file.c_str(), out_name.c_str() );
+    if( dryrunAbort() )
+        return SUCCESS;
 
     if( openFileForWriting( out ))
         return FAILURE;
@@ -225,16 +186,21 @@ ArtUtility::actionRemove( JobContext& job )
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
-    if( MP4GetMetadataCoverArtCount( job.fileHandle ) == 0)
+    const uint32_t artc = MP4GetMetadataCoverArtCount( job.fileHandle );
+    verbose2f( "cover-art %s\n", (artc == 0) ? "not found" : "found" );
+    if( artc == 0 ) {
+        verbose1f( "skipped: %s\n", job.file.c_str() );
         return SUCCESS;
+    }
 
-    verbose1f( "removing cover-art in %s\n", job.file.c_str() );
+    verbose1f( "removing cover-art from %s\n", job.file.c_str() );
+    if( dryrunAbort() )
+        return SUCCESS;
 
     if( !MP4DeleteMetadataCoverArt( job.fileHandle ))
         return herrf( "unable to remove cover-art: %s\n", job.file.c_str() );
 
-    // mark post processing for optimization
-    job.optimize = true;
+    job.optimizeApplicable = true;
     return SUCCESS;
 }
 
@@ -280,8 +246,8 @@ ArtUtility::identifyArtType( uint8_t* art, uint32_t size, ArtType& type )
 
     type.name = "unknown";
     type.ext  = "dat";
-    type.cwarns.resize( 0 );
-    type.cerror.resize( 0 );
+    type.cwarns.clear();
+    type.cerror.clear();
 
     Header* found = NULL;
     for( Header* p = headers; p->type != Header::UNKNOWN; p++ ) {
@@ -332,6 +298,9 @@ ArtUtility::utility_job( JobContext& job )
     bool result = FAILURE;
 
     switch( _action ) {
+        case ACTION_UNDEFINED:
+            return herrf( "no action specified\n" );
+
         case ACTION_ADD:
             result = actionAdd( job );
             break;
@@ -354,121 +323,31 @@ ArtUtility::utility_job( JobContext& job )
 ///////////////////////////////////////////////////////////////////////////////
 
 bool
-ArtUtility::utility_process()
+ArtUtility::utility_option( int code, bool& handled )
 {
-    for ( ;; ) {
-        const int c = prog::getOption( _argc, _argv, "a:rxc:sykfoqzvh", _options, NULL );
-        if( c == -1 )
-            break;
-
-        switch ( c ) {
-            case 'a':
-                _action = ACTION_ADD;
-                _artSource = prog::optarg;
-                break;
-
-            case 'r':
-                _action = ACTION_REMOVE;
-                break;
-
-            case 'x':
-                _action = ACTION_EXTRACT;
-                break;
-
-            case 'c':
-            {
-                const string s = prog::optarg;
-                if( !s.compare( "none" ))
-                    _compatibility = COMPAT_NONE;
-                else if( !s.compare( "dynamic" ))
-                    _compatibility = COMPAT_DYNAMIC;
-                else if( !s.compare( "itunes" ))
-                    _compatibility = COMPAT_ITUNES;
-                else
-                    return herrf( "invalid compatibility mode: %s\n", s.c_str() );
-                verbose2f( "compatibility mode: %s\n", toString( _compatibility ).c_str() ); 
-                break;
-            }
-
-            case 's':
-                _strict = true;
-                break;
-
-            case 'y':
-                _dryrun = true;
-                break;
-
-            case 'k':
-                _keepgoing = true;
-                break;
-
-            case 'f':
-                _force = true;
-                break;
-
-            case 'o':
-                _overwrite = true;
-                break;
-
-            case 'q':
-                _verbosity = 0;
-                break;
-
-            case 'z':
-                _optimize = true;
-                break;
-
-            case 'v':
-                _verbosity++;
-                break;
-
-            case 'h':
-                printHelp( false );
-                return SUCCESS;
-
-            case PL_VERBOSE:
-            {
-                const uint32_t level = std::strtoul( prog::optarg, NULL, 0 );
-                _verbosity = ( level < 4 ) ? level : 3;
-                break;
-            }
-
-            case PL_HELP:
-                printHelp( true );
-                return SUCCESS;
-
-            case PL_VERSION:
-                printVersion();
-                return SUCCESS;
-
-            default:
-                printUsage( true );
-                return FAILURE;
-        }
-    }
-
-    if( !(prog::optind < _argc) ) {
-        printUsage( true );
-        return FAILURE;
-    }
-
-    switch( _action ) {
-        case ACTION_ADD:
+    handled = true;
+    switch( code ) {
+        case 'a':
+            _action = ACTION_ADD;
+            _artSource = prog::optarg;
             if( _artSource.empty() )
                 return herrf( "invalid cover-art file: empty-string\n" );
             break;
 
-        case ACTION_REMOVE:
-        case ACTION_LIST:
-        case ACTION_EXTRACT:
+        case 'r':
+            _action = ACTION_REMOVE;
             break;
 
-        case ACTION_UNDEFINED:
+        case 'x':
+            _action = ACTION_EXTRACT;
+            break;
+
         default:
-            return herrf( "no action specified\n" );
+            handled = false;
+            break;
     }
 
-    return batch( prog::optind );
+    return SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

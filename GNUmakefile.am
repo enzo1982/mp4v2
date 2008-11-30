@@ -8,6 +8,8 @@ check_PROGRAMS =
 
 ###############################################################################
 
+libmp4v2_la_LIBADD = libplatform.la
+
 libmp4v2_la_SOURCES = \
     src/3gp.cpp                          \
     src/atom_ac3.cpp                     \
@@ -153,6 +155,7 @@ if ADD_UTIL
     bin_PROGRAMS += mp4optimize
     bin_PROGRAMS += mp4syncfiles
     bin_PROGRAMS += mp4tags
+    bin_PROGRAMS += mp4track
     bin_PROGRAMS += mp4trackdump
 endif
 
@@ -164,6 +167,7 @@ mp4info_SOURCES      = util/mp4info.cpp
 mp4optimize_SOURCES  = util/mp4optimize.cpp
 mp4syncfiles_SOURCES = util/mp4syncfiles.cpp
 mp4tags_SOURCES      = util/mp4tags.cpp
+mp4track_SOURCES     = util/mp4track.cpp
 mp4trackdump_SOURCES = util/mp4trackdump.cpp
 
 UTILITY_LDADD = libmp4v2.la libutil.la libplatform.la $(X_LDFLAGS)
@@ -176,6 +180,7 @@ mp4info_LDADD      = libmp4v2.la libplatform.la $(X_LDFLAGS)
 mp4optimize_LDADD  = $(UTILITY_LDADD)
 mp4syncfiles_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
 mp4tags_LDADD      = libmp4v2.la libplatform.la $(X_LDFLAGS)
+mp4track_LDADD     = $(UTILITY_LDADD)
 mp4trackdump_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
 
 ###############################################################################
@@ -244,7 +249,8 @@ MK_CXX_I = \
 man1_MANS = \
     doc/man/man1/mp4art.1 \
     doc/man/man1/mp4dump.1 \
-    doc/man/man1/mp4optimize.1
+    doc/man/man1/mp4optimize.1 \
+    doc/man/man1/mp4track.1
 
 ###############################################################################
 

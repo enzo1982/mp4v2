@@ -554,7 +554,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT = __MAKE_ABS_TOP_SRCDIR/doc/doxygen/mainpage.h __MAKE_ABS_TOP_SRCDIR/include __MAKE_ABS_TOP_SRCDIR/libplatform
+INPUT = __MAKE_ABS_TOP_SRCDIR/doc/doxygen/mainpage.h __MAKE_ABS_TOP_SRCDIR/include __MAKE_ABS_TOP_SRCDIR/libplatform __MAKE_ABS_TOP_SRCDIR/util/Utility.h
 
 # This tag can be used to specify the character encoding of the source files 
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is 
@@ -1205,7 +1205,7 @@ INCLUDE_FILE_PATTERNS  =
 # undefined via #undef or recursively expanded use the := operator 
 # instead of the = operator.
 
-PREDEFINED             =  MP4V2_EXPORT MP4V2_DEPRECATED DEFAULT(x)=" =x"
+PREDEFINED =  MP4V2_EXPORT MP4V2_DEPRECATED DEFAULT(x)=" =x" MP4V2_WFORMAT_PRINTF()=
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then 
 # this tag can be used to specify a list of macro names that should be expanded. 

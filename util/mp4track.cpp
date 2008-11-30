@@ -27,10 +27,10 @@ namespace mp4v2 { namespace util {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class DumpUtility : public Utility
+class TrackUtility : public Utility
 {
 public:
-    DumpUtility( int, char** );
+    TrackUtility( int, char** );
 
 protected:
     // delegates implementation
@@ -40,37 +40,22 @@ protected:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DumpUtility::DumpUtility( int argc, char** argv )
-    : Utility    ( "mp4dump", argc, argv )
+TrackUtility::TrackUtility( int argc, char** argv )
+    : Utility( "mp4track", argc, argv )
 {
     _usage = "[OPTION]... file...";
     _description =
-        "\nFor each mp4 file specified, dump the file contents in a human-readable"
-        "\ntext format, to stdout.";
-
-    _options.remove( "optimize" );
-    _options.remove( "compat" );
-    _options.remove( "strict" );
-    _options.remove( "dryrun" );
-    _options.remove( "keepgoing" );
-    _options.remove( "overwrite" );
-    _options.remove( "force" );
-    _options.remove( "quiet" );
+        "\n<TODO-KB>";
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 bool
-DumpUtility::utility_job( JobContext& job )
+TrackUtility::utility_job( JobContext& job )
 {
-    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
-    if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
-        return herrf( "unable to open for read: %s\n", job.file.c_str() );
-
-    verbose1f( "dumping %s\n", job.file.c_str() );
-
-    if( !MP4Dump( job.fileHandle, stdout, _debugImplicits ))
-        return herrf( "dump failed: %s\n", job.file.c_str() );
+    verbose1f( "optimizing %s\n", job.file.c_str() );
+    if( !MP4Optimize( job.file.c_str(), NULL ))
+        return herrf( "optimize failed: %s\n", job.file.c_str() );
 
     return SUCCESS;
 }
@@ -78,7 +63,7 @@ DumpUtility::utility_job( JobContext& job )
 ///////////////////////////////////////////////////////////////////////////////
 
 bool
-DumpUtility::utility_option( int code, bool& handled )
+TrackUtility::utility_option( int code, bool& handled )
 {
     return SUCCESS;
 }
@@ -88,7 +73,7 @@ DumpUtility::utility_option( int code, bool& handled )
 extern "C"
 int main( int argc, char** argv )
 {
-    DumpUtility util( argc, argv );
+    TrackUtility util( argc, argv );
     return util.process();
 }
 

@@ -1,3 +1,4 @@
 ::command::test_standardUsage mp4art
 ::command::test_standardUsage mp4dump
 ::command::test_standardUsage mp4optimize
+::command::test_standardUsage mp4track
