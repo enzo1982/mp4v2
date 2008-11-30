@@ -435,6 +435,20 @@ char* MP4File::ReadCountedString(uint8_t charSize, bool allowExpandedCount, uint
     } else {
         charLength = ReadUInt8();
     }
+    
+    if (fixedLength && (charLength > fixedLength)) {
+        /*
+         * The counted length of this string is greater than the
+         * maxiumum fixed length, so truncate the string to the
+         * maximum fixed length amount (take 1 byte away from the
+         * fixedlength since we've already sacrificed one byte for
+         * reading the counted length, and there has been a bug where
+         * a non counted string has been used in the place of a
+         * counted string).
+         */  
+        WARNING(charLength > fixedLength);
+        charLength = fixedLength - 1U;
+    }
 
     uint32_t byteLength = charLength * charSize;
     char* data = (char*)MP4Malloc(byteLength + 1);
