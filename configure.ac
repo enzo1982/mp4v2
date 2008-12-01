@@ -38,7 +38,7 @@ AC_MSG_NOTICE([
   -->])
 
 AC_CONFIG_AUX_DIR([autoaux])
-AM_INIT_AUTOMAKE([1.10 foreign -Wall -Wno-portability -Werror subdir-objects nostdinc no-dependencies no-dist-gzip dist-bzip2 dist-zip dejagnu])
+AM_INIT_AUTOMAKE([1.10 foreign -Wall -Wno-portability -Werror subdir-objects nostdinc no-dist-gzip dist-bzip2 dist-zip dejagnu])
 
 AC_CONFIG_SRCDIR([src/mp4.cpp])
 
@@ -52,6 +52,10 @@ AC_CANONICAL_HOST
 ###############################################################################
 # add configure options
 ###############################################################################
+
+if test -z "$enable_dependency_tracking"; then
+    enable_dependency_tracking=no
+fi
 
 AC_ARG_ENABLE([debug],
     [AS_HELP_STRING([--disable-debug],[disable debugging compilation])])

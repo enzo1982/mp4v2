@@ -6,15 +6,15 @@ The following command configures the project for a build.  It is highly recommen
 @COMMAND.configure{}
 @end example
 
-Please see @file{INSTALL} for details on configure usage, and standard options. Additionally, the following options are have been added to @file{configure} for use when building @value{PROJECT.name}:
+Please see @file{INSTALL} for details on configure usage, and standard options. Additionally, the following custom options have been added to @file{configure}:
 
 @table @samp
 
-@item --disable-optimize
-Do not optimize. Do not direct compiler to optimize code. By default compiler optimization is enabled if the platform supports it.
-
 @item --disable-debug
 Do not generate debug information.  Do not direct compiler to generate debugging information. By default the compiler will generate debug information if the platform supports it.
+
+@item --disable-optimize
+Do not optimize. Do not direct compiler to optimize code. By default compiler optimization is enabled if the platform supports it.
 
 @item --disable-fvisibility
 Do not set default ELF symbol visibility. By default configure attempts to detect if the compiler supports this feature. However on some platforms detecting incompatibilty of this feature might not be accurate in which case this option should be given.
@@ -30,5 +30,8 @@ On bi-arch capable platforms it is possible to generate 32 or 64 bit code. This 
 
 @item --enable-ub[=ARCHS]
 On OSX systems it is possible to generate universal binaries. This is supported by adding one or more argument patterns @samp{-arch ARCH} when compiling or linking. Use this option to either target an architecture different from the platform default, or to produce universal binaries.
+
+@item --enable-dependency-tracking
+Enable automatic dependency tracking for include-files. By default this feature is disabled.
 
 @end table

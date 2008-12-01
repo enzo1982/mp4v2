@@ -271,5 +271,4 @@ dist-hook:
 ## they are aware of automake variables and targets. Note that we wrap in
 ## an eval to prevent automake from parsing GNU make extensions therein.
 ##
-#-$(eval include $(top_srcdir)/doc/GNUmakefile.mk)
 -include $(top_srcdir)/doc/GNUmakefile.mk
