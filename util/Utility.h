@@ -193,7 +193,8 @@ protected:
     uint32_t          _debug;         //!< mp4 file I/O verbosity
     uint32_t          _verbosity;     //!< verbosity level, default=1
 
-    CompatibilityMode _compatibilityJob; //!< job compatibility
+    CompatibilityMode _jobCompatibility;
+    uint32_t          _jobCount;
     uint32_t          _debugVerbosity;
     bool              _debugImplicits;
 
@@ -214,6 +215,10 @@ protected:
     static string  toString( CompatibilityMode );          //!< convert to string
     static string& toString( CompatibilityMode, string& ); //!< convert to string with storage
 };
+
+///////////////////////////////////////////////////////////////////////////////
+
+uint32_t crc32( const unsigned char*, uint32_t ); // ISO/IEC 8802-3:1989
 
 /// @} ////////////////////////////////////////////////////////////////////////
 

@@ -43,8 +43,15 @@ protected:
 OptimizeUtility::OptimizeUtility( int argc, char** argv )
     : Utility( "mp4optimize", argc, argv )
 {
+    _options.remove( "optimize" );
+    _options.remove( "compat" );
+    _options.remove( "strict" );
+    _options.remove( "overwrite" );
+
     _usage = "[OPTION]... file...";
     _description =
+        // 79-cols, inclusive, max desired width
+        // |----------------------------------------------------------------------------|
         "\nFor each mp4 file specified, optimize the file structure by moving control"
         "\ninformation to the beginning of the file and interleaving track samples,"
         "\neliminating excess seeks during playback. Additionally free blocks and"
@@ -57,6 +64,10 @@ bool
 OptimizeUtility::utility_job( JobContext& job )
 {
     verbose1f( "optimizing %s\n", job.file.c_str() );
+
+    if( dryrunAbort() )
+        return SUCCESS;
+
     if( !MP4Optimize( job.file.c_str(), NULL ))
         return herrf( "optimize failed: %s\n", job.file.c_str() );
 

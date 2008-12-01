@@ -45,7 +45,10 @@ TrackUtility::TrackUtility( int argc, char** argv )
 {
     _usage = "[OPTION]... file...";
     _description =
-        "\n<TODO-KB>";
+        // 79-cols, inclusive, max desired width
+        // |----------------------------------------------------------------------------|
+        "\nFor each mp4 file specified, perform the specified ACTION. An action must be"
+        "\nspecified. Some options are not applicable to some actions.";
 }
 
 ///////////////////////////////////////////////////////////////////////////////

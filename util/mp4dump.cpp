@@ -43,19 +43,20 @@ protected:
 DumpUtility::DumpUtility( int argc, char** argv )
     : Utility    ( "mp4dump", argc, argv )
 {
-    _usage = "[OPTION]... file...";
-    _description =
-        "\nFor each mp4 file specified, dump the file contents in a human-readable"
-        "\ntext format, to stdout.";
-
     _options.remove( "optimize" );
     _options.remove( "compat" );
     _options.remove( "strict" );
     _options.remove( "dryrun" );
-    _options.remove( "keepgoing" );
     _options.remove( "overwrite" );
     _options.remove( "force" );
     _options.remove( "quiet" );
+
+    _usage = "[OPTION]... file...";
+    _description =
+        // 79-cols, inclusive, max desired width
+        // |----------------------------------------------------------------------------|
+        "\nFor each mp4 file specified, dump the file contents in a human-readable"
+        "\ntext format, to stdout.";
 }
 
 ///////////////////////////////////////////////////////////////////////////////
