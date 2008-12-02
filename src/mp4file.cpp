@@ -2290,7 +2290,7 @@ void MP4File::AddChapter(MP4TrackId chapterTrackId, MP4Duration chapterDuration,
 
     if(chapterTitle != NULL)
     {
-        textLen = min((int)strlen(chapterTitle), MP4V2_CHAPTER_TITLE_MAX);
+        textLen = min((uint32_t)strlen(chapterTitle), (uint32_t)MP4V2_CHAPTER_TITLE_MAX);
         if (0 < textLen)
         {
             strncpy(text, chapterTitle, textLen);
@@ -2351,7 +2351,7 @@ void MP4File::AddNeroChapter(MP4Timestamp chapterStart, const char * chapterTitl
     }
     else
     {
-        int len = min((int)strlen(chapterTitle), 255);
+        int len = min((uint32_t)strlen(chapterTitle), (uint32_t)255);
         strncpy( buffer, chapterTitle, len );
         buffer[len] = 0;
     }
@@ -2382,7 +2382,7 @@ MP4TrackId MP4File::FindChapterReferenceTrack(MP4TrackId chapterTrackId, char * 
             {
                 if( 0 != trackName )
                 {
-                    int nameLen = min((int)strlen(name), trackNameSize);
+                    int nameLen = min((uint32_t)strlen(name), (uint32_t)trackNameSize);
                     strncpy(trackName, name, nameLen);
                     trackName[nameLen] = 0;
                 }
@@ -2499,7 +2499,7 @@ MP4ChapterType MP4File::GetChapters(MP4Chapter_t ** chapterList, uint32_t * chap
 
                     // we know that sample+2 contains the title (sample[0] and sample[1] is the length)
                     const char * title = (const char *)&(sample[2]);
-                    int titleLen = min((sample[0] << 8) | sample[1], MP4V2_CHAPTER_TITLE_MAX);
+                    int titleLen = min((uint32_t)((sample[0] << 8) | sample[1]), (uint32_t)MP4V2_CHAPTER_TITLE_MAX);
                     strncpy(chapters[i].title, title, titleLen);
                     chapters[i].title[titleLen] = 0;
 
@@ -2575,7 +2575,7 @@ MP4ChapterType MP4File::GetChapters(MP4Chapter_t ** chapterList, uint32_t * chap
         for (i = 0, j = 1; i < counter; ++i, ++j)
         {
             // insert the chapter title
-            uint32_t len = min((int)strlen(name), MP4V2_CHAPTER_TITLE_MAX);
+            uint32_t len = min((uint32_t)strlen(name), (uint32_t)MP4V2_CHAPTER_TITLE_MAX);
             strncpy(chapters[i].title, name, len);
             chapters[i].title[len] = 0;
 
