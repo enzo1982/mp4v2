@@ -1019,6 +1019,10 @@ void MP4File::RemoveTrackFromOd(MP4TrackId trackId)
     RemoveTrackReference(MakeTrackName(m_odTrackId, "tref.mpod"), trackId);
 }
 
+/*
+ * Try to obtain the properties of this reference track, if not found then return
+ * NULL in *ppCountProperty and *ppTrackIdProperty.
+ */
 void MP4File::GetTrackReferenceProperties(const char* trefName,
         MP4Property** ppCountProperty, MP4Property** ppTrackIdProperty)
 {
@@ -1026,11 +1030,9 @@ void MP4File::GetTrackReferenceProperties(const char* trefName,
 
     snprintf(propName, sizeof(propName), "%s.%s", trefName, "entryCount");
     (void)m_pRootAtom->FindProperty(propName, ppCountProperty);
-    ASSERT(*ppCountProperty);
 
     snprintf(propName, sizeof(propName), "%s.%s", trefName, "entries.trackId");
     (void)m_pRootAtom->FindProperty(propName, ppTrackIdProperty);
-    ASSERT(*ppTrackIdProperty);
 }
 
 void MP4File::AddTrackReference(const char* trefName, MP4TrackId refTrackId)
@@ -1042,8 +1044,10 @@ void MP4File::AddTrackReference(const char* trefName, MP4TrackId refTrackId)
                                 (MP4Property**)&pCountProperty,
                                 (MP4Property**)&pTrackIdProperty);
 
-    pTrackIdProperty->AddValue(refTrackId);
-    pCountProperty->IncrementValue();
+    if (pCountProperty && pTrackIdProperty) {
+        pTrackIdProperty->AddValue(refTrackId);
+        pCountProperty->IncrementValue();
+    }
 }
 
 uint32_t MP4File::FindTrackReference(const char* trefName,
@@ -1056,9 +1060,11 @@ uint32_t MP4File::FindTrackReference(const char* trefName,
                                 (MP4Property**)&pCountProperty,
                                 (MP4Property**)&pTrackIdProperty);
 
-    for (uint32_t i = 0; i < pCountProperty->GetValue(); i++) {
-        if (refTrackId == pTrackIdProperty->GetValue(i)) {
-            return i + 1;   // N.B. 1 not 0 based index
+    if (pCountProperty && pTrackIdProperty) {
+        for (uint32_t i = 0; i < pCountProperty->GetValue(); i++) {
+            if (refTrackId == pTrackIdProperty->GetValue(i)) {
+                return i + 1;   // N.B. 1 not 0 based index
+            }
         }
     }
     return 0;
@@ -1073,10 +1079,12 @@ void MP4File::RemoveTrackReference(const char* trefName, MP4TrackId refTrackId)
                                 (MP4Property**)&pCountProperty,
                                 (MP4Property**)&pTrackIdProperty);
 
-    for (uint32_t i = 0; i < pCountProperty->GetValue(); i++) {
-        if (refTrackId == pTrackIdProperty->GetValue(i)) {
-            pTrackIdProperty->DeleteValue(i);
-            pCountProperty->IncrementValue(-1);
+    if (pCountProperty && pTrackIdProperty) {
+        for (uint32_t i = 0; i < pCountProperty->GetValue(); i++) {
+            if (refTrackId == pTrackIdProperty->GetValue(i)) {
+                pTrackIdProperty->DeleteValue(i);
+                pCountProperty->IncrementValue(-1);
+            }
         }
     }
 }
