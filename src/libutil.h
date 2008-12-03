@@ -24,14 +24,15 @@ namespace mp4v2 { namespace util {
 
 struct FileSummaryInfo {
     typedef set<string>  BrandSet;
-    typedef vector<bool> BoolList;
 
     // standard ftyp box attributes
     string   major_brand;
     uint32_t minor_version;
     BrandSet compatible_brands;
 
-    BoolList mdatExtendedSize;
+    uint32_t nlargesize;
+    uint32_t nversion1;
+    uint32_t nspecial;
 };
 
 /// Fetch mp4 file summary information.

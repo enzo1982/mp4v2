@@ -23,9 +23,37 @@
 
 #include "impl.h"
 #include "libutil.h"
+#include <stack>
 
 namespace mp4v2 { namespace util {
     using namespace mp4v2::impl;
+
+///////////////////////////////////////////////////////////////////////////////
+
+// search atom recursively for any 64-bit characteristics.
+// nlargsize indicates number of atoms which use largesize extension.
+// nversion1 indicates number of atoms which use version==1 extension.
+// nspecial indicates number of special 64-bit atoms;
+//   eg: stbl may container one of { stco || co64 } for chunkoffsets.
+void searchFor64bit( MP4Atom& atom, FileSummaryInfo& info )
+{
+    const uint32_t max = atom.GetNumberOfChildAtoms();
+    for( uint32_t i = 0; i < max; i++ ) {
+        MP4Atom& child = *atom.GetChildAtom( i );
+
+        if( child.GetLargesizeMode() )
+            info.nlargesize++;
+
+        MP4Integer8Property* version;
+        if( child.FindProperty( "version", (MP4Property**)&version ) && version->GetValue() == 1 )
+            info.nversion1++;
+
+        if( !strcmp( child.GetType(), "co64" ))
+            info.nspecial++;
+
+        searchFor64bit( child, info );
+    }
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -60,22 +88,16 @@ fetchFileSummaryInfo( MP4FileHandle file, FileSummaryInfo& info )
                 stripped += s[pos];
         }
 
+        if( stripped.empty() )
+            continue;
+
         info.compatible_brands.insert( stripped );
     }
 
-    info.mdatExtendedSize.clear();
-
-    const string mdatType = "mdat";
-    max = root->GetNumberOfChildAtoms();
-    for( uint32_t i = 0; i < max; i++ ) {
-        MP4Atom* atom = root->GetChildAtom( i );
-        if( !atom )
-            continue;
-        if( mdatType != atom->GetType() )
-            continue;
-
-        info.mdatExtendedSize.push_back( atom->GetLargesizeMode() );
-    }
+    info.nlargesize = 0;
+    info.nversion1  = 0;
+    info.nspecial   = 0;
+    searchFor64bit( *root, info );
 
     return false;
 }

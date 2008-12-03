@@ -105,14 +105,12 @@ FileUtility::actionList( JobContext& job )
 
     const int wbrand = 5;
     const int wcompat = 18;
-    const int wdat = 3;
     const int wsizing = 6;
     const string sep = "  ";
 
     if( _jobCount == 0 ) {
         report << setw(wbrand) << left << "BRAND" 
                << sep << setw(wcompat) << left << "COMPAT" 
-               << sep << setw(wdat) << right << "DAT"
                << sep << setw(wsizing) << left << "SIZING" 
                << sep << setw(0) << "FILE"
                << '\n';
@@ -139,18 +137,13 @@ FileUtility::actionList( JobContext& job )
         }
     }
 
-    const FileSummaryInfo::BoolList::size_type max = info.mdatExtendedSize.size();
-    for( FileSummaryInfo::BoolList::size_type i = 0; i < max; i++ ) {
-        report << setw(wbrand) << left << info.major_brand
-               << sep << setw(wcompat) << left << compat
-               << sep << setw(wdat) << right << i
-               << sep << setw(wsizing) << left << (info.mdatExtendedSize[i] ? "64-bit" : "32-bit");
+    const bool sizing = info.nlargesize | info.nversion1 | info.nspecial;
 
-        if( i == 0 )
-            report << sep << job.file;
-
-        report << '\n';
-    }
+    report << setw(wbrand) << left << info.major_brand
+           << sep << setw(wcompat) << left << compat
+           << sep << setw(wsizing) << left << (sizing ? "64-bit" : "32-bit")
+           << sep << job.file
+           << '\n';
 
     verbose1f( "%s", report.str().c_str() );
     return SUCCESS;
