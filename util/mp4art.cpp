@@ -21,7 +21,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "impl.h"
+#include "libutil/util.h"
 
 namespace mp4v2 { namespace util {
 
@@ -29,14 +29,6 @@ namespace mp4v2 { namespace util {
 
 class ArtUtility : public Utility
 {
-public:
-    ArtUtility( int, char** );
-
-protected:
-    // delegates implementation
-    bool utility_option( int, bool& );
-    bool utility_job( JobContext& );
-
 private:
     enum Action {
         ACTION_UNDEFINED,
@@ -45,6 +37,14 @@ private:
         ACTION_REMOVE,
         ACTION_EXTRACT,
     };
+
+public:
+    ArtUtility( int, char** );
+
+protected:
+    // delegates implementation
+    bool utility_option( int, bool& );
+    bool utility_job( JobContext& );
 
 private:
     struct ArtType {
@@ -61,7 +61,8 @@ private:
     bool actionRemove  ( JobContext& );
     bool actionExtract ( JobContext& );
 
-    Group  _artOptions;
+private:
+    Group  _artGroup;
     Action _action;
     string _artSource;
 };
@@ -69,15 +70,15 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 
 ArtUtility::ArtUtility( int argc, char** argv )
-    : Utility     ( "mp4art", argc, argv )
-    , _artOptions ( "ACTIONS" )
-    , _action     ( ACTION_UNDEFINED )
+    : Utility   ( "mp4art", argc, argv )
+    , _artGroup ( "ACTIONS" )
+    , _action   ( ACTION_UNDEFINED )
 {
-    _artOptions.add( 'l', false, "list",    false, LC_NONE, "list cover-art in mp4" );
-    _artOptions.add( 'a', true,  "add",     true,  LC_NONE, "add cover-art from FILE to mp4", "FILE" );
-    _artOptions.add( 'r', false, "remove",  false, LC_NONE, "remove cover-art from mp4" );
-    _artOptions.add( 'x', false, "extract", false, LC_NONE, "extract cover-art from mp4" );
-    _groups.push_back( &_artOptions );
+    _artGroup.add( 'l', false, "list",    false, LC_NONE, "list available cover-art" );
+    _artGroup.add( 'a', true,  "add",     true,  LC_NONE, "add cover-art from FILE", "FILE" );
+    _artGroup.add( 'r', false, "remove",  false, LC_NONE, "remove cover-art" );
+    _artGroup.add( 'x', false, "extract", false, LC_NONE, "extract cover-art" );
+    _groups.push_back( &_artGroup );
 
     _usage = "[OPTION]... ACTION file...";
     _description =
@@ -186,14 +187,14 @@ ArtUtility::actionList( JobContext& job )
 {
     ostringstream report;
 
-    const int wid = 3;
+    const int widx = 3;
     const int wsize = 8;
     const int wext = 4;
     const int wtype = 9;
     const string sep = "  ";
 
     if( _jobCount == 0 ) {
-        report << setw(wid) << right << "ID" << left
+        report << setw(widx) << right << "IDX" << left
                << sep << setw(wsize) << right << "SIZE" << left
                << sep << setw(8) << "CRC32"
                << sep << setw(wext) << "EXT"
@@ -210,12 +211,13 @@ ArtUtility::actionList( JobContext& job )
 
     const uint32_t artc = MP4GetMetadataCoverArtCount( job.fileHandle );
     for( uint32_t i = 0; i < artc; i++ ) {
-        report << right << setw(wid) << i << left;
-
+        ostringstream oss;
+        oss << right << setw(widx) << i << left;
+    
         uint8_t* data;
         uint32_t size;
         if( !MP4GetMetadataCoverArt( job.fileHandle, &data, &size )) {
-            report << " [missing]\n";
+            report << oss.str() << " [missing]\n";
             continue;
         }
 
@@ -224,12 +226,13 @@ ArtUtility::actionList( JobContext& job )
         ArtType type;
         identifyArtType( data, size, type );
 
-        report << sep << setw(wsize) << right << size << left
-               << sep << setw(8) << setfill('0') << hex << right << crc << setfill(' ') << dec << left
-               << sep << setw(wext) << type.ext
-               << sep << setw(wtype) << type.name
-               << sep << setw(0) << job.file
-               << '\n';
+        oss << sep << setw(wsize) << right << size << left
+            << sep << setw(8) << setfill('0') << hex << right << crc << setfill(' ') << dec << left
+            << sep << setw(wext) << type.ext
+            << sep << setw(wtype) << type.name
+            << sep << setw(0) << job.file;
+
+        report << oss.str() << '\n';
     }
 
     verbose1f( "%s", report.str().c_str() );
@@ -389,6 +392,7 @@ bool
 ArtUtility::utility_option( int code, bool& handled )
 {
     handled = true;
+
     switch( code ) {
         case 'l':
             _action = ACTION_LIST;

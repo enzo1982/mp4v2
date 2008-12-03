@@ -1,4 +1,4 @@
-noinst_LTLIBRARIES = libplatform.la libutil.la
+noinst_LTLIBRARIES = libplatform.la
 
 lib_LTLIBRARIES = libmp4v2.la
 
@@ -141,18 +141,30 @@ if ADD_PLATFORM_WIN32
 endif
 
 libutil_la_SOURCES = \
-    util/Utility.h   \
-    util/Utility.cpp
+    libutil/Utility.h    \
+    libutil/Utility.cpp  \
+    libutil/crc.h        \
+    libutil/crc.cpp      \
+    libutil/impl.h       \
+    libutil/util.h
 
 ###############################################################################
 
 if ADD_UTIL
+    noinst_LTLIBRARIES += libutil.la
+
+    libmp4v2_la_SOURCES += \
+        src/libutil.h \
+        src/libutil.cpp \
+        src/subtitle.h \
+        src/subtitle.cpp
+
     bin_PROGRAMS += mp4art
     bin_PROGRAMS += mp4chaps
-    bin_PROGRAMS += mp4dump
     bin_PROGRAMS += mp4extract
+    bin_PROGRAMS += mp4file
     bin_PROGRAMS += mp4info
-    bin_PROGRAMS += mp4optimize
+    bin_PROGRAMS += mp4subtitle
     bin_PROGRAMS += mp4syncfiles
     bin_PROGRAMS += mp4tags
     bin_PROGRAMS += mp4track
@@ -161,10 +173,10 @@ endif
 
 mp4art_SOURCES       = util/mp4art.cpp
 mp4chaps_SOURCES     = util/mp4chaps.cpp
-mp4dump_SOURCES      = util/mp4dump.cpp
 mp4extract_SOURCES   = util/mp4extract.cpp
+mp4file_SOURCES      = util/mp4file.cpp
 mp4info_SOURCES      = util/mp4info.cpp
-mp4optimize_SOURCES  = util/mp4optimize.cpp
+mp4subtitle_SOURCES  = util/mp4subtitle.cpp
 mp4syncfiles_SOURCES = util/mp4syncfiles.cpp
 mp4tags_SOURCES      = util/mp4tags.cpp
 mp4track_SOURCES     = util/mp4track.cpp
@@ -174,10 +186,10 @@ UTILITY_LDADD = libmp4v2.la libutil.la libplatform.la $(X_LDFLAGS)
 
 mp4art_LDADD       = $(UTILITY_LDADD)
 mp4chaps_LDADD     = libmp4v2.la libplatform.la $(X_LDFLAGS)
-mp4dump_LDADD      = $(UTILITY_LDADD)
 mp4extract_LDADD   = libmp4v2.la libplatform.la $(X_LDFLAGS)
+mp4file_LDADD      = $(UTILITY_LDADD)
 mp4info_LDADD      = libmp4v2.la libplatform.la $(X_LDFLAGS)
-mp4optimize_LDADD  = $(UTILITY_LDADD)
+mp4subtitle_LDADD  = $(UTILITY_LDADD)
 mp4syncfiles_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
 mp4tags_LDADD      = libmp4v2.la libplatform.la $(X_LDFLAGS)
 mp4track_LDADD     = $(UTILITY_LDADD)
@@ -213,9 +225,7 @@ mp4v2inc_HEADERS = \
 
 ###############################################################################
 
-EXTRA_DIST = \
-    project/project.m4  \
-    util/impl.h
+EXTRA_DIST = project/project.m4
 
 ###############################################################################
 
@@ -246,11 +256,15 @@ MK_CXX_I = \
 
 ###############################################################################
 
-man1_MANS = \
-    doc/man/man1/mp4art.1 \
-    doc/man/man1/mp4dump.1 \
-    doc/man/man1/mp4optimize.1 \
-    doc/man/man1/mp4track.1
+if ADD_UTIL
+if ADD_MANS
+    man1_MANS = \
+        doc/man/man1/mp4art.1       \
+        doc/man/man1/mp4file.1      \
+        doc/man/man1/mp4subtitle.1  \
+        doc/man/man1/mp4track.1
+endif
+endif
 
 ###############################################################################
 

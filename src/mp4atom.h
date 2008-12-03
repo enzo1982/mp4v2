@@ -204,6 +204,8 @@ public:
     virtual void FinishWrite(bool use64 = false);
     virtual void Dump(FILE* pFile, uint8_t indent, bool dumpImplicits);
 
+    bool GetLargesizeMode();
+
 protected:
     void AddProperty(MP4Property* pProperty);
 
@@ -235,10 +237,13 @@ protected:
     /* debugging aid */
     uint32_t GetVerbosity();
 
+    void SetLargesizeMode( bool );
+
 protected:
     MP4File*    m_pFile;
     uint64_t    m_start;
     uint64_t    m_end;
+    bool        m_largesizeMode; // true if largesize mode
     uint64_t    m_size;
     char        m_type[5];
     bool        m_unknownType;

@@ -198,7 +198,7 @@ protected:
     uint32_t          _debugVerbosity;
     bool              _debugImplicits;
 
-    Group         _options;
+    Group         _group;
     string        _xhelpCompatibility;
     string        _xhelpDebug;
     string        _xhelpVerbosity;
@@ -215,10 +215,6 @@ protected:
     static string  toString( CompatibilityMode );          //!< convert to string
     static string& toString( CompatibilityMode, string& ); //!< convert to string with storage
 };
-
-///////////////////////////////////////////////////////////////////////////////
-
-uint32_t crc32( const unsigned char*, uint32_t ); // ISO/IEC 8802-3:1989
 
 /// @} ////////////////////////////////////////////////////////////////////////
 

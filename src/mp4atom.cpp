@@ -33,8 +33,7 @@
 
 #include "impl.h"
 
-namespace mp4v2 {
-namespace impl {
+namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -53,6 +52,7 @@ MP4Atom::MP4Atom(const char* type)
     m_pFile = NULL;
     m_start = 0;
     m_end = 0;
+    m_largesizeMode = false;
     m_size = 0;
     m_pParentAtom = NULL;
     m_depth = 0xFF;
@@ -421,6 +421,7 @@ MP4Atom* MP4Atom::ReadAtom(MP4File* pFile, MP4Atom* pParentAtom)
     type[4] = '\0';
 
     // extended size
+    const bool largesizeMode = (dataSize == 1);
     if (dataSize == 1) {
         dataSize = pFile->ReadUInt64();
         hdrSize += 8;
@@ -471,6 +472,7 @@ MP4Atom* MP4Atom::ReadAtom(MP4File* pFile, MP4Atom* pParentAtom)
     pAtom->SetFile(pFile);
     pAtom->SetStart(pos);
     pAtom->SetEnd(pos + hdrSize + dataSize);
+    pAtom->SetLargesizeMode(largesizeMode);
     pAtom->SetSize(dataSize);
     if (ATOMID(type) == ATOMID("uuid")) {
         pAtom->SetExtendedType(extendedType);
@@ -991,7 +993,16 @@ uint8_t MP4Atom::GetDepth()
     return m_depth;
 }
 
+bool MP4Atom::GetLargesizeMode()
+{
+    return m_largesizeMode;
+}
+
+void MP4Atom::SetLargesizeMode( bool mode )
+{
+    m_largesizeMode = mode;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
-}
-} // namespace mp4v2::impl
+}} // namespace mp4v2::impl
