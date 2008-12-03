@@ -254,7 +254,15 @@ Utility::formatGroups()
     _help = oss.str();
 
     // allocate and populate C-style options
-    _longOptions = new prog::Option[optionCount];
+    delete[] _longOptions;
+    _longOptions = new prog::Option[optionCount + 1];
+
+    // fill EOL marker
+    _longOptions[optionCount].name = NULL;
+    _longOptions[optionCount].type = prog::Option::NO_ARG;
+    _longOptions[optionCount].flag = 0;
+    _longOptions[optionCount].val  = 0;
+
     _shortOptions.clear();
 
     int optionIndex = 0;
