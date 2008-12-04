@@ -11,7 +11,8 @@ body,table {
 body {
     background-color: #3C464D;
     min-width: 800px;
-    max-width: 1440px;
+    max-width:  1360px;
+    padding-top: 0.5em;
     padding-bottom: 1em;
 }
 
@@ -90,8 +91,8 @@ dl span.samp, dl span.command {
 /* ----------------------------------*/
 
 div#page {
-    margin-left: 80px;
-    margin-right: 80px;
+    margin-left: 40px;
+    margin-right: 40px;
     position: relative;
     background-color: #EDEFF2;
     -webkit-border-radius: 1em;
@@ -112,7 +113,6 @@ div#sitebanner {
     background-position: top left;
     min-height: 128px;
     max-height: 128px;
-    max-width:  1280px;
     text-shadow: black 1px 1px 0px;
     -webkit-border-top-left-radius: 1em;
     -webkit-border-top-right-radius: 1em;
