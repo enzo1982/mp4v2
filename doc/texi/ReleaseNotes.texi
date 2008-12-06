@@ -19,7 +19,7 @@ This project's goal is to continue development of a C-library named @file{libmp4
 
 @chapter Breaking Changes
 @section Top-level header file
-This release is @b{nearly} 100% API compatible with MPEG4IP, however there are some differences. There single change code using this library @b{must} make is to include the top-level public header file as follows. @b{This is the only supported mechanism to include the library}. We do not support attempts to any sub-level header files; such files are private implementation details and their naming must not be relied upon.
+This release is @b{nearly} 100% API compatible with MPEG4IP, however there are some differences. There single change code using this library @b{must} make is to include the top-level public header file as follows. @b{This is the only supported mechanism to include the library}. We do not support attempts to include any sub-level header files; such files are private implementation details and their naming must not be relied upon.
 
 @example
 #include <mp4v2/mp4v2.h>

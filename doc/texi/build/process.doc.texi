@@ -1,5 +1,12 @@
 @section Build Documentation
 
+This step in the build process introduces some significant requirements to the host system:
+
+@itemize
+@item GNU texinfo 4.8 or higher (lower versions should work)
+@item Doxygen 1.5.7 or higher (lower versions should work)
+@end itemize
+
 Documentation that is shipped with @value{TERM.srcdist} is generated as part of the @ref{Build Process} step. This section documents builds all of the supported methods to build documentation. There are three kinds of documentation in this project; man-pages, articles and API. @b{Documentation must be build from the repository}.
 
 Man-pages are automatically generated for command-line utilities by using @command{html2man} which invokes standard options @command{--help} and @command{--version} and gleans the information, generating a man-page in @b{nroff} script. Note that the utilities will first be built as they are depdendencies of man-page generation.

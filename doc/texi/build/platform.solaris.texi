@@ -9,7 +9,7 @@ Building on @value{OS.solaris} is supported. The following are the recommended s
 
 @include build/platform.common.bundled.texi
 @quotation Note
-@value{OS.solaris}' does not (yet) really bundle a compiler. The recommendation is to use the companion-disk compiler for maximum C++ runtime compatibility. It is usually found in @file{/usr/sfw/bin}.
+@value{OS.solaris} does not (yet) really bundle a compiler. The recommendation is to use the companion-disk compiler for maximum C++ runtime compatibility. It is usually found in @file{/usr/sfw/bin}.
 @end quotation
 
 @include build/platform.common.conf.default.texi

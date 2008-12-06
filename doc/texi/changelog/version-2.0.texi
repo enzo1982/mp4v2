@@ -6,9 +6,16 @@ Renamed public API top-level header to @code{<mp4v2/mp4v2.h>} and added namespac
 Added initial AC3 support.
 
 @item
-Added QuickTime and Nero chapter support.
+Added native Windows port. The port targets @code{WINVER 0x0500} which is Windows 2000 or higher.
+
+@item
+Added QuickTime and Nero chapter support. See @command{mp4chaps} command-line utility.
 @* Contributed by Ullrich Pollähne <u.pollaehne@@gmail.com>.
 
 @item
-Added native Windows port. The port targets @code{WINVER 0x0500} which is Windows 2000 or higher.
+Enhanced @command{mp4art} to support multiple cover-art atoms.
+
+@item
+Dropped @command{mp4dump} and replaced with @command{mp4file} which supports general file operations.
+
 @end enumerate
