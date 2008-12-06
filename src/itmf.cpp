@@ -59,7 +59,7 @@ ArtItem::reset()
     type     = BT_UNDEFINED;
     buffer   = NULL;
     size     = 0;
-    autofree = 0;
+    autofree = false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -271,6 +271,16 @@ convertBasicType( BasicType value, string& buffer )
 BasicType
 convertBasicType( const string& value )
 {
+    // if number perform enum lookup
+    istringstream convert;
+    convert.str( value );
+    int ivalue;
+    if( convert >> ivalue && ivalue > 0 ) {
+        const BasicTypeToString::const_iterator found = __basicTypeToString.find( static_cast<BasicType>(ivalue) );
+        if( found != __basicTypeToString.end() )
+            return found->first;
+    }
+
     // exact match
     const BasicTypeFromString::const_iterator found = __basicTypeFromString.find( value );
     if( found != __basicTypeFromString.end() )
@@ -322,6 +332,16 @@ convertGenre( Genre value, string& buffer )
 Genre
 convertGenre( const string& value )
 {
+    // if number perform enum lookup
+    istringstream convert;
+    convert.str( value );
+    int ivalue;
+    if( convert >> ivalue && ivalue > 0 ) {
+        const GenreToString::const_iterator found = __genreToString.find( static_cast<Genre>(ivalue) );
+        if( found != __genreToString.end() )
+            return found->first;
+    }
+
     // exact match
     const GenreFromString::const_iterator found = __genreFromString.find( value );
     if( found != __genreFromString.end() )
@@ -376,7 +396,7 @@ InitConverters::InitConverters()
         { BT_RIAA_PA,    "RIAA_PA" },
         { BT_UPC,        "UPC" },
         { BT_BMP,        "BMP" },
-        { BT_UNDEFINED,  "UNDEFINED" } // must be last
+        { BT_UNDEFINED,  "" } // must be last
     };
 
     for( BasicTypeData* p = basicTypeData; p->type != BT_UNDEFINED; p++ ) {
@@ -517,7 +537,7 @@ InitConverters::InitConverters()
         { GENRE_EURO_HOUSE,        "Euro-House" },
         { GENRE_DANCE_HALL,        "Dance Hall" },
         { GENRE_NONE,              "<NONE>" },
-        { GENRE_UNDEFINED,         "UNDEFINED" } // must be last
+        { GENRE_UNDEFINED,         "" } // must be last
     };
 
     for( GenreData* p = genreData; p->type != GENRE_UNDEFINED; p++ ) {
