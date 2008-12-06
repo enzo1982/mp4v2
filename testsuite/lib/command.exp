@@ -141,20 +141,26 @@ proc ::command::test_standardUsage { args } {
 
     # -h
     set rv [exec 0 $exe -h]
-    matchListLine {^Usage: \S+}   [lindex $rv 1] 0
+    matchListLine {^Usage: \S+} [lindex $rv 1] 0
     matchListAny  {\s+--help}    [lindex $rv 1]
     matchListAny  {\s+--version} [lindex $rv 1]
 
     # --help
     set rv [exec 0 $exe --help]
-    matchListLine {^Usage: \S+}   [lindex $rv 1] 0
-    matchListAny  {\s+--help}    [lindex $rv 1]
-    matchListAny  {\s+--version} [lindex $rv 1]
-    matchListAny  {^VERBOSITY LEVELS} [lindex $rv 1]
+    matchListLine {^Usage: \S+} [lindex $rv 1] 0
+    matchListAny  {\s+--help}       [lindex $rv 1]
+    matchListAny  {\s+--version}    [lindex $rv 1]
+    matchListAny  {^VERBOSE LEVELS} [lindex $rv 1]
 
     # --version
     set rv [exec 0 $exe --version]
     matchListLine {^\S+\s-\s\S+} [lindex $rv 1] 0
+
+    # --versionx
+    set rv [exec 0 $exe --versionx]
+    matchListAny  {^utility:\s+\S+} [lindex $rv 1]
+    matchListAny  {^product:\s+\S+} [lindex $rv 1]
+    matchListAny  {^version:\s+\S+} [lindex $rv 1]
 
     # bogus short-option
     set rv [exec 1 $exe "-*" ]

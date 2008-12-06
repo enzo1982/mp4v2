@@ -4,17 +4,15 @@
 namespace mp4v2 { namespace platform { namespace io {
 
 ///////////////////////////////////////////////////////////////////////////////
-//!
-//! Base file interface.
-//!
-//! File abstracts basic file functionality that may apply to many types of
-//! files. All files are assumed to be 64-bit files unless built on a 32-bit
-//! platform which does not support 64-bit file offsets. The interface uses a
-//! signed 64-bit value which can help with filesize math, thus limiting
-//! actual file size to 63-bits, roughly 9.22 million TB.
-//!
-//! @ingroup platform_io
-//!
+///
+/// Base file interface.
+///
+/// File abstracts basic file functionality that may apply to many types of
+/// files. All files are assumed to be 64-bit files unless built on a 32-bit
+/// platform which does not support 64-bit file offsets. The interface uses a
+/// signed 64-bit value which can help with filesize math, thus limiting
+/// actual file size to 63-bits, roughly 9.22 million TB.
+///
 ///////////////////////////////////////////////////////////////////////////////
 class File
 {

@@ -33,70 +33,18 @@ Utility::Utility( string name_, int argc_, char** argv_ )
     , _argc             ( argc_ )
     , _argv             ( argv_ )
     , _optimize         ( false )
-    , _compatibility    ( COMPAT_AUTO )
-    , _strict           ( false )
     , _dryrun           ( false )
     , _keepgoing        ( false )
     , _overwrite        ( false )
     , _force            ( false )
     , _debug            ( 0 )
     , _verbosity        ( 1 )
-    , _jobCompatibility ( COMPAT_NONE )
     , _jobCount         ( 0 )
     , _debugVerbosity   ( 0 )
     , _debugImplicits   ( false )
     , _group            ( "OPTIONS" )
 {
     debugUpdate( 1 );
-
-    // populate map
-    _compatibilityByExtension["m4a"] = COMPAT_ITUNES;
-    _compatibilityByExtension["m4p"] = COMPAT_ITUNES;
-    _compatibilityByExtension["m4v"] = COMPAT_ITUNES;
-
-    _xhelpCompatibility =
-        // 79-cols, inclusive, max desired width
-        // |----------------------------------------------------------------------------|
-        "\nCOMPATIBILITY MODES"
-        "\n  none      disable compaitbility checks"
-        "\n  auto      automatic compatibility mode (default)"
-        "\n  itunes    force itunes compatibility";
-
-    _xhelpDebug =
-        // 79-cols, inclusive, max desired width
-        // |----------------------------------------------------------------------------|
-        "\nDEBUG LEVELS (for raw mp4 file I/O)"
-        "\n  0  supressed"
-        "\n  1  add warnings and errors (default)"
-        "\n  2  add table details"
-        "\n  3  add implicits"
-        "\n  4  everything";
-
-    _xhelpVerbosity =
-        // 79-cols, inclusive, max desired width
-        // |----------------------------------------------------------------------------|
-        "\nVERBOSITY LEVELS"
-        "\n  0  warnings and errors"
-        "\n  1  normal informative messages (default)"
-        "\n  2  more informative messages"
-        "\n  3  everything";
-
-    // populate standard options
-    _group.add( 'z', false, "optimize",  false, LC_NONE, "optimize mp4 file after modification" );
-    _group.add( 'c', true,  "compat",    true,  LC_NONE, "specify compatibility MODE", "MODE",
-        _xhelpCompatibility );
-    _group.add( 's', false, "strict",    false, LC_NONE, "enable strict compat; treat deprecations as errors" );
-    _group.add( 'y', false, "dryrun",    false, LC_NONE, "do not actually create or modify any files" );
-    _group.add( 'k', false, "keepgoing", false, LC_NONE, "continue batch processing even after errors" );
-    _group.add( 'o', false, "overwrite", false, LC_NONE, "overwrite existing files when creating" );
-    _group.add( 'f', false, "force",     false, LC_NONE, "force overwrite even if file is read-only" );
-    _group.add( 'q', false, "quiet",     false, LC_NONE, "equivalent to --verbose 0" );
-    _group.add( 'd', false, "debug",     true,  LC_DEBUG, "increase debug or long-option to set NUM", "NUM",
-        _xhelpDebug );
-    _group.add( 'v', false, "verbose",   true,  LC_VERBOSE, "increase verbosity or long-option to set NUM", "NUM",
-        _xhelpVerbosity );
-    _group.add( 'h', false, "help",      false, LC_HELP, "print help or long-option for extended help" );
-    _group.add(             "version",   false, LC_VERSION, "print version information and exit" );
 
     _usage = "<UNDEFINED>";
     _description = "<UNDEFINED>";
@@ -200,12 +148,15 @@ Utility::formatGroups()
 {
     // determine longest long-option [+space +argname]
     int longMax = 0;
-    list<Group*>::reverse_iterator end = _groups.rend();
-    for( list<Group*>::reverse_iterator it = _groups.rbegin(); it != end; it++ ) {
+    list<Group*>::reverse_iterator ie = _groups.rend();
+    for( list<Group*>::reverse_iterator it = _groups.rbegin(); it != ie; it++ ) {
         Group& group = **it;
-        const Group::List::const_iterator endo = group.options.end();
-        for( Group::List::const_iterator ito = group.options.begin(); ito != endo; ito++ ) {
-            Option& option = **ito;
+        const Group::List::const_iterator ieo = group.options.end();
+        for( Group::List::const_iterator ito = group.options.begin(); ito != ieo; ito++ ) {
+            const Option& option = **ito;
+            if( option.hidden )
+                continue;
+
             int len = option.lname.length();
             if( option.lhasarg )
                 len += 1 + option.argname.length();
@@ -219,15 +170,18 @@ Utility::formatGroups()
 
     int groupCount = 0;
     int optionCount = 0;
-    end = _groups.rend();
-    for( list<Group*>::reverse_iterator it = _groups.rbegin(); it != end; it++, groupCount++ ) {
+    ie = _groups.rend();
+    for( list<Group*>::reverse_iterator it = _groups.rbegin(); it != ie; it++, groupCount++ ) {
         if( groupCount )
             oss << '\n';
         Group& group = **it;
         oss << '\n' << group.name;
-        const Group::List::const_iterator endo = group.options.end();
-        for( Group::List::const_iterator ito = group.options.begin(); ito != endo; ito++, optionCount++ ) {
-            Option& option = **ito;
+        const Group::List::const_iterator ieo = group.options.end();
+        for( Group::List::const_iterator ito = group.options.begin(); ito != ieo; ito++, optionCount++ ) {
+            const Option& option = **ito;
+            if( option.hidden )
+                continue;
+
             oss << "\n ";
 
             if( option.scode == 0 )
@@ -266,12 +220,12 @@ Utility::formatGroups()
     _shortOptions.clear();
 
     int optionIndex = 0;
-    end = _groups.rend();
-    for( list<Group*>::reverse_iterator it = _groups.rbegin(); it != end; it++ ) {
+    ie = _groups.rend();
+    for( list<Group*>::reverse_iterator it = _groups.rbegin(); it != ie; it++ ) {
         Group& group = **it;
-        const Group::List::const_iterator endo = group.options.end();
-        for( Group::List::const_iterator ito = group.options.begin(); ito != endo; ito++, optionIndex++ ) {
-            Option& a = **ito;
+        const Group::List::const_iterator ieo = group.options.end();
+        for( Group::List::const_iterator ito = group.options.begin(); ito != ieo; ito++, optionIndex++ ) {
+            const Option& a = **ito;
             prog::Option& b = _longOptions[optionIndex];
 
             b.name = const_cast<char*>(a.lname.c_str());
@@ -295,30 +249,13 @@ Utility::job( string arg )
 {
     verbose2f( "job begin: %s\n", arg.c_str() );
 
-    // setup job compatibility
-    if( _compatibility == COMPAT_AUTO ) {
-        string ext = arg;
-        io::FileSystem::pathnameOnlyExtension( ext );
-
-        const CompatibilityMap::iterator found = _compatibilityByExtension.find( ext );
-        if( found != _compatibilityByExtension.end() )
-            _jobCompatibility = found->second;
-        else
-            _jobCompatibility = COMPAT_NONE;
-
-        verbose2f( "compatibility mode: %s\n", toString( _jobCompatibility ).c_str() );
-    }
-    else {
-        _jobCompatibility = _compatibility;
-    }
-
     // perform job
     JobContext job( arg );
     const bool result = utility_job( job );
 
     // free data flagged with job
-    list<void*>::iterator end = job.tofree.end();
-    for( list<void*>::iterator it = job.tofree.begin(); it != end; it++ )
+    list<void*>::iterator ie = job.tofree.end();
+    for( list<void*>::iterator it = job.tofree.begin(); it != ie; it++ )
         free( *it );
 
     // close file handle flagged with job
@@ -383,12 +320,12 @@ Utility::printHelp( bool extended, bool toerr )
     oss << "Usage: " << _name << " " << _usage << '\n' << _description << '\n' << _help;
 
     if( extended ) {
-        const list<Group*>::reverse_iterator end = _groups.rend();
-        for( list<Group*>::reverse_iterator it = _groups.rbegin(); it != end; it++ ) {
+        const list<Group*>::reverse_iterator ie = _groups.rend();
+        for( list<Group*>::reverse_iterator it = _groups.rbegin(); it != ie; it++ ) {
             Group& group = **it;
-            const Group::List::const_iterator endo = group.options.end();
-            for( Group::List::const_iterator ito = group.options.begin(); ito != endo; ito++ ) {
-                Option& option = **ito;
+            const Group::List::const_iterator ieo = group.options.end();
+            for( Group::List::const_iterator ito = group.options.begin(); ito != ieo; ito++ ) {
+                const Option& option = **ito;
                 if( option.help.empty() )
                     continue;
 
@@ -410,7 +347,7 @@ Utility::printUsage( bool toerr )
 {
     ostringstream oss;
     oss <<   "Usage: " << _name << " " << _usage
-        << "\nTry -h or --help for more information";
+        << "\nTry -h for brief help or --help for extended help";
  
     if( toerr )
         errf( "%s\n", oss.str().c_str() );
@@ -421,10 +358,27 @@ Utility::printUsage( bool toerr )
 ///////////////////////////////////////////////////////////////////////////////
 
 void
-Utility::printVersion()
+Utility::printVersion( bool extended )
 {
     ostringstream oss;
-    oss << _name << " - " << MP4V2_PROJECT_name_formal;
+    oss << left;
+
+    if( extended ) {
+        oss <<         setw(13) << "utility:" << _name
+            << '\n' << setw(13) << "product:" << MP4V2_PROJECT_name
+            << '\n' << setw(13) << "version:" << MP4V2_PROJECT_version
+            << '\n' << setw(13) << "build date:" << MP4V2_PROJECT_build
+            << '\n'
+            << '\n' << setw(18) << "repository URL:" << MP4V2_PROJECT_repo_url
+            << '\n' << setw(18) << "repository root:" << MP4V2_PROJECT_repo_root
+            << '\n' << setw(18) << "repository UUID:" << MP4V2_PROJECT_repo_uuid
+            << '\n' << setw(18) << "repository rev:" << MP4V2_PROJECT_repo_rev
+            << '\n' << setw(18) << "repository date:" << MP4V2_PROJECT_repo_date
+            << '\n' << setw(18) << "repository type:" << MP4V2_PROJECT_repo_type;
+    }
+    else {
+        oss << _name << " - " << MP4V2_PROJECT_name_formal;
+    }
 
     outf( "%s\n", oss.str().c_str() );
 }
@@ -438,9 +392,9 @@ Utility::process()
 
     // populate code lookup set
     set<int> codes;
-    const Group::List::const_iterator end = _group.options.end();
-    for( Group::List::const_iterator it = _group.options.begin(); it != end; it++ ) {
-        Option& option = **it;
+    const Group::List::const_iterator ie = _group.options.end();
+    for( Group::List::const_iterator it = _group.options.begin(); it != ie; it++ ) {
+        const Option& option = **it;
         if( option.scode != 0 )
             codes.insert( option.scode );
         if( option.lcode != LC_NONE )
@@ -464,25 +418,6 @@ Utility::process()
         switch( code ) {
             case 'z':
                 _optimize = true;
-                break;
-
-            case 'c':
-            {
-                const string s = prog::optarg;
-                if( !s.compare( "none" ))
-                    _compatibility = COMPAT_NONE;
-                else if( !s.compare( "auto" ))
-                    _compatibility = COMPAT_AUTO;
-                else if( !s.compare( "itunes" ))
-                    _compatibility = COMPAT_ITUNES;
-                else
-                    return herrf( "invalid compatibility mode: %s\n", s.c_str() );
-                verbose2f( "compatibility mode: %s\n", toString( _compatibility ).c_str() ); 
-                break;
-            }
-
-            case 's':
-                _strict = true;
                 break;
 
             case 'y':
@@ -515,8 +450,12 @@ Utility::process()
                 break;
 
             case 'h':
-                printHelp( false );
+                printHelp( false, false );
                 return SUCCESS;
+
+            case LC_DEBUG:
+                debugUpdate( std::strtoul( prog::optarg, NULL, 0 ) );
+                break;
 
             case LC_VERBOSE:
             {
@@ -525,16 +464,16 @@ Utility::process()
                 break;
             }
 
-            case LC_DEBUG:
-                debugUpdate( std::strtoul( prog::optarg, NULL, 0 ) );
-                break;
-
             case LC_HELP:
-                printHelp( true );
+                printHelp( true, false );
                 return SUCCESS;
 
             case LC_VERSION:
-                printVersion();
+                printVersion( false );
+                return SUCCESS;
+
+            case LC_VERSIONX:
+                printVersion( true );
                 return SUCCESS;
 
             default:
@@ -601,35 +540,6 @@ Utility::openFileForWriting( io::StdioFile& file )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-string
-Utility::toString( CompatibilityMode mode )
-{
-    string result;
-    return toString( mode, result );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-string&
-Utility::toString( CompatibilityMode mode, string& out )
-{
-    switch( mode ) {
-        case COMPAT_NONE:   out = "none";   return out;
-        case COMPAT_AUTO:   out = "auto";   return out;
-        case COMPAT_ITUNES: out = "itunes"; return out;
-
-        default:
-            break;
-    }
-
-    ostringstream oss;
-    oss << "UNDEFINED(" << mode << ")";
-    out = oss.str();
-    return out;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void
 Utility::verbose( uint32_t level, const char* format, va_list ap )
 {
@@ -676,6 +586,54 @@ Utility::verbose3f( const char* format, ... )
 const bool Utility::SUCCESS = false;
 const bool Utility::FAILURE = true;
 
+const Utility::Option Utility::STD_OPTIMIZE( 'z', false, "optimize", false, LC_NONE,
+    "optimize mp4 file after modification" );
+
+const Utility::Option Utility::STD_DRYRUN( 'y', false, "dryrun", false, LC_NONE,
+    "do not actually create or modify any files" );
+
+const Utility::Option Utility::STD_KEEPGOING( 'k', false, "keepgoing", false, LC_NONE,
+    "continue batch processing even after errors" );
+
+const Utility::Option Utility::STD_OVERWRITE( 'o', false, "overwrite", false, LC_NONE,
+    "overwrite existing files when creating" );
+
+const Utility::Option Utility::STD_FORCE( 'f', false, "force", false, LC_NONE,
+    "force overwrite even if file is read-only" );
+
+const Utility::Option Utility::STD_QUIET( 'q', false, "quiet", false, LC_NONE,
+    "equivalent to --verbose 0" );
+
+const Utility::Option Utility::STD_DEBUG( 'd', false, "debug", true, LC_DEBUG,
+    "increase debug or long-option to set NUM", "NUM",
+    // 79-cols, inclusive, max desired width
+    // |----------------------------------------------------------------------------|
+    "\nDEBUG LEVELS (for raw mp4 file I/O)"
+    "\n  0  supressed"
+    "\n  1  add warnings and errors (default)"
+    "\n  2  add table details"
+    "\n  3  add implicits"
+    "\n  4  everything" );
+
+const Utility::Option Utility::STD_VERBOSE( 'v', false, "verbose", true, LC_VERBOSE,
+    "increase verbosity or long-option to set NUM", "NUM",
+    // 79-cols, inclusive, max desired width
+    // |----------------------------------------------------------------------------|
+    "\nVERBOSE LEVELS"
+    "\n  0  warnings and errors"
+    "\n  1  normal informative messages (default)"
+    "\n  2  more informative messages"
+    "\n  3  everything" );
+
+const Utility::Option Utility::STD_HELP( 'h', false, "help", false, LC_HELP,
+    "print brief help or long-option for extended help" );
+
+const Utility::Option Utility::STD_VERSION( 0, false, "version", false, LC_VERSION,
+    "print version information and exit" );
+
+const Utility::Option Utility::STD_VERSIONX( 0, false, "versionx", false, LC_VERSIONX,
+    "print extended version information and exit", "ARG", "", true );
+
 ///////////////////////////////////////////////////////////////////////////////
 
 Utility::Group::Group( string name_ )
@@ -688,9 +646,17 @@ Utility::Group::Group( string name_ )
 
 Utility::Group::~Group()
 {
-    const List::iterator end = _options.end();
-    for( List::iterator it = _options.begin(); it != end; it++ )
+    const List::iterator ie = _optionsDelete.end();
+    for( List::iterator it = _optionsDelete.begin(); it != ie; it++ )
         delete *it;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+Utility::Group::add( const Option& option )
+{
+    _options.push_back( &option );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -701,12 +667,15 @@ Utility::Group::add(
     bool     shasarg,
     string   lname,
     bool     lhasarg,
-    LongCode lcode,
+    uint32_t lcode,
     string   descr,
     string   argname,
-    string   help )
+    string   help,
+    bool     hidden )
 {
-    _options.push_back( new Option( scode, shasarg, lname, lhasarg, lcode, descr, argname, help ));
+    Option* o = new Option( scode, shasarg, lname, lhasarg, lcode, descr, argname, help, hidden );
+    _options.push_back( o );
+    _optionsDelete.push_back( o );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -715,28 +684,13 @@ void
 Utility::Group::add( 
     string   lname,
     bool     lhasarg,
-    LongCode lcode,
+    uint32_t lcode,
     string   descr,
     string   argname,
-    string   help )
+    string   help,
+    bool     hidden )
 {
-    add( 0, false, lname, lhasarg, lcode, descr, argname, help );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void
-Utility::Group::remove( string name )
-{
-    const List::iterator end = _options.end();
-    for( List::iterator it = _options.begin(); it != end; it++ ) {
-        Option& option = **it;
-        if( option.lname.compare( name ))
-            continue;
-
-        _options.erase( it );
-        break;
-    }
+    add( 0, false, lname, lhasarg, lcode, descr, argname, help, hidden );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -746,10 +700,11 @@ Utility::Option::Option(
     bool     shasarg_,
     string   lname_,
     bool     lhasarg_,
-    LongCode lcode_,
+    uint32_t lcode_,
     string   descr_,
     string   argname_,
-    string   help_ )
+    string   help_,
+    bool     hidden_ )
         : scode   ( scode_ )
         , shasarg ( shasarg_ )
         , lname   ( lname_ )
@@ -758,6 +713,7 @@ Utility::Option::Option(
         , descr   ( descr_ )
         , argname ( argname_ )
         , help    ( help_ )
+        , hidden  ( hidden_ )
 {
 }
 

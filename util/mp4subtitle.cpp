@@ -31,12 +31,11 @@ namespace mp4v2 { namespace util {
 class SubtitleUtility : public Utility
 {
 private:
-    enum Action {
-        ACTION_UNDEFINED,
-        ACTION_LIST,
-        ACTION_EXTRACT,
-        ACTION_MODIFY,
-        ACTION_REMOVE,
+    enum SubtitleLongCode {
+        LC_LIST = _LC_MAX,
+        LC_EXPORT,
+        LC_IMPORT,
+        LC_REMOVE,
     };
 
 public:
@@ -48,15 +47,17 @@ protected:
     bool utility_job( JobContext& );
 
 private:
-    bool actionList    ( JobContext& );
-    bool actionExtract ( JobContext& );
-    bool actionModify  ( JobContext& );
-    bool actionRemove  ( JobContext& );
+    bool actionList   ( JobContext& );
+    bool actionExport ( JobContext& );
+    bool actionImport ( JobContext& );
+    bool actionRemove ( JobContext& );
 
 private:
     Group  _actionGroup;
-    Action _action;
-    string _argtxt;
+
+    bool (SubtitleUtility::*_action)( JobContext& );
+
+    string _stTextFile;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -64,16 +65,25 @@ private:
 SubtitleUtility::SubtitleUtility( int argc, char** argv )
     : Utility      ( "mp4subtitle", argc, argv )
     , _actionGroup ( "ACTIONS" )
-    , _action      ( ACTION_UNDEFINED )
+    , _action      ( NULL )
 {
-    _group.remove( "optimize" );
-    _group.remove( "compat" );
-    _group.remove( "strict" );
+    // add standard options which make sense for this utility
+    _group.add( STD_OPTIMIZE );
+    _group.add( STD_DRYRUN );
+    _group.add( STD_KEEPGOING );
+    _group.add( STD_OVERWRITE );
+    _group.add( STD_FORCE );
+    _group.add( STD_QUIET );
+    _group.add( STD_DEBUG );
+    _group.add( STD_VERBOSE );
+    _group.add( STD_HELP );
+    _group.add( STD_VERSION );
+    _group.add( STD_VERSIONX );
 
-    _actionGroup.add( 'l', false, "list",    false, LC_NONE, "list available subtitles" );
-    _actionGroup.add( 'x', true,  "extract", true,  LC_NONE, "extract subtitles to TXT", "TXT" );
-    _actionGroup.add( 'm', true,  "modify",  true,  LC_NONE, "set subtitles from TXT", "TXT" );
-    _actionGroup.add( 'r', false, "remove",  false, LC_NONE, "remove all subtitles" );
+    _actionGroup.add( "list",   false, LC_LIST,   "list available subtitles" );
+    _actionGroup.add( "export", true,  LC_EXPORT, "export subtitles to TXT", "TXT" );
+    _actionGroup.add( "import", true,  LC_IMPORT, "import subtitles from TXT", "TXT" );
+    _actionGroup.add( "remove", false, LC_REMOVE, "remove all subtitles" );
     _groups.push_back( &_actionGroup );
 
     _usage = "[OPTION]... ACTION file...";
@@ -87,11 +97,24 @@ SubtitleUtility::SubtitleUtility( int argc, char** argv )
 ///////////////////////////////////////////////////////////////////////////////
 
 bool
-SubtitleUtility::actionExtract( JobContext& job )
+SubtitleUtility::actionExport( JobContext& job )
 {
     job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
+
+    verbose1f( "NOT IMPLEMENTED\n" );
+    return FAILURE;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+SubtitleUtility::actionImport( JobContext& job )
+{
+    job.fileHandle = MP4Modify( job.file.c_str() );
+    if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
+        return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
     verbose1f( "NOT IMPLEMENTED\n" );
     return FAILURE;
@@ -105,19 +128,6 @@ SubtitleUtility::actionList( JobContext& job )
     job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
-
-    verbose1f( "NOT IMPLEMENTED\n" );
-    return FAILURE;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool
-SubtitleUtility::actionModify( JobContext& job )
-{
-    job.fileHandle = MP4Modify( job.file.c_str() );
-    if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
-        return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
     verbose1f( "NOT IMPLEMENTED\n" );
     return FAILURE;
@@ -141,33 +151,10 @@ SubtitleUtility::actionRemove( JobContext& job )
 bool
 SubtitleUtility::utility_job( JobContext& job )
 {
-    bool result = FAILURE;
+    if( !_action )
+        return herrf( "no action specified\n" );
 
-    switch( _action ) {
-        case ACTION_UNDEFINED:
-            return herrf( "no action specified\n" );
-
-        case ACTION_LIST:
-            result = actionList( job );
-            break;
-
-        case ACTION_EXTRACT:
-            result = actionExtract( job );
-            break;
-
-        case ACTION_MODIFY:
-            result = actionModify( job );
-            break;
-
-        case ACTION_REMOVE:
-            result = actionRemove( job );
-            break;
-
-        default:
-            return herrf( "unknown action(%d)\n", _action );
-    }
-
-    return result;
+    return (this->*_action)( job );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -178,26 +165,26 @@ SubtitleUtility::utility_option( int code, bool& handled )
     handled = true;
 
     switch( code ) {
-        case 'l':
-            _action = ACTION_LIST;
+        case LC_LIST:
+            _action = &SubtitleUtility::actionList;
             break;
 
-        case 'x':
-            _action = ACTION_EXTRACT;
-            _argtxt = prog::optarg;
-            if( _argtxt.empty() )
+        case LC_EXPORT:
+            _action = &SubtitleUtility::actionExport;
+            _stTextFile = prog::optarg;
+            if( _stTextFile.empty() )
                 return herrf( "invalid TXT file: empty-string\n" );
             break;
 
-        case 'm':
-            _action = ACTION_MODIFY;
-            _argtxt = prog::optarg;
-            if( _argtxt.empty() )
+        case LC_IMPORT:
+            _action = &SubtitleUtility::actionImport;
+            _stTextFile = prog::optarg;
+            if( _stTextFile.empty() )
                 return herrf( "invalid TXT file: empty-string\n" );
             break;
 
-        case 'r':
-            _action = ACTION_REMOVE;
+        case LC_REMOVE:
+            _action = &SubtitleUtility::actionRemove;
             break;
 
         default:

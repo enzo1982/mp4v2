@@ -24,18 +24,21 @@
 #include "libutil/util.h"
 
 namespace mp4v2 { namespace util {
+    using namespace itmf;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class ArtUtility : public Utility
 {
 private:
-    enum Action {
-        ACTION_UNDEFINED,
-        ACTION_LIST,
-        ACTION_ADD,
-        ACTION_REMOVE,
-        ACTION_EXTRACT,
+    enum ArtLongCode {
+        LC_ART_ANY = _LC_MAX,
+        LC_ART_INDEX,
+        LC_LIST,
+        LC_ADD,
+        LC_REMOVE,
+        LC_REPLACE,
+        LC_EXTRACT,
     };
 
 public:
@@ -54,31 +57,56 @@ private:
         string         cerror; // compatibility error
     };
 
-    void identifyArtType( uint8_t*, uint32_t, ArtType& );
-
     bool actionList    ( JobContext& );
     bool actionAdd     ( JobContext& );
     bool actionRemove  ( JobContext& );
+    bool actionReplace ( JobContext& );
     bool actionExtract ( JobContext& );
 
+    bool extractSingle( JobContext&, const ArtItem&, uint32_t );
+
 private:
-    Group  _artGroup;
-    Action _action;
-    string _artSource;
+    Group  _actionGroup;
+    Group  _parmGroup;
+
+    bool (ArtUtility::*_action)( JobContext& );
+
+    string   _artImageFile;
+    uint32_t _artFilter;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 ArtUtility::ArtUtility( int argc, char** argv )
-    : Utility   ( "mp4art", argc, argv )
-    , _artGroup ( "ACTIONS" )
-    , _action   ( ACTION_UNDEFINED )
+    : Utility      ( "mp4art", argc, argv )
+    , _actionGroup ( "ACTIONS" )
+    , _parmGroup   ( "ACTION PARAMETERS" )
+    , _action      ( NULL )
+    , _artFilter   ( numeric_limits<uint32_t>::max() )
 {
-    _artGroup.add( 'l', false, "list",    false, LC_NONE, "list available cover-art" );
-    _artGroup.add( 'a', true,  "add",     true,  LC_NONE, "add cover-art from FILE", "FILE" );
-    _artGroup.add( 'r', false, "remove",  false, LC_NONE, "remove cover-art" );
-    _artGroup.add( 'x', false, "extract", false, LC_NONE, "extract cover-art" );
-    _groups.push_back( &_artGroup );
+    // add standard options which make sense for this utility
+    _group.add( STD_OPTIMIZE );
+    _group.add( STD_DRYRUN );
+    _group.add( STD_KEEPGOING );
+    _group.add( STD_OVERWRITE );
+    _group.add( STD_FORCE );
+    _group.add( STD_QUIET );
+    _group.add( STD_DEBUG );
+    _group.add( STD_VERBOSE );
+    _group.add( STD_HELP );
+    _group.add( STD_VERSION );
+    _group.add( STD_VERSIONX );
+
+    _parmGroup.add( "art-any",   false, LC_ART_ANY,   "act on all cover-art (default)" );
+    _parmGroup.add( "art-index", true,  LC_ART_INDEX, "act on cover-art index IDX", "IDX" );
+    _groups.push_back( &_parmGroup );
+
+    _actionGroup.add( "list",    false, LC_LIST,    "list available cover-art" );
+    _actionGroup.add( "add",     true,  LC_ADD,     "add cover-art from IMG file", "IMG" );
+    _actionGroup.add( "replace", true,  LC_REPLACE, "replace cover-art with IMG file", "IMG" );
+    _actionGroup.add( "remove",  false, LC_REMOVE,  "remove cover-art" );
+    _actionGroup.add( "extract", false, LC_EXTRACT, "extract cover-art" );
+    _groups.push_back( &_actionGroup );
 
     _usage = "[OPTION]... ACTION file...";
     _description =
@@ -93,24 +121,30 @@ ArtUtility::ArtUtility( int argc, char** argv )
 bool
 ArtUtility::actionAdd( JobContext& job )
 {
-    io::StdioFile in( _artSource );
+    io::StdioFile in( _artImageFile );
     if( in.open( "rb" ))
-        return herrf( "unable to open %s for read: %s\n", _artSource.c_str(), sys::getLastErrorStr() );
+        return herrf( "unable to open %s for read: %s\n", _artImageFile.c_str(), sys::getLastErrorStr() );
 
     io::File::Size size;
     if( in.getSize( size ))
-        return herrf( "unable to get %s size: %s\n", _artSource.c_str(), sys::getLastErrorStr() );
+        return herrf( "unable to get %s size: %s\n", _artImageFile.c_str(), sys::getLastErrorStr() );
 
-    void* const data = malloc( size );
-    job.tofree.push_back( data );
+    const uint32_t max = numeric_limits<uint32_t>::max();
+    if( size > max )
+        return herrf( "file too large: %s (exceeds %u bytes)\n", _artImageFile.c_str(), max );
+
+    ArtItem item;
+    item.size     = static_cast<uint32_t>( size );
+    item.buffer   = static_cast<uint8_t*>( malloc( item.size ));
+    item.autofree = true;
 
     io::File::Size nin;
-    if( in.read( data, size, nin ))
-        return herrf( "read failed: %s\n", _artSource.c_str() );
+    if( in.read( item.buffer, item.size, nin ))
+        return herrf( "read failed: %s\n", _artImageFile.c_str() );
 
     in.close();
 
-    verbose1f( "adding %s -> %s\n", _artSource.c_str(), job.file.c_str() );
+    verbose1f( "adding %s -> %s\n", _artImageFile.c_str(), job.file.c_str() );
     if( dryrunAbort() )
         return SUCCESS;
 
@@ -118,7 +152,7 @@ ArtUtility::actionAdd( JobContext& job )
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
-    if( !MP4SetMetadataCoverArt( job.fileHandle, (uint8_t*)data, size ))
+    if( artAdd( job.fileHandle, item ))
         return herrf( "unable to add cover-art: %s\n", job.file.c_str() );
 
     job.optimizeApplicable = true;
@@ -134,50 +168,31 @@ ArtUtility::actionExtract( JobContext& job )
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
 
-    const uint32_t artc = MP4GetMetadataCoverArtCount( job.fileHandle );
-    verbose2f( "cover-art %s\n", (artc == 0) ? "not found" : "found" );
-    if( artc == 0 ) {
-        verbose1f( "skipped: %s\n", job.file.c_str() );
-        return SUCCESS;
+    // single-mode
+    if( _artFilter != numeric_limits<uint32_t>::max() ) {
+        ArtItem item;
+        if( artGet( job.fileHandle, item, _artFilter ))
+            return herrf( "unable to retrieve cover-art (index=%d): %s\n", _artFilter, job.file.c_str() );
+
+        return extractSingle( job, item, _artFilter );
     }
 
-    uint8_t* data;
-    uint32_t size;
-    if( !MP4GetMetadataCoverArt( job.fileHandle, &data, &size ))
-        return herrf( "cover-art missing\n" );
+    // wildcard-mode
+    ArtList items;
+    if( artList( job.fileHandle, items ))
+        return herrf( "unable to retrieve list of cover-art: %s\n", job.file.c_str() );
 
-    ArtType type;
-    identifyArtType( data, size, type );
-    verbose2f( "cover-art identified: %d bytes\n", size );
+    bool onesuccess = false;
+    const ArtList::size_type max = items.size();
+    for( ArtList::size_type i = 0; i < max; i++ ) {
+        bool rv = extractSingle( job, items[i], i );
+        if( !rv )
+            onesuccess = true;
+        if( !_keepgoing && rv )
+            return FAILURE;
+    }
 
-    const vector<string>::iterator end = type.cwarns.end();
-    for (vector<string>::iterator it = type.cwarns.begin(); it != end; it++ )
-        hwarnf( "%s\n", it->c_str() );
-
-    if( !type.cerror.empty() )
-        return herrf( "%s\n", type.cerror.c_str() );
-
-    string out_name = job.file;
-    io::FileSystem::pathnameStripExtension( out_name );
-
-    // add art extension
-    out_name += '.';
-    out_name += type.ext;
-    io::StdioFile out( out_name );
-
-    verbose1f( "extracting %s -> %s\n", job.file.c_str(), out_name.c_str() );
-    if( dryrunAbort() )
-        return SUCCESS;
-
-    if( openFileForWriting( out ))
-        return FAILURE;
-
-    io::File::Size nout;
-    if( out.write( data, size, nout ))
-        return herrf( "write failed: %s\n", out_name.c_str() );
-
-    out.close();
-    return SUCCESS;
+    return _keepgoing ? onesuccess : SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -189,15 +204,13 @@ ArtUtility::actionList( JobContext& job )
 
     const int widx = 3;
     const int wsize = 8;
-    const int wext = 4;
     const int wtype = 9;
     const string sep = "  ";
 
     if( _jobCount == 0 ) {
         report << setw(widx) << right << "IDX" << left
-               << sep << setw(wsize) << right << "SIZE" << left
+               << sep << setw(wsize) << right << "BYTES" << left
                << sep << setw(8) << "CRC32"
-               << sep << setw(wext) << "EXT"
                << sep << setw(wtype) << "TYPE"
                << sep << setw(0) << "FILE"
                << '\n';
@@ -209,30 +222,28 @@ ArtUtility::actionList( JobContext& job )
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
 
-    const uint32_t artc = MP4GetMetadataCoverArtCount( job.fileHandle );
-    for( uint32_t i = 0; i < artc; i++ ) {
-        ostringstream oss;
-        oss << right << setw(widx) << i << left;
-    
-        uint8_t* data;
-        uint32_t size;
-        if( !MP4GetMetadataCoverArt( job.fileHandle, &data, &size )) {
-            report << oss.str() << " [missing]\n";
+    ArtList items;
+    if( artList( job.fileHandle, items ))
+        return herrf( "unable to get list of cover-art: %s\n", job.file.c_str() );
+
+    int line = 0;
+    const ArtList::size_type max = items.size();
+    for( ArtList::size_type i = 0; i < max; i++ ) {
+        if( _artFilter != numeric_limits<uint32_t>::max() && _artFilter != i )
             continue;
-        }
 
-        const uint32_t crc = crc32( data, size );
+        ArtItem& item = items[i];
+        const uint32_t crc = crc32( item.buffer, item.size );
 
-        ArtType type;
-        identifyArtType( data, size, type );
+        report << setw(widx) << right << i
+               << sep << setw(wsize) << item.size
+               << sep << setw(8) << setfill('0') << hex << crc << setfill(' ') << dec
+               << sep << setw(wtype) << left << convertBasicType(item.type);
 
-        oss << sep << setw(wsize) << right << size << left
-            << sep << setw(8) << setfill('0') << hex << right << crc << setfill(' ') << dec << left
-            << sep << setw(wext) << type.ext
-            << sep << setw(wtype) << type.name
-            << sep << setw(0) << job.file;
+        if( line++ == 0 )
+            report << sep << setw(0) << job.file;
 
-        report << oss.str() << '\n';
+        report << '\n';
     }
 
     verbose1f( "%s", report.str().c_str() );
@@ -248,19 +259,16 @@ ArtUtility::actionRemove( JobContext& job )
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
-    const uint32_t artc = MP4GetMetadataCoverArtCount( job.fileHandle );
-    verbose2f( "cover-art %s\n", (artc == 0) ? "not found" : "found" );
-    if( artc == 0 ) {
-        verbose1f( "skipped: %s\n", job.file.c_str() );
-        return SUCCESS;
-    }
+    if( _artFilter == numeric_limits<uint32_t>::max() )
+        verbose1f( "removing cover-art (all) from %s\n", job.file.c_str() );
+    else
+        verbose1f( "removing cover-art (index=%d) from %s\n", _artFilter, job.file.c_str() );
 
-    verbose1f( "removing cover-art from %s\n", job.file.c_str() );
     if( dryrunAbort() )
         return SUCCESS;
 
-    if( !MP4DeleteMetadataCoverArt( job.fileHandle ))
-        return herrf( "unable to remove cover-art: %s\n", job.file.c_str() );
+    if( artRemove( job.fileHandle, _artFilter ))
+        return herrf( "remove failed\n" );
 
     job.optimizeApplicable = true;
     return SUCCESS;
@@ -268,88 +276,90 @@ ArtUtility::actionRemove( JobContext& job )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void
-ArtUtility::identifyArtType( uint8_t* art, uint32_t size, ArtType& type )
+bool
+ArtUtility::actionReplace( JobContext& job )
 {
-    // compatibility flags
-    // reference: iTMF (iTunes Metadata Format) Specification 2008-04-16
-    static const uint32_t CF_ITMF  = 0x00000001; // iTMF compatible
-    static const uint32_t CF_ITMFD = 0x00000002; // iTMF deprecated
+    io::StdioFile in( _artImageFile );
+    if( in.open( "rb" ))
+        return herrf( "unable to open %s for read: %s\n", _artImageFile.c_str(), sys::getLastErrorStr() );
 
-    struct Header {
-        enum Type {
-            UNKNOWN,
-            BMP,
-            GIF87A,
-            GIF89A,
-            JPG,
-            PNG,
-            TIFFL,
-            TIFFB,
-        } type;
+    io::File::Size size;
+    if( in.getSize( size ))
+        return herrf( "unable to get %s size: %s\n", _artImageFile.c_str(), sys::getLastErrorStr() );
 
-        string   ext;    // suitable lower-case file extension
-        string   name;   // short string describing name of type
-        string   data;   // header-bytes to match
-        uint32_t cflags; // compatibility flags
-    };
+    const uint32_t max = numeric_limits<uint32_t>::max();
+    if( size > max )
+        return herrf( "file too large: %s (exceeds %u bytes)\n", _artImageFile.c_str(), max );
 
-    // types which may be detected by first-bytes only
-    static Header headers[] = {
-        { Header::BMP,    "BMP",  "bmp", "\x4d\x42", CF_ITMF },
-        { Header::GIF87A, "gif",  "GIF (87a)", "GIF87a", CF_ITMFD },
-        { Header::GIF89A, "gif",  "GIF (89a)", "GIF89a", CF_ITMFD },
-        { Header::JPG,    "jpg",  "JPEG", "\xff\xd8\xff\xe0", CF_ITMF },
-        { Header::PNG,    "png",  "PNG", "\x89\x50\x4e\x47\x0d\x0a\x1a\x0a", CF_ITMF },
-        { Header::TIFFL,  "tiff", "TIFF (little-endian)", "II42", 0 },
-        { Header::TIFFB,  "tiff", "TIFF (big-endian)", "MM42", 0 },
-        { Header::UNKNOWN } // must be last
-    };
+    ArtItem item;
+    item.size     = static_cast<uint32_t>( size );
+    item.buffer   = static_cast<uint8_t*>( malloc( item.size ));
+    item.autofree = true;
 
-    type.name = "unknown";
-    type.ext  = "dat";
-    type.cwarns.clear();
-    type.cerror.clear();
+    io::File::Size nin;
+    if( in.read( item.buffer, item.size, nin ))
+        return herrf( "read failed: %s\n", _artImageFile.c_str() );
 
-    Header* found = NULL;
-    for( Header* p = headers; p->type != Header::UNKNOWN; p++ ) {
-        Header& h = *p;
+    in.close();
 
-        if( size < h.data.size() )
-            continue;
+    if( _artFilter == numeric_limits<uint32_t>::max() )
+        verbose1f( "replacing %s -> %s (all)\n", _artImageFile.c_str(), job.file.c_str() );
+    else
+        verbose1f( "replacing %s -> %s (index=%d)\n", _artImageFile.c_str(), job.file.c_str(), _artFilter );
 
-        if( memcmp(h.data.data(), art, h.data.size()) == 0 ) {
-            found = &h;
-            type.name = h.name;
-            type.ext  = h.ext;
+    if( dryrunAbort() )
+        return SUCCESS;
+
+    job.fileHandle = MP4Modify( job.file.c_str() );
+    if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
+        return herrf( "unable to open for write: %s\n", job.file.c_str() );
+
+    if( artSet( job.fileHandle, item, _artFilter ))
+        return herrf( "unable to add cover-art: %s\n", job.file.c_str() );
+
+    job.optimizeApplicable = true;
+    return SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+ArtUtility::extractSingle( JobContext& job, const ArtItem& item, uint32_t index )
+{
+    // compute out filename
+    string out_name = job.file;
+    io::FileSystem::pathnameStripExtension( out_name );
+
+    ostringstream oss;
+    oss << out_name << ".art[" << index << ']';
+
+    // add file extension appropriate for known cover-art types
+    switch( item.type ) {
+        case BT_GIF:    oss << ".gif"; break;
+        case BT_JPEG:   oss << ".jpg"; break;
+        case BT_PNG:    oss << ".png"; break;
+        case BT_BMP:    oss << ".bmp"; break;
+
+        default:
+            oss << ".dat";
             break;
-        }
     }
 
-    // populate compatibility warnings
-    if( !found) {
-        ostringstream oss;
-        oss << "invalid cover-art type: " << type.name;
-        type.cerror = oss.str();
-        return;
-    }
+    out_name = oss.str();
+    verbose1f( "extracting %s (index=%d) -> %s\n", job.file.c_str(), index, out_name.c_str() );
+    if( dryrunAbort() )
+        return SUCCESS;
 
-    if( _jobCompatibility == COMPAT_ITUNES ) {
-        if( found->cflags & CF_ITMFD ) {
-            ostringstream oss;
-            oss << "deprecated cover-art type: " << type.name;
-            if( _strict ) {
-                type.cerror = oss.str();
-                return;
-            }
-            type.cwarns.push_back( oss.str() );
-        }
-        else if( !(found->cflags & CF_ITMF) ) {
-            ostringstream oss;
-            oss << "invalid cover-art type: " << type.name;
-            type.cerror = oss.str();
-        }
-    }
+    io::StdioFile out( out_name );
+    if( openFileForWriting( out ))
+        return FAILURE;
+
+    io::File::Size nout;
+    if( out.write( item.buffer, item.size, nout ))
+        return herrf( "write failed: %s\n", out_name.c_str() );
+
+    out.close();
+    return SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -357,33 +367,10 @@ ArtUtility::identifyArtType( uint8_t* art, uint32_t size, ArtType& type )
 bool
 ArtUtility::utility_job( JobContext& job )
 {
-    bool result = FAILURE;
+    if( !_action )
+        return herrf( "no action specified\n" );
 
-    switch( _action ) {
-        case ACTION_UNDEFINED:
-            return herrf( "no action specified\n" );
-
-        case ACTION_LIST:
-            result = actionList( job );
-            break;
-
-        case ACTION_ADD:
-            result = actionAdd( job );
-            break;
-
-        case ACTION_REMOVE:
-            result = actionRemove( job );
-            break;
-
-        case ACTION_EXTRACT:
-            result = actionExtract( job );
-            break;
-
-        default:
-            return herrf( "unknown action(%d)\n", _action );
-    }
-
-    return result;
+    return (this->*_action)( job );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -394,23 +381,38 @@ ArtUtility::utility_option( int code, bool& handled )
     handled = true;
 
     switch( code ) {
-        case 'l':
-            _action = ACTION_LIST;
+        case LC_ART_ANY:
+            _artFilter = numeric_limits<uint32_t>::max();
             break;
 
-        case 'a':
-            _action = ACTION_ADD;
-            _artSource = prog::optarg;
-            if( _artSource.empty() )
+        case LC_ART_INDEX:
+            _artFilter = std::strtoul( prog::optarg, NULL, 0 );
+            break;
+
+        case LC_LIST:
+            _action = &ArtUtility::actionList;
+            break;
+
+        case LC_ADD:
+            _action = &ArtUtility::actionAdd;
+            _artImageFile = prog::optarg;
+            if( _artImageFile.empty() )
                 return herrf( "invalid cover-art file: empty-string\n" );
             break;
 
-        case 'r':
-            _action = ACTION_REMOVE;
+        case LC_REMOVE:
+            _action = &ArtUtility::actionRemove;
             break;
 
-        case 'x':
-            _action = ACTION_EXTRACT;
+        case LC_REPLACE:
+            _action = &ArtUtility::actionReplace;
+            _artImageFile = prog::optarg;
+            if( _artImageFile.empty() )
+                return herrf( "invalid cover-art file: empty-string\n" );
+            break;
+
+        case LC_EXTRACT:
+            _action = &ArtUtility::actionExtract;
             break;
 
         default:

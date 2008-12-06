@@ -141,6 +141,10 @@ if ADD_PLATFORM_WIN32
 endif
 
 libutil_la_SOURCES = \
+    libutil/Database.h   \
+    libutil/Database.cpp \
+    libutil/Timecode.h   \
+    libutil/Timecode.cpp \
     libutil/Utility.h    \
     libutil/Utility.cpp  \
     libutil/crc.h        \
@@ -153,10 +157,14 @@ libutil_la_SOURCES = \
 if ADD_UTIL
     noinst_LTLIBRARIES += libutil.la
 
-    libmp4v2_la_SOURCES += \
-        src/libutil.h \
-        src/libutil.cpp \
-        src/subtitle.h \
+    libmp4v2_la_SOURCES +=  \
+        src/itmf.h          \
+        src/itmf.cpp        \
+        src/libutil.h       \
+        src/libutil.cpp     \
+        src/qtff.h          \
+        src/qtff.cpp        \
+        src/subtitle.h      \
         src/subtitle.cpp
 
     bin_PROGRAMS += mp4art

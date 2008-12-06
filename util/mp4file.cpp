@@ -30,11 +30,10 @@ namespace mp4v2 { namespace util {
 class FileUtility : public Utility
 {
 private:
-    enum Action {
-        ACTION_UNDEFINED,
-        ACTION_LIST,
-        ACTION_OPTIMIZE,
-        ACTION_DUMP,
+    enum FileLongCode {
+        LC_LIST = _LC_MAX,
+        LC_OPTIMIZE,
+        LC_DUMP,
     };
 
 public:
@@ -51,8 +50,9 @@ private:
     bool actionDump     ( JobContext& );
 
 private:
-    Group  _actionGroup;
-    Action _action;
+    Group _actionGroup;
+
+    bool (FileUtility::*_action)( JobContext& );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -60,17 +60,21 @@ private:
 FileUtility::FileUtility( int argc, char** argv )
     : Utility      ( "mp4file", argc, argv )
     , _actionGroup ( "ACTIONS" )
-    , _action      ( ACTION_UNDEFINED )
+    , _action      ( NULL )
 {
-    _group.remove( "optimize" );
-    _group.remove( "compat" );
-    _group.remove( "strict" );
-    _group.remove( "overwrite" );
-    _group.remove( "force" );
+    // add standard options which make sense for this utility
+    _group.add( STD_DRYRUN );
+    _group.add( STD_KEEPGOING );
+    _group.add( STD_QUIET );
+    _group.add( STD_DEBUG );
+    _group.add( STD_VERBOSE );
+    _group.add( STD_HELP );
+    _group.add( STD_VERSION );
+    _group.add( STD_VERSIONX );
 
-    _actionGroup.add( 'l', false, "list",     false, LC_NONE, "list (summary information)" );
-    _actionGroup.add( 'z', false, "optimize", false, LC_NONE, "optimize mp4 structure" );
-    _actionGroup.add( 'p', false, "dump",     false, LC_NONE, "dump mp4 structure in human-readable format" );
+    _actionGroup.add( "list",     false, LC_LIST,     "list (summary information)" );
+    _actionGroup.add( "optimize", false, LC_OPTIMIZE, "optimize mp4 structure" );
+    _actionGroup.add( "dump",     false, LC_DUMP,     "dump mp4 structure in human-readable format" );
     _groups.push_back( &_actionGroup );
 
     _usage = "[OPTION]... ACTION file...";
@@ -123,14 +127,14 @@ FileUtility::actionList( JobContext& job )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
 
     FileSummaryInfo info;
-    if( fetchFileSummaryInfo( job.fileHandle, info ))
+    if( fileFetchSummaryInfo( job.fileHandle, info ))
         return herrf( "unable to fetch file summary info" );
 
     string compat;
     {
-        const FileSummaryInfo::BrandSet::iterator end = info.compatible_brands.end();
+        const FileSummaryInfo::BrandSet::iterator ie = info.compatible_brands.end();
         int count = 0;
-        for( FileSummaryInfo::BrandSet::iterator it = info.compatible_brands.begin(); it != end; it++, count++ ) {
+        for( FileSummaryInfo::BrandSet::iterator it = info.compatible_brands.begin(); it != ie; it++, count++ ) {
             if( count > 0 )
                 compat += ',';
             compat += *it;
@@ -170,29 +174,10 @@ FileUtility::actionOptimize( JobContext& job )
 bool
 FileUtility::utility_job( JobContext& job )
 {
-    bool result = FAILURE;
+    if( !_action )
+        return herrf( "no action specified\n" );
 
-    switch( _action ) {
-        case ACTION_UNDEFINED:
-            return herrf( "no action specified\n" );
-
-        case ACTION_LIST:
-            result = actionList( job );
-            break;
-
-        case ACTION_OPTIMIZE:
-            result = actionOptimize( job );
-            break;
-
-        case ACTION_DUMP:
-            result = actionDump( job );
-            break;
-
-        default:
-            return herrf( "unknown action(%d)\n", _action );
-    }
-
-    return result;
+    return (this->*_action)( job );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -203,16 +188,16 @@ FileUtility::utility_option( int code, bool& handled )
     handled = true;
 
     switch( code ) {
-        case 'l':
-            _action = ACTION_LIST;
+        case LC_LIST:
+            _action = &FileUtility::actionList;
             break;
 
-        case 'z':
-            _action = ACTION_OPTIMIZE;
+        case LC_OPTIMIZE:
+            _action = &FileUtility::actionOptimize;
             break;
 
-        case 'p':
-            _action = ACTION_DUMP;
+        case LC_DUMP:
+            _action = &FileUtility::actionDump;
             break;
 
         default:

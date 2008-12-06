@@ -30,9 +30,14 @@ namespace mp4v2 { namespace util {
 class TrackUtility : public Utility
 {
 private:
-    enum Action {
-        ACTION_UNDEFINED,
-        ACTION_LIST,
+    enum TrackLongAction {
+        LC_TRACK_ANY = _LC_MAX,
+        LC_TRACK_ID,
+        LC_TRACK_INDEX,
+        LC_SAMPLE_ANY,
+        LC_SAMPLE_ID,
+        LC_SAMPLE_INDEX,
+        LC_LIST,
     };
 
 public:
@@ -47,9 +52,10 @@ private:
     bool actionList( JobContext& );
 
 private:
-    Group  _actionGroup;
-    Group  _parmGroup;
-    Action _action;
+    Group _actionGroup;
+    Group _parmGroup;
+
+    bool (TrackUtility::*_action)( JobContext& );
     string _listLastFile;
 };
 
@@ -63,16 +69,30 @@ TrackUtility::TrackUtility( int argc, char** argv )
     : Utility      ( "mp4track", argc, argv )
     , _actionGroup ( "ACTIONS" )
     , _parmGroup   ( "PARAMETERS" )
-    , _action      ( ACTION_UNDEFINED )
+    , _action      ( NULL )
 {
-    _parmGroup.add( "track-id",     true, LC_NONE, "track by id" );
-    _parmGroup.add( "track-index",  true, LC_NONE, "track by index" );
-    _parmGroup.add( "sample-id",    true, LC_NONE, "sample by id" );
-    _parmGroup.add( "sample-index", true, LC_NONE, "sample by index" );
+    // add standard options which make sense for this utility
+    _group.add( STD_OPTIMIZE );
+    _group.add( STD_DRYRUN );
+    _group.add( STD_KEEPGOING );
+    _group.add( STD_OVERWRITE );
+    _group.add( STD_FORCE );
+    _group.add( STD_QUIET );
+    _group.add( STD_DEBUG );
+    _group.add( STD_VERBOSE );
+    _group.add( STD_HELP );
+    _group.add( STD_VERSION );
+    _group.add( STD_VERSIONX );
+
+    _parmGroup.add( "track-any",    false, LC_TRACK_ANY,    "any track" );
+    _parmGroup.add( "track-id",     true,  LC_TRACK_ID,     "track by id" );
+    _parmGroup.add( "track-index",  true,  LC_TRACK_INDEX,  "track by index" );
+    _parmGroup.add( "sample-any",   false, LC_SAMPLE_ANY,   "any sample" );
+    _parmGroup.add( "sample-id",    true,  LC_SAMPLE_ID,    "sample by id" );
+    _parmGroup.add( "sample-index", true,  LC_SAMPLE_INDEX, "sample by index" );
     _groups.push_back( &_parmGroup );
 
-    _actionGroup.add( 'l', false, "list",    false, LC_NONE, "list tracks in mp4" );
-    _actionGroup.add( 'x', false, "extract", false, LC_NONE, "list tracks in mp4" );
+    _actionGroup.add( "list", false, LC_LIST, "list tracks in mp4" );
     _groups.push_back( &_actionGroup );
 
     _usage = "[OPTION]... [PARAMETERS]... ACTION file...";
@@ -168,21 +188,10 @@ TrackUtility::actionList( JobContext& job )
 bool
 TrackUtility::utility_job( JobContext& job )
 {
-    bool result = FAILURE;
+    if( !_action )
+        return herrf( "no action specified\n" );
 
-    switch( _action ) {
-        case ACTION_UNDEFINED:
-            return herrf( "no action specified\n" );
-
-        case ACTION_LIST:
-            result = actionList( job );
-            break;
-
-        default:
-            return herrf( "unknown action(%d)\n", _action );
-    }
-
-    return result;
+    return (this->*_action)( job );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -193,8 +202,8 @@ TrackUtility::utility_option( int code, bool& handled )
     handled = true;
 
     switch( code ) {
-        case 'l':
-            _action = ACTION_LIST;
+        case LC_LIST:
+            _action = &TrackUtility::actionList;
             break;
 
         default:

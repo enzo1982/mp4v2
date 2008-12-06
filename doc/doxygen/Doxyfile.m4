@@ -554,7 +554,13 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT = __MAKE_ABS_TOP_SRCDIR/doc/doxygen/mainpage.h __MAKE_ABS_TOP_SRCDIR/include __MAKE_ABS_TOP_SRCDIR/libplatform __MAKE_ABS_TOP_SRCDIR/util/Utility.h
+INPUT = __MAKE_ABS_TOP_SRCDIR/doc/doxygen/mainpage.h \
+    __MAKE_ABS_TOP_SRCDIR/include \
+    __MAKE_ABS_TOP_SRCDIR/libplatform \
+    __MAKE_ABS_TOP_SRCDIR/src/libutil.h \
+    __MAKE_ABS_TOP_SRCDIR/src/itmf.h \
+    __MAKE_ABS_TOP_SRCDIR/src/qtff.h \
+    __MAKE_ABS_TOP_SRCDIR/util/Utility.h
 
 # This tag can be used to specify the character encoding of the source files 
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is 
@@ -897,7 +903,7 @@ DISABLE_INDEX          = NO
 # This tag can be used to set the number of enum values (range [1..20]) 
 # that doxygen will group on one line in the generated HTML documentation.
 
-ENUM_VALUES_PER_LINE   = 4
+ENUM_VALUES_PER_LINE   = 3
 
 # The GENERATE_TREEVIEW tag is used to specify whether a tree-like index
 # structure should be generated to display hierarchical information.

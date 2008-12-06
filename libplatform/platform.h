@@ -1,6 +1,21 @@
 #ifndef MP4V2_PLATFORM_PLATFORM_H
 #define MP4V2_PLATFORM_PLATFORM_H
 
+/// @namespace mp4v2::platform (private) Platform abstraction.
+/// <b>WARNING: THIS IS A PRIVATE NAMESPACE. NOT FOR PUBLIC CONSUMPTION.</b>
+///
+/// This namespace implements platform abstractions that are useful for
+/// keeping the code base portable.
+
+/// @namespace mp4v2::platform::io (private) I/O.
+/// <b>WARNING: THIS IS A PRIVATE NAMESPACE. NOT FOR PUBLIC CONSUMPTION.</b>
+
+/// @namespace mp4v2::platform::number (private) Number.
+/// <b>WARNING: THIS IS A PRIVATE NAMESPACE. NOT FOR PUBLIC CONSUMPTION.</b>
+
+/// @namespace mp4v2::platform::sys (private) System.
+/// <b>WARNING: THIS IS A PRIVATE NAMESPACE. NOT FOR PUBLIC CONSUMPTION.</b>
+
 ///////////////////////////////////////////////////////////////////////////////
 
 #if defined( _WIN32 )
@@ -14,7 +29,6 @@
 #include "libplatform/warning.h"
 #include "libplatform/endian.h"
 
-//! @defgroup platform_io libplatform I/O
 #include "libplatform/io/File.h"
 #include "libplatform/io/FileSystem.h"
 

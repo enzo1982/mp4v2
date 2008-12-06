@@ -4,13 +4,11 @@
 namespace mp4v2 { namespace platform { namespace io {
 
 ///////////////////////////////////////////////////////////////////////////////
-//!
-//! General file-system abstraction.
-//!
-//! FileSystem abstracts operations on files and directories.
-//!
-//! @ingroup platform_io
-//!
+///
+/// General file-system abstraction.
+///
+/// FileSystem abstracts operations on files and directories.
+///
 ///////////////////////////////////////////////////////////////////////////////
 class FileSystem
 {

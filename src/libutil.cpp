@@ -58,7 +58,7 @@ void searchFor64bit( MP4Atom& atom, FileSummaryInfo& info )
 ///////////////////////////////////////////////////////////////////////////////
 
 bool
-fetchFileSummaryInfo( MP4FileHandle file, FileSummaryInfo& info )
+fileFetchSummaryInfo( MP4FileHandle file, FileSummaryInfo& info )
 {
     if( file == MP4_INVALID_FILE_HANDLE )
         return true;

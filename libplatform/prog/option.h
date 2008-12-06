@@ -1,26 +1,25 @@
 #ifndef MP4V2_PLATFORM_PROG_OPTION_H
 #define MP4V2_PLATFORM_PROG_OPTION_H
 
+///////////////////////////////////////////////////////////////////////////////
+///
+/// @namespace mp4v2::platform::prog Command-line argument parsing.
+/// <b>WARNING: THIS IS A PRIVATE NAMESPACE. NOT FOR PUBLIC CONSUMPTION.</b>
+///
+/// This namespace provides a mechanism to parse command-line arguments and
+/// options for executables.
+/// It is identical in behavior to <b>getopt_long</b> functions available
+/// with many popular posix-platforms such as Darwin, FreeBSD and Linux.
+/// Virtually any OS which has getopt_long will adequately document this
+/// functionality. However, to avoid symbol ambiguity with the popular
+/// posix implementation, the following identifiers have been renamed:
+///     @li getopt_long()      -> getOption()
+///     @li getopt_long_only() -> getOptionSingle()
+///     @li option             -> Option
+///     @li option.has_arg     -> Option.type
+//!
+///////////////////////////////////////////////////////////////////////////////
 namespace mp4v2 { namespace platform { namespace prog {
-
-///////////////////////////////////////////////////////////////////////////////
-//!
-//! @defgroup platform_prog libplatform Program Option
-//! @{
-//!
-//! This module provides a mechanism to parse command-line arguments and
-//! options for executables.
-//! It is identical in behavior to <b>getopt_long</b> functions available
-//! with many popular posix-platforms such as Darwin, FreeBSD and Linux.
-//! Virtually any OS which has getopt_long will adequately document this
-//! functionality. However, to avoid symbol ambiguity with the popular
-//! posix implementation, the following identifiers have been renamed:
-//!     @li getopt_long()      -> getOption()
-//!     @li getopt_long_only() -> getOptionWord()
-//!     @li option             -> Option
-//!     @li option.has_arg     -> Option.type
-//!
-///////////////////////////////////////////////////////////////////////////////
 
 //! On return from getOption() or getOptionSingle(),
 //! points to an option argument, if it is anticipated.
@@ -166,8 +165,6 @@ int getOption( int argc, char* const* argv, const char* optstr, const Option* lo
 ///////////////////////////////////////////////////////////////////////////////
 int getOptionSingle( int argc, char* const* argv, const char* optstr, const Option* longopts, int* idx );
 
-///////////////////////////////////////////////////////////////////////////////
-//! @}
 ///////////////////////////////////////////////////////////////////////////////
 
 }}} // namespace mp4v2::platform::prog

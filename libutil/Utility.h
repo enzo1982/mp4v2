@@ -66,25 +66,27 @@ class Utility
 protected:
     enum LongCode {
         LC_NONE = 0xf0000000, // safe (cannot conflict with char values)
-        LC_VERBOSE,
         LC_DEBUG,
+        LC_VERBOSE,
         LC_HELP,
         LC_VERSION,
+        LC_VERSIONX,
         _LC_MAX // will be used to seeed derived-class long-codes enum
     };
 
     class Option {
     public:
-        Option( char, bool, string, bool, LongCode, string, string, string );
+        Option( char, bool, string, bool, uint32_t, string, string = "ARG", string = "", bool = false );
 
         const char     scode;
         const bool     shasarg;
         const string   lname;
         const bool     lhasarg;
-        const LongCode lcode;
+        const uint32_t lcode;
         const string   descr;
         const string   argname;
         const string   help;
+        const bool     hidden;
     };
 
     class Group {
@@ -92,28 +94,21 @@ protected:
         explicit Group( string );
         ~Group();
 
-        void add( char, bool, string, bool, LongCode, string, string = "ARG", string = "" );
-        void add( string, bool, LongCode, string, string = "ARG", string = "" );
-        void remove( string );
+        void add( const Option& ); // options added this way will not be deleted
+        void add( char, bool, string, bool, uint32_t, string, string = "ARG", string = "", bool = false );
+        void add( string, bool, uint32_t, string, string = "ARG", string = "", bool = false );
 
         const string name;
 
     public:
-        typedef list<Option*> List;
+        typedef list<const Option*> List;
 
     private:
         List _options;
+        List _optionsDelete;
 
     public:
         const List& options;
-    };
-
-    enum CompatibilityMode {
-        _COMPAT_UNDEFINED,
-        COMPAT_NONE,   //!< disable compatibilty checks
-        COMPAT_AUTO,   //!< derive mode from job filename
-        COMPAT_ITUNES, //!< iTunes compatibility
-        _COMPAT_MAX
     };
 
     //! structure passed as argument to each job during batch processing
@@ -128,9 +123,6 @@ protected:
         list<void*>   tofree;             //!< memory to free at end of job
     };
 
-private:
-    typedef map<string,CompatibilityMode> CompatibilityMap;
-
 public:
     virtual ~Utility();
 
@@ -139,9 +131,9 @@ public:
 protected:
     Utility( string, int, char** );
 
-    void printUsage   ( bool = false );       //!< print usage
-    void printHelp    ( bool, bool = false ); //!< print help
-    void printVersion ( );                    //!< print utility version
+    void printUsage   ( bool );       //!< print usage
+    void printHelp    ( bool, bool ); //!< print help
+    void printVersion ( bool );       //!< print utility version
 
     void errf ( const char*, ... ) MP4V2_WFORMAT_PRINTF(2,3); //!< print to stderr
     void outf ( const char*, ... ) MP4V2_WFORMAT_PRINTF(2,3); //!< print to stdout
@@ -171,7 +163,6 @@ private:
     void verbose( uint32_t, const char*, va_list );
 
 private:
-    CompatibilityMap _compatibilityByExtension;
     string _help;
 
     prog::Option* _longOptions;
@@ -182,27 +173,21 @@ protected:
     const int          _argc; //!< arg count
     char* const* const _argv; //!< arg vector
 
-    // common options
-    bool              _optimize;      //!< optimize mp4 file after modification
-    CompatibilityMode _compatibility; //!< overall batch compatibility
-    bool              _strict;        //!< strict compatibliity
-    bool              _dryrun;        //!< dry-run, no writing is actually performed
-    bool              _keepgoing;     //!< contine batch processing even after error
-    bool              _overwrite;     //!< overwrite file if already exists
-    bool              _force;         //!< force overwriting a file even if read-only
-    uint32_t          _debug;         //!< mp4 file I/O verbosity
-    uint32_t          _verbosity;     //!< verbosity level, default=1
+    // common options state
+    bool     _optimize;  //!< optimize mp4 file after modification
+    bool     _strict;    //!< strict compatibliity
+    bool     _dryrun;    //!< dry-run, no writing is actually performed
+    bool     _keepgoing; //!< contine batch processing even after error
+    bool     _overwrite; //!< overwrite file if already exists
+    bool     _force;     //!< force overwriting a file even if read-only
+    uint32_t _debug;     //!< mp4 file I/O verbosity
+    uint32_t _verbosity; //!< verbosity level, default=1
 
-    CompatibilityMode _jobCompatibility;
     uint32_t          _jobCount;
     uint32_t          _debugVerbosity;
     bool              _debugImplicits;
 
-    Group         _group;
-    string        _xhelpCompatibility;
-    string        _xhelpDebug;
-    string        _xhelpVerbosity;
-
+    Group         _group; // group to which standard options are added
     string        _usage;
     string        _description;
     list<Group*>  _groups;
@@ -212,8 +197,18 @@ public:
     static const bool FAILURE;
 
 protected:
-    static string  toString( CompatibilityMode );          //!< convert to string
-    static string& toString( CompatibilityMode, string& ); //!< convert to string with storage
+    // standard options for concrete utilities to add to _group in constructor
+    static const Option STD_OPTIMIZE;
+    static const Option STD_DRYRUN;
+    static const Option STD_KEEPGOING;
+    static const Option STD_OVERWRITE;
+    static const Option STD_FORCE;
+    static const Option STD_QUIET;
+    static const Option STD_DEBUG;
+    static const Option STD_VERBOSE;
+    static const Option STD_HELP;
+    static const Option STD_VERSION;
+    static const Option STD_VERSIONX;
 };
 
 /// @} ////////////////////////////////////////////////////////////////////////

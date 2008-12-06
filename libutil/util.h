@@ -6,10 +6,10 @@
 #include "libplatform/platform.h"
 #include "src/libutil.h"
 
+#include <fstream>
 #include <iomanip>
 #include <list>
 #include <map>
-#include <sstream>
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -19,6 +19,8 @@ namespace mp4v2 { namespace util {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+#include "Database.h"
+#include "Timecode.h"
 #include "Utility.h"
 #include "crc.h"
 

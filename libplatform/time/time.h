@@ -1,12 +1,9 @@
 #ifndef MP4V2_PLATFORM_TIME_TIME_H
 #define MP4V2_PLATFORM_TIME_TIME_H
 
+/// @namespace mp4v2::platform::time (private) Time.
+/// <b>WARNING: THIS IS A PRIVATE NAMESPACE. NOT FOR PUBLIC CONSUMPTION.</b>
 namespace mp4v2 { namespace platform { namespace time {
-
-///////////////////////////////////////////////////////////////////////////////
-//! @defgroup platform_time libplatform Time
-//! @{
-///////////////////////////////////////////////////////////////////////////////
 
 //! type used to represent milliseconds
 typedef int64_t milliseconds_t;

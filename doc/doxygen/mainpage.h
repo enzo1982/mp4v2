@@ -1,8 +1,8 @@
 /** @mainpage MP4v2 API Reference
 
 The MP4v2 library provides an API to create and modify mp4 files as defined
-by ISO base media file format, document number ISO/IEC 14496-12:2005(E).
-It is a very powerful and extensible format that can accomodate practically
+by ISO base media file format, document number ISO/IEC 14496-12:2005(E). It
+is a very powerful and extensible format that can accomodate practically
 any type of media.
 
 The basic structure of an mp4 file is that the file is a container for one
@@ -29,8 +29,10 @@ etails.
 @section invocation Invocation
 
 The public libary API is defined in @c <mp4v2/mp4v2.h> which includes all the
-necessary dependent header files. You should never use any other header
-files from MP4v2 sources.
+necessary dependent header files. <b>You must never use any other header
+files</b> for public API. Using other header files or symbols which are
+not exported via the public API is expressly not supported and may change
+at any time without notice.
 
 The MP4v2 library can be used by either C or C++ programs. The calling
 convention is C but for convenience if C++ is used default function arguments
