@@ -471,6 +471,22 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\itmf.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\itmf.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\libutil.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\libutil.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\mp4.cpp"
 				>
 			</File>
@@ -571,6 +587,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\qtff.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\qtff.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\rtphint.cpp"
 				>
 			</File>
@@ -579,7 +603,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\type.h"
+				RelativePath="..\..\src\subtitle.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\subtitle.h"
 				>
 			</File>
 			<File

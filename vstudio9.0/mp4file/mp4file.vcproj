@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="libutil"
-	ProjectGUID="{04DFBC5C-2A75-4918-AAA6-EA931CDD117A}"
-	RootNamespace="libutil"
+	Name="mp4file"
+	ProjectGUID="{C97FBF72-8249-4782-A34A-BEA222E9A257}"
+	RootNamespace="mp4file"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -146,43 +146,7 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\libutil\crc.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\libutil\crc.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\libutil\Database.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\libutil\Database.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\libutil\impl.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\libutil\Timecode.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\libutil\Timecode.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\libutil\util.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\libutil\Utility.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\libutil\Utility.h"
+			RelativePath="..\..\util\mp4file.cpp"
 			>
 		</File>
 	</Files>

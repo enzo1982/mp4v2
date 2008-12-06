@@ -250,6 +250,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\libplatform\platform_base.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\libplatform\platform_win32.h"
 			>
 		</File>
