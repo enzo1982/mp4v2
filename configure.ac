@@ -80,8 +80,8 @@ AC_ARG_ENABLE([mingw_mt],
 # checks for programs
 ###############################################################################
 
-AC_PROG_MKDIR_P
 AC_PROG_CXX
+AC_LIBTOOL_WIN32_DLL
 AC_PROG_LIBTOOL
 
 AC_CHECK_PROG([HAVE_SVN],[svn],[yes],[no])
