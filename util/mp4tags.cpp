@@ -22,23 +22,23 @@ namespace mp4v2 { namespace util {
 
 /* One-letter options -- if you want to rearrange these, change them
    here, immediately below in OPT_STRING, and in the help text. */
-#define OPT_HELP    'h'
-#define OPT_VERSION 'v'
-#define OPT_ALBUM   'A'
-#define OPT_ARTIST  'a'
-#define OPT_TEMPO   'b'
-#define OPT_COMMENT 'c'
-#define OPT_DISK    'd'
-#define OPT_DISKS   'D'
-#define OPT_GENRE   'g'
-#define OPT_GROUPING 'G'
-#define OPT_PICTURE 'P'
-#define OPT_SONG    's'
-#define OPT_TRACK   't'
-#define OPT_TRACKS  'T'
-#define OPT_WRITER  'w'    /* _composer_ */
-#define OPT_YEAR    'y'
-#define OPT_REMOVE  'r'
+#define OPT_HELP         'h'
+#define OPT_VERSION      'v'
+#define OPT_ALBUM        'A'
+#define OPT_ARTIST       'a'
+#define OPT_TEMPO        'b'
+#define OPT_COMMENT      'c'
+#define OPT_DISK         'd'
+#define OPT_DISKS        'D'
+#define OPT_GENRE        'g'
+#define OPT_GROUPING     'G'
+#define OPT_PICTURE      'P'
+#define OPT_SONG         's'
+#define OPT_TRACK        't'
+#define OPT_TRACKS       'T'
+#define OPT_COMPOSER     'w'
+#define OPT_YEAR         'y'
+#define OPT_REMOVE       'r'
 #define OPT_ALBUM_ARTIST 'R'
 
 #define OPT_STRING  "hvA:a:b:c:d:D:g:G:P:s:t:T:w:y:r:R:"
@@ -49,25 +49,25 @@ static const char* const help_text =
     "OPTION... FILE...\n"
     "Adds or modifies iTunes-compatible tags on MP4 files.\n"
     "\n"
-    "  -h, -help         Display this help text and exit\n"
-    "  -v, -version      Display version information and exit\n"
-    "  -A, -album    STR  Set the album title\n"
-    "  -a, -artist   STR  Set the artist information\n"
-    "  -b, -tempo    NUM  Set the tempo (beats per minute)\n"
-    "  -c, -comment  STR  Set a general comment\n"
-    "  -d, -disk     NUM  Set the disk number\n"
-    "  -D, -disks    NUM  Set the number of disks\n"
-    "  -g, -genre    STR  Set the genre name\n"
-    "  -G, -grouping STR  Set the grouping name\n"
-    "  -P, -picture  PTH  Set the picture as a .png\n"
-    "  -s, -song     STR  Set the song title\n"
-    "  -t, -track    NUM  Set the track number\n"
-    "  -T, -tracks   NUM  Set the number of tracks\n"
-    "  -w, -writer   STR  Set the composer information\n"
-    "  -y, -year     NUM  Set the year\n"
+    "  -h, -help            Display this help text and exit\n"
+    "  -v, -version         Display version information and exit\n"
+    "  -A, -album       STR  Set the album title\n"
+    "  -a, -artist      STR  Set the artist information\n"
+    "  -b, -tempo       NUM  Set the tempo (beats per minute)\n"
+    "  -c, -comment     STR  Set a general comment\n"
+    "  -d, -disk        NUM  Set the disk number\n"
+    "  -D, -disks       NUM  Set the number of disks\n"
+    "  -g, -genre       STR  Set the genre name\n"
+    "  -G, -grouping    STR  Set the grouping name\n"
+    "  -P, -picture     PTH  Set the picture as a .png\n"
+    "  -s, -song        STR  Set the song title\n"
+    "  -t, -track       NUM  Set the track number\n"
+    "  -T, -tracks      NUM  Set the number of tracks\n"
+    "  -w, -writer      STR  Set the composer information\n"
+    "  -y, -year        NUM  Set the release date\n"
     "  -R, -albumartist STR Set the album artist\n"
-    "  -r, -remove   STR  Remove tags by code (e.g. \"-r cs\"\n"
-    "                     removes the comment and song tags)";
+    "  -r, -remove      STR  Remove tags by code (e.g. \"-r cs\"\n"
+    "                        removes the comment and song tags)";
 
 extern "C" int
     main( int argc, char** argv )
@@ -87,7 +87,7 @@ extern "C" int
         { "tempo",       prog::Option::REQUIRED_ARG, 0, OPT_TEMPO        },
         { "track",       prog::Option::REQUIRED_ARG, 0, OPT_TRACK        },
         { "tracks",      prog::Option::REQUIRED_ARG, 0, OPT_TRACKS       },
-        { "writer",      prog::Option::REQUIRED_ARG, 0, OPT_WRITER       },
+        { "writer",      prog::Option::REQUIRED_ARG, 0, OPT_COMPOSER     },
         { "year",        prog::Option::REQUIRED_ARG, 0, OPT_YEAR         },
         { "remove",      prog::Option::REQUIRED_ARG, 0, OPT_REMOVE       },
         { "albumartist", prog::Option::REQUIRED_ARG, 0, OPT_ALBUM_ARTIST },
@@ -206,14 +206,14 @@ extern "C" int
                     case OPT_SONG:
                         MP4DeleteMetadataName( h );
                         break;
-                    case OPT_WRITER:
-                        MP4DeleteMetadataWriter( h );
+                    case OPT_COMPOSER:
+                        MP4DeleteMetadataComposer( h );
                         break;
                     case OPT_YEAR:
-                        MP4DeleteMetadataYear( h );
+                        MP4DeleteMetadataReleaseDate( h );
                         break;
                     case OPT_TEMPO:
-                        MP4DeleteMetadataTempo( h );
+                        MP4DeleteMetadataBPM( h );
                         break;
                     case OPT_TRACK:
                         MP4DeleteMetadataTrack( h );
@@ -274,14 +274,14 @@ extern "C" int
                     case OPT_SONG:
                         MP4SetMetadataName( h, tags[i] );
                         break;
-                    case OPT_WRITER:
-                        MP4SetMetadataWriter( h, tags[i] );
+                    case OPT_COMPOSER:
+                        MP4SetMetadataComposer( h, tags[i] );
                         break;
                     case OPT_YEAR:
-                        MP4SetMetadataYear( h, tags[i] );
+                        MP4SetMetadataReleaseDate( h, tags[i] );
                         break;
                     case OPT_TEMPO:
-                        MP4SetMetadataTempo( h, nums[i] );
+                        MP4SetMetadataBPM( h, nums[i] );
                         break;
                     case OPT_ALBUM_ARTIST:
                         MP4SetMetadataAlbumArtist( h, tags[i] );

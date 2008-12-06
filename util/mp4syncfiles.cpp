@@ -118,11 +118,11 @@ static bool compare_meta( char *toname, MP4FileHandle to,
 
     CHECK_AND_FREE( tovalue );
     CHECK_AND_FREE( fromvalue );
-    MP4GetMetadataWriter( to, &tovalue );
-    MP4GetMetadataWriter( from, &fromvalue );
+    MP4GetMetadataComposer( to, &tovalue );
+    MP4GetMetadataComposer( from, &fromvalue );
     if ( tovalue == NULL || fromvalue == NULL || strcmp( tovalue, fromvalue ) != 0 ) {
         if ( tovalue != NULL || fromvalue != NULL ) {
-            printf( "%s writer \"%s\" \"%s\"\n",
+            printf( "%s composer \"%s\" \"%s\"\n",
                     fromname, fromvalue, tovalue );
             CHECK_AND_FREE( tovalue );
             CHECK_AND_FREE( fromvalue );
@@ -131,10 +131,10 @@ static bool compare_meta( char *toname, MP4FileHandle to,
     }
     CHECK_AND_FREE( tovalue );
     CHECK_AND_FREE( fromvalue );
-    MP4GetMetadataYear( to, &tovalue );
-    MP4GetMetadataYear( from, &fromvalue );
+    MP4GetMetadataReleaseDate( to, &tovalue );
+    MP4GetMetadataReleaseDate( from, &fromvalue );
     if ( tovalue == NULL || fromvalue == NULL || strcmp( tovalue, fromvalue ) != 0 ) {
-        printf( "%s year \"%s\" \"%s\"\n",
+        printf( "%s release date \"%s\" \"%s\"\n",
                 fromname, fromvalue, tovalue );
         CHECK_AND_FREE( tovalue );
         CHECK_AND_FREE( fromvalue );
@@ -219,10 +219,10 @@ static bool compare_meta( char *toname, MP4FileHandle to,
     CHECK_AND_FREE( tovalue );
     CHECK_AND_FREE( fromvalue );
 
-    MP4GetMetadataTempo( to, &tonum );
-    MP4GetMetadataTempo( from, &fromnum );
+    MP4GetMetadataBPM( to, &tonum );
+    MP4GetMetadataBPM( from, &fromnum );
     if ( tonum != fromnum ) {
-        printf( "%s tempo %u %u \n",
+        printf( "%s BPM %u %u \n",
                 fromname, fromnum, tonum );
         return false;
     }
@@ -302,23 +302,23 @@ static void copy_meta( char *toname, MP4FileHandle to,
 
     CHECK_AND_FREE( tovalue );
     CHECK_AND_FREE( fromvalue );
-    MP4GetMetadataWriter( to, &tovalue );
-    MP4GetMetadataWriter( from, &fromvalue );
+    MP4GetMetadataComposer( to, &tovalue );
+    MP4GetMetadataComposer( from, &fromvalue );
     if ( tovalue == NULL || fromvalue == NULL || strcmp( tovalue, fromvalue ) != 0 ) {
         if ( tovalue != NULL )
-            MP4DeleteMetadataWriter( to );
+            MP4DeleteMetadataComposer( to );
         if ( fromvalue != NULL )
-            MP4SetMetadataWriter( to, fromvalue );
+            MP4SetMetadataComposer( to, fromvalue );
     }
     CHECK_AND_FREE( tovalue );
     CHECK_AND_FREE( fromvalue );
-    MP4GetMetadataYear( to, &tovalue );
-    MP4GetMetadataYear( from, &fromvalue );
+    MP4GetMetadataReleaseDate( to, &tovalue );
+    MP4GetMetadataReleaseDate( from, &fromvalue );
     if ( tovalue == NULL || fromvalue == NULL || strcmp( tovalue, fromvalue ) != 0 ) {
         if ( tovalue != NULL )
-            MP4DeleteMetadataYear( to );
+            MP4DeleteMetadataReleaseDate( to );
         if ( fromvalue != NULL )
-            MP4SetMetadataYear( to, fromvalue );
+            MP4SetMetadataReleaseDate( to, fromvalue );
     }
     CHECK_AND_FREE( tovalue );
     CHECK_AND_FREE( fromvalue );
@@ -366,11 +366,11 @@ static void copy_meta( char *toname, MP4FileHandle to,
     CHECK_AND_FREE( tovalue );
     CHECK_AND_FREE( fromvalue );
 
-    MP4GetMetadataTempo( to, &tonum );
-    MP4GetMetadataTempo( from, &fromnum );
+    MP4GetMetadataBPM( to, &tonum );
+    MP4GetMetadataBPM( from, &fromnum );
     if ( tonum != fromnum ) {
-        MP4DeleteMetadataTempo( to );
-        MP4SetMetadataTempo( to, fromnum );
+        MP4DeleteMetadataBPM( to );
+        MP4SetMetadataBPM( to, fromnum );
     }
 
     MP4GetMetadataTrack( to, &tonum, &tonum2 );

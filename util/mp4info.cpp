@@ -95,16 +95,16 @@ extern "C" int main( int argc, char** argv )
                 fprintf( stdout, " Artist: %s\n", value );
                 free( value );
             }
-            if ( MP4GetMetadataWriter( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Writer: %s\n", value );
+            if ( MP4GetMetadataComposer( mp4file, &value ) && value != NULL ) {
+                fprintf( stdout, " Composer: %s\n", value );
                 free( value );
             }
             if ( MP4GetMetadataTool( mp4file, &value ) && value != NULL ) {
                 fprintf( stdout, " Tool: %s\n", value );
                 free( value );
             }
-            if ( MP4GetMetadataYear( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Year: %s\n", value );
+            if ( MP4GetMetadataReleaseDate( mp4file, &value ) && value != NULL ) {
+                fprintf( stdout, " Release Date: %s\n", value );
                 free( value );
             }
             if ( MP4GetMetadataAlbum( mp4file, &value ) && value != NULL ) {
@@ -127,8 +127,8 @@ extern "C" int main( int argc, char** argv )
                 fprintf( stdout, " Grouping: %s\n", value );
                 free( value );
             }
-            if ( MP4GetMetadataTempo( mp4file, &numvalue ) ) {
-                fprintf( stdout, " Tempo: %u\n", numvalue );
+            if ( MP4GetMetadataBPM( mp4file, &numvalue ) ) {
+                fprintf( stdout, " BPM: %u\n", numvalue );
             }
             if ( MP4GetMetadataComment( mp4file, &value ) &&
                     value != NULL ) {
