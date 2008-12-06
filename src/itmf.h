@@ -180,22 +180,29 @@ enum Genre {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/// Object representing one cover-art item.
+/// This correlates to a covr->data atom and offers automatic memory freeing
+/// when <b>autofree</b> is true.
 class MP4V2_EXPORT ArtItem
 {
 public:
     ArtItem();
     ~ArtItem();
 
+    /// Reset to state of newly constructed object.
+    /// If <b>buffer</b> is not NULL and <b>autofree</b> is true the
+    /// buffer will be free'd.
     void reset();
 
-    BasicType type;
-    uint8_t*  buffer;
-    uint32_t  size;
-    bool      autofree;
+    BasicType type;     ///< cover-art type.
+    uint8_t*  buffer;   ///< buffer point to raw cover-art data.
+    uint32_t  size;     ///< size of cover-art buffer in bytes.
+    bool      autofree; ///< when true invoke free(buffer) upon destruction.
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/// Object representing a list of cover-art items.
 class MP4V2_EXPORT ArtList : public vector<ArtItem>
 {
 public:
@@ -205,40 +212,85 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/// Convert #BasicType to string.
 MP4V2_EXPORT string
 convertBasicType( BasicType value );
 
+/// Convert #BasicType to string with buffer.
 MP4V2_EXPORT string&
 convertBasicType( BasicType value, string& buffer );
 
+/// Convert string to #BasicType.
 MP4V2_EXPORT BasicType
 convertBasicType( const string& value );
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/// Convert #Genre to string.
 MP4V2_EXPORT string
 convertGenre( Genre value );
 
+/// Convert #Genre to string with buffer.
 MP4V2_EXPORT string&
 convertGenre( Genre value, string& buffer );
 
+/// Convert string to #Genre.
 MP4V2_EXPORT Genre
 convertGenre( const string& value );
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/// Fetch list of cover-art items from file.
+///
+/// @param file on which to operate.
+/// @param out vector of #ArtItem objects.
+///
+/// @return <b>true</b> on failure, <b>false</b> on success.
+
 MP4V2_EXPORT bool
 artList( MP4FileHandle file, ArtList& out );
 
+/// Add cover-art item to file.
+/// Any necessary metadata atoms are first created.
+/// Additionally, if an empty data-atom exists it will be used,
+/// otherwise a new data-atom is added to <b>covr-atom</b>.
+///
+/// @param file on which to operate.
+/// @param item cover-art object to place in file.
+///
+/// @return <b>true</b> on failure, <b>false</b> on success.
 MP4V2_EXPORT bool
 artAdd( MP4FileHandle file, const ArtItem& item );
 
+/// Remove cover-art item from file.
+///
+/// @param file on which to operate.
+/// @param index 0-based index of cover-art to remove.
+///     Default value indicates wildcard behavior to remove all items.
+///
+/// @return <b>true</b> on failure, <b>false</b> on success.
 MP4V2_EXPORT bool
 artRemove( MP4FileHandle file, uint32_t index = numeric_limits<uint32_t>::max() );
 
+/// Fetch cover-art item from file.
+///
+/// @param file on which to operate.
+/// @param item cover-art object populated with data.
+///     The resulting object owns the malloc'd buffer and <b>item.autofree</b>
+///     is set to true for convenient memory management.
+/// @param index 0-based index of cover-art to fetch.
+///
+/// @return <b>true</b> on failure, <b>false</b> on success.
 MP4V2_EXPORT bool
 artGet( MP4FileHandle file, ArtItem& item, uint32_t index );
 
+/// Replace cover-art item in file.
+///
+/// @param file on which to operate.
+/// @param item cover-art object to place in file.
+/// @param index 0-based index of cover-art to replace.
+///
+/// @return <b>true</b> on failure, <b>false</b> on success.
 MP4V2_EXPORT bool
 artSet( MP4FileHandle file, const ArtItem& item, uint32_t index );
 

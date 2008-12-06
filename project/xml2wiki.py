@@ -70,7 +70,7 @@ class Document( Element ):
 
         self._pragmaSummary = PragmaElement( self, 'summary' )
         self._pragmaLabels = PragmaElement( self, 'labels' )
-        self._pragmaLabels._addText( 'xml2wiki,Distribution' )
+        self._pragmaLabels._addText( 'xml2wiki,Distribution,Featured' )
 
     def _pop( self ):
         self._stack.pop()

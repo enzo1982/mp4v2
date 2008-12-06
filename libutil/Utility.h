@@ -28,13 +28,6 @@ namespace mp4v2 { namespace util {
 
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// @defgroup mp4v2_util libutil
-/// @{
-///
-///////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////
-///
 /// Utility general program class.
 ///
 /// This class provides a base implementation for a general utility which
@@ -50,12 +43,6 @@ namespace mp4v2 { namespace util {
 ///     @li issue brief-usage when invalid argument is supplied and exit with 1.
 ///     @li support --help option and exit with 0.
 ///     @li support --version option and exit with 0.
-///     @li do not use options with an OPTIONAL_ARG specified. if you desire
-///         convenient default behavior for an option, use a NO_ARG short-option,
-///         and a REQUIRED_ARG long-option. this avoids 'spacing' ambiguity.
-///     @li support both long and short options when possible. Sometimes it's
-///         useful to only have the long-option available especially with
-///         meta-options { --help, --version }.
 ///     @li utilities which <b>create</b> new output files should never
 ///         over-write an existing file unless given the project's universal
 ///         '-o' or '--overwrite' option.
@@ -211,7 +198,7 @@ protected:
     static const Option STD_VERSIONX;
 };
 
-/// @} ////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 }} // namespace mp4v2::util
 
