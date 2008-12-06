@@ -54,9 +54,13 @@ M4.flags = -I$(BUILD/)project
 M4.cmd   = $(M4) $(M4.flags) $(1) > $(2)
 M4.deps  = $(BUILD/)project/project.m4
 
+ifeq ($(FOUND_HELP2MAN),yes)
 HELP2MAN       = help2man
 HELP2MAN.flags = -m "$(PROJECT_name) Utilities" -N
 HELP2MAN.cmd   = $(HELP2MAN) $(HELP2MAN.flags) ./$(1) -o $(2)
+else
+HELP2MAN.cmd = touch $(2)
+endif
 
 MAKEINFO.flags      = -I$(DOC.in/)texi -I$(DOC.out/)texi
 MAKEINFO.flags.html = --html --no-headers --no-split

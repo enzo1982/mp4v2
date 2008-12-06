@@ -19,22 +19,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <string>
-
-#include <cassert>
-#include <cctype>
-#include <cerrno>
-#include <climits>
-#include <cmath>
-#include <cstdarg>
-#include <cstddef>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <ctime>
-#include <cwchar>
-#include <cwctype>
-
+#include "libplatform/platform_base.h"
 #include <windows.h>
 
 #include <mp4v2/mp4v2.h>
@@ -105,6 +90,13 @@ namespace mp4v2 { namespace platform {
 #define snprintf(s,n,...)  _snprintf(s,n,__VA_ARGS__)
 #define strcasecmp(s1,s2)  _stricmp(s1,s2)
 #define strdup(s)          _strdup(s)
+
+///////////////////////////////////////////////////////////////////////////////
+
+// macro clashes with symbol
+#ifdef __MINGW32__
+#   undef LC_NONE
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 

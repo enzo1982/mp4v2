@@ -84,7 +84,7 @@ AC_PROG_CXX
 AC_LIBTOOL_WIN32_DLL
 AC_PROG_LIBTOOL
 
-AC_CHECK_PROG([HAVE_SVN],[svn],[yes],[no])
+AC_CHECK_PROG([FOUND_HELP2MAN],[help2man],[yes],[no])
 
 ###############################################################################
 # top-level platform check

@@ -112,6 +112,7 @@ libplatform_la_SOURCES = \
     libplatform/io/FileSystem.h          \
     libplatform/number/random.h          \
     libplatform/platform.h               \
+    libplatform/platform_base.h          \
     libplatform/platform_posix.h         \
     libplatform/platform_win32.h         \
     libplatform/process/process.h        \

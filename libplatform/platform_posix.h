@@ -28,22 +28,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <string>
-
-#include <cassert>
-#include <cctype>
-#include <cerrno>
-#include <climits>
-#include <cmath>
-#include <cstdarg>
-#include <cstddef>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <ctime>
-#include <cwchar>
-#include <cwctype>
-
+#include "libplatform/platform_base.h"
 #include <inttypes.h>
 #include <stdint.h>
 #include <fcntl.h>
