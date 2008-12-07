@@ -111,10 +111,8 @@ public:
     void setSeconds    ( uint64_t );
     void setSubseconds ( uint64_t );
 
-    string toString() const;
-    string toStringExtended() const;
-
 private:
+    uint64_t convertDuration( const Timecode& ) const;
     void recompute();
 };
 

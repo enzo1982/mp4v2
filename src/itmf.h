@@ -243,7 +243,7 @@ convertGenre( const string& value );
 /// Fetch list of cover-art items from file.
 ///
 /// @param file on which to operate.
-/// @param out vector of #ArtItem objects.
+/// @param out vector of ArtItem objects.
 ///
 /// @return <b>true</b> on failure, <b>false</b> on success.
 

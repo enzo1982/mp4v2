@@ -48,6 +48,8 @@ Timecode::Timecode( const Timecode& obj )
     operator=( obj );
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 Timecode::Timecode( const string& time_, double scale_ )
     : _scale            ( scale_ < 1.0 ? 1.0 : scale_ )
     , _duration         ( 0 )
@@ -69,10 +71,12 @@ Timecode::Timecode( const string& time_, double scale_ )
     parse( time_ );
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 Timecode::Timecode( uint64_t duration_, double scale_ )
     : _scale            ( scale_ < 1.0 ? 1.0 : scale_ )
     , _duration         ( 0 )
-    , _format           ( FRAME )
+    , _format           ( DECIMAL )
     , _svalue           ( "" )
     , _hours            ( 0 )
     , _minutes          ( 0 )
@@ -88,6 +92,17 @@ Timecode::Timecode( uint64_t duration_, double scale_ )
     , subseconds        ( _subseconds )
 {
     setDuration( duration_ );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+uint64_t
+Timecode::convertDuration( const Timecode& obj ) const
+{
+    if( _scale == obj._scale )
+        return obj._duration;
+
+    return static_cast<uint64_t>( ( _scale / obj._scale ) * obj._duration );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -113,13 +128,12 @@ Timecode::operator=( const Timecode& rhs )
 Timecode&
 Timecode::operator+=( const Timecode& rhs )
 {
-    const uint64_t old = _duration;
-    _duration += rhs._duration;
-
+    uint64_t dur = _duration + convertDuration( rhs );
     // overflow check
-    if( _duration < old )
-        _duration = numeric_limits<long long>::max();
+    if( dur < _duration )
+        dur = numeric_limits<long long>::max();
 
+    setDuration( dur );
     return *this;
 }
 
@@ -128,13 +142,12 @@ Timecode::operator+=( const Timecode& rhs )
 Timecode&
 Timecode::operator-=( const Timecode& rhs )
 {
-    const uint64_t old = _duration;
-    _duration -= rhs._duration;
+    uint64_t dur = _duration - convertDuration( rhs );
+    // underflow check
+    if( dur > _duration )
+        dur = 0;
 
-    // overflow check
-    if( _duration > old )
-        _duration = 0;
-
+    setDuration( dur );
     return *this;
 }
 
@@ -143,7 +156,7 @@ Timecode::operator-=( const Timecode& rhs )
 bool
 Timecode::operator<( const Timecode& obj ) const
 {
-    return _duration < obj._duration;
+    return _duration < convertDuration( obj );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -151,7 +164,7 @@ Timecode::operator<( const Timecode& obj ) const
 bool
 Timecode::operator<=( const Timecode& obj ) const
 {
-    return _duration <= obj._duration;
+    return _duration <= convertDuration( obj );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -159,7 +172,7 @@ Timecode::operator<=( const Timecode& obj ) const
 bool
 Timecode::operator>( const Timecode& obj ) const
 {
-    return _duration < obj._duration;
+    return _duration < convertDuration( obj );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -167,7 +180,7 @@ Timecode::operator>( const Timecode& obj ) const
 bool
 Timecode::operator>=( const Timecode& obj ) const
 {
-    return _duration < obj._duration;
+    return _duration < convertDuration( obj );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -175,7 +188,7 @@ Timecode::operator>=( const Timecode& obj ) const
 bool
 Timecode::operator!=( const Timecode& obj ) const
 {
-    return _duration != obj._duration;
+    return _duration != convertDuration( obj );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -183,7 +196,7 @@ Timecode::operator!=( const Timecode& obj ) const
 bool
 Timecode::operator==( const Timecode& obj ) const
 {
-    return _duration == obj._duration;
+    return _duration == convertDuration( obj );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -192,7 +205,7 @@ Timecode
 Timecode::operator+( const Timecode& obj ) const
 {
     Timecode t( *this );
-    t += obj._duration;
+    t += obj;
     return t;
 }
 
@@ -202,7 +215,7 @@ Timecode
 Timecode::operator-( const Timecode& obj ) const
 {
     Timecode t( *this );
-    t -= obj._duration;
+    t -= obj;
     return t;
 }
 
@@ -464,8 +477,6 @@ Timecode::recompute()
         {
             const double d = std::log10( _scale );
             int w = (d != floor(d)) ? int(d) + 1 : int(d);
-            if( w < 2)
-                w = 2;
             oss << '.' << setw(w) << _subseconds;
             break;
         }
