@@ -81,8 +81,8 @@ public:
 
 public:
     Timecode( const Timecode& );
-    Timecode( const string& = __emptyString, double = 1.0 );
-    Timecode( uint64_t, double = 1.0 );
+    explicit Timecode( const string& = __emptyString, double = 1.0 );
+    explicit Timecode( uint64_t, double = 1.0 );
 
     Timecode& operator=  ( const Timecode& );
     Timecode& operator+= ( const Timecode& );
