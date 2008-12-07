@@ -488,6 +488,14 @@ Timecode::recompute()
 ///////////////////////////////////////////////////////////////////////////////
 
 void
+Timecode::reset()
+{
+    setDuration( 0 );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
 Timecode::setDuration( uint64_t duration_, double scale_ )
 {
     if( scale_ != 0.0 ) {
@@ -547,10 +555,12 @@ Timecode::setMinutes( uint64_t minutes_ )
 void
 Timecode::setScale( double scale_ )
 {
+    const double oldscale = _scale;
     _scale = scale_;
     if( _scale < 1.0 )
         _scale = 1.0;
 
+    _subseconds = static_cast<uint64_t>( (_scale / oldscale) * _subseconds );
     recompute();
 }
 
