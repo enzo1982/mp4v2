@@ -320,8 +320,9 @@ Timecode::parse( const string& time, string& outError )
             case ':':
                 switch( target ) {
                     case HOURS:
+                        convert.clear();
                         convert.str( tbuffer );
-                        if( !(convert >> *tvalue) ) {
+                        if( !tbuffer.empty() && !(convert >> *tvalue) ) {
                             error = "failed to convert integer";
                             return true;
                         }
@@ -331,8 +332,9 @@ Timecode::parse( const string& time, string& outError )
                         break;
 
                     case MINUTES:
+                        convert.clear();
                         convert.str( tbuffer );
-                        if( !(convert >> *tvalue) ) {
+                        if( !tbuffer.empty() && !(convert >> *tvalue) ) {
                             error = "failed to convert integer";
                             return true;
                         }
@@ -342,8 +344,9 @@ Timecode::parse( const string& time, string& outError )
                         break;
 
                     case SECONDS:
+                        convert.clear();
                         convert.str( tbuffer );
-                        if( !(convert >> *tvalue) ) {
+                        if( !tbuffer.empty() && !(convert >> *tvalue) ) {
                             error = "failed to convert integer";
                             return true;
                         }
@@ -366,8 +369,9 @@ Timecode::parse( const string& time, string& outError )
                     return true;
                 }
                 _format = DECIMAL;
+                convert.clear();
                 convert.str( tbuffer );
-                if( !(convert >> *tvalue) ) {
+                if( !tbuffer.empty() && !(convert >> *tvalue) ) {
                     error = "failed to convert integer";
                     return true;
                 }
@@ -404,8 +408,9 @@ Timecode::parse( const string& time, string& outError )
 
     // apply final section
     if( !tbuffer.empty() ) {
+        convert.clear();
         convert.str( tbuffer );
-        if( !(convert >> *tvalue) ) {
+        if( !tbuffer.empty() && !(convert >> *tvalue) ) {
             error = "failed to convert integer";
             return true;
         }
@@ -475,9 +480,7 @@ Timecode::recompute()
 
         case DECIMAL:
         {
-            const double d = std::log10( _scale );
-            int w = (d != floor(d)) ? int(d) + 1 : int(d);
-            oss << '.' << setw(w) << _subseconds;
+            oss << '.' << setw(3) << static_cast<uint64_t>(_subseconds / _scale * 1000.0 + 0.5);
             break;
         }
     }
