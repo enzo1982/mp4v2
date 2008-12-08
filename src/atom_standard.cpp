@@ -87,7 +87,15 @@ MP4StandardAtom::MP4StandardAtom (const char *type) : MP4Atom(type)
     } else if (ATOMID(type) == ATOMID("covr")) { /* Apple iTunes */
         ExpectChildAtom("data", Required, Many);
     } else if (ATOMID(type) == ATOMID("cprt") ||
-               ATOMID(type) == ATOMID("cnID")) {
+               ATOMID(type) == ATOMID("cnID") ||
+               ATOMID(type) == ATOMID("tvsh") ||
+               ATOMID(type) == ATOMID("tvsn") ||
+               ATOMID(type) == ATOMID("tven") ||
+               ATOMID(type) == ATOMID("tvnn") ||
+               ATOMID(type) == ATOMID("tves") ||
+               ATOMID(type) == ATOMID("desc") ||
+               ATOMID(type) == ATOMID("ldes") ||
+               ATOMID(type) == ATOMID("soal")) {
 #if 0
         AddVersionAndFlags();
         AddProperty(
@@ -210,6 +218,15 @@ MP4StandardAtom::MP4StandardAtom (const char *type) : MP4Atom(type)
         ExpectChildAtom("aART", Optional, OnlyOne); /* album artist */
         ExpectChildAtom("----", Optional, Many); /* ---- free form */
         ExpectChildAtom("pgap", Optional, OnlyOne); /* part of gapless album */
+        ExpectChildAtom("tvsh", Optional, OnlyOne); /* TV show */
+        ExpectChildAtom("tvsn", Optional, OnlyOne); /* TV season */
+        ExpectChildAtom("tven", Optional, OnlyOne); /* TV episode number */
+        ExpectChildAtom("tvnn", Optional, OnlyOne); /* TV network */
+        ExpectChildAtom("tves", Optional, OnlyOne); /* TV epsidoe */
+        ExpectChildAtom("desc", Optional, OnlyOne); /* description */
+        ExpectChildAtom("ldes", Optional, OnlyOne); /* long description */
+        ExpectChildAtom("soal", Optional, OnlyOne); /* album name for sorting */
+
 
     }  else if (ATOMID(type) == ATOMID("imif")) {
         AddVersionAndFlags();
