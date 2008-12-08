@@ -154,6 +154,26 @@ extern "C" int main( int argc, char** argv )
                          value );
                 free( value );
             }
+            if ( MP4GetMetadataCopyright( mp4file, &value ) &&
+                    value != NULL ) {
+                fprintf( stdout, " Copyright: %s\n",
+                         value );
+                free( value );
+            }
+            if ( MP4GetMetadataExplicit( mp4file, &bytevalue ) ) {
+                fprintf( stdout, " Explicit Content: %s\n",
+                         bytevalue ? "yes" : "no" );
+            }
+            if ( MP4GetMetadataPurchaserAccount( mp4file, &value ) &&
+                    value != NULL ) {
+                fprintf( stdout, " Purchaser Account: %s\n",
+                         value );
+                free( value );
+            }
+            if ( MP4GetMetadataPurchaseDate( mp4file, &value ) && value != NULL ) {
+                fprintf( stdout, " Purchase Date: %s\n", value );
+                free( value );
+            }
             MP4Close( mp4file );
         }
         free( info );

@@ -4573,7 +4573,95 @@ extern "C" {
         }
         return false;
     }
+    
+    bool MP4SetMetadataCopyright (MP4FileHandle hFile,
+                                    const char* value)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->SetMetadataString("cprt", value);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return false;
+    }
+    
+    bool MP4GetMetadataCopyright (MP4FileHandle hFile,
+                                    char** value)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->GetMetadataString("cprt", value);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return false;
+    }
+    
+    bool MP4DeleteMetadataCopyright (MP4FileHandle hFile)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->DeleteMetadataAtom("cprt");
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return false;
+    }
 
+    bool MP4GetMetadataExplicit(MP4FileHandle hFile, uint8_t* value)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->GetMetadataUint8("rtng", value);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return false;
+    }
+
+    bool MP4GetMetadataPurchaserAccount (MP4FileHandle hFile,
+                                    char** value)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->GetMetadataString("apID", value);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return false;
+    }
+    
+    bool MP4GetMetadataPurchaseDate(MP4FileHandle hFile,
+                            char** value)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->GetMetadataString("purd", value);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return false;
+    }
+    
     bool MP4SetMetadataFreeForm(MP4FileHandle hFile,
                                 const char *name,
                                 const uint8_t* pValue,
@@ -4620,7 +4708,6 @@ extern "C" {
         }
         return false;
     }
-
 
     void MP4Free (void *p)
     {

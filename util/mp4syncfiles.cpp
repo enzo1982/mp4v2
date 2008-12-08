@@ -128,7 +128,21 @@ static bool compare_meta( char *toname, MP4FileHandle to,
             CHECK_AND_FREE( fromvalue );
             return false;
         }
+    }    
+    CHECK_AND_FREE( tovalue );
+    CHECK_AND_FREE( fromvalue );
+    MP4GetMetadataCopyright( to, &tovalue );
+    MP4GetMetadataCopyright( from, &fromvalue );
+    if ( tovalue == NULL || fromvalue == NULL || strcmp( tovalue, fromvalue ) != 0 ) {
+        if ( tovalue != NULL || fromvalue != NULL ) {
+            printf( "%s copyright \"%s\" \"%s\"\n",
+                    fromname, fromvalue, tovalue );
+            CHECK_AND_FREE( tovalue );
+            CHECK_AND_FREE( fromvalue );
+            return false;
+        }
     }
+    
     CHECK_AND_FREE( tovalue );
     CHECK_AND_FREE( fromvalue );
     MP4GetMetadataReleaseDate( to, &tovalue );
@@ -309,6 +323,17 @@ static void copy_meta( char *toname, MP4FileHandle to,
             MP4DeleteMetadataComposer( to );
         if ( fromvalue != NULL )
             MP4SetMetadataComposer( to, fromvalue );
+    }
+    
+    CHECK_AND_FREE( tovalue );
+    CHECK_AND_FREE( fromvalue );
+    MP4GetMetadataCopyright( to, &tovalue );
+    MP4GetMetadataCopyright( from, &fromvalue );
+    if ( tovalue == NULL || fromvalue == NULL || strcmp( tovalue, fromvalue ) != 0 ) {
+        if ( tovalue != NULL )
+            MP4DeleteMetadataCopyright( to );
+        if ( fromvalue != NULL )
+            MP4SetMetadataCopyright( to, fromvalue );
     }
     CHECK_AND_FREE( tovalue );
     CHECK_AND_FREE( fromvalue );

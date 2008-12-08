@@ -339,6 +339,35 @@ bool MP4DeleteMetadataAlbumArtist(
     MP4FileHandle hFile );
 
 MP4V2_EXPORT
+bool MP4SetMetadataCopyright(
+    MP4FileHandle hFile,
+    const char*   value );
+
+MP4V2_EXPORT
+bool MP4GetMetadataCopyright(
+    MP4FileHandle hFile,
+    char**        value );
+    
+MP4V2_EXPORT
+bool MP4DeleteMetadataCopyright(
+    MP4FileHandle hFile );
+
+MP4V2_EXPORT
+bool MP4GetMetadataExplicit(
+    MP4FileHandle hFile,
+    uint8_t*      value );
+
+MP4V2_EXPORT
+bool MP4GetMetadataPurchaserAccount(
+    MP4FileHandle hFile,
+    char**        value );
+
+MP4V2_EXPORT
+bool MP4GetMetadataPurchaseDate(
+    MP4FileHandle hFile,
+    char**        value );
+
+MP4V2_EXPORT
 bool MP4SetMetadataFreeForm(
     MP4FileHandle  hFile,
     const char*    name,

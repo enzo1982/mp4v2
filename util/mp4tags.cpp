@@ -28,6 +28,7 @@ namespace mp4v2 { namespace util {
 #define OPT_ARTIST       'a'
 #define OPT_TEMPO        'b'
 #define OPT_COMMENT      'c'
+#define OPT_COPYRIGHT    'C'
 #define OPT_DISK         'd'
 #define OPT_DISKS        'D'
 #define OPT_GENRE        'g'
@@ -41,7 +42,7 @@ namespace mp4v2 { namespace util {
 #define OPT_REMOVE       'r'
 #define OPT_ALBUM_ARTIST 'R'
 
-#define OPT_STRING  "hvA:a:b:c:d:D:g:G:P:s:t:T:w:y:r:R:"
+#define OPT_STRING  "hvA:a:b:c:C:d:D:g:G:P:s:t:T:w:y:r:R:"
 
 #define ELEMENT_OF(x,i) x[int(i)]
 
@@ -55,6 +56,7 @@ static const char* const help_text =
     "  -a, -artist      STR  Set the artist information\n"
     "  -b, -tempo       NUM  Set the tempo (beats per minute)\n"
     "  -c, -comment     STR  Set a general comment\n"
+    "  -C, -copyright   STR  Set the copyright information\n"
     "  -d, -disk        NUM  Set the disk number\n"
     "  -D, -disks       NUM  Set the number of disks\n"
     "  -g, -genre       STR  Set the genre name\n"
@@ -78,6 +80,7 @@ extern "C" int
         { "album",       prog::Option::REQUIRED_ARG, 0, OPT_ALBUM        },
         { "artist",      prog::Option::REQUIRED_ARG, 0, OPT_ARTIST       },
         { "comment",     prog::Option::REQUIRED_ARG, 0, OPT_COMMENT      },
+        { "copyright",   prog::Option::REQUIRED_ARG, 0, OPT_COPYRIGHT    },
         { "disk",        prog::Option::REQUIRED_ARG, 0, OPT_DISK         },
         { "disks",       prog::Option::REQUIRED_ARG, 0, OPT_DISKS        },
         { "genre",       prog::Option::REQUIRED_ARG, 0, OPT_GENRE        },
@@ -191,6 +194,9 @@ extern "C" int
                     case OPT_COMMENT:
                         MP4DeleteMetadataComment( h );
                         break;
+                    case OPT_COPYRIGHT:
+                        MP4DeleteMetadataCopyright( h );
+                        break;
                     case OPT_DISK:
                         MP4DeleteMetadataDisk( h );
                         break;
@@ -264,6 +270,9 @@ extern "C" int
                         break;
                     case OPT_COMMENT:
                         MP4SetMetadataComment( h, tags[i] );
+                        break;
+                    case OPT_COPYRIGHT:
+                        MP4SetMetadataCopyright( h, tags[i] );
                         break;
                     case OPT_GENRE:
                         MP4SetMetadataGenre( h, tags[i] );
