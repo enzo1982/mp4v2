@@ -95,7 +95,13 @@ MP4StandardAtom::MP4StandardAtom (const char *type) : MP4Atom(type)
                ATOMID(type) == ATOMID("tves") ||
                ATOMID(type) == ATOMID("desc") ||
                ATOMID(type) == ATOMID("ldes") ||
-               ATOMID(type) == ATOMID("soal")) {
+               ATOMID(type) == ATOMID("soal") ||
+               ATOMID(type) == ATOMID("soar") ||
+               ATOMID(type) == ATOMID("soaa") ||
+               ATOMID(type) == ATOMID("sonm") ||
+               ATOMID(type) == ATOMID("soco") ||
+               ATOMID(type) == ATOMID("sosn") ||
+               ATOMID(type) == ATOMID("hdvd")) {
 #if 0
         AddVersionAndFlags();
         AddProperty(
@@ -221,13 +227,18 @@ MP4StandardAtom::MP4StandardAtom (const char *type) : MP4Atom(type)
         ExpectChildAtom("tvsh", Optional, OnlyOne); /* TV show */
         ExpectChildAtom("tvsn", Optional, OnlyOne); /* TV season */
         ExpectChildAtom("tven", Optional, OnlyOne); /* TV episode number */
-        ExpectChildAtom("tvnn", Optional, OnlyOne); /* TV network */
+        ExpectChildAtom("tvnn", Optional, OnlyOne); /* TV network name */
         ExpectChildAtom("tves", Optional, OnlyOne); /* TV epsidoe */
         ExpectChildAtom("desc", Optional, OnlyOne); /* description */
         ExpectChildAtom("ldes", Optional, OnlyOne); /* long description */
-        ExpectChildAtom("soal", Optional, OnlyOne); /* album name for sorting */
-
-
+        ExpectChildAtom("soal", Optional, OnlyOne); /* sort album */
+        ExpectChildAtom("soar", Optional, OnlyOne); /* sort artist */
+        ExpectChildAtom("soaa", Optional, OnlyOne); /* sort album artist */
+        ExpectChildAtom("sonm", Optional, OnlyOne); /* sort name */
+        ExpectChildAtom("soco", Optional, OnlyOne); /* sort composer */
+        ExpectChildAtom("sosn", Optional, OnlyOne); /* sort show */
+        ExpectChildAtom("hdvd", Optional, OnlyOne); /* HD video */
+        
     }  else if (ATOMID(type) == ATOMID("imif")) {
         AddVersionAndFlags();
         AddProperty(new MP4DescriptorProperty("ipmp_desc", MP4IPMPDescrTag,

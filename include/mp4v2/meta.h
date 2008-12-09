@@ -368,6 +368,61 @@ bool MP4GetMetadataPurchaseDate(
     char**        value );
 
 MP4V2_EXPORT
+bool MP4GetMetadataHDVideo(
+    MP4FileHandle hFile,
+    uint8_t*      value );
+    
+MP4V2_EXPORT
+bool MP4GetMetadataTVShow(
+    MP4FileHandle hFile,
+    char**        value );
+
+MP4V2_EXPORT
+bool MP4GetMetadataDescription(
+    MP4FileHandle hFile,
+    char**        value );
+
+MP4V2_EXPORT
+bool MP4GetMetadataSortName(
+    MP4FileHandle hFile,
+    char**        value );
+
+MP4V2_EXPORT
+bool MP4GetMetadataSortArtist(
+    MP4FileHandle hFile,
+    char**        value );
+
+MP4V2_EXPORT
+bool MP4GetMetadataSortAlbum(
+    MP4FileHandle hFile,
+    char**        value );
+
+MP4V2_EXPORT
+bool MP4GetMetadataSortAlbumArtist(
+    MP4FileHandle hFile,
+    char**        value );
+
+MP4V2_EXPORT
+bool MP4GetMetadataSortComposer(
+    MP4FileHandle hFile,
+    char**        value );
+
+MP4V2_EXPORT
+bool MP4GetMetadataSortTVShow(
+    MP4FileHandle hFile,
+    char**        value );
+
+MP4V2_EXPORT
+bool MP4GetMetadataTVNetworkName(
+    MP4FileHandle hFile,
+    char**        value );
+
+MP4V2_EXPORT
+bool MP4GetMetadataTVEpisodeNumber(
+    MP4FileHandle hFile,
+    char**        value );
+
+MP4V2_EXPORT
 bool MP4SetMetadataFreeForm(
     MP4FileHandle  hFile,
     const char*    name,

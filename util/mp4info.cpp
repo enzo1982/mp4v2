@@ -91,12 +91,24 @@ extern "C" int main( int argc, char** argv )
                 fprintf( stdout, " Name: %s\n", value );
                 free( value );
             }
+            if ( MP4GetMetadataSortName( mp4file, &value ) && value != NULL ) {
+                fprintf( stdout, " Sort Name: %s\n", value );
+                free( value );
+            }
             if ( MP4GetMetadataArtist( mp4file, &value ) && value != NULL ) {
                 fprintf( stdout, " Artist: %s\n", value );
                 free( value );
             }
+            if ( MP4GetMetadataSortArtist( mp4file, &value ) && value != NULL ) {
+                fprintf( stdout, " Sort Artist: %s\n", value );
+                free( value );
+            }
             if ( MP4GetMetadataComposer( mp4file, &value ) && value != NULL ) {
                 fprintf( stdout, " Composer: %s\n", value );
+                free( value );
+            }
+            if ( MP4GetMetadataSortComposer( mp4file, &value ) && value != NULL ) {
+                fprintf( stdout, " Sort Composer: %s\n", value );
                 free( value );
             }
             if ( MP4GetMetadataTool( mp4file, &value ) && value != NULL ) {
@@ -109,6 +121,10 @@ extern "C" int main( int argc, char** argv )
             }
             if ( MP4GetMetadataAlbum( mp4file, &value ) && value != NULL ) {
                 fprintf( stdout, " Album: %s\n", value );
+                free( value );
+            }
+            if ( MP4GetMetadataSortAlbum( mp4file, &value ) && value != NULL ) {
+                fprintf( stdout, " Sort Album: %s\n", value );
                 free( value );
             }
             if ( MP4GetMetadataTrack( mp4file, &numvalue, &numvalue2 ) ) {
@@ -154,6 +170,12 @@ extern "C" int main( int argc, char** argv )
                          value );
                 free( value );
             }
+            if ( MP4GetMetadataSortAlbumArtist( mp4file, &value ) &&
+                    value != NULL ) {
+                fprintf( stdout, " Sort Album Artist: %s\n",
+                         value );
+                free( value );
+            }
             if ( MP4GetMetadataCopyright( mp4file, &value ) &&
                     value != NULL ) {
                 fprintf( stdout, " Copyright: %s\n",
@@ -172,6 +194,30 @@ extern "C" int main( int argc, char** argv )
             }
             if ( MP4GetMetadataPurchaseDate( mp4file, &value ) && value != NULL ) {
                 fprintf( stdout, " Purchase Date: %s\n", value );
+                free( value );
+            }
+            if ( MP4GetMetadataHDVideo( mp4file, &bytevalue ) ) {
+                fprintf( stdout, " HD Video: %s\n",
+                         bytevalue ? "yes" : "no" );
+            }
+            if ( MP4GetMetadataTVShow( mp4file, &value ) && value != NULL ) {
+                fprintf( stdout, " TV Show: %s\n", value );
+                free( value );
+            }
+            if ( MP4GetMetadataSortTVShow( mp4file, &value ) && value != NULL ) {
+                fprintf( stdout, " Sort TV Show: %s\n", value );
+                free( value );
+            }
+            if ( MP4GetMetadataDescription( mp4file, &value ) && value != NULL ) {
+                fprintf( stdout, " Description: %s\n", value );
+                free( value );
+            }
+            if ( MP4GetMetadataTVNetworkName( mp4file, &value ) && value != NULL ) {
+                fprintf( stdout, " TV Network: %s\n", value );
+                free( value );
+            }
+            if ( MP4GetMetadataTVEpisodeNumber( mp4file, &value ) && value != NULL ) {
+                fprintf( stdout, " TV Episode Number: %s\n", value );
                 free( value );
             }
             MP4Close( mp4file );
