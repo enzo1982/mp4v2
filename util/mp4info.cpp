@@ -112,7 +112,11 @@ extern "C" int main( int argc, char** argv )
                 free( value );
             }
             if ( MP4GetMetadataTool( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Tool: %s\n", value );
+                fprintf( stdout, " Encoded with: %s\n", value );
+                free( value );
+            }
+            if ( MP4GetMetadataEncodedBy( mp4file, &value ) && value != NULL ) {
+                fprintf( stdout, " Encoded by: %s\n", value );
                 free( value );
             }
             if ( MP4GetMetadataReleaseDate( mp4file, &value ) && value != NULL ) {
@@ -208,16 +212,24 @@ extern "C" int main( int argc, char** argv )
                 fprintf( stdout, " Sort TV Show: %s\n", value );
                 free( value );
             }
-            if ( MP4GetMetadataDescription( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Description: %s\n", value );
-                free( value );
-            }
             if ( MP4GetMetadataTVNetworkName( mp4file, &value ) && value != NULL ) {
                 fprintf( stdout, " TV Network: %s\n", value );
                 free( value );
             }
             if ( MP4GetMetadataTVEpisodeNumber( mp4file, &value ) && value != NULL ) {
                 fprintf( stdout, " TV Episode Number: %s\n", value );
+                free( value );
+            }
+            if ( MP4GetMetadataShortDescription( mp4file, &value ) && value != NULL ) {
+                fprintf( stdout, " Short Description: %s\n", value );
+                free( value );
+            }
+            if ( MP4GetMetadataLongDescription( mp4file, &value ) && value != NULL ) {
+                fprintf( stdout, " Long Description: %s\n", value );
+                free( value );
+            }
+            if ( MP4GetMetadataLyrics( mp4file, &value ) && value != NULL ) {
+                fprintf( stdout, " Lyrics: \n%s\n", value );
                 free( value );
             }
             MP4Close( mp4file );

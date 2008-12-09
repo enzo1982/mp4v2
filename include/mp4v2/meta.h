@@ -378,9 +378,18 @@ bool MP4GetMetadataTVShow(
     char**        value );
 
 MP4V2_EXPORT
-bool MP4GetMetadataDescription(
+bool MP4SetMetadataShortDescription(
+    MP4FileHandle hFile,
+    const char*   value );
+
+MP4V2_EXPORT
+bool MP4GetMetadataShortDescription(
     MP4FileHandle hFile,
     char**        value );
+
+MP4V2_EXPORT
+bool MP4DeleteMetadataShortDescription(
+    MP4FileHandle hFile );
 
 MP4V2_EXPORT
 bool MP4GetMetadataSortName(
@@ -421,6 +430,30 @@ MP4V2_EXPORT
 bool MP4GetMetadataTVEpisodeNumber(
     MP4FileHandle hFile,
     char**        value );
+    
+MP4V2_EXPORT
+bool MP4GetMetadataLongDescription(
+    MP4FileHandle hFile,
+    char**        value );
+
+MP4V2_EXPORT
+bool MP4GetMetadataLyrics(
+    MP4FileHandle hFile,
+    char**        value );
+
+MP4V2_EXPORT
+bool MP4SetMetadataEncodedBy(
+    MP4FileHandle hFile,
+    const char*   value );
+
+MP4V2_EXPORT
+bool MP4GetMetadataEncodedBy(
+    MP4FileHandle hFile,
+    char**        value );
+    
+MP4V2_EXPORT
+bool MP4DeleteMetadataEncodedBy(
+    MP4FileHandle hFile );
 
 MP4V2_EXPORT
 bool MP4SetMetadataFreeForm(

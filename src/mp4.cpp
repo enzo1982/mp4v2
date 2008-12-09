@@ -4676,12 +4676,12 @@ extern "C" {
         return false;
     }
     
-    bool MP4GetMetadataTVShow(MP4FileHandle hFile,
-                            char** value)
+    bool MP4SetMetadataShortDescription (MP4FileHandle hFile,
+                                    const char* value)
     {
         if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
             try {
-                return ((MP4File*)hFile)->GetMetadataString("tvsh", value);
+                return ((MP4File*)hFile)->SetMetadataString("desc", value);
             }
             catch (MP4Error* e) {
                 PRINT_ERROR(e);
@@ -4691,12 +4691,26 @@ extern "C" {
         return false;
     }
     
-    bool MP4GetMetadataDescription(MP4FileHandle hFile,
+    bool MP4GetMetadataShortDescription(MP4FileHandle hFile,
                             char** value)
     {
         if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
             try {
                 return ((MP4File*)hFile)->GetMetadataString("desc", value);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return false;
+    }
+    
+    bool MP4DeleteMetadataShortDescription (MP4FileHandle hFile)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->DeleteMetadataAtom("desc");
             }
             catch (MP4Error* e) {
                 PRINT_ERROR(e);
@@ -4795,6 +4809,20 @@ extern "C" {
         }
         return false;
     }
+    bool MP4GetMetadataTVShow(MP4FileHandle hFile,
+                            char** value)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->GetMetadataString("tvsh", value);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return false;
+    }
     
     bool MP4GetMetadataTVNetworkName(MP4FileHandle hFile,
                             char** value)
@@ -4817,6 +4845,80 @@ extern "C" {
         if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
             try {
                 return ((MP4File*)hFile)->GetMetadataString("tven", value);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return false;
+    }
+    
+    bool MP4GetMetadataLongDescription(MP4FileHandle hFile,
+                            char** value)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->GetMetadataString("ldes", value);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return false;
+    }
+    
+    bool MP4GetMetadataLyrics(MP4FileHandle hFile,
+                            char** value)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->GetMetadataString("始yr", value);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return false;
+    }
+    
+    bool MP4SetMetadataEncodedBy (MP4FileHandle hFile,
+                                    const char* value)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->SetMetadataString("委nc", value);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return false;
+    }
+    
+    bool MP4GetMetadataEncodedBy (MP4FileHandle hFile,
+                                    char** value)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->GetMetadataString("委nc", value);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return false;
+    }
+    
+    bool MP4DeleteMetadataEncodedBy (MP4FileHandle hFile)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->DeleteMetadataAtom("委nc");
             }
             catch (MP4Error* e) {
                 PRINT_ERROR(e);

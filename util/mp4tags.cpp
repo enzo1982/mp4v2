@@ -31,8 +31,11 @@ namespace mp4v2 { namespace util {
 #define OPT_COPYRIGHT    'C'
 #define OPT_DISK         'd'
 #define OPT_DISKS        'D'
+#define OPT_ENCODEDBY    'e'
+#define OPT_TOOL         'E'
 #define OPT_GENRE        'g'
 #define OPT_GROUPING     'G'
+#define OPT_DESCRIPTION  'm'
 #define OPT_PICTURE      'P'
 #define OPT_SONG         's'
 #define OPT_TRACK        't'
@@ -42,7 +45,7 @@ namespace mp4v2 { namespace util {
 #define OPT_REMOVE       'r'
 #define OPT_ALBUM_ARTIST 'R'
 
-#define OPT_STRING  "hvA:a:b:c:C:d:D:g:G:P:s:t:T:w:y:r:R:"
+#define OPT_STRING  "hvA:a:b:c:C:d:D:e:E:g:G:m:P:s:t:T:w:y:r:R:"
 
 #define ELEMENT_OF(x,i) x[int(i)]
 
@@ -59,8 +62,11 @@ static const char* const help_text =
     "  -C, -copyright   STR  Set the copyright information\n"
     "  -d, -disk        NUM  Set the disk number\n"
     "  -D, -disks       NUM  Set the number of disks\n"
+    "  -e, -encodedby   NUM  Set the name of the person or company who encoded the file\n"
+    "  -E, -tool        NUM  Set the software used for encoding\n"
     "  -g, -genre       STR  Set the genre name\n"
     "  -G, -grouping    STR  Set the grouping name\n"
+    "  -m, -description STR  Set the short description\n"
     "  -P, -picture     PTH  Set the picture as a .png\n"
     "  -s, -song        STR  Set the song title\n"
     "  -t, -track       NUM  Set the track number\n"
@@ -83,8 +89,11 @@ extern "C" int
         { "copyright",   prog::Option::REQUIRED_ARG, 0, OPT_COPYRIGHT    },
         { "disk",        prog::Option::REQUIRED_ARG, 0, OPT_DISK         },
         { "disks",       prog::Option::REQUIRED_ARG, 0, OPT_DISKS        },
+        { "encodedby",   prog::Option::REQUIRED_ARG, 0, OPT_ENCODEDBY    },
+        { "tool",        prog::Option::REQUIRED_ARG, 0, OPT_TOOL         },
         { "genre",       prog::Option::REQUIRED_ARG, 0, OPT_GENRE        },
         { "grouping",    prog::Option::REQUIRED_ARG, 0, OPT_GROUPING     },
+        { "description", prog::Option::REQUIRED_ARG, 0, OPT_DESCRIPTION  },
         { "picture",     prog::Option::REQUIRED_ARG, 0, OPT_PICTURE      },
         { "song",        prog::Option::REQUIRED_ARG, 0, OPT_SONG         },
         { "tempo",       prog::Option::REQUIRED_ARG, 0, OPT_TEMPO        },
@@ -203,11 +212,20 @@ extern "C" int
                     case OPT_DISKS:
                         MP4DeleteMetadataDisk( h );
                         break;
+                    case OPT_ENCODEDBY:
+                        MP4DeleteMetadataEncodedBy( h );
+                        break;
+                    case OPT_TOOL:
+                        MP4DeleteMetadataTool( h );
+                        break;
                     case OPT_GENRE:
                         MP4DeleteMetadataGenre( h );
                         break;
                     case OPT_GROUPING:
                         MP4DeleteMetadataGrouping( h );
+                        break;
+                    case OPT_DESCRIPTION:
+                        MP4DeleteMetadataShortDescription( h );
                         break;
                     case OPT_SONG:
                         MP4DeleteMetadataName( h );
@@ -274,11 +292,20 @@ extern "C" int
                     case OPT_COPYRIGHT:
                         MP4SetMetadataCopyright( h, tags[i] );
                         break;
+                    case OPT_ENCODEDBY:
+                        MP4SetMetadataEncodedBy( h, tags[i] );
+                        break;
+                    case OPT_TOOL:
+                        MP4SetMetadataTool( h, tags[i] );
+                        break;
                     case OPT_GENRE:
                         MP4SetMetadataGenre( h, tags[i] );
                         break;
                     case OPT_GROUPING:
                         MP4SetMetadataGrouping( h, tags[i] );
+                        break;
+                    case OPT_DESCRIPTION:
+                        MP4SetMetadataShortDescription( h, tags[i] );
                         break;
                     case OPT_SONG:
                         MP4SetMetadataName( h, tags[i] );

@@ -101,6 +101,7 @@ MP4StandardAtom::MP4StandardAtom (const char *type) : MP4Atom(type)
                ATOMID(type) == ATOMID("sonm") ||
                ATOMID(type) == ATOMID("soco") ||
                ATOMID(type) == ATOMID("sosn") ||
+               ATOMID(type) == ATOMID("©enc") ||
                ATOMID(type) == ATOMID("hdvd")) {
 #if 0
         AddVersionAndFlags();
@@ -238,6 +239,7 @@ MP4StandardAtom::MP4StandardAtom (const char *type) : MP4Atom(type)
         ExpectChildAtom("soco", Optional, OnlyOne); /* sort composer */
         ExpectChildAtom("sosn", Optional, OnlyOne); /* sort show */
         ExpectChildAtom("hdvd", Optional, OnlyOne); /* HD video */
+        ExpectChildAtom("©enc", Optional, OnlyOne); /* Encoded by */
         
     }  else if (ATOMID(type) == ATOMID("imif")) {
         AddVersionAndFlags();
