@@ -35,6 +35,7 @@ namespace mp4v2 { namespace util {
 #define OPT_TOOL         'E'
 #define OPT_GENRE        'g'
 #define OPT_GROUPING     'G'
+#define OPT_HD           'H'
 #define OPT_DESCRIPTION  'm'
 #define OPT_PICTURE      'P'
 #define OPT_SONG         's'
@@ -45,7 +46,7 @@ namespace mp4v2 { namespace util {
 #define OPT_REMOVE       'r'
 #define OPT_ALBUM_ARTIST 'R'
 
-#define OPT_STRING  "hvA:a:b:c:C:d:D:e:E:g:G:m:P:s:t:T:w:y:r:R:"
+#define OPT_STRING  "hvA:a:b:c:C:d:D:e:E:g:G:H:m:P:s:t:T:w:y:r:R:"
 
 #define ELEMENT_OF(x,i) x[int(i)]
 
@@ -62,10 +63,11 @@ static const char* const help_text =
     "  -C, -copyright   STR  Set the copyright information\n"
     "  -d, -disk        NUM  Set the disk number\n"
     "  -D, -disks       NUM  Set the number of disks\n"
-    "  -e, -encodedby   NUM  Set the name of the person or company who encoded the file\n"
-    "  -E, -tool        NUM  Set the software used for encoding\n"
+    "  -e, -encodedby   STR  Set the name of the person or company who encoded the file\n"
+    "  -E, -tool        STR  Set the software used for encoding\n"
     "  -g, -genre       STR  Set the genre name\n"
     "  -G, -grouping    STR  Set the grouping name\n"
+    "  -H, -hdvideo     NUM  Set the HD flag (1\\0)\n"
     "  -m, -description STR  Set the short description\n"
     "  -P, -picture     PTH  Set the picture as a .png\n"
     "  -s, -song        STR  Set the song title\n"
@@ -93,6 +95,7 @@ extern "C" int
         { "tool",        prog::Option::REQUIRED_ARG, 0, OPT_TOOL         },
         { "genre",       prog::Option::REQUIRED_ARG, 0, OPT_GENRE        },
         { "grouping",    prog::Option::REQUIRED_ARG, 0, OPT_GROUPING     },
+        { "hdvideo",     prog::Option::REQUIRED_ARG, 0, OPT_HD           },
         { "description", prog::Option::REQUIRED_ARG, 0, OPT_DESCRIPTION  },
         { "picture",     prog::Option::REQUIRED_ARG, 0, OPT_PICTURE      },
         { "song",        prog::Option::REQUIRED_ARG, 0, OPT_SONG         },
@@ -141,6 +144,7 @@ extern "C" int
             case OPT_DISKS:
             case OPT_TRACK:
             case OPT_TRACKS:
+            case OPT_HD:
             case OPT_TEMPO:
                 r = sscanf( prog::optarg, "%d", &nums[c] );
                 if ( r < 1 ) {
@@ -224,6 +228,9 @@ extern "C" int
                     case OPT_GROUPING:
                         MP4DeleteMetadataGrouping( h );
                         break;
+                    case OPT_HD:
+                        MP4DeleteMetadataHDVideo( h );
+                        break;
                     case OPT_DESCRIPTION:
                         MP4DeleteMetadataShortDescription( h );
                         break;
@@ -303,6 +310,9 @@ extern "C" int
                         break;
                     case OPT_GROUPING:
                         MP4SetMetadataGrouping( h, tags[i] );
+                        break;
+                    case OPT_HD:
+                        MP4SetMetadataHDVideo( h, nums[i] );
                         break;
                     case OPT_DESCRIPTION:
                         MP4SetMetadataShortDescription( h, tags[i] );

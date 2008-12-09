@@ -368,9 +368,18 @@ bool MP4GetMetadataPurchaseDate(
     char**        value );
 
 MP4V2_EXPORT
+bool MP4SetMetadataHDVideo(
+    MP4FileHandle hFile,
+    uint8_t       value );
+
+MP4V2_EXPORT
 bool MP4GetMetadataHDVideo(
     MP4FileHandle hFile,
     uint8_t*      value );
+
+MP4V2_EXPORT
+bool MP4DeleteMetadataHDVideo(
+    MP4FileHandle hFile );
     
 MP4V2_EXPORT
 bool MP4GetMetadataTVShow(
