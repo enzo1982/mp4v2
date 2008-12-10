@@ -51,7 +51,68 @@ void MP4SetLibFunc( lib_message_func_t libf )
     libfunc = libf;
 }
 
-void MP4Error::Print(FILE* pFile)
+///////////////////////////////////////////////////////////////////////////////
+
+MP4Error::MP4Error()
+    : m_errno     ( 0 )
+    , m_errstring ( NULL )
+    , m_where     ( NULL )
+    , m_free      ( false )
+{
+}
+
+MP4Error::MP4Error( int err, const char* where )
+    : m_errno     ( err )
+    , m_errstring ( NULL )
+    , m_where     ( where )
+    , m_free      ( false )
+{
+}
+
+MP4Error::MP4Error(const char *format, const char *where, ...)
+    : m_errno     ( 0 )
+    , m_errstring ( format )
+    , m_where     ( where )
+    , m_free      ( false )
+{
+    char* text = (char*)malloc( 512 );
+    if( !text )
+        return;
+
+    va_list ap;
+    va_start( ap, where );
+    vsnprintf( text, 512, format, ap );
+    va_end( ap );
+    m_errstring = text;
+    m_free = true;
+}
+
+MP4Error::MP4Error( int err, const char* format, const char* where, ... )
+    : m_errno     ( err )
+    , m_errstring ( format )
+    , m_where     ( where )
+    , m_free      ( false )
+{
+    char* text = (char*)malloc( 512 );
+    if( !text )
+        return;
+
+    va_list ap;
+    va_start( ap, where );
+    vsnprintf( text, 512, format, ap );
+    va_end( ap );
+    m_errstring = text;
+    m_free = true;
+}
+
+MP4Error::~MP4Error()
+{
+    if( m_free && m_errstring )
+        free( (void*)m_errstring );
+}
+
+void
+MP4Error::Print( FILE* pFile )
 {
     if (libfunc != NULL) {
         (libfunc)(LOGLEVEL_ERR, "MP4ERROR", "%s:%s:%s",
@@ -78,6 +139,8 @@ void MP4Error::Print(FILE* pFile)
     }
     fprintf(pFile, "\n");
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 void MP4HexDump(
     uint8_t* pBytes, uint32_t numBytes,
