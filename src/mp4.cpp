@@ -155,18 +155,41 @@ extern "C" {
 
     void MP4Close(MP4FileHandle hFile)
     {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                ((MP4File*)hFile)->Close();
-                delete (MP4File*)hFile;
-                return;
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+        if( !MP4_IS_VALID_FILE_HANDLE( hFile ))
+            return;
+
+        MP4File& f = *(MP4File*)hFile;
+        try {
+            f.Close();
         }
-        return ;
+        catch ( MP4Error* e ) {
+            PRINT_ERROR( e );
+            delete e;
+        }
+
+        delete &f;
+    }
+
+    bool MP4CopyClose( MP4FileHandle hFile, const char* tmpFileName )
+    {
+        if( !MP4_IS_VALID_FILE_HANDLE( hFile ))
+            return false;
+
+        bool success = false;
+        MP4File& f = *(MP4File*)hFile;
+        try {
+            success = f.CopyClose( tmpFileName ? tmpFileName : "" );
+        }
+        catch ( MP4Error* e ) {
+            PRINT_ERROR( e );
+            delete e;
+        }
+
+        if( !success )
+            return false;
+
+        delete &f;
+        return true;
     }
 
     bool MP4Dump(
