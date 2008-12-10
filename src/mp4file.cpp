@@ -609,6 +609,52 @@ void MP4File::Close()
     m_pFile = NULL;
 }
 
+// this is useful when doing file modfication and not caring about
+// re-write performance. it greatly simplies things to mimic behavior
+// of Optimize() for all writes, and then caller may rename file
+// to overwrite original. the key difference is in sequencing,
+// optimize permits one to read/copy/overwrite in a single operation.
+// however this function is useful for a workflow such as:
+//
+//      1. caller opens file
+//      2. caller modifies atoms, etc.
+//      3. caller invokes this function
+//      4. CopyClose writes atoms out (optimized) to a new file
+//      5. CopyClose closes both original and new file
+//      6. caller then renames origfile -> newfile if desired
+//
+bool MP4File::CopyClose( const string& copyFileName )
+{
+    const string oldFileName = m_fileName;
+    MP4Free( m_fileName );
+    m_fileName = MP4Stralloc( copyFileName.c_str() );
+
+    void* pReadFile = m_pFile;
+    Virtual_IO* pReadIO = m_virtual_IO;
+    m_pFile = NULL;
+    m_mode = 'w';
+
+    Open("wb");
+
+    SetIntegerProperty( "moov.mvhd.modificationTime", MP4GetAbsTimestamp() );
+
+    // writing meta info in the optimal order
+    ((MP4RootAtom*)m_pRootAtom)->BeginOptimalWrite();
+
+    // write data in optimal order
+    RewriteMdat( pReadFile, m_pFile, pReadIO, m_virtual_IO );
+
+    // finish writing
+    ((MP4RootAtom*)m_pRootAtom)->FinishOptimalWrite();
+
+    // cleanup
+    m_virtual_IO->Close( m_pFile );
+    m_pFile = NULL;
+    pReadIO->Close( pReadFile );
+
+    return true;
+}
+
 const char* MP4File::TempFileName()
 {
     string s;

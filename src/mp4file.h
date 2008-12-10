@@ -60,6 +60,7 @@ public: /* equivalent to MP4 library API */
     void Optimize(const char* orgFileName,
                   const char* newFileName = NULL);
     void Dump(FILE* pDumpFile = NULL, bool dumpImplicits = false);
+    bool CopyClose( const string& copyFileName );
     void Close();
 
     /* library property per file */

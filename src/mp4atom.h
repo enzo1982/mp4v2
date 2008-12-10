@@ -171,17 +171,6 @@ public:
         return m_pProperties.Size();
     }
 
-#if 0
-    void SetProperty(uint32_t index, MP4Property *property) {
-        uint64_t t;
-        if (index > m_pProperties.Size())
-            return;
-
-        t = property->Get(index);
-        m_pProperties[index]->Set(t, index);
-    }
-#endif
-
     MP4Atom* FindAtom(const char* name);
 
     MP4Atom* FindChildAtom(const char* name);
