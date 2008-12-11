@@ -170,28 +170,6 @@ extern "C" {
         delete &f;
     }
 
-    bool MP4CopyClose( MP4FileHandle hFile, const char* tmpFileName )
-    {
-        if( !MP4_IS_VALID_FILE_HANDLE( hFile ))
-            return false;
-
-        bool success = false;
-        MP4File& f = *(MP4File*)hFile;
-        try {
-            success = f.CopyClose( tmpFileName ? tmpFileName : "" );
-        }
-        catch ( MP4Error* e ) {
-            PRINT_ERROR( e );
-            delete e;
-        }
-
-        if( !success )
-            return false;
-
-        delete &f;
-        return true;
-    }
-
     bool MP4Dump(
         MP4FileHandle hFile,
         FILE* pDumpFile,

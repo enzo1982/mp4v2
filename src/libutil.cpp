@@ -126,4 +126,29 @@ fileFetchSummaryInfo( MP4FileHandle file, FileSummaryInfo& info )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+bool
+MP4CopyClose( MP4FileHandle hFile, const string& tmpFileName )
+{
+    if( !MP4_IS_VALID_FILE_HANDLE( hFile ))
+        return false;
+
+    bool success = false;
+    MP4File& f = *(MP4File*)hFile;
+    try {
+        success = f.CopyClose( tmpFileName.c_str() );
+    }
+    catch ( MP4Error* e ) {
+        e->Print( stdout );
+        delete e;
+    }
+
+    if( !success )
+        return false;
+
+    delete &f;
+    return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 }} // namespace mp4v2::util

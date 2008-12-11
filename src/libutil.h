@@ -70,6 +70,21 @@ bool fileFetchSummaryInfo( MP4FileHandle file, FileSummaryInfo& info );
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/// Copy-out and close an mp4 file.
+/// This function writes out a copy of all the atoms from an open mp4
+/// file. The new file is written out in optimized-form, so a subsequent
+/// optimize operation is not necessary. Both files are then closed.
+///
+/// @param hFile handle of file to close.
+/// @param copyFileName name of new file to copy to.
+///
+/// @return <b>true</b> on success, <b>false</b> on failure.
+///
+MP4V2_EXPORT
+bool MP4CopyClose( MP4FileHandle hFile, const string& copyFileName );
+
+///////////////////////////////////////////////////////////////////////////////
+
 }} // namespace mp4v2::util
 
 #endif // MP4V2_IMPL_LIBUTIL_H
