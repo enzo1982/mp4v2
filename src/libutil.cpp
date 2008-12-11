@@ -30,6 +30,28 @@ namespace mp4v2 { namespace util {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+UtilException::UtilException( const string& what_ )
+    : _what ( what_ )
+    , what  ( _what )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+UtilException::UtilException( const ostringstream& what_ )
+    : _what ( what_.str() )
+    , what  ( _what )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+UtilException::~UtilException()
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 // search atom recursively for any 64-bit characteristics.
 // nlargsize indicates number of atoms which use largesize extension.
 // nversion1 indicates number of atoms which use version==1 extension.

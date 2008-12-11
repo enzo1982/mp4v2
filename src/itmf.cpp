@@ -79,8 +79,6 @@ ArtList::~ArtList()
 bool
 artAdd( MP4FileHandle file, const ArtItem& item )
 {
-    if( file == MP4_INVALID_FILE_HANDLE )
-        return true;
     MP4File& mp4 = *((MP4File*)file);
 
     const char* const covr_name = "moov.udta.meta.ilst.covr";
@@ -101,10 +99,10 @@ artAdd( MP4FileHandle file, const ArtItem& item )
         MP4Atom* atom = covr->GetChildAtom( i );
 
         MP4BytesProperty* metadata = NULL;
-        if ( !atom->FindProperty( "data.metadata", (MP4Property**)&metadata ))
+        if( !atom->FindProperty( "data.metadata", (MP4Property**)&metadata ))
             continue;
 
-        if ( metadata->GetCount() )
+        if( metadata->GetCount() )
             continue;
 
         data = atom;
@@ -116,6 +114,7 @@ artAdd( MP4FileHandle file, const ArtItem& item )
     if( !data ) {
         data = MP4Atom::CreateAtom( "data" );
         covr->AddChildAtom( data );
+        data->Generate();
         index = covr->GetNumberOfChildAtoms() - 1;
     }
 
@@ -128,9 +127,6 @@ bool
 artGet( MP4FileHandle file, ArtItem& item, uint32_t index )
 {
     item.reset();
-
-    if( file == MP4_INVALID_FILE_HANDLE )
-        return true;
     MP4File& mp4 = *((MP4File*)file);
 
     MP4Atom* covr = mp4.FindAtom( "moov.udta.meta.ilst.covr" );
@@ -161,9 +157,6 @@ bool
 artList( MP4FileHandle file, ArtList& out )
 {
     out.clear();
-
-    if( file == MP4_INVALID_FILE_HANDLE )
-        return true;
     MP4File& mp4 = *((MP4File*)file);
 
     const uint32_t artc = mp4.GetMetadataCoverArtCount();
@@ -179,8 +172,6 @@ artList( MP4FileHandle file, ArtList& out )
 bool
 artRemove( MP4FileHandle file, uint32_t index )
 {
-    if( file == MP4_INVALID_FILE_HANDLE )
-        return true;
     MP4File& mp4 = *((MP4File*)file);
 
     if( index == numeric_limits<uint32_t>::max() )
@@ -211,8 +202,6 @@ artRemove( MP4FileHandle file, uint32_t index )
 bool
 artSet( MP4FileHandle file, const ArtItem& item, uint32_t index )
 {
-    if( file == MP4_INVALID_FILE_HANDLE )
-        return true;
     MP4File& mp4 = *((MP4File*)file);
 
     MP4Atom* covr = mp4.FindAtom( "moov.udta.meta.ilst.covr" );

@@ -1,11 +1,17 @@
-#ifndef MP4V2_IMPL_ITMF_H
-#define MP4V2_IMPL_ITMF_H
+#ifndef MP4V2_UTIL_ITMF_H
+#define MP4V2_UTIL_ITMF_H
 
 /// @namespace mp4v2::util::itmf (private) iTunes Metadata Format.
 /// <b>WARNING: THIS IS A PRIVATE NAMESPACE. NOT FOR PUBLIC CONSUMPTION.</b>
 ///
 /// This namespace implements some features that are specified by the
 /// iTunes Metadata Format Specification, revision 2008-04-16.
+///
+/// This namespace provides a rich C++ interface, and is not intended to be
+/// exposed as public API in its current state, especially given its curren
+/// parent namespace.
+///
+/// The dependents of this module are libutil/utilities.
 ///
 namespace mp4v2 { namespace util { namespace itmf {
     using namespace std;
@@ -212,29 +218,29 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// Convert #BasicType to string.
+/// convert #BasicType to string.
 MP4V2_EXPORT string
 convertBasicType( BasicType value );
 
-/// Convert #BasicType to string with buffer.
+/// convert #BasicType to string with buffer.
 MP4V2_EXPORT string&
 convertBasicType( BasicType value, string& buffer );
 
-/// Convert string to #BasicType.
+/// convert string to #BasicType.
 MP4V2_EXPORT BasicType
 convertBasicType( const string& value );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// Convert #Genre to string.
+/// convert #Genre to string.
 MP4V2_EXPORT string
 convertGenre( Genre value );
 
-/// Convert #Genre to string with buffer.
+/// convert #Genre to string with buffer.
 MP4V2_EXPORT string&
 convertGenre( Genre value, string& buffer );
 
-/// Convert string to #Genre.
+/// convert string to #Genre.
 MP4V2_EXPORT Genre
 convertGenre( const string& value );
 
@@ -246,7 +252,7 @@ convertGenre( const string& value );
 /// @param out vector of ArtItem objects.
 ///
 /// @return <b>true</b> on failure, <b>false</b> on success.
-
+///
 MP4V2_EXPORT bool
 artList( MP4FileHandle file, ArtList& out );
 
@@ -259,18 +265,20 @@ artList( MP4FileHandle file, ArtList& out );
 /// @param item cover-art object to place in file.
 ///
 /// @return <b>true</b> on failure, <b>false</b> on success.
+///
 MP4V2_EXPORT bool
 artAdd( MP4FileHandle file, const ArtItem& item );
 
-/// Remove cover-art item from file.
+/// Replace cover-art item in file.
 ///
 /// @param file on which to operate.
-/// @param index 0-based index of cover-art to remove.
-///     Default value indicates wildcard behavior to remove all items.
+/// @param item cover-art object to place in file.
+/// @param index 0-based index of cover-art to replace.
 ///
 /// @return <b>true</b> on failure, <b>false</b> on success.
+///
 MP4V2_EXPORT bool
-artRemove( MP4FileHandle file, uint32_t index = numeric_limits<uint32_t>::max() );
+artSet( MP4FileHandle file, const ArtItem& item, uint32_t index );
 
 /// Fetch cover-art item from file.
 ///
@@ -284,18 +292,19 @@ artRemove( MP4FileHandle file, uint32_t index = numeric_limits<uint32_t>::max() 
 MP4V2_EXPORT bool
 artGet( MP4FileHandle file, ArtItem& item, uint32_t index );
 
-/// Replace cover-art item in file.
+/// Remove cover-art item from file.
 ///
 /// @param file on which to operate.
-/// @param item cover-art object to place in file.
-/// @param index 0-based index of cover-art to replace.
+/// @param index 0-based index of cover-art to remove.
+///     Default value indicates wildcard behavior to remove all items.
 ///
 /// @return <b>true</b> on failure, <b>false</b> on success.
+///
 MP4V2_EXPORT bool
-artSet( MP4FileHandle file, const ArtItem& item, uint32_t index );
+artRemove( MP4FileHandle file, uint32_t index = numeric_limits<uint32_t>::max() );
 
 ///////////////////////////////////////////////////////////////////////////////
 
 }}} // namespace mp4v2::util::itmf
 
-#endif // MP4V2_IMPL_ITMF_H
+#endif // MP4V2_UTIL_ITMF_H

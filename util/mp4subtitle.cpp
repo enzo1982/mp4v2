@@ -68,7 +68,6 @@ SubtitleUtility::SubtitleUtility( int argc, char** argv )
     , _action      ( NULL )
 {
     // add standard options which make sense for this utility
-    _group.add( STD_OPTIMIZE );
     _group.add( STD_DRYRUN );
     _group.add( STD_KEEPGOING );
     _group.add( STD_OVERWRITE );

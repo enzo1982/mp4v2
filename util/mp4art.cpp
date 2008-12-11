@@ -85,7 +85,6 @@ ArtUtility::ArtUtility( int argc, char** argv )
     , _artFilter   ( numeric_limits<uint32_t>::max() )
 {
     // add standard options which make sense for this utility
-    _group.add( STD_OPTIMIZE );
     _group.add( STD_DRYRUN );
     _group.add( STD_KEEPGOING );
     _group.add( STD_OVERWRITE );
@@ -148,14 +147,14 @@ ArtUtility::actionAdd( JobContext& job )
     if( dryrunAbort() )
         return SUCCESS;
 
-    job.fileHandle = MP4Modify( job.file.c_str() );
+    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
     if( artAdd( job.fileHandle, item ))
-        return herrf( "unable to add cover-art: %s\n", job.file.c_str() );
+        return herrf( "unable to add cover-art\n" );
 
-    job.optimizeApplicable = true;
+    job.fileWasModified = true;
     return SUCCESS;
 }
 
@@ -164,7 +163,7 @@ ArtUtility::actionAdd( JobContext& job )
 bool
 ArtUtility::actionExtract( JobContext& job )
 {
-    job.fileHandle = MP4Read( job.file.c_str() );
+    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
 
@@ -180,7 +179,7 @@ ArtUtility::actionExtract( JobContext& job )
     // wildcard-mode
     ArtList items;
     if( artList( job.fileHandle, items ))
-        return herrf( "unable to retrieve list of cover-art: %s\n", job.file.c_str() );
+        return herrf( "unable to fetch list of cover-art: %s\n", job.file.c_str() );
 
     bool onesuccess = false;
     const ArtList::size_type max = items.size();
@@ -218,7 +217,7 @@ ArtUtility::actionList( JobContext& job )
         report << setfill('-') << setw(70) << "" << setfill(' ') << '\n';
     }
 
-    job.fileHandle = MP4Read( job.file.c_str() );
+    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
 
@@ -255,7 +254,7 @@ ArtUtility::actionList( JobContext& job )
 bool
 ArtUtility::actionRemove( JobContext& job )
 {
-    job.fileHandle = MP4Modify( job.file.c_str() );
+    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
@@ -270,7 +269,7 @@ ArtUtility::actionRemove( JobContext& job )
     if( artRemove( job.fileHandle, _artFilter ))
         return herrf( "remove failed\n" );
 
-    job.optimizeApplicable = true;
+    job.fileWasModified = true;
     return SUCCESS;
 }
 
@@ -310,14 +309,14 @@ ArtUtility::actionReplace( JobContext& job )
     if( dryrunAbort() )
         return SUCCESS;
 
-    job.fileHandle = MP4Modify( job.file.c_str() );
+    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
     if( artSet( job.fileHandle, item, _artFilter ))
         return herrf( "unable to add cover-art: %s\n", job.file.c_str() );
 
-    job.optimizeApplicable = true;
+    job.fileWasModified = true;
     return SUCCESS;
 }
 

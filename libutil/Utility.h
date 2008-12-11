@@ -106,7 +106,7 @@ protected:
 
         const string  file;               //!< file job is working on
         MP4FileHandle fileHandle;         //!< handle of file, if applicable to job
-        bool          optimizeApplicable; //!< indicate file optimization is applicable
+        bool          fileWasModified;    //!< indicate file was modified
         list<void*>   tofree;             //!< memory to free at end of job
     };
 
@@ -148,6 +148,7 @@ private:
     void formatGroups();
     void debugUpdate( uint32_t );
     void verbose( uint32_t, const char*, va_list );
+    bool process_impl();
 
 private:
     string _help;
@@ -161,7 +162,6 @@ protected:
     char* const* const _argv; //!< arg vector
 
     // common options state
-    bool     _optimize;  //!< optimize mp4 file after modification
     bool     _strict;    //!< strict compatibliity
     bool     _dryrun;    //!< dry-run, no writing is actually performed
     bool     _keepgoing; //!< contine batch processing even after error

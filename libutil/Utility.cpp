@@ -22,6 +22,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "impl.h"
+#include "src/mp4error.h"
 
 namespace mp4v2 { namespace util {
 
@@ -32,7 +33,6 @@ Utility::Utility( string name_, int argc_, char** argv_ )
     , _name             ( name_ )
     , _argc             ( argc_ )
     , _argv             ( argv_ )
-    , _optimize         ( false )
     , _dryrun           ( false )
     , _keepgoing        ( false )
     , _overwrite        ( false )
@@ -67,18 +67,29 @@ Utility::batch( int argi )
     if( !(argi < _argc) )
         return SUCCESS;
 
-    bool result = FAILURE;
+    bool batchResult = FAILURE;
     for( int i = argi; i < _argc; i++ ) {
-        if( job( _argv[i] )) {
-            if( !_keepgoing )
-                return FAILURE;
+        bool subResult = FAILURE;
+        try {
+            if( !job( _argv[i] )) {
+                batchResult = SUCCESS;
+                subResult = SUCCESS;
+            }
         }
-        else {
-            result = SUCCESS;
+        catch( mp4v2::impl::MP4Error* x ) {
+            x->Print( stderr );
+            delete x;
         }
-    }
+        catch( UtilException* x ) {
+            herrf( "%s\n", x->what.c_str() );
+            delete x;
+        }
 
-    return result;
+        if( !_keepgoing && subResult == FAILURE )
+            return FAILURE;
+    }
+    
+    return batchResult;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -251,23 +262,44 @@ Utility::job( string arg )
 
     // perform job
     JobContext job( arg );
-    const bool result = utility_job( job );
+    bool result = FAILURE;
+    try {
+        result = utility_job( job );
+    }
+    catch( mp4v2::impl::MP4Error* x ) {
+        x->Print( stderr );
+        delete x;
+    }
+    catch( UtilException* x ) {
+        herrf( "%s\n", x->what.c_str() );
+        delete x;
+    }
+
+    // close file handle flagged with job
+    if( job.fileHandle != MP4_INVALID_FILE_HANDLE ) {
+        if( result == SUCCESS && job.fileWasModified ) {
+            string tfile = job.file;
+            tfile += ".tmp";
+
+            verbose2f( "writing %s\n", tfile.c_str() );
+            if( !MP4CopyClose( job.fileHandle, tfile.c_str() ))
+                hwarnf( "write failed: %s\n", job.file.c_str() );
+
+            verbose2f( "renaming %s -> %s\n", tfile.c_str(), job.file.c_str() );
+            if( io::FileSystem::rename( tfile, job.file ))
+                hwarnf( "rename failed: %s -> %s\n", tfile.c_str(), job.file.c_str() );
+        }
+        else {
+            verbose2f( "closing %s\n", job.file.c_str() );
+            MP4Close( job.fileHandle );
+        }
+    }
 
     // free data flagged with job
     list<void*>::iterator ie = job.tofree.end();
     for( list<void*>::iterator it = job.tofree.begin(); it != ie; it++ )
         free( *it );
 
-    // close file handle flagged with job
-    if( job.fileHandle != MP4_INVALID_FILE_HANDLE )
-        MP4Close( job.fileHandle );
-
-    // invoke optimize if flagged
-    if( _optimize && job.optimizeApplicable ) {
-        verbose1f( "optimizing %s\n", job.file.c_str() );
-        if( !MP4Optimize( job.file.c_str(), NULL ))
-            hwarnf( "optimize failed: %s\n", job.file.c_str() );    
-    }
 
     verbose2f( "job end\n" );
     _jobCount++;
@@ -279,10 +311,18 @@ Utility::job( string arg )
 bool
 Utility::herrf( const char* format, ... )
 {
-    fprintf( stdout, (_keepgoing ? "WARNING: " : "ERROR: ") );
     va_list ap;
     va_start( ap, format );
-    vfprintf( stdout, format, ap );
+
+    if( _keepgoing ) {
+        fprintf( stdout, "WARNING: " );
+        vfprintf( stdout, format, ap );
+    }
+    else {
+        fprintf( stderr, "ERROR: " );
+        vfprintf( stderr, format, ap );
+    }
+
     va_end( ap );
     return FAILURE;
 }
@@ -388,6 +428,26 @@ Utility::printVersion( bool extended )
 bool
 Utility::process()
 {
+    bool rv = true;
+
+    try {
+        rv = process_impl();
+    }
+    catch( UtilException* x ) {
+        // rare usage of herrf, make sure its not a warning header.
+        _keepgoing = false;
+        herrf( "%s\n", x->what.c_str() );
+        delete x;
+    }
+
+    return rv;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+Utility::process_impl()
+{
     formatGroups();
 
     // populate code lookup set
@@ -408,7 +468,7 @@ Utility::process()
 
         bool handled = false;
         if( utility_option( code, handled ))
-            break;
+            return FAILURE;
         if( handled )
             continue;
 
@@ -416,10 +476,6 @@ Utility::process()
             continue;
 
         switch( code ) {
-            case 'z':
-                _optimize = true;
-                break;
-
             case 'y':
                 _dryrun = true;
                 break;
@@ -586,9 +642,6 @@ Utility::verbose3f( const char* format, ... )
 const bool Utility::SUCCESS = false;
 const bool Utility::FAILURE = true;
 
-const Utility::Option Utility::STD_OPTIMIZE( 'z', false, "optimize", false, LC_NONE,
-    "optimize mp4 file after modification" );
-
 const Utility::Option Utility::STD_DRYRUN( 'y', false, "dryrun", false, LC_NONE,
     "do not actually create or modify any files" );
 
@@ -720,9 +773,9 @@ Utility::Option::Option(
 ///////////////////////////////////////////////////////////////////////////////
 
 Utility::JobContext::JobContext( string file_ )
-    : file               ( file_ )
-    , fileHandle         ( MP4_INVALID_FILE_HANDLE )
-    , optimizeApplicable ( false )
+    : file            ( file_ )
+    , fileHandle      ( MP4_INVALID_FILE_HANDLE )
+    , fileWasModified ( false )
 {
 }
 

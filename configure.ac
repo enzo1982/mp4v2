@@ -81,7 +81,7 @@ AC_ARG_ENABLE([mingw_mt],
 ###############################################################################
 
 AC_PROG_CXX
-AC_LIBTOOL_WIN32_DLL
+#AC_LIBTOOL_WIN32_DLL
 AC_PROG_LIBTOOL
 
 AC_CHECK_PROG([FOUND_HELP2MAN],[help2man],[yes],[no])

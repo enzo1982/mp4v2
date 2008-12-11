@@ -28,7 +28,23 @@ namespace mp4v2 { namespace util {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-struct FileSummaryInfo {
+class MP4V2_EXPORT UtilException
+{
+protected:
+    string _what;
+
+public:
+    const string& what;
+
+public:
+    explicit UtilException( const string& what );
+    explicit UtilException( const ostringstream& what );
+    ~UtilException();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+struct MP4V2_EXPORT FileSummaryInfo {
     typedef set<string>  BrandSet;
 
     // standard ftyp box attributes

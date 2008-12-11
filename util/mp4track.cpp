@@ -31,13 +31,31 @@ class TrackUtility : public Utility
 {
 private:
     enum TrackLongAction {
-        LC_TRACK_ANY = _LC_MAX,
+        LC_TRACK_WILDCARD = _LC_MAX,
         LC_TRACK_ID,
         LC_TRACK_INDEX,
-        LC_SAMPLE_ANY,
+
+        LC_SAMPLE_WILDCARD,
         LC_SAMPLE_ID,
         LC_SAMPLE_INDEX,
+
         LC_LIST,
+
+        LC_COLR_PARMS,
+        LC_COLR_PARM_HD,
+        LC_COLR_PARM_SD,
+
+        LC_COLR_LIST,
+        LC_COLR_ADD,
+        LC_COLR_SET,
+        LC_COLR_REMOVE,
+
+        LC_PASP_PARMS,
+
+        LC_PASP_LIST,
+        LC_PASP_ADD,
+        LC_PASP_SET,
+        LC_PASP_REMOVE,
     };
 
 public:
@@ -51,12 +69,44 @@ protected:
 private:
     bool actionList( JobContext& );
 
+    bool actionColorParameterList   ( JobContext& );
+    bool actionColorParameterAdd    ( JobContext& );
+    bool actionColorParameterSet    ( JobContext& );
+    bool actionColorParameterRemove ( JobContext& );
+
+    bool actionPictureAspectRatioList   ( JobContext& );
+    bool actionPictureAspectRatioAdd    ( JobContext& );
+    bool actionPictureAspectRatioSet    ( JobContext& );
+    bool actionPictureAspectRatioRemove ( JobContext& );
+
 private:
+    enum TrackMode {
+        TM_INDEX,
+        TM_ID,
+        TM_WILDCARD,
+    };
+
+    enum SampleMode {
+        SM_INDEX,
+        SM_ID,
+        SM_WILDCARD,
+    };
+
     Group _actionGroup;
     Group _parmGroup;
 
     bool (TrackUtility::*_action)( JobContext& );
-    string _listLastFile;
+
+    TrackMode _trackMode;
+    uint16_t  _trackIndex;
+    uint32_t  _trackId;
+
+    SampleMode _sampleMode;
+    uint16_t   _sampleIndex;
+    uint32_t   _sampleId;
+
+    qtff::ColorParameterBox::Item     _colorParameterItem;
+    qtff::PictureAspectRatioBox::Item _pictureAspectRatioItem;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -70,9 +120,14 @@ TrackUtility::TrackUtility( int argc, char** argv )
     , _actionGroup ( "ACTIONS" )
     , _parmGroup   ( "PARAMETERS" )
     , _action      ( NULL )
+    , _trackMode   ( TM_WILDCARD )
+    , _trackIndex  ( 0 )
+    , _trackId     ( MP4_INVALID_TRACK_ID )
+    , _sampleMode  ( SM_INDEX )
+    , _sampleIndex ( 0 )
+    , _sampleId    ( MP4_INVALID_SAMPLE_ID )
 {
     // add standard options which make sense for this utility
-    _group.add( STD_OPTIMIZE );
     _group.add( STD_DRYRUN );
     _group.add( STD_KEEPGOING );
     _group.add( STD_OVERWRITE );
@@ -84,15 +139,27 @@ TrackUtility::TrackUtility( int argc, char** argv )
     _group.add( STD_VERSION );
     _group.add( STD_VERSIONX );
 
-    _parmGroup.add( "track-any",    false, LC_TRACK_ANY,    "any track" );
-    _parmGroup.add( "track-id",     true,  LC_TRACK_ID,     "track by id" );
-    _parmGroup.add( "track-index",  true,  LC_TRACK_INDEX,  "track by index" );
-    _parmGroup.add( "sample-any",   false, LC_SAMPLE_ANY,   "any sample" );
-    _parmGroup.add( "sample-id",    true,  LC_SAMPLE_ID,    "sample by id" );
-    _parmGroup.add( "sample-index", true,  LC_SAMPLE_INDEX, "sample by index" );
+    _parmGroup.add( "track-any",    false, LC_TRACK_WILDCARD,  "any track" );
+    _parmGroup.add( "track-id",     true,  LC_TRACK_ID,        "track by id" );
+    _parmGroup.add( "track-index",  true,  LC_TRACK_INDEX,     "track by index" );
+    _parmGroup.add( "sample-any",   false, LC_SAMPLE_WILDCARD, "any sample" );
+    _parmGroup.add( "sample-id",    true,  LC_SAMPLE_ID,       "sample by id" );
+    _parmGroup.add( "sample-index", true,  LC_SAMPLE_INDEX,    "sample by index" );
+    _parmGroup.add( "colr-parms",   true,  LC_COLR_PARMS,      "where format is IDX1,IDX2,IDX3", "CSV" );
+    _parmGroup.add( "colr-parm-hd", false, LC_COLR_PARM_HD,    "equivalent to --colr-parms=6,1,6" );
+    _parmGroup.add( "colr-parm-sd", false, LC_COLR_PARM_SD,    "equivalent to --colr-parms=1,1,1" );
+    _parmGroup.add( "pasp-parms",   true,  LC_PASP_PARMS,      "where format is vSPACING,hSPACING", "CSV" );
     _groups.push_back( &_parmGroup );
 
-    _actionGroup.add( "list", false, LC_LIST, "list tracks in mp4" );
+    _actionGroup.add( "list",        false, LC_LIST,        "list all tracks in mp4" );
+    _actionGroup.add( "colr-list",   false, LC_COLR_LIST,   "list all colr-boxes in mp4" );
+    _actionGroup.add( "colr-add",    false, LC_COLR_ADD,    "add colr-box to a video track" );
+    _actionGroup.add( "colr-set",    false, LC_COLR_SET,    "set colr-box parms" );
+    _actionGroup.add( "colr-remove", false, LC_COLR_REMOVE, "remove colr-box from track" );
+    _actionGroup.add( "pasp-list",   false, LC_PASP_LIST,   "list all pasp-boxes in mp4" );
+    _actionGroup.add( "pasp-add",    false, LC_PASP_ADD,    "add pasp-box to a video track" );
+    _actionGroup.add( "pasp-set",    false, LC_PASP_SET,    "set pasp-box parms" );
+    _actionGroup.add( "pasp-remove", false, LC_PASP_REMOVE, "remove pasp-box from track" );
     _groups.push_back( &_actionGroup );
 
     _usage = "[OPTION]... [PARAMETERS]... ACTION file...";
@@ -101,6 +168,222 @@ TrackUtility::TrackUtility( int argc, char** argv )
         // |----------------------------------------------------------------------------|
         "\nFor each mp4 file specified, perform the specified ACTION. An action must be"
         "\nspecified. Some options are not applicable to some actions.";
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+TrackUtility::actionColorParameterAdd( JobContext& job )
+{
+    ostringstream oss;
+    oss << "adding colr-box(" << _colorParameterItem.convertToCSV() << ") -> " << job.file;
+
+    switch( _trackMode ) {
+        case TM_INDEX:
+            oss << " (track index=" << _trackIndex << ')';
+            break;
+
+        case TM_ID:
+            oss << " (track id=" << _trackId << ')';
+            break;
+
+        default:
+        case TM_WILDCARD:
+            return herrf( "track not specified\n" );
+    }
+
+    verbose1f( "%s\n", oss.str().c_str() );
+    if( dryrunAbort() )
+        return SUCCESS;
+
+    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
+    if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
+        return herrf( "unable to open for write: %s\n", job.file.c_str() );
+
+    switch( _trackMode ) {
+        default:
+        case TM_INDEX:
+            if( qtff::ColorParameterBox::add( job.fileHandle, _trackIndex, _colorParameterItem ))
+                return herrf( "unable to add colr-box\n" );
+            break;
+
+        case TM_ID:
+            if( qtff::ColorParameterBox::add( job.fileHandle, _trackId, _colorParameterItem ))
+                return herrf( "unable to add colr-box\n" );
+            break;
+    }
+
+    job.fileWasModified = true;
+    return SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+TrackUtility::actionColorParameterList( JobContext& job )
+{
+    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
+    if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
+        return herrf( "unable to open for read: %s\n", job.file.c_str() );
+
+    ostringstream report;
+
+    const int widx = 3;
+    const int wid = 3;
+    const int wtype = 8;
+    const int wparm = 6;
+    const string sep = "  ";
+
+    if( _jobCount == 0 ) {
+        report << setw(widx) << right << "IDX"
+               << sep << setw(wid) << "ID"
+               << sep << setw(wtype) << left << "TYPE"
+               << sep << setw(wparm) << right << "PRIMRY"
+               << sep << setw(wparm) << right << "XFERFN"
+               << sep << setw(wparm) << right << "MATRIX"
+               << sep << setw(0) << "FILE"
+               << '\n';
+
+        report << setfill('-') << setw(70) << "" << setfill(' ') << '\n';
+    }
+
+    qtff::ColorParameterBox::ItemList itemList;
+    if( qtff::ColorParameterBox::list( job.fileHandle, itemList ))
+        return herrf( "unable to fetch list of colr-boxes" );
+
+    const qtff::ColorParameterBox::ItemList::size_type max = itemList.size();
+    for( qtff::ColorParameterBox::ItemList::size_type i = 0; i < max; i++ ) {
+        const qtff::ColorParameterBox::IndexedItem& xitem = itemList[i];
+
+        const char* type = MP4GetTrackType( job.fileHandle, xitem.trackId );
+        if( !type)
+            type = "unknown";
+
+        report << right << setw(widx) << xitem.trackIndex
+               << sep << setw(wid) << xitem.trackId
+               << sep << setw(wtype) << left << toStringTrackType( type )
+               << sep << setw(wparm) << right << xitem.item.primariesIndex
+               << sep << setw(wparm) << right << xitem.item.transferFunctionIndex
+               << sep << setw(wparm) << right << xitem.item.matrixIndex;
+
+        if( i == 0 )
+            report << sep << setw(0) << job.file;
+
+        report << '\n';
+    }
+
+    verbose1f( "%s", report.str().c_str() );
+    return SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+TrackUtility::actionColorParameterRemove( JobContext& job )
+{
+    ostringstream oss;
+    oss << "removing colr-box from " << job.file;
+
+    switch( _trackMode ) {
+        case TM_INDEX:
+            oss << " (track index=" << _trackIndex << ')';
+            break;
+
+        case TM_ID:
+            oss << " (track id=" << _trackId << ')';
+            break;
+
+        default:
+        case TM_WILDCARD:
+            oss << " (all tracks)";
+    }
+
+    verbose1f( "%s\n", oss.str().c_str() );
+    if( dryrunAbort() )
+        return SUCCESS;
+
+    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
+    if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
+        return herrf( "unable to open for write: %s\n", job.file.c_str() );
+
+    switch( _trackMode ) {
+        case TM_INDEX:
+            if( qtff::ColorParameterBox::remove( job.fileHandle, _trackIndex ))
+                return herrf( "unable to remove colr-box\n" );
+            break;
+
+        case TM_ID:
+            if( qtff::ColorParameterBox::remove( job.fileHandle, _trackId ))
+                return herrf( "unable to remove colr-box\n" );
+            break;
+
+        default:
+        case TM_WILDCARD:
+        {
+            qtff::ColorParameterBox::ItemList itemList;
+            if( qtff::ColorParameterBox::list( job.fileHandle, itemList ))
+                return herrf( "unable to fetch list of colr-boxes" );
+
+            _trackMode = TM_INDEX;
+            const qtff::ColorParameterBox::ItemList::size_type max = itemList.size();
+            for( qtff::ColorParameterBox::ItemList::size_type i = 0; i < max; i++ ) {
+                const qtff::ColorParameterBox::IndexedItem& xitem = itemList[i];
+                _trackIndex = xitem.trackIndex;
+                actionColorParameterRemove( job );
+            }
+            break;
+        }
+    }
+
+    job.fileWasModified = true;
+    return SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+TrackUtility::actionColorParameterSet( JobContext& job )
+{
+    ostringstream oss;
+    oss << "setting colr-box(" << _colorParameterItem.convertToCSV() << ") -> " << job.file;
+
+    switch( _trackMode ) {
+        case TM_INDEX:
+            oss << " (track index=" << _trackIndex << ')';
+            break;
+
+        case TM_ID:
+            oss << " (track id=" << _trackId << ')';
+            break;
+
+        default:
+        case TM_WILDCARD:
+            return herrf( "track not specified\n" );
+    }
+
+    verbose1f( "%s\n", oss.str().c_str() );
+    if( dryrunAbort() )
+        return SUCCESS;
+
+    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
+    if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
+        return herrf( "unable to open for write: %s\n", job.file.c_str() );
+
+    switch( _trackMode ) {
+        default:
+        case TM_INDEX:
+            if( qtff::ColorParameterBox::set( job.fileHandle, _trackIndex, _colorParameterItem ))
+                return herrf( "unable to set colr-box\n" );
+            break;
+
+        case TM_ID:
+            if( qtff::ColorParameterBox::set( job.fileHandle, _trackId, _colorParameterItem ))
+                return herrf( "unable to set colr-box\n" );
+            break;
+    }
+
+    job.fileWasModified = true;
+    return SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -130,7 +413,7 @@ TrackUtility::actionList( JobContext& job )
         report << setfill('-') << setw(70) << "" << setfill(' ') << '\n';
     }
 
-    job.fileHandle = MP4Read( job.file.c_str() );
+    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
 
@@ -171,15 +454,227 @@ TrackUtility::actionList( JobContext& job )
             << sep << setw(wflags) << setfill('0') << right << hex << (flags & 0x00ffffff) << left << dec
             << sep << setw(wnsamp) << nsamp;
 
-        if( job.file != _listLastFile ) {
-            _listLastFile = job.file;
-            oss << sep << job.file;
-        }
+        if( i == 0 )
+            oss << sep << setw(0) << job.file;
 
         report << oss.str() << '\n';
     }
 
     verbose1f( "%s", report.str().c_str() );
+    return SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+TrackUtility::actionPictureAspectRatioAdd( JobContext& job )
+{
+    ostringstream oss;
+    oss << "adding pasp-box(" << _pictureAspectRatioItem.convertToCSV() << ") -> " << job.file;
+
+    switch( _trackMode ) {
+        case TM_INDEX:
+            oss << " (track index=" << _trackIndex << ')';
+            break;
+
+        case TM_ID:
+            oss << " (track id=" << _trackId << ')';
+            break;
+
+        default:
+        case TM_WILDCARD:
+            return herrf( "track not specified\n" );
+    }
+
+    verbose1f( "%s\n", oss.str().c_str() );
+    if( dryrunAbort() )
+        return SUCCESS;
+
+    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
+    if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
+        return herrf( "unable to open for write: %s\n", job.file.c_str() );
+
+    switch( _trackMode ) {
+        default:
+        case TM_INDEX:
+            if( qtff::PictureAspectRatioBox::add( job.fileHandle, _trackIndex, _pictureAspectRatioItem ))
+                return herrf( "unable to add pasp-box\n" );
+            break;
+
+        case TM_ID:
+            if( qtff::PictureAspectRatioBox::add( job.fileHandle, _trackId, _pictureAspectRatioItem ))
+                return herrf( "unable to add pasp-box\n" );
+            break;
+    }
+
+    job.fileWasModified = true;
+    return SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+TrackUtility::actionPictureAspectRatioList( JobContext& job )
+{
+    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
+    if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
+        return herrf( "unable to open for read: %s\n", job.file.c_str() );
+
+    ostringstream report;
+
+    const int widx = 3;
+    const int wid = 3;
+    const int wtype = 8;
+    const int wparm = 6;
+    const string sep = "  ";
+
+    if( _jobCount == 0 ) {
+        report << setw(widx) << right << "IDX"
+               << sep << setw(wid) << "ID"
+               << sep << setw(wtype) << left << "TYPE"
+               << sep << setw(wparm) << right << "hSPACE"
+               << sep << setw(wparm) << right << "vSPACE"
+               << sep << setw(0) << "FILE"
+               << '\n';
+
+        report << setfill('-') << setw(70) << "" << setfill(' ') << '\n';
+    }
+
+    qtff::PictureAspectRatioBox::ItemList itemList;
+    if( qtff::PictureAspectRatioBox::list( job.fileHandle, itemList ))
+        return herrf( "unable to fetch list of pasp-boxes" );
+
+    const qtff::PictureAspectRatioBox::ItemList::size_type max = itemList.size();
+    for( qtff::PictureAspectRatioBox::ItemList::size_type i = 0; i < max; i++ ) {
+        const qtff::PictureAspectRatioBox::IndexedItem& xitem = itemList[i];
+
+        const char* type = MP4GetTrackType( job.fileHandle, xitem.trackId );
+        if( !type)
+            type = "unknown";
+
+        report << right << setw(widx) << xitem.trackIndex
+               << sep << setw(wid) << xitem.trackId
+               << sep << setw(wtype) << left << toStringTrackType( type )
+               << sep << setw(wparm) << right << xitem.item.hSpacing
+               << sep << setw(wparm) << right << xitem.item.vSpacing;
+
+        if( i == 0 )
+            report << sep << setw(0) << job.file;
+
+        report << '\n';
+    }
+
+    verbose1f( "%s", report.str().c_str() );
+    return SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+TrackUtility::actionPictureAspectRatioRemove( JobContext& job )
+{
+    ostringstream oss;
+    oss << "removing pasp-box from " << job.file;
+
+    switch( _trackMode ) {
+        case TM_INDEX:
+            oss << " (track index=" << _trackIndex << ')';
+            break;
+
+        case TM_ID:
+            oss << " (track id=" << _trackId << ')';
+            break;
+
+        default:
+        case TM_WILDCARD:
+            oss << " (all tracks)";
+    }
+
+    verbose1f( "%s\n", oss.str().c_str() );
+    if( dryrunAbort() )
+        return SUCCESS;
+
+    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
+    if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
+        return herrf( "unable to open for write: %s\n", job.file.c_str() );
+
+    switch( _trackMode ) {
+        case TM_INDEX:
+            if( qtff::PictureAspectRatioBox::remove( job.fileHandle, _trackIndex ))
+                return herrf( "unable to remove pasp-box\n" );
+            break;
+
+        case TM_ID:
+            if( qtff::PictureAspectRatioBox::remove( job.fileHandle, _trackId ))
+                return herrf( "unable to remove pasp-box\n" );
+            break;
+
+        default:
+        case TM_WILDCARD:
+        {
+            qtff::PictureAspectRatioBox::ItemList itemList;
+            if( qtff::PictureAspectRatioBox::list( job.fileHandle, itemList ))
+                return herrf( "unable to fetch list of pasp-boxes" );
+
+            _trackMode = TM_INDEX;
+            const qtff::PictureAspectRatioBox::ItemList::size_type max = itemList.size();
+            for( qtff::PictureAspectRatioBox::ItemList::size_type i = 0; i < max; i++ ) {
+                const qtff::PictureAspectRatioBox::IndexedItem& xitem = itemList[i];
+                _trackIndex = xitem.trackIndex;
+                actionPictureAspectRatioRemove( job );
+            }
+            break;
+        }
+    }
+
+    job.fileWasModified = true;
+    return SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+TrackUtility::actionPictureAspectRatioSet( JobContext& job )
+{
+    ostringstream oss;
+    oss << "setting pasp-box(" << _pictureAspectRatioItem.convertToCSV() << ") -> " << job.file;
+
+    switch( _trackMode ) {
+        case TM_INDEX:
+            oss << " (track index=" << _trackIndex << ')';
+            break;
+
+        case TM_ID:
+            oss << " (track id=" << _trackId << ')';
+            break;
+
+        default:
+        case TM_WILDCARD:
+            return herrf( "track not specified\n" );
+    }
+
+    verbose1f( "%s\n", oss.str().c_str() );
+    if( dryrunAbort() )
+        return SUCCESS;
+
+    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
+    if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
+        return herrf( "unable to open for write: %s\n", job.file.c_str() );
+
+    switch( _trackMode ) {
+        default:
+        case TM_INDEX:
+            if( qtff::PictureAspectRatioBox::set( job.fileHandle, _trackIndex, _pictureAspectRatioItem ))
+                return herrf( "unable to set pasp-box\n" );
+            break;
+
+        case TM_ID:
+            if( qtff::PictureAspectRatioBox::set( job.fileHandle, _trackId, _pictureAspectRatioItem ))
+                return herrf( "unable to set pasp-box\n" );
+            break;
+    }
+
+    job.fileWasModified = true;
     return SUCCESS;
 }
 
@@ -202,8 +697,84 @@ TrackUtility::utility_option( int code, bool& handled )
     handled = true;
 
     switch( code ) {
+        case LC_TRACK_WILDCARD:
+            _trackMode = TM_WILDCARD;
+            break;
+
+        case LC_TRACK_INDEX:
+        {
+            _trackMode = TM_INDEX;
+            istringstream iss( prog::optarg );
+            iss >> _trackIndex;
+            if( iss.rdstate() != ios::eofbit )
+                return herrf( "invalid track index: %s\n", prog::optarg );
+            break;
+        }
+
+        case LC_TRACK_ID:
+        {
+            _trackMode = TM_ID;
+            istringstream iss( prog::optarg );
+            iss >> _trackId;
+            if( iss.rdstate() != ios::eofbit )
+                return herrf( "invalid track id: %s\n", prog::optarg );
+            break;
+        }
+
         case LC_LIST:
             _action = &TrackUtility::actionList;
+            break;
+
+        case LC_COLR_PARMS:
+            _colorParameterItem.convertFromCSV( prog::optarg );
+            break;
+
+        case LC_COLR_PARM_HD:
+            _colorParameterItem.primariesIndex        = 6;
+            _colorParameterItem.transferFunctionIndex = 1;
+            _colorParameterItem.matrixIndex           = 6;
+            break;
+
+        case LC_COLR_PARM_SD:
+            _colorParameterItem.primariesIndex        = 1;
+            _colorParameterItem.transferFunctionIndex = 1;
+            _colorParameterItem.matrixIndex           = 1;
+            break;
+
+        case LC_COLR_LIST:
+            _action = &TrackUtility::actionColorParameterList;
+            break;
+
+        case LC_COLR_ADD:
+            _action = &TrackUtility::actionColorParameterAdd;
+            break;
+
+        case LC_COLR_SET:
+            _action = &TrackUtility::actionColorParameterSet;
+            break;
+
+        case LC_COLR_REMOVE:
+            _action = &TrackUtility::actionColorParameterRemove;
+            break;
+
+        case LC_PASP_PARMS:
+            _pictureAspectRatioItem.convertFromCSV( prog::optarg );
+            break;
+
+        case LC_PASP_LIST:
+            _action = &TrackUtility::actionPictureAspectRatioList;
+            break;
+
+        case LC_PASP_ADD:
+            _action = &TrackUtility::actionPictureAspectRatioAdd;
+            break;
+
+        case LC_PASP_SET:
+            _action = &TrackUtility::actionPictureAspectRatioSet;
+            break;
+
+        case LC_PASP_REMOVE:
+            _action = &TrackUtility::actionPictureAspectRatioRemove;
             break;
 
         default:
