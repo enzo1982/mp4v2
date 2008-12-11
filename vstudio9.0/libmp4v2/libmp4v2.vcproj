@@ -519,6 +519,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\mp4error.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\mp4file.cpp"
 				>
 			</File>
