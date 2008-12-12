@@ -148,10 +148,12 @@ class Document( Element ):
             e = Element( self._pending, delimBegin='`', delimEnd='`' )
         elif name == 'section' or name == 'subsection':
             self._sectionBegin()
+        elif name == 'table':
+            e = Element( self._pending, newline=1, delimBegin='<table border="1" cellpadding="4">', delimEnd='</table>', strip=True )
         elif name == 'tableitem':
             e = TableItemElement( self._pending )
         elif name == 'tableterm':
-            e = Element( self._pending, delimBegin='||' )
+            e = Element( self._pending, delimBegin='<td width="15%">', delimEnd='</td>' )
         elif name == 'title':
             e = HeadingElement( self._pending, self._chapterLevel + self._sectionLevel )
         elif name == 'unnumbered' or name == 'unnumberedsec':
@@ -214,7 +216,7 @@ class BlockElement( Element ):
 
 class CodeElement( Element ):
     def __init__( self, parent ):
-        Element.__init__( self, parent, newline=2, delimBegin='{{{\n', delimEnd='\n}}}' )
+        Element.__init__( self, parent, newline=2, delimBegin='{{{\n', delimEnd='\n}}}\n' )
 
 ###############################################################################
 
@@ -222,7 +224,7 @@ class HeadingElement( Element ):
     def __init__( self, parent, level ):
         Element.__init__( self, parent, newline=2 )
         self._delimBegin = ('=' * level) + ' '
-        self._delimEnd   = ' ' + ('=' * level)
+        self._delimEnd   = ' ' + ('=' * level) + '\n'
 
         # insert divider for level 1 headers
         if level == 1:
@@ -256,8 +258,8 @@ class ItemElement( BlockElement ):
         self._newline = 1
         if isinstance( parent, TableItemElement ):
             self._newline    = 0
-            self._delimBegin = '||'
-            self._delimEnd   = '||'
+            self._delimBegin = '<td>'
+            self._delimEnd   = '</td>'
 
 ###############################################################################
 
@@ -279,6 +281,8 @@ class ParagraphElement( Element ):
 class TableItemElement( Element ):
     def __init__( self, parent ):
         Element.__init__( self, parent, newline=1, text=False )
+        self._delimBegin = '<tr>'
+        self._delimEnd   = '</tr>'
 
 ###############################################################################
 
