@@ -3,27 +3,27 @@
 
 /*****************************************************************************/
 
-#define MP4V2_PROJECT_name            "MP4v2"
-#define MP4V2_PROJECT_name_lower      "mp4v2"
-#define MP4V2_PROJECT_name_upper      "MP4V2"
-#define MP4V2_PROJECT_name_formal     "MP4v2 2.0-r125"
-#define MP4V2_PROJECT_url_website     "http://code.google.com/p/mp4v2"
-#define MP4V2_PROJECT_url_downloads   "http://code.google.com/p/mp4v2/downloads/list"
-#define MP4V2_PROJECT_url_discussion  "http://groups.google.com/group/mp4v2"
-#define MP4V2_PROJECT_irc             "irc://irc.freenode.net/handbrake"
-#define MP4V2_PROJECT_bugreport       "<eddyg@myreflection.org>"
-#define MP4V2_PROJECT_version         "2.0-r125"
-#define MP4V2_PROJECT_version_hex     0x00020000
-#define MP4V2_PROJECT_version_major   2
-#define MP4V2_PROJECT_version_minor   0
-#define MP4V2_PROJECT_version_point   0
-#define MP4V2_PROJECT_repo_url        "https://mp4v2.googlecode.com/svn/trunk"
-#define MP4V2_PROJECT_repo_root       "https://mp4v2.googlecode.com/svn"
-#define MP4V2_PROJECT_repo_uuid       "6e6572fa-98a6-11dd-ad9f-f77439c74b79"
-#define MP4V2_PROJECT_repo_rev        125
-#define MP4V2_PROJECT_repo_date       "2008-12-06 09:44:52 -0500 (Sat, 06 Dec 2008)"
-#define MP4V2_PROJECT_repo_type       "developer"
-#define MP4V2_PROJECT_build           "Sat Dec  6 10:04:15 EST 2008"
+#define MP4V2_PROJECT_name            "@PROJECT_name@"
+#define MP4V2_PROJECT_name_lower      "@PROJECT_name_lower@"
+#define MP4V2_PROJECT_name_upper      "@PROJECT_name_upper@"
+#define MP4V2_PROJECT_name_formal     "@PROJECT_name_formal@"
+#define MP4V2_PROJECT_url_website     "@PROJECT_url_website@"
+#define MP4V2_PROJECT_url_downloads   "@PROJECT_url_downloads@"
+#define MP4V2_PROJECT_url_discussion  "@PROJECT_url_discussion@"
+#define MP4V2_PROJECT_irc             "@PROJECT_irc@"
+#define MP4V2_PROJECT_bugreport       "@PROJECT_bugreport@"
+#define MP4V2_PROJECT_version         "@PROJECT_version@"
+#define MP4V2_PROJECT_version_hex     @PROJECT_version_hex@
+#define MP4V2_PROJECT_version_major   @PROJECT_version_major@
+#define MP4V2_PROJECT_version_minor   @PROJECT_version_minor@
+#define MP4V2_PROJECT_version_point   @PROJECT_version_point@
+#define MP4V2_PROJECT_repo_url        "@PROJECT_repo_url@"
+#define MP4V2_PROJECT_repo_root       "@PROJECT_repo_root@"
+#define MP4V2_PROJECT_repo_uuid       "@PROJECT_repo_uuid@"
+#define MP4V2_PROJECT_repo_rev        @PROJECT_repo_rev@
+#define MP4V2_PROJECT_repo_date       "@PROJECT_repo_date@"
+#define MP4V2_PROJECT_repo_type       "@PROJECT_repo_type@"
+#define MP4V2_PROJECT_build           "@PROJECT_build@"
 
 /*****************************************************************************/
 

@@ -1,5 +1,3 @@
-noinst_LTLIBRARIES = libplatform.la
-
 lib_LTLIBRARIES = libmp4v2.la
 
 bin_PROGRAMS =
@@ -7,8 +5,6 @@ bin_PROGRAMS =
 check_PROGRAMS =
 
 ###############################################################################
-
-libmp4v2_la_LIBADD = libplatform.la
 
 libmp4v2_la_SOURCES = \
     src/3gp.cpp                          \
@@ -104,7 +100,7 @@ libmp4v2_la_SOURCES = \
     src/virtual_io.cpp                   \
     src/virtual_io.h
 
-libplatform_la_SOURCES = \
+libmp4v2_la_SOURCES += \
     libplatform/endian.h                 \
     libplatform/impl.h                   \
     libplatform/io/File.cpp              \
@@ -126,7 +122,7 @@ libplatform_la_SOURCES = \
     libplatform/warning.h
 
 if ADD_PLATFORM_POSIX
-    libplatform_la_SOURCES += \
+    libmp4v2_la_SOURCES += \
         libplatform/io/File_posix.cpp          \
         libplatform/io/FileSystem_posix.cpp    \
         libplatform/number/random_posix.cpp    \
@@ -134,7 +130,7 @@ if ADD_PLATFORM_POSIX
         libplatform/time/time_posix.cpp
 endif
 if ADD_PLATFORM_WIN32
-    libplatform_la_SOURCES += \
+    libmp4v2_la_SOURCES += \
         libplatform/io/File_win32.cpp          \
         libplatform/io/FileSystem_win32.cpp    \
         libplatform/number/random_win32.cpp    \
@@ -142,32 +138,41 @@ if ADD_PLATFORM_WIN32
         libplatform/time/time_win32.cpp
 endif
 
-libutil_la_SOURCES = \
-    libutil/Database.h   \
-    libutil/Database.cpp \
-    libutil/Timecode.h   \
-    libutil/Timecode.cpp \
-    libutil/Utility.h    \
-    libutil/Utility.cpp  \
-    libutil/crc.h        \
-    libutil/crc.cpp      \
-    libutil/impl.h       \
-    libutil/util.h
-
-###############################################################################
-
 if ADD_UTIL
-    noinst_LTLIBRARIES += libutil.la
+    libmp4v2_la_SOURCES += \
+        libutil/Database.cpp       \
+        libutil/Database.h         \
+        libutil/Timecode.cpp       \
+        libutil/Timecode.h         \
+        libutil/UtilException.cpp  \
+        libutil/UtilException.h    \
+        libutil/Utility.cpp        \
+        libutil/Utility.h          \
+        libutil/crc.cpp            \
+        libutil/crc.h              \
+        libutil/impl.h             \
+        libutil/other.cpp          \
+        libutil/other.h            \
+        libutil/util.cpp           \
+        libutil/util.h
 
-    libmp4v2_la_SOURCES +=  \
-        src/itmf.h          \
-        src/itmf.cpp        \
-        src/libutil.h       \
-        src/libutil.cpp     \
-        src/qtff.h          \
-        src/qtff.cpp        \
-        src/subtitle.h      \
-        src/subtitle.cpp
+    libmp4v2_la_SOURCES += \
+        libutil/itmf/CoverArtBox.cpp  \
+        libutil/itmf/CoverArtBox.h    \
+        libutil/itmf/impl.h           \
+        libutil/itmf/itmf.h           \
+        libutil/itmf/type.cpp         \
+        libutil/itmf/type.h
+
+    libmp4v2_la_SOURCES += \
+        libutil/qtff/ColorParameterBox.cpp      \
+        libutil/qtff/ColorParameterBox.h        \
+        libutil/qtff/PictureAspectRatioBox.cpp  \
+        libutil/qtff/PictureAspectRatioBox.h    \
+        libutil/qtff/coding.cpp                 \
+        libutil/qtff/coding.h                   \
+        libutil/qtff/impl.h                     \
+        libutil/qtff/qtff.h
 
     bin_PROGRAMS += mp4art
     bin_PROGRAMS += mp4chaps
@@ -192,18 +197,16 @@ mp4tags_SOURCES      = util/mp4tags.cpp
 mp4track_SOURCES     = util/mp4track.cpp
 mp4trackdump_SOURCES = util/mp4trackdump.cpp
 
-UTILITY_LDADD = libmp4v2.la libutil.la libplatform.la $(X_LDFLAGS)
-
-mp4art_LDADD       = $(UTILITY_LDADD)
-mp4chaps_LDADD     = libmp4v2.la libplatform.la $(X_LDFLAGS)
-mp4extract_LDADD   = libmp4v2.la libplatform.la $(X_LDFLAGS)
-mp4file_LDADD      = $(UTILITY_LDADD)
-mp4info_LDADD      = libmp4v2.la libplatform.la $(X_LDFLAGS)
-mp4subtitle_LDADD  = $(UTILITY_LDADD)
-mp4syncfiles_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
-mp4tags_LDADD      = libmp4v2.la libplatform.la $(X_LDFLAGS)
-mp4track_LDADD     = $(UTILITY_LDADD)
-mp4trackdump_LDADD = libmp4v2.la libplatform.la $(X_LDFLAGS)
+mp4art_LDADD       = libmp4v2.la $(X_LDFLAGS)
+mp4chaps_LDADD     = libmp4v2.la $(X_LDFLAGS)
+mp4extract_LDADD   = libmp4v2.la $(X_LDFLAGS)
+mp4file_LDADD      = libmp4v2.la $(X_LDFLAGS)
+mp4info_LDADD      = libmp4v2.la $(X_LDFLAGS)
+mp4subtitle_LDADD  = libmp4v2.la $(X_LDFLAGS)
+mp4syncfiles_LDADD = libmp4v2.la $(X_LDFLAGS)
+mp4tags_LDADD      = libmp4v2.la $(X_LDFLAGS)
+mp4track_LDADD     = libmp4v2.la $(X_LDFLAGS)
+mp4trackdump_LDADD = libmp4v2.la $(X_LDFLAGS)
 
 ###############################################################################
 

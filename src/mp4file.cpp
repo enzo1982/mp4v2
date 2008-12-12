@@ -609,6 +609,8 @@ void MP4File::Close()
     m_pFile = NULL;
 }
 
+// Implementation notes (author KB).
+//
 // this is useful when doing file modfication and not caring about
 // re-write performance. it greatly simplies things to mimic behavior
 // of Optimize() for all writes, and then caller may rename file
@@ -616,12 +618,28 @@ void MP4File::Close()
 // optimize permits one to read/copy/overwrite in a single operation.
 // however this function is useful for a workflow such as:
 //
-//      1. caller opens file
-//      2. caller modifies atoms, etc.
-//      3. caller invokes this function
-//      4. CopyClose writes atoms out (optimized) to a new file
-//      5. CopyClose closes both original and new file
-//      6. caller then renames origfile -> newfile if desired
+//      1. caller opens file with MP4Read().
+//      2. caller modifies atom tree.
+//      3. caller invokes CopyClose() which writes atoms out
+//         to a new file (optimized) and closes both original
+//         file from step #1 and new file.
+//      4. caller optionally renames origfile -> newfile if desired
+//
+// This method was made to resolve an indeterminate issue with MP4Modify()
+// which corrupted files after atoms (such as COLR and PASP) were added or
+// removed from the hierarchy. Upon closing the file, it became invalid
+// and could no longer be parsed; part of MOOV tree was corrupted.
+// Several possibilities exist, and the existence of this function rules
+// none of them out. Is MP4Modify() really the issue? Or is the author's
+// method of atom addition/removal at fault?
+//
+// If this is issue is revisited, the original troublesome workflow
+// used by the author was:
+//
+//      1. caller opens file with MP4Modify().
+//      2. caller modifies atom tree.
+//      3. caller invokes MP4Close().
+//      4. caller optionally invokes MP4Optimize().
 //
 bool MP4File::CopyClose( const string& copyFileName )
 {

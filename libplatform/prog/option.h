@@ -23,32 +23,32 @@ namespace mp4v2 { namespace platform { namespace prog {
 
 //! On return from getOption() or getOptionSingle(),
 //! points to an option argument, if it is anticipated.
-extern char* optarg;
+MP4V2_EXPORT extern char* optarg;
 
 //! On return from getOption() or getOptionSingle(),
 //! contains the index to the next argv argument for a subsequent call to
 //! getOption() or getOptionSingle().
 //! Initialized to 1 and must be set manually to 1 prior to invoking
 //! getOption() or getOptionSingle() to evaluate multiple sets of arguments.
-extern int optind;
+MP4V2_EXPORT extern int optind;
 
 //! On return from getOption() or getOptionSingle(),
 //! saves the last known option character returned by
 //! getOption() or getOptionSingle().
 //! On error, contains the character/code of option which caused error.
-extern int optopt;
+MP4V2_EXPORT extern int optopt;
 
 //! Initialized to 1 and may be set to 0 to disable error messages.
-extern int opterr;
+MP4V2_EXPORT extern int opterr;
 
 //! Must be set to 1 before evaluating the 2nd or each additional set
 //! of arguments.
-extern int optreset;
+MP4V2_EXPORT extern int optreset;
 
 //! Structure describing a single option.
 //! An instance of Option is required for each program option and is
 //! initialized before use with getOption() or getOptionWord().
-struct Option
+struct MP4V2_EXPORT Option
 {
     //! expectation-type indicating number of arguments expected
     //! on the command-line following the option-argument itself
@@ -130,6 +130,7 @@ struct Option
 //!     A -1 will be returned when the argument list has been exhausted.
 //!
 ///////////////////////////////////////////////////////////////////////////////
+MP4V2_EXPORT
 int getOption( int argc, char* const* argv, const char* optstr, const Option* longopts, int* idx );
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -163,6 +164,7 @@ int getOption( int argc, char* const* argv, const char* optstr, const Option* lo
 //!     A -1 will be returned when the argument list has been exhausted.
 //!
 ///////////////////////////////////////////////////////////////////////////////
+MP4V2_EXPORT
 int getOptionSingle( int argc, char* const* argv, const char* optstr, const Option* longopts, int* idx );
 
 ///////////////////////////////////////////////////////////////////////////////

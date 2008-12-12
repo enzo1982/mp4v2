@@ -1,46 +1,9 @@
-#ifndef MP4V2_IMPL_LIBUTIL_H
-#define MP4V2_IMPL_LIBUTIL_H
-
-#include <mp4v2/mp4v2.h>
-
-#include <map>
-#include <set>
-#include <sstream>
-#include <string>
-#include <vector>
-
-#include "itmf.h"
-#include "qtff.h"
-#include "subtitle.h"
-
-/// @namespace mp4v2::util (private) Command-line utility support.
-/// <b>WARNING: THIS IS A PRIVATE NAMESPACE. NOT FOR PUBLIC CONSUMPTION.</b>
-///
-/// This namespace is used for command-line utilities. Some symbols from this
-/// namespace are exported from libmp4v2 in order to support new functionality
-/// which may or may not make it into some form of public API, at which time
-/// it will be moved out of this namespace.
+#ifndef MP4V2_UTIL_OTHER_H
+#define MP4V2_UTIL_OTHER_H
 
 ///////////////////////////////////////////////////////////////////////////////
 
 namespace mp4v2 { namespace util {
-    using namespace std;
-
-///////////////////////////////////////////////////////////////////////////////
-
-class MP4V2_EXPORT UtilException
-{
-protected:
-    string _what;
-
-public:
-    const string& what;
-
-public:
-    explicit UtilException( const string& what );
-    explicit UtilException( const ostringstream& what );
-    ~UtilException();
-};
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -87,4 +50,4 @@ bool MP4CopyClose( MP4FileHandle hFile, const string& copyFileName );
 
 }} // namespace mp4v2::util
 
-#endif // MP4V2_IMPL_LIBUTIL_H
+#endif // MP4V2_UTIL_OTHER_H

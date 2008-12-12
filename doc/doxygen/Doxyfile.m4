@@ -557,10 +557,7 @@ WARN_LOGFILE           =
 INPUT = __MAKE_ABS_TOP_SRCDIR/doc/doxygen/mainpage.h \
     __MAKE_ABS_TOP_SRCDIR/include \
     __MAKE_ABS_TOP_SRCDIR/libplatform \
-    __MAKE_ABS_TOP_SRCDIR/src/libutil.h \
-    __MAKE_ABS_TOP_SRCDIR/src/itmf.h \
-    __MAKE_ABS_TOP_SRCDIR/src/qtff.h \
-    __MAKE_ABS_TOP_SRCDIR/libutil/Utility.h
+    __MAKE_ABS_TOP_SRCDIR/libutil
 
 # This tag can be used to specify the character encoding of the source files 
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is 

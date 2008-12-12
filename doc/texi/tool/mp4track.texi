@@ -1,0 +1,126 @@
+@chapter mp4track
+This tool is used to manage various aspects of individual tracks in an mp4 file. Some of the actions are mp4 (generic) while others may support standards based on mp4 files such as @samp{.m4a} or @samp{.m4v} files. The default is to try and act on all tracks in a file; but some actions will require an individual track be specified.
+
+@table @samp
+@item --track-any
+act on any track (default).
+Specifies the scope of the action to operate on all, if applicable, tracks.
+
+@item --track-index IDX
+act on track id INDEX.
+Specifies the scope of the action to operate on track-index IDX.
+
+@item --track-id ID
+act on track id ID.
+Specifies the scope of the action to operate on track-id ID.
+@end table
+
+@table @samp
+@item --list
+list all tracks in mp4.
+This will produce a brief report of each track for each mp4 file.
+@b{IDX} shows the track-index (0-based).
+@b{ID} shows the track-id.
+@b{TYPE} shows the track type.
+@b{FLAGS} shows track flags in hex.
+Example output:
+@example
+IDX    ID  TYPE      FLAGS   #SAMPL  FILE
+----------------------------------------------------------------------
+  0     1  audio     000001  238500  Song.m4a
+  0     1  video     000001  239800  Movie1.m4v
+  1     2  audio     000003  468100
+  2     3  text      00000e  100000
+  0     1  video     000001  239800  Movie2.m4v
+  1     2  audio     000003  468100
+  2     3  text      00000e  100000
+@end example
+@end table
+
+The @b{colr} related actions manage @b{Color Parameter} boxes which are used by QuickTime to map numerical values of pixels in a file to a common representation of color for video tracks. They may or may not be suitable for other Apple media players. Community feedback on compatibility is welcome.
+
+@table @samp
+@item --colr-list
+list all colr-boxes in mp4.
+
+@item --colr-add
+add colr-box to a video track.
+An individual track must be specified.
+
+@item --colr-set
+set colr-box parms.
+An individual track must be specified.
+
+@item --colr-remove
+remove colr-box from track.
+By default all colr-boxes will be removed unless an individual track is specified.
+
+@item --colr-parms CSV
+where CSV is IDX1,IDX2,IDX3 .
+Specify the exact parameters of an NCLC Color Parameter box as specified in the QuickTime specification.
+IDX1 correlates to the 16-bit primaries index.
+IDX2 correlates to the 16-bit transferFunction index.
+IDX3 correlates to the 16-bit matrixIndex index.
+Effects actions --colr-add, --colr-set.
+
+@item --colr-parm-hd
+equivalent to --colr-parms=1,1,1 .
+This is a convenience setting generally suitable for HD content.
+Effects actions --colr-add, --colr-set.
+
+@item --colr-parm-sd
+equivalent to --colr-parms=6,1,6 .
+This is a convenience setting generally suitable for SD content.
+Effects actions --colr-add, --colr-set.
+
+Example, add a colr-box tuned for HD content:
+@example
+mp4track --track-id=1 --colr-add --colr-parm-hd mymovie.m4v
+@end example
+
+Example, add a colr-box with arbitrary index parameters:
+@example
+mp4track --track-id=1 --colr-add --colr-parms=2,3,4 mymovie.m4v
+@end example
+
+@end table
+
+The @b{pasp} related actions manage @b{Picture Aspect Ratio} boxes which are used by QuickTime to specify height-to-width ratio of pixels for video tracks. They may or may not be suitable for other Apple media players. Community feedback on compatibility is welcome.
+
+@table @samp
+@item --pasp-list
+list all pasp-boxes in mp4.
+
+@item --pasp-add
+add pasp-box to a video track.
+An individual track must be specified.
+
+@item --pasp-set
+set pasp-box parms.
+An individual track must be specified.
+
+@item --pasp-remove
+remove pasp-box from track
+By default all pasp-boxes will be removed unless an individual track is specified.
+
+@item --pasp-parms CSV
+where CSV is hSPACING,vSPACING.
+Specify the exact parameters of Picture Aspect Ratio box as specified in the QuickTime specification.
+Effects actions --pasp-add, --pasp-set.
+
+Example, add a pasp-box with default (1,1) parameters for square pixels:
+@example
+mp4track --track-id=1 --pasp-add --pasp-parms=1,1 mymovie.m4v
+@end example
+
+Example, add a pasp-box for 16:9 digital 525 (NTSC):
+@example
+mp4track --track-id=1 --pasp-add --pasp-parms=40,33 mymovie.m4v
+@end example
+
+Example, add a pasp-box for 16:9 digital 625 (PAL):
+@example
+mp4track --track-id=1 --pasp-add --pasp-parms=118,81 mymovie.m4v
+@end example
+
+@end table

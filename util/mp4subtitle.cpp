@@ -199,8 +199,11 @@ SubtitleUtility::utility_option( int code, bool& handled )
 extern "C"
 int main( int argc, char** argv )
 {
+    sinit(); // libutil static initializer
     SubtitleUtility util( argc, argv );
-    return util.process();
+    const bool result = util.process();
+    sshutdown(); // libutil static initializer
+    return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

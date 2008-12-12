@@ -14,7 +14,7 @@ namespace mp4v2 { namespace platform { namespace io {
 /// actual file size to 63-bits, roughly 9.22 million TB.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class File
+class MP4V2_EXPORT File
 {
 public:
     //! type used to represent all file sizes and offsets
@@ -142,7 +142,7 @@ public:
 //! @ingroup platform_io
 //! 
 ///////////////////////////////////////////////////////////////////////////////
-class StdioFile : public File
+class MP4V2_EXPORT StdioFile : public File
 {
 public:
     //! type used to represent underlying operating system file handle

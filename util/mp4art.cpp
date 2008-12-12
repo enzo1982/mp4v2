@@ -63,7 +63,7 @@ private:
     bool actionReplace ( JobContext& );
     bool actionExtract ( JobContext& );
 
-    bool extractSingle( JobContext&, const ArtItem&, uint32_t );
+    bool extractSingle( JobContext&, const CoverArtBox::Item&, uint32_t );
 
 private:
     Group  _actionGroup;
@@ -96,15 +96,15 @@ ArtUtility::ArtUtility( int argc, char** argv )
     _group.add( STD_VERSION );
     _group.add( STD_VERSIONX );
 
-    _parmGroup.add( "art-any",   false, LC_ART_ANY,   "act on all cover-art (default)" );
-    _parmGroup.add( "art-index", true,  LC_ART_INDEX, "act on cover-art index IDX", "IDX" );
+    _parmGroup.add( "art-any",   false, LC_ART_ANY,   "act on all covr-boxes (default)" );
+    _parmGroup.add( "art-index", true,  LC_ART_INDEX, "act on covr-box index IDX", "IDX" );
     _groups.push_back( &_parmGroup );
 
-    _actionGroup.add( "list",    false, LC_LIST,    "list available cover-art" );
-    _actionGroup.add( "add",     true,  LC_ADD,     "add cover-art from IMG file", "IMG" );
-    _actionGroup.add( "replace", true,  LC_REPLACE, "replace cover-art with IMG file", "IMG" );
-    _actionGroup.add( "remove",  false, LC_REMOVE,  "remove cover-art" );
-    _actionGroup.add( "extract", false, LC_EXTRACT, "extract cover-art" );
+    _actionGroup.add( "list",    false, LC_LIST,    "list all covr-boxes" );
+    _actionGroup.add( "add",     true,  LC_ADD,     "add covr-box from IMG file", "IMG" );
+    _actionGroup.add( "replace", true,  LC_REPLACE, "replace covr-box with IMG file", "IMG" );
+    _actionGroup.add( "remove",  false, LC_REMOVE,  "remove covr-box" );
+    _actionGroup.add( "extract", false, LC_EXTRACT, "extract covr-box" );
     _groups.push_back( &_actionGroup );
 
     _usage = "[OPTION]... ACTION file...";
@@ -132,7 +132,7 @@ ArtUtility::actionAdd( JobContext& job )
     if( size > max )
         return herrf( "file too large: %s (exceeds %u bytes)\n", _artImageFile.c_str(), max );
 
-    ArtItem item;
+    CoverArtBox::Item item;
     item.size     = static_cast<uint32_t>( size );
     item.buffer   = static_cast<uint8_t*>( malloc( item.size ));
     item.autofree = true;
@@ -151,8 +151,8 @@ ArtUtility::actionAdd( JobContext& job )
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
-    if( artAdd( job.fileHandle, item ))
-        return herrf( "unable to add cover-art\n" );
+    if( CoverArtBox::add( job.fileHandle, item ))
+        return herrf( "unable to add covr-box\n" );
 
     job.fileWasModified = true;
     return SUCCESS;
@@ -169,21 +169,21 @@ ArtUtility::actionExtract( JobContext& job )
 
     // single-mode
     if( _artFilter != numeric_limits<uint32_t>::max() ) {
-        ArtItem item;
-        if( artGet( job.fileHandle, item, _artFilter ))
-            return herrf( "unable to retrieve cover-art (index=%d): %s\n", _artFilter, job.file.c_str() );
+        CoverArtBox::Item item;
+        if( CoverArtBox::get( job.fileHandle, item, _artFilter ))
+            return herrf( "unable to retrieve covr-box (index=%d): %s\n", _artFilter, job.file.c_str() );
 
         return extractSingle( job, item, _artFilter );
     }
 
     // wildcard-mode
-    ArtList items;
-    if( artList( job.fileHandle, items ))
-        return herrf( "unable to fetch list of cover-art: %s\n", job.file.c_str() );
+    CoverArtBox::ItemList items;
+    if( CoverArtBox::list( job.fileHandle, items ))
+        return herrf( "unable to fetch list of covr-box: %s\n", job.file.c_str() );
 
     bool onesuccess = false;
-    const ArtList::size_type max = items.size();
-    for( ArtList::size_type i = 0; i < max; i++ ) {
+    const CoverArtBox::ItemList::size_type max = items.size();
+    for( CoverArtBox::ItemList::size_type i = 0; i < max; i++ ) {
         bool rv = extractSingle( job, items[i], i );
         if( !rv )
             onesuccess = true;
@@ -221,17 +221,17 @@ ArtUtility::actionList( JobContext& job )
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
 
-    ArtList items;
-    if( artList( job.fileHandle, items ))
-        return herrf( "unable to get list of cover-art: %s\n", job.file.c_str() );
+    CoverArtBox::ItemList items;
+    if( CoverArtBox::list( job.fileHandle, items ))
+        return herrf( "unable to get list of covr-box: %s\n", job.file.c_str() );
 
     int line = 0;
-    const ArtList::size_type max = items.size();
-    for( ArtList::size_type i = 0; i < max; i++ ) {
+    const CoverArtBox::ItemList::size_type max = items.size();
+    for( CoverArtBox::ItemList::size_type i = 0; i < max; i++ ) {
         if( _artFilter != numeric_limits<uint32_t>::max() && _artFilter != i )
             continue;
 
-        ArtItem& item = items[i];
+        CoverArtBox::Item& item = items[i];
         const uint32_t crc = crc32( item.buffer, item.size );
 
         report << setw(widx) << right << i
@@ -259,14 +259,14 @@ ArtUtility::actionRemove( JobContext& job )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
     if( _artFilter == numeric_limits<uint32_t>::max() )
-        verbose1f( "removing cover-art (all) from %s\n", job.file.c_str() );
+        verbose1f( "removing covr-box (all) from %s\n", job.file.c_str() );
     else
-        verbose1f( "removing cover-art (index=%d) from %s\n", _artFilter, job.file.c_str() );
+        verbose1f( "removing covr-box (index=%d) from %s\n", _artFilter, job.file.c_str() );
 
     if( dryrunAbort() )
         return SUCCESS;
 
-    if( artRemove( job.fileHandle, _artFilter ))
+    if( CoverArtBox::remove( job.fileHandle, _artFilter ))
         return herrf( "remove failed\n" );
 
     job.fileWasModified = true;
@@ -290,7 +290,7 @@ ArtUtility::actionReplace( JobContext& job )
     if( size > max )
         return herrf( "file too large: %s (exceeds %u bytes)\n", _artImageFile.c_str(), max );
 
-    ArtItem item;
+    CoverArtBox::Item item;
     item.size     = static_cast<uint32_t>( size );
     item.buffer   = static_cast<uint8_t*>( malloc( item.size ));
     item.autofree = true;
@@ -313,8 +313,8 @@ ArtUtility::actionReplace( JobContext& job )
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
-    if( artSet( job.fileHandle, item, _artFilter ))
-        return herrf( "unable to add cover-art: %s\n", job.file.c_str() );
+    if( CoverArtBox::set( job.fileHandle, item, _artFilter ))
+        return herrf( "unable to add covr-box: %s\n", job.file.c_str() );
 
     job.fileWasModified = true;
     return SUCCESS;
@@ -323,7 +323,7 @@ ArtUtility::actionReplace( JobContext& job )
 ///////////////////////////////////////////////////////////////////////////////
 
 bool
-ArtUtility::extractSingle( JobContext& job, const ArtItem& item, uint32_t index )
+ArtUtility::extractSingle( JobContext& job, const CoverArtBox::Item& item, uint32_t index )
 {
     // compute out filename
     string out_name = job.file;
@@ -332,7 +332,7 @@ ArtUtility::extractSingle( JobContext& job, const ArtItem& item, uint32_t index 
     ostringstream oss;
     oss << out_name << ".art[" << index << ']';
 
-    // add file extension appropriate for known cover-art types
+    // add file extension appropriate for known covr-box types
     switch( item.type ) {
         case BT_GIF:    oss << ".gif"; break;
         case BT_JPEG:   oss << ".jpg"; break;
@@ -396,7 +396,7 @@ ArtUtility::utility_option( int code, bool& handled )
             _action = &ArtUtility::actionAdd;
             _artImageFile = prog::optarg;
             if( _artImageFile.empty() )
-                return herrf( "invalid cover-art file: empty-string\n" );
+                return herrf( "invalid image file: empty-string\n" );
             break;
 
         case LC_REMOVE:
@@ -407,7 +407,7 @@ ArtUtility::utility_option( int code, bool& handled )
             _action = &ArtUtility::actionReplace;
             _artImageFile = prog::optarg;
             if( _artImageFile.empty() )
-                return herrf( "invalid cover-art file: empty-string\n" );
+                return herrf( "invalid image file: empty-string\n" );
             break;
 
         case LC_EXTRACT:
@@ -427,8 +427,11 @@ ArtUtility::utility_option( int code, bool& handled )
 extern "C"
 int main( int argc, char** argv )
 {
+    sinit(); // libutil static initializer
     ArtUtility util( argc, argv );
-    return util.process();
+    const bool result = util.process();
+    sshutdown(); // libutil static initializer
+    return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

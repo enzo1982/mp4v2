@@ -22,33 +22,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "impl.h"
-#include "libutil.h"
-#include <stack>
 
 namespace mp4v2 { namespace util {
     using namespace mp4v2::impl;
-
-///////////////////////////////////////////////////////////////////////////////
-
-UtilException::UtilException( const string& what_ )
-    : _what ( what_ )
-    , what  ( _what )
-{
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-UtilException::UtilException( const ostringstream& what_ )
-    : _what ( what_.str() )
-    , what  ( _what )
-{
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-UtilException::~UtilException()
-{
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -57,7 +33,9 @@ UtilException::~UtilException()
 // nversion1 indicates number of atoms which use version==1 extension.
 // nspecial indicates number of special 64-bit atoms;
 //   eg: stbl may container one of { stco || co64 } for chunkoffsets.
-void searchFor64bit( MP4Atom& atom, FileSummaryInfo& info )
+
+void
+searchFor64bit( MP4Atom& atom, FileSummaryInfo& info )
 {
     const uint32_t max = atom.GetNumberOfChildAtoms();
     for( uint32_t i = 0; i < max; i++ ) {

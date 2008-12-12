@@ -5,15 +5,11 @@ namespace mp4v2 { namespace platform { namespace number {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/*
- * Generate 32-bit pseudo-random number.
- */
-uint32_t random32();
+/// Generate 32-bit pseudo-random number.
+MP4V2_EXPORT uint32_t random32();
 
-/*
- * Seed pseudo-random number generator.
- */
-void srandom( uint32_t );
+/// Seed pseudo-random number generator.
+MP4V2_EXPORT void srandom( uint32_t );
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -10,7 +10,7 @@ namespace mp4v2 { namespace platform { namespace io {
 /// FileSystem abstracts operations on files and directories.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class FileSystem
+class MP4V2_EXPORT FileSystem
 {
 public:
     static string DIR_SEPARATOR;  //!< separator string used in file pathnames

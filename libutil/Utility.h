@@ -48,7 +48,7 @@ namespace mp4v2 { namespace util {
 ///         '-o' or '--overwrite' option.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class Utility
+class MP4V2_EXPORT Utility
 {
 protected:
     enum LongCode {
@@ -61,7 +61,7 @@ protected:
         _LC_MAX // will be used to seeed derived-class long-codes enum
     };
 
-    class Option {
+    class MP4V2_EXPORT Option {
     public:
         Option( char, bool, string, bool, uint32_t, string, string = "ARG", string = "", bool = false );
 
@@ -76,7 +76,7 @@ protected:
         const bool     hidden;
     };
 
-    class Group {
+    class MP4V2_EXPORT Group {
     public:
         explicit Group( string );
         ~Group();
@@ -99,7 +99,7 @@ protected:
     };
 
     //! structure passed as argument to each job during batch processing
-    class JobContext
+    class MP4V2_EXPORT JobContext
     {
     public:
         JobContext( string file_ );
@@ -179,23 +179,22 @@ protected:
     string        _description;
     list<Group*>  _groups;
 
+protected:
+    // standard options for concrete utilities to add to _group in constructor
+    const Option STD_DRYRUN;
+    const Option STD_KEEPGOING;
+    const Option STD_OVERWRITE;
+    const Option STD_FORCE;
+    const Option STD_QUIET;
+    const Option STD_DEBUG;
+    const Option STD_VERBOSE;
+    const Option STD_HELP;
+    const Option STD_VERSION;
+    const Option STD_VERSIONX;
+
 public:
     static const bool SUCCESS;
     static const bool FAILURE;
-
-protected:
-    // standard options for concrete utilities to add to _group in constructor
-    static const Option STD_OPTIMIZE;
-    static const Option STD_DRYRUN;
-    static const Option STD_KEEPGOING;
-    static const Option STD_OVERWRITE;
-    static const Option STD_FORCE;
-    static const Option STD_QUIET;
-    static const Option STD_DEBUG;
-    static const Option STD_VERBOSE;
-    static const Option STD_HELP;
-    static const Option STD_VERSION;
-    static const Option STD_VERSIONX;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

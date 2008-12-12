@@ -1,8 +1,6 @@
 #include "impl.h"
-#include "libutil.h"
 
 namespace mp4v2 { namespace util { namespace itmf {
-    using namespace mp4v2::impl;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -10,223 +8,73 @@ namespace {
     typedef map<BasicType,string> BasicTypeToString;
     typedef map<string,BasicType> BasicTypeFromString;
 
-    BasicTypeToString   __basicTypeToString;
-    BasicTypeFromString __basicTypeFromString;
-
     typedef map<Genre,string> GenreToString;
     typedef map<string,Genre> GenreFromString;
 
-    GenreToString   __genreToString;
-    GenreFromString __genreFromString;
-
-    // portable static initialization
-    class InitConverters {
+    class Singleton
+    {
     public:
-        InitConverters();
+        Singleton();
+
+        BasicTypeToString   basicTypeToString;
+        BasicTypeFromString basicTypeFromString;
+
+        GenreToString   genreToString;
+        GenreFromString genreFromString;
+    };
+    Singleton* SINGLETON;
+
+    struct ImageHeader {
+        BasicType type;
+        string    data;
     };
 
-    InitConverters __initConverters;
-
-    BasicType computeBasicType( const ArtItem& item );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-ArtItem::ArtItem()
-    : type     ( BT_UNDEFINED )
-    , buffer   ( NULL )
-    , size     ( 0 )
-    , autofree ( false )
-{
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-ArtItem::~ArtItem()
-{
-    if( autofree && buffer )
-        free( buffer );
+    // POD static init does not need singletons
+    static ImageHeader IMAGE_HEADERS[] = {
+        { BT_BMP,  "\x4d\x42" },
+        { BT_GIF,  "GIF87a" },
+        { BT_GIF,  "GIF89a" },
+        { BT_JPEG, "\xff\xd8\xff\xe0" },
+        { BT_PNG,  "\x89\x50\x4e\x47\x0d\x0a\x1a\x0a" },
+        { BT_UNDEFINED } // must be last
+    };
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void
-ArtItem::reset()
+type_sinit()
 {
-    if( autofree && buffer )
-        free( buffer );
-
-    type     = BT_UNDEFINED;
-    buffer   = NULL;
-    size     = 0;
-    autofree = false;
+    SINGLETON = new Singleton();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ArtList::ArtList()
+void
+type_sshutdown()
 {
+    delete SINGLETON;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ArtList::~ArtList()
+BasicType
+computeBasicType( const void* buffer, uint32_t size )
 {
-}
+    ImageHeader* found = NULL;
+    for( ImageHeader* p = IMAGE_HEADERS; p->type != BT_UNDEFINED; p++ ) {
+        ImageHeader& h = *p;
 
-///////////////////////////////////////////////////////////////////////////////
-
-bool
-artAdd( MP4FileHandle file, const ArtItem& item )
-{
-    MP4File& mp4 = *((MP4File*)file);
-
-    const char* const covr_name = "moov.udta.meta.ilst.covr";
-    MP4Atom* covr = mp4.FindAtom( covr_name );
-    if( !covr ) {
-        mp4.AddDescendantAtoms( "moov", "udta.meta.ilst.covr" );
-
-        covr = mp4.FindAtom( covr_name );
-        if( !covr )
-            return true;
-    }
-
-    // use empty data atom if one exists
-    MP4Atom* data = NULL;
-    uint32_t index = 0;
-    const uint32_t atomc = covr->GetNumberOfChildAtoms();
-    for( uint32_t i = 0; i < atomc; i++ ) {
-        MP4Atom* atom = covr->GetChildAtom( i );
-
-        MP4BytesProperty* metadata = NULL;
-        if( !atom->FindProperty( "data.metadata", (MP4Property**)&metadata ))
+        if( size < h.data.size() )
             continue;
 
-        if( metadata->GetCount() )
-            continue;
-
-        data = atom;
-        index = i;
-        break;
+        if( memcmp(h.data.data(), buffer, h.data.size()) == 0 ) {
+            found = &h;
+            break;
+        }
     }
 
-    // no empty atom found, create one.
-    if( !data ) {
-        data = MP4Atom::CreateAtom( "data" );
-        covr->AddChildAtom( data );
-        data->Generate();
-        index = covr->GetNumberOfChildAtoms() - 1;
-    }
-
-    return artSet( file, item, index );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool
-artGet( MP4FileHandle file, ArtItem& item, uint32_t index )
-{
-    item.reset();
-    MP4File& mp4 = *((MP4File*)file);
-
-    MP4Atom* covr = mp4.FindAtom( "moov.udta.meta.ilst.covr" );
-    if( !covr )
-        return true;
-
-    if( !(index < covr->GetNumberOfChildAtoms()) )
-        return true;
-
-    MP4Atom* data = covr->GetChildAtom( index );
-    if( !data )
-        return true;
-
-    MP4BytesProperty* metadata = NULL;
-    if ( !data->FindProperty( "data.metadata", (MP4Property**)&metadata ))
-        return true;
-
-    metadata->GetValue( &item.buffer, &item.size );
-    item.autofree = true;
-    item.type = static_cast<BasicType>( data->GetFlags() );
-
-    return false;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool
-artList( MP4FileHandle file, ArtList& out )
-{
-    out.clear();
-    MP4File& mp4 = *((MP4File*)file);
-
-    const uint32_t artc = mp4.GetMetadataCoverArtCount();
-    out.resize( artc );
-    for( uint32_t i = 0; i < artc; i++ )
-        artGet( file, out[i], i );
-
-    return false;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool
-artRemove( MP4FileHandle file, uint32_t index )
-{
-    MP4File& mp4 = *((MP4File*)file);
-
-    if( index == numeric_limits<uint32_t>::max() )
-        return !mp4.DeleteMetadataAtom( "covr" );
-
-    MP4Atom* covr = mp4.FindAtom( "moov.udta.meta.ilst.covr" );
-    if( !covr )
-        return true;
-
-    if( !(index < covr->GetNumberOfChildAtoms()) )
-        return true;
-
-    MP4Atom* data = covr->GetChildAtom( index );
-    if( !data )
-        return true;
-
-    covr->DeleteChildAtom( data );
-    delete data;
-
-    if( covr->GetNumberOfChildAtoms() == 0 )
-        return !mp4.DeleteMetadataAtom( "covr" );
-
-    return false;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool
-artSet( MP4FileHandle file, const ArtItem& item, uint32_t index )
-{
-    MP4File& mp4 = *((MP4File*)file);
-
-    MP4Atom* covr = mp4.FindAtom( "moov.udta.meta.ilst.covr" );
-    if( !covr )
-        return true;
-
-    if( !(index < covr->GetNumberOfChildAtoms()) )
-        return true;
-
-    MP4Atom* data = covr->GetChildAtom( index );
-    if( !data )
-        return true;
-
-    MP4BytesProperty* metadata = NULL;
-    if ( !data->FindProperty( "data.metadata", (MP4Property**)&metadata ))
-        return true;
-
-    // autodetect type if BT_UNDEFINED
-    const BasicType final_type = (item.type == BT_UNDEFINED) ? computeBasicType(item) : item.type;
-
-    // set type; note: not really flags due to b0rked atom structure
-    data->SetFlags( final_type );
-    metadata->SetValue( item.buffer, item.size );
-
-    return false;
+    return found ? found->type : BT_IMPLICIT;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -243,8 +91,8 @@ convertBasicType( BasicType value )
 string&
 convertBasicType( BasicType value, string& buffer )
 {
-    const BasicTypeToString::const_iterator found = __basicTypeToString.find( value );
-    if( found != __basicTypeToString.end() ) {
+    const BasicTypeToString::const_iterator found = SINGLETON->basicTypeToString.find( value );
+    if( found != SINGLETON->basicTypeToString.end() ) {
         buffer = found->second;
         return buffer;
     }
@@ -265,22 +113,23 @@ convertBasicType( const string& value )
     convert.str( value );
     int ivalue;
     if( convert >> ivalue && ivalue > 0 ) {
-        const BasicTypeToString::const_iterator found = __basicTypeToString.find( static_cast<BasicType>(ivalue) );
-        if( found != __basicTypeToString.end() )
+        const BasicTypeToString::const_iterator found = SINGLETON->basicTypeToString.find(
+            static_cast<BasicType>(ivalue) );
+        if( found != SINGLETON->basicTypeToString.end() )
             return found->first;
     }
 
     // exact match
-    const BasicTypeFromString::const_iterator found = __basicTypeFromString.find( value );
-    if( found != __basicTypeFromString.end() )
+    const BasicTypeFromString::const_iterator found = SINGLETON->basicTypeFromString.find( value );
+    if( found != SINGLETON->basicTypeFromString.end() )
         return found->second;
 
     // partial match
     int matches = 0;
     BasicType matched = BT_UNDEFINED;
 
-    const BasicTypeFromString::const_iterator ie = __basicTypeFromString.end();
-    for( BasicTypeFromString::const_iterator it = __basicTypeFromString.begin(); it != ie; it++ ) {
+    const BasicTypeFromString::const_iterator ie = SINGLETON->basicTypeFromString.end();
+    for( BasicTypeFromString::const_iterator it = SINGLETON->basicTypeFromString.begin(); it != ie; it++ ) {
         if( it->first.find( value ) == 0 ) {
             matches++;
             matched = it->second;
@@ -304,8 +153,8 @@ convertGenre( Genre value )
 string&
 convertGenre( Genre value, string& buffer )
 {
-    const GenreToString::const_iterator found = __genreToString.find( value );
-    if( found != __genreToString.end() ) {
+    const GenreToString::const_iterator found = SINGLETON->genreToString.find( value );
+    if( found != SINGLETON->genreToString.end() ) {
         buffer = found->second;
         return buffer;
     }
@@ -326,22 +175,22 @@ convertGenre( const string& value )
     convert.str( value );
     int ivalue;
     if( convert >> ivalue && ivalue > 0 ) {
-        const GenreToString::const_iterator found = __genreToString.find( static_cast<Genre>(ivalue) );
-        if( found != __genreToString.end() )
+        const GenreToString::const_iterator found = SINGLETON->genreToString.find( static_cast<Genre>(ivalue) );
+        if( found != SINGLETON->genreToString.end() )
             return found->first;
     }
 
     // exact match
-    const GenreFromString::const_iterator found = __genreFromString.find( value );
-    if( found != __genreFromString.end() )
+    const GenreFromString::const_iterator found = SINGLETON->genreFromString.find( value );
+    if( found != SINGLETON->genreFromString.end() )
         return found->second;
 
     // partial match
     int matches = 0;
     Genre matched = GENRE_UNDEFINED;
 
-    const GenreFromString::const_iterator ie = __genreFromString.end();
-    for( GenreFromString::const_iterator it = __genreFromString.begin(); it != ie; it++ ) {
+    const GenreFromString::const_iterator ie = SINGLETON->genreFromString.end();
+    for( GenreFromString::const_iterator it = SINGLETON->genreFromString.begin(); it != ie; it++ ) {
         if( it->first.find( value ) == 0 ) {
             matches++;
             matched = it->second;
@@ -357,7 +206,7 @@ namespace {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-InitConverters::InitConverters()
+Singleton::Singleton()
 {
     struct BasicTypeData {
         BasicType         type;
@@ -389,8 +238,8 @@ InitConverters::InitConverters()
     };
 
     for( BasicTypeData* p = basicTypeData; p->type != BT_UNDEFINED; p++ ) {
-        __basicTypeToString.insert( BasicTypeToString::value_type( p->type, p->text ));
-        __basicTypeFromString.insert( BasicTypeFromString::value_type( p->text, p->type ));
+        basicTypeToString.insert( BasicTypeToString::value_type( p->type, p->text ));
+        basicTypeFromString.insert( BasicTypeFromString::value_type( p->text, p->type ));
     }
 
     struct GenreData {
@@ -530,44 +379,9 @@ InitConverters::InitConverters()
     };
 
     for( GenreData* p = genreData; p->type != GENRE_UNDEFINED; p++ ) {
-        __genreToString.insert( GenreToString::value_type( p->type, p->text ));
-        __genreFromString.insert( GenreFromString::value_type( p->text, p->type ));
+        genreToString.insert( GenreToString::value_type( p->type, p->text ));
+        genreFromString.insert( GenreFromString::value_type( p->text, p->type ));
     }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-BasicType
-computeBasicType( const ArtItem& item )
-{
-    struct Header {
-        BasicType type;
-        string    data;
-    };
-
-    static Header headers[] = {
-        { BT_BMP,  "\x4d\x42" },
-        { BT_GIF,  "GIF87a" },
-        { BT_GIF,  "GIF89a" },
-        { BT_JPEG, "\xff\xd8\xff\xe0" },
-        { BT_PNG,  "\x89\x50\x4e\x47\x0d\x0a\x1a\x0a" },
-        { BT_UNDEFINED } // must be last
-    };
-
-    Header* found = NULL;
-    for( Header* p = headers; p->type != BT_UNDEFINED; p++ ) {
-        Header& h = *p;
-
-        if( item.size < h.data.size() )
-            continue;
-
-        if( memcmp(h.data.data(), item.buffer, h.data.size()) == 0 ) {
-            found = &h;
-            break;
-        }
-    }
-
-    return found ? found->type : BT_IMPLICIT;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -54,10 +54,6 @@ public:
     };
 
 private:
-    static const string __emptyString;
-    static string       __noString;
-
-private:
     double   _scale;
     uint64_t _duration;
     Format   _format;
@@ -81,8 +77,8 @@ public:
 
 public:
     Timecode( const Timecode& );
-    explicit Timecode( const string& = __emptyString, double = 1.0 );
-    explicit Timecode( uint64_t, double = 1.0 );
+    explicit Timecode( const string&, double = 1.0 );
+    explicit Timecode( uint64_t = 0, double = 1.0 );
 
     Timecode& operator=  ( const Timecode& );
     Timecode& operator+= ( const Timecode& );
@@ -98,7 +94,7 @@ public:
     Timecode operator+ ( const Timecode& ) const;
     Timecode operator- ( const Timecode& ) const;
 
-    bool parse( const string&, string& = __noString );
+    bool parse( const string&, string* = NULL );
 
     void reset();
 

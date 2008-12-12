@@ -76,7 +76,7 @@ Timecode::Timecode( const string& time_, double scale_ )
 Timecode::Timecode( uint64_t duration_, double scale_ )
     : _scale            ( scale_ < 1.0 ? 1.0 : scale_ )
     , _duration         ( 0 )
-    , _format           ( DECIMAL )
+    , _format           ( FRAME )
     , _svalue           ( "" )
     , _hours            ( 0 )
     , _minutes          ( 0 )
@@ -222,10 +222,11 @@ Timecode::operator-( const Timecode& obj ) const
 ///////////////////////////////////////////////////////////////////////////////
 
 bool
-Timecode::parse( const string& time, string& outError )
+Timecode::parse( const string& time, string* outError )
 {
     string outErrorPlacebo;
-    string& error = (&outError == &__emptyString) ? outErrorPlacebo : outError;
+    string& error = outError ? *outError : outErrorPlacebo;
+    error.clear();
 
     _format     = FRAME;
     _hours      = 0;
@@ -584,11 +585,6 @@ Timecode::setSubseconds( uint64_t subseconds_ )
     _subseconds = subseconds_;
     recompute();
 }
-
-///////////////////////////////////////////////////////////////////////////////
-
-const string Timecode::__emptyString;
-string       Timecode::__noString;
 
 ///////////////////////////////////////////////////////////////////////////////
 

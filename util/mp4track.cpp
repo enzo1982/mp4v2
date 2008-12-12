@@ -139,16 +139,18 @@ TrackUtility::TrackUtility( int argc, char** argv )
     _group.add( STD_VERSION );
     _group.add( STD_VERSIONX );
 
-    _parmGroup.add( "track-any",    false, LC_TRACK_WILDCARD,  "any track" );
-    _parmGroup.add( "track-id",     true,  LC_TRACK_ID,        "track by id" );
-    _parmGroup.add( "track-index",  true,  LC_TRACK_INDEX,     "track by index" );
-    _parmGroup.add( "sample-any",   false, LC_SAMPLE_WILDCARD, "any sample" );
-    _parmGroup.add( "sample-id",    true,  LC_SAMPLE_ID,       "sample by id" );
-    _parmGroup.add( "sample-index", true,  LC_SAMPLE_INDEX,    "sample by index" );
-    _parmGroup.add( "colr-parms",   true,  LC_COLR_PARMS,      "where format is IDX1,IDX2,IDX3", "CSV" );
-    _parmGroup.add( "colr-parm-hd", false, LC_COLR_PARM_HD,    "equivalent to --colr-parms=6,1,6" );
-    _parmGroup.add( "colr-parm-sd", false, LC_COLR_PARM_SD,    "equivalent to --colr-parms=1,1,1" );
-    _parmGroup.add( "pasp-parms",   true,  LC_PASP_PARMS,      "where format is vSPACING,hSPACING", "CSV" );
+    _parmGroup.add( "track-any",    false, LC_TRACK_WILDCARD,  "act on any track (default)" );
+    _parmGroup.add( "track-index",  true,  LC_TRACK_INDEX,     "act on track index IDX", "IDX" );
+    _parmGroup.add( "track-id",     true,  LC_TRACK_ID,        "act on track id ID", "ID" );
+/*
+    _parmGroup.add( "sample-any",   false, LC_SAMPLE_WILDCARD, "act on any sample (default)" );
+    _parmGroup.add( "sample-index", true,  LC_SAMPLE_INDEX,    "act on sample index IDX" );
+    _parmGroup.add( "sample-id",    true,  LC_SAMPLE_ID,       "act on sample id ID" );
+*/
+    _parmGroup.add( "colr-parms",   true,  LC_COLR_PARMS,      "where CSV is IDX1,IDX2,IDX3", "CSV" );
+    _parmGroup.add( "colr-parm-hd", false, LC_COLR_PARM_HD,    "equivalent to --colr-parms=1,1,1" );
+    _parmGroup.add( "colr-parm-sd", false, LC_COLR_PARM_SD,    "equivalent to --colr-parms=6,1,6" );
+    _parmGroup.add( "pasp-parms",   true,  LC_PASP_PARMS,      "where CSV is hSPACING,vSPACING", "CSV" );
     _groups.push_back( &_parmGroup );
 
     _actionGroup.add( "list",        false, LC_LIST,        "list all tracks in mp4" );
@@ -730,15 +732,15 @@ TrackUtility::utility_option( int code, bool& handled )
             break;
 
         case LC_COLR_PARM_HD:
-            _colorParameterItem.primariesIndex        = 6;
-            _colorParameterItem.transferFunctionIndex = 1;
-            _colorParameterItem.matrixIndex           = 6;
-            break;
-
-        case LC_COLR_PARM_SD:
             _colorParameterItem.primariesIndex        = 1;
             _colorParameterItem.transferFunctionIndex = 1;
             _colorParameterItem.matrixIndex           = 1;
+            break;
+
+        case LC_COLR_PARM_SD:
+            _colorParameterItem.primariesIndex        = 6;
+            _colorParameterItem.transferFunctionIndex = 1;
+            _colorParameterItem.matrixIndex           = 6;
             break;
 
         case LC_COLR_LIST:
@@ -790,8 +792,11 @@ TrackUtility::utility_option( int code, bool& handled )
 extern "C"
 int main( int argc, char** argv )
 {
+    sinit(); // libutil static initializer
     TrackUtility util( argc, argv );
-    return util.process();
+    const bool result = util.process();
+    sshutdown(); // libutil static initializer
+    return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
