@@ -22,7 +22,11 @@
 #endif
 
 #if defined( _WIN32 )
-#   define MP4V2_EXPORT __declspec(dllexport)
+#   if defined( _WINDLL )
+#       define MP4V2_EXPORT __declspec(dllexport)
+#   else
+#       define MP4V2_EXPORT __declspec(dllimport)
+#   endif
 #else
 #   define MP4V2_EXPORT __attribute__((visibility("default")))
 #endif

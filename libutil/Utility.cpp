@@ -668,53 +668,6 @@ Utility::verbose3f( const char* format, ... )
 const bool Utility::SUCCESS = false;
 const bool Utility::FAILURE = true;
 
-#if 0
-const Utility::Option Utility::STD_DRYRUN( 'y', false, "dryrun", false, LC_NONE,
-    "do not actually create or modify any files" );
-
-const Utility::Option Utility::STD_KEEPGOING( 'k', false, "keepgoing", false, LC_NONE,
-    "continue batch processing even after errors" );
-
-const Utility::Option Utility::STD_OVERWRITE( 'o', false, "overwrite", false, LC_NONE,
-    "overwrite existing files when creating" );
-
-const Utility::Option Utility::STD_FORCE( 'f', false, "force", false, LC_NONE,
-    "force overwrite even if file is read-only" );
-
-const Utility::Option Utility::STD_QUIET( 'q', false, "quiet", false, LC_NONE,
-    "equivalent to --verbose 0" );
-
-const Utility::Option Utility::STD_DEBUG( 'd', false, "debug", true, LC_DEBUG,
-    "increase debug or long-option to set NUM", "NUM",
-    // 79-cols, inclusive, max desired width
-    // |----------------------------------------------------------------------------|
-    "\nDEBUG LEVELS (for raw mp4 file I/O)"
-    "\n  0  supressed"
-    "\n  1  add warnings and errors (default)"
-    "\n  2  add table details"
-    "\n  3  add implicits"
-    "\n  4  everything" );
-
-const Utility::Option Utility::STD_VERBOSE( 'v', false, "verbose", true, LC_VERBOSE,
-    "increase verbosity or long-option to set NUM", "NUM",
-    // 79-cols, inclusive, max desired width
-    // |----------------------------------------------------------------------------|
-    "\nVERBOSE LEVELS"
-    "\n  0  warnings and errors"
-    "\n  1  normal informative messages (default)"
-    "\n  2  more informative messages"
-    "\n  3  everything" );
-
-const Utility::Option Utility::STD_HELP( 'h', false, "help", false, LC_HELP,
-    "print brief help or long-option for extended help" );
-
-const Utility::Option Utility::STD_VERSION( 0, false, "version", false, LC_VERSION,
-    "print version information and exit" );
-
-const Utility::Option Utility::STD_VERSIONX( 0, false, "versionx", false, LC_VERSIONX,
-    "print extended version information and exit", "ARG", "", true );
-#endif
-
 ///////////////////////////////////////////////////////////////////////////////
 
 Utility::Group::Group( string name_ )
