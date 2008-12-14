@@ -1,415 +1,645 @@
-/* mp4chaps -- tool to set iTunes-compatible chapter markers from Nero chapter markers
- *
- * The contents of this file are subject to the Mozilla Public
- * License Version 1.1 (the "License"); you may not use this file
- * except in compliance with the License. You may obtain a copy of
- * the License at http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS
- * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
- * implied. See the License for the specific language governing
- * rights and limitations under the License.
- */
-
+///////////////////////////////////////////////////////////////////////////////
+//
+//  The contents of this file are subject to the Mozilla Public License
+//  Version 1.1 (the "License"); you may not use this file except in
+//  compliance with the License. You may obtain a copy of the License at
+//  http://www.mozilla.org/MPL/
+//
+//  Software distributed under the License is distributed on an "AS IS"
+//  basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//  License for the specific language governing rights and limitations
+//  under the License.
+// 
+//  The Original Code is MP4v2.
+// 
+//  The Initial Developer of the Original Code is Ullrich Pollaehne.
+//  Portions created by Kona Blend are Copyright (C) 2008.
+//  All Rights Reserved.
+//
+//  Contributors:
+//      Kona Blend, kona8lend@@gmail.com
+//      Ullrich Pollaehne, u.pollaehne@@gmail.com
+//
+///////////////////////////////////////////////////////////////////////////////
 #include "libutil/util.h"
 
 namespace mp4v2 { namespace util {
 
-/* One-letter options -- if you want to rearrange these, change them
-   here, immediately below in OPT_STRING, and in the help text. */
-#define OPT_HELP     'h'
-#define OPT_VERSION  'V'
-#define OPT_VERBOSE  'v'
-#define OPT_REMOVE   'r'
-#define OPT_CONVERT  'c'
-#define OPT_NERO     'N'
-#define OPT_OPTIMIZE 'o'
-#define OPT_QT       'Q'
-#define OPT_EVERY    'e'
-#define OPT_LIST     'l'
-#define OPT_STRING   "hVv::rcNoQe:l"
+///////////////////////////////////////////////////////////////////////////////
 
-static const char* help_text =
-    "OPTION... FILE...\n"
-    "\nConvert/Manage Nero chapter markers or QT/iTunes/iPod\n"
-    "  chapter markers in MP4 Audio files\n"
-    "\n"
-    "  -h, -help             Display this help text and exit\n"
-    "  -V, -version          Display version information and exit\n"
-    "  -v, -verbose <level>  enable verbose processing output\n"
-    "  -r, -remove           Remove chapter markers\n"
-    "  -c, -convert          Convert chapter markers\n"
-    "  -o, -optimize         re-write file in optimized form\n"
-    "  -N, -Nero             write/remove/convert to Nero chapter markers\n"
-    "  -Q, -QuickTime        write/remove/convert to QuickTime chapter markers\n"
-    "  -e, -every n          creates chapter markers every n seconds\n"
-    "  -l, -list             list available chapter markers\n"
-    "\n"
-    "Either -Q or -N can be given. To write or delete both do not give any of them.\n";
-
-char* ProgName;
-
-// function prototypes
-void ListChapters(MP4FileHandle hFile, MP4ChapterType fromChapterType);
-int CreateChaptersEvery(MP4FileHandle hFile, int seconds, const char * filename, MP4ChapterType toChapterType);
-
-
-extern "C" int
-    main(int argc, char** argv)
+class ChapterUtility : public Utility
 {
-    static const prog::Option long_options[] =
-    {
-        { "help",      prog::Option::NO_ARG,       0, OPT_HELP     },
-        { "verbose",   prog::Option::OPTIONAL_ARG, 0, OPT_VERBOSE  },
-        { "version",   prog::Option::NO_ARG,       0, OPT_VERSION  },
-        { "remove",    prog::Option::NO_ARG,       0, OPT_REMOVE   },
-        { "convert",   prog::Option::NO_ARG,       0, OPT_CONVERT  },
-        { "optimize",  prog::Option::NO_ARG,       0, OPT_OPTIMIZE },
-        { "Nero",      prog::Option::NO_ARG,       0, OPT_NERO     },
-        { "QuickTime", prog::Option::NO_ARG,       0, OPT_QT       },
-        { "every",     prog::Option::REQUIRED_ARG, 0, OPT_EVERY    },
-        { "list",      prog::Option::NO_ARG,       0, OPT_LIST     },
-        { NULL,        prog::Option::NO_ARG,       0, 0            }
-    };
+public:
+    ChapterUtility( int, char** );
 
+protected:
+    // delegates implementation
+    bool utility_option( int, bool& );
+    bool utility_job( JobContext& );
 
-    bool optEvery = false;
-    bool optDelete = false;
-    bool optConvert = false;
-    bool optOptimize = false;
-    bool optList = false;
-    bool needsModification = false;
-    MP4ChapterType chapterType = MP4ChapterTypeAny;
-    uint32_t seconds = 0;
-    uint32_t verbosity = MP4_DETAILS_ERROR | MP4_DETAILS_WARNING;
+private:
+    bool actionList    ( JobContext& );
+    bool actionConvert ( JobContext& );
+    bool actionEvery   ( JobContext& );
+    bool actionExport  ( JobContext& );
+    bool actionImport  ( JobContext& );
+    bool actionRemove  ( JobContext& );
 
-    ProgName = argv[0];
+private:
+    Group  _actionGroup;
+    Group  _parmGroup;
 
-    /* Option-processing loop. */
-    int c = prog::getOptionSingle(argc, argv, OPT_STRING, long_options, NULL);
-    while (c != -1)
-    {
-        switch (c)
-        {
-            /* getopt() returns '?' if there was an error.  It already
-            printed the error message, so just return. */
-        case '?':
-            return 1;
+    bool       (ChapterUtility::*_action)( JobContext& );
+    void       fixQtScale(MP4FileHandle );
+    MP4TrackId getReferencingTrack( MP4FileHandle );
+    string     getChapterTypeName( MP4ChapterType ) const;
+    bool       readChapterFile( const char*, char**, io::StdioFile::Size& );
 
-            /* Help and version requests handled here. */
-        case OPT_HELP:
-            fprintf(stderr, "usage %s %s", argv[0], help_text);
-            return 0;
-        case OPT_VERSION:
-            fprintf(stderr, "%s - %s\n", ProgName, MP4V2_PROJECT_name_formal);
-            return 0;
+    MP4ChapterType _ChapterType;
+    uint32_t       _ChaptersEvery;
 
-        case OPT_VERBOSE:
-            verbosity |= MP4_DETAILS_READ | MP4_DETAILS_WRITE;
-            if ( prog::optarg ) {
-                uint32_t level;
-                if (sscanf( prog::optarg, "%u", &level) == 1)
-                {
-                    if (0 == level)
-                    {
-                        verbosity = level;
-                    }
-                    else
-                    {
-                        if (level >= 2)
-                        {
-                            verbosity |= MP4_DETAILS_TABLE;
-                        }
-                        if (level >= 3)
-                        {
-                            verbosity |= MP4_DETAILS_SAMPLE;
-                        }
-                        if (level >= 4)
-                        {
-                            verbosity = MP4_DETAILS_ALL;
-                        }
-                    }
-                }
-            }
-            break;
-        case OPT_NERO:
-            if (MP4ChapterTypeAny != chapterType)
-            {
-                fprintf(stderr, "usage %s %s", argv[0], help_text);
-                return 0;
-            }
-            chapterType = MP4ChapterTypeNero;
-            break;
+    string _stTextFile;
+};
 
-        case OPT_QT:
-            if (MP4ChapterTypeAny != chapterType)
-            {
-                fprintf(stderr, "usage %s %s", argv[0], help_text);
-                return 0;
-            }
-            chapterType = MP4ChapterTypeQt;
-            break;
+///////////////////////////////////////////////////////////////////////////////
 
-        case OPT_REMOVE:
-            optDelete = true;
-            needsModification = true;
-            break;
+ChapterUtility::ChapterUtility( int argc, char** argv )
+    : Utility        ( "mp4chaps", argc, argv )
+    , _actionGroup   ( "ACTIONS" )
+    , _parmGroup     ( "ACTION PARAMETERS" )
+    , _action        ( NULL )
+    , _ChapterType   ( MP4ChapterTypeAny )
+    , _ChaptersEvery ( 0 )
+{
+    // add standard options which make sense for this utility
+    _group.add( STD_KEEPGOING );
+    _group.add( STD_OVERWRITE );
+    _group.add( STD_FORCE );
+    _group.add( STD_QUIET );
+    _group.add( STD_DEBUG );
+    _group.add( STD_VERBOSE );
+    _group.add( STD_HELP );
+    _group.add( STD_VERSION );
+    _group.add( STD_VERSIONX );
 
-        case OPT_CONVERT:
-            optConvert = true;
-            needsModification = true;
-            break;
+    _parmGroup.add( 'A', false, "chapter-any",  false, LC_NONE, "act on any chapter type (default)" );
+    _parmGroup.add( 'Q', false, "chapter-qt",   false, LC_NONE, "act on QuickTime chapters" );
+    _parmGroup.add( 'N', false, "chapter-nero", false, LC_NONE, "act on Nero chapters" );
+    _groups.push_back( &_parmGroup );
 
-        case OPT_OPTIMIZE:
-            optOptimize = true;
-            needsModification = true;
-            break;
+    _actionGroup.add( 'l', false, "list",    false, LC_NONE, "list available chapters" );
+    _actionGroup.add( 'c', false, "convert", false, LC_NONE, "convert available chapters" );
+    _actionGroup.add( 'e', true,  "every",   true,  LC_NONE, "create chapters every NUM seconds", "NUM" );
+    _actionGroup.add( 'x', false, "export",  false, LC_NONE, "export chapters to file.chapters.txt" );
+    _actionGroup.add( 'i', false, "import",  false, LC_NONE, "import chapters from file.chapters.txt" );
+    _actionGroup.add( 'r', false, "remove",  false, LC_NONE, "remove all chapters" );
+    _groups.push_back( &_actionGroup );
 
-        case OPT_LIST:
-            optList = true;
-            break;
-
-            /* Numeric arguments: convert them using sscanf(). */
-        case OPT_EVERY:
-        {
-            int r = sscanf(prog::optarg, "%ul", &seconds);
-            if (r < 1)
-            {
-                fprintf(stderr, "%s: option requires numeric argument -- %c\n",
-                        argv[0], c);
-                return 2;
-            }
-            optEvery = true;
-            needsModification = true;
-        }
-        break;
-
-        default:
-            break;
-        } /* end switch */
-
-        c = prog::getOptionSingle(argc, argv, OPT_STRING, long_options, NULL);
-    } /* end while */
-
-    /* Check that we have at least one non-option argument */
-    if ((argc - prog::optind) < 1)
-    {
-        fprintf(stderr,
-                "%s: You must specify at least one MP4 file.\n",
-                argv[0]);
-        fprintf(stderr, "usage %s %s", argv[0], help_text);
-        return 3;
-    }
-
-    if (verbosity > MP4_DETAILS_ERROR)
-    {
-        fprintf( stderr, "%s version %s\n", ProgName, MP4V2_PROJECT_version );
-    }
-
-    /* Loop through the non-option arguments, and do the requested chapter work */
-    int rc = 0;
-    bool needsOptimize = false;
-    while (prog::optind < argc)
-    {
-        char *filename = argv[prog::optind++];
-
-        MP4FileHandle h = 0;
-        if (needsModification)
-        {
-            h = MP4Modify(filename, verbosity);
-        }
-        else
-        {
-            h = MP4Read(filename, verbosity);
-        }
-
-        if (h == MP4_INVALID_FILE_HANDLE)
-        {
-            fprintf(stderr, "Could not open '%s'... aborting\n", filename);
-            return 5;
-        }
-
-        if (optDelete)
-        {
-            MP4DeleteChapters(h, chapterType);
-        }
-
-        if (optEvery)
-        {
-            rc = CreateChaptersEvery(h, seconds, filename, chapterType);
-            if (0 != rc)
-            {
-                MP4Close(h);
-                continue;
-            }
-            needsOptimize = true;
-        }
-
-        if (optConvert)
-        {
-            if (MP4ChapterTypeAny != chapterType)
-            {
-                MP4ConvertChapters(h, chapterType);
-                needsOptimize = true;
-            }
-        }
-
-        if (optList)
-        {
-            ListChapters(h, chapterType);
-        }
-
-        if (0 == rc)
-        {
-            if (optOptimize || needsOptimize)
-            {
-                // get around a QuickTime/iPod issue with storing the number of samples in a signed 32Bit value
-                uint32_t timescale = MP4GetTimeScale(h);
-                MP4Duration duration = MP4GetDuration(h);
-                uint64_t sampleCount = duration * timescale;
-                if (INT_MAX < sampleCount)
-                {
-                    // timescale too high, lower it
-                    MP4ChangeMovieTimeScale(h, 1000);
-                }
-            }
-
-            MP4Close(h);
-
-            if (optOptimize || needsOptimize)
-            {
-                MP4Optimize(filename);
-            }
-        }
-    } /* end while prog::optind < argc */
-
-    return 0;
+    _usage = "[OPTION]... ACTION [ACTION PARAMETERS] file...";
+    _description =
+        // 79-cols, inclusive, max desired width
+        // |----------------------------------------------------------------------------|
+        "\nFor each mp4 file specified, perform the specified ACTION. An action must be"
+        "\nspecified. Some options are not applicable to some actions.";
 }
 
-/*
- * format a duration to a readable format ("stolen" from gpac MP4Box)
- */
-static char *format_duration(uint64_t dur, char *szDur)
-{
-    uint32_t h, m, s, ms;
+///////////////////////////////////////////////////////////////////////////////
 
-    h = (uint32_t) (dur / 3600000);
-    m = (uint32_t) (dur / 60000) - h * 60;
-    s = (uint32_t) (dur / 1000) - h * 3600 - m * 60;
-    ms = (uint32_t) (dur) - h * 3600000 - m * 60000 - s * 1000;
-    if (h<=24)
-    {
-        sprintf(szDur, "%02d:%02d:%02d.%03d", h, m, s, ms);
-    }
-    else
-    {
-        uint32_t d = (uint32_t) (dur / 3600000 / 24);
-        h = (uint32_t) (dur/3600000)-24*d;
-        if (d<=365)
-        {
-            sprintf(szDur, "%d Days, %02d:%02d:%02d.%03d", d, h, m, s, ms);
-        }
-        else
-        {
-            uint32_t y=0;
-            while (d>365)
-            {
-                y++;
-                d-=365;
-                if (y%4) d--;
-            }
-            sprintf(szDur, "%d Years %d Days, %02d:%02d:%02d.%03d", y, d, h, m, s, ms);
-        }
-    }
-    return szDur;
-}
-
-/*
- * List chapter start time and title
- */
-void ListChapters(MP4FileHandle hFile, MP4ChapterType fromChapterType)
+bool
+ChapterUtility::actionList( JobContext& job )
 {
+    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
+    if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
+    {
+        return herrf( "unable to open for read: %s\n", job.file.c_str() );
+    }
+
     MP4Chapter_t * chapters = 0;
     uint32_t chapterCount = 0;
-    char szDur[20] = {0};
-    MP4Duration durationSum = 0;
 
     // get the list of chapters
-    MP4ChapterType type = MP4GetChapters(hFile, &chapters, &chapterCount, fromChapterType);
+    MP4ChapterType chtp = MP4GetChapters(job.fileHandle, &chapters, &chapterCount, _ChapterType);
     if (0 == chapterCount)
     {
-        return;
+        verbose1f( "File %s does not contain chapters of type %s\n", job.file.c_str(), getChapterTypeName( chtp ).c_str() );
+        return SUCCESS;
     }
 
-    // start output (in mp4box format)
-    switch(type)
-    {
-    case MP4ChapterTypeQt:
-        fprintf(stdout, "\nQuickTime");
-        break;
-    case MP4ChapterTypeNero:
-        fprintf(stdout, "\nNero");
-        break;
-    default:
-        fprintf(stdout, "\nUnknown");
-    }
-    fprintf(stdout, " Chapters:\n");
+    // start output (more or less like mp4box does)
+    fprintf( stdout, "%s Chapters:\n", getChapterTypeName( chtp ).c_str() );
 
+    Timecode duration(0, 1000.0);
     for (uint32_t i = 0; i < chapterCount; ++i)
     {
-        // get the tile
-        const char * title = chapters[i].title;
-        // format the start time
-        const char * formattedDuration = format_duration(durationSum, szDur);
-
         // print the infos
-        fprintf(stdout, "\tChapter #%u - %s - \"%s\"\n", i+1, formattedDuration, title);
+        fprintf(stdout, "\tChapter #%u - %s - \"%s\"\n", i+1, duration.svalue.c_str(), chapters[i].title);
 
         // add the duration of this chapter to the sum (is the start time of the next chapter)
-        durationSum += chapters[i].duration;
+        duration += Timecode(chapters[i].duration, 1000.0);
     }
 
     // free up the memory
     MP4Free(chapters);
+
+    return SUCCESS;
 }
 
-/*
- * Create Qt/Nero chapter markers with a duration of 'seconds' seconds
- */
-int CreateChaptersEvery(MP4FileHandle hFile, int seconds, const char * filename, MP4ChapterType toChapterType)
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+ChapterUtility::actionConvert( JobContext& job )
 {
-    // get the audio track that will reference the chapter track
-    MP4TrackId refTrackId = MP4FindTrackId(hFile, MP4_INVALID_TRACK_ID, MP4_AUDIO_TRACK_TYPE);
-    if (! MP4_IS_VALID_TRACK_ID(refTrackId))
+    job.fileHandle = MP4Modify( job.file.c_str(), _debugVerbosity );
+    if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
     {
-        MP4Close(hFile);
-        fprintf(stderr, "Could not find audio track in file '%s'... aborting\n", filename);
-        return 6;
+        return herrf( "unable to open for write: %s\n", job.file.c_str() );
     }
 
-    // get informations about the audio track
-    MP4Duration refTrackDuration = MP4GetTrackDuration(hFile, refTrackId);
-    uint32_t scale = MP4GetTrackTimeScale(hFile, refTrackId);
-
-    // calculate the count of chapters (yes we do accept rounding errors)
-    uint32_t playlength = refTrackDuration / scale;
-    uint32_t chapterCount = playlength / seconds;
-
-    // create an array for the chapters and fill it
-    MP4Chapter_t * chapters = (MP4Chapter_t*)malloc(sizeof(MP4Chapter_t) * chapterCount);
-    for (uint32_t i = 0; i < chapterCount; ++i)
+    MP4ChapterType chtp = MP4ConvertChapters( job.fileHandle, _ChapterType );
+    if( MP4ChapterTypeNone == chtp )
     {
-        chapters[i].duration = seconds * 1000;
-        sprintf(chapters[i].title, "Chapter %i", i+1);
+        return herrf( "File %s does not contain chapters of type %s\n", job.file.c_str(), getChapterTypeName( chtp ).c_str() );
     }
 
-    // now set the chapters
-    MP4SetChapters(hFile, chapters, chapterCount, toChapterType);
+    fixQtScale( job.fileHandle );
+    job.fileWasModified = true;
+
+    return SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+ChapterUtility::actionEvery( JobContext& job )
+{
+    job.fileHandle = MP4Modify( job.file.c_str(), _debugVerbosity );
+    if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
+    {
+        return herrf( "unable to open for write: %s\n", job.file.c_str() );
+    }
+
+    MP4TrackId refTrackId = getReferencingTrack( job.fileHandle );
+    if( !MP4_IS_VALID_TRACK_ID(refTrackId) )
+    {
+        return herrf( "unable to find a video or audio track in file %s\n", job.file.c_str() );
+    }
+
+    Timecode refTrackDuration( MP4GetTrackDuration( job.fileHandle, refTrackId ), MP4GetTrackTimeScale( job.fileHandle, refTrackId ) );
+    refTrackDuration.setScale( 1000.0 );
+
+    Timecode chapterDuration( _ChaptersEvery * 1000, 1000.0 );
+    Timecode durationSum( 0, 1000.0 );
+    vector<MP4Chapter_t> chapters;
+
+    while( durationSum + chapterDuration < refTrackDuration )
+    {
+        MP4Chapter_t chap;
+        chap.duration = chapterDuration.duration;
+        sprintf(chap.title, "Chapter %i", chapters.size()+1);
+
+        chapters.push_back( chap );
+
+        durationSum += chapterDuration;
+    }
+
+    if( 0 < chapters.size() )
+    {
+        chapters.back().duration = (refTrackDuration - (durationSum - chapterDuration)).duration;
+
+        MP4SetChapters(job.fileHandle, &chapters[0], chapters.size(), _ChapterType);
+    }
+
+    fixQtScale( job.fileHandle );
+    job.fileWasModified = true;
+
+    return SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+ChapterUtility::actionExport( JobContext& job )
+{
+    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
+    if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
+    {
+        return herrf( "unable to open for read: %s\n", job.file.c_str() );
+    }
+
+    // get the list of chapters
+    MP4Chapter_t*  chapters = 0;
+    uint32_t       chapterCount = 0;
+    MP4ChapterType chtp = MP4GetChapters( job.fileHandle, &chapters, &chapterCount, _ChapterType );
+    if (0 == chapterCount)
+    {
+        return herrf( "File %s does not contain chapters of type %s\n", job.file.c_str(), getChapterTypeName( chtp ).c_str() );
+    }
+
+    // build the filename
+    // compute out filename
+    string outName = job.file;
+    io::FileSystem::pathnameStripExtension( outName );
+    outName.append( ".chapters.txt" );
+
+    // open the file
+    io::StdioFile out( outName );
+    if( openFileForWriting( out ) )
+    {
+        return FAILURE;
+    }
+
+    // write the chapters
+    char fileLine[2048] = {0};
+    io::StdioFile::Size nout;
+    bool failure = SUCCESS;
+    Timecode duration( 0, 1000.0 );
+    for( uint32_t i = 0; i < chapterCount; ++i )
+    {
+        // print the infos
+        sprintf( fileLine, "%s %s\n", duration.svalue.c_str(), chapters[i].title );
+        if( out.write(fileLine, strlen(fileLine), nout) )
+        {
+            failure = herrf( "write to %s failed: %s\n", outName.c_str(), sys::getLastErrorStr() );
+            break;
+        }
+
+        // add the duration of this chapter to the sum (the start time of the next chapter)
+        duration += Timecode(chapters[i].duration, 1000.0);
+    }
+    out.close();
+    if( failure )
+    {
+        verbose1f( "removing file %s\n", outName.c_str() );
+        ::remove( outName.c_str() );
+    }
 
     // free up the memory
-    free(chapters);
+    MP4Free(chapters);
 
-    return 0;
+    return SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+ChapterUtility::actionImport( JobContext& job )
+{
+    job.fileHandle = MP4Modify( job.file.c_str(), _debugVerbosity );
+    if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
+    {
+        return herrf( "unable to open for write: %s\n", job.file.c_str() );
+    }
+
+    MP4TrackId refTrackId = getReferencingTrack( job.fileHandle );
+    if( !MP4_IS_VALID_TRACK_ID(refTrackId) )
+    {
+        return herrf( "unable to find a video or audio track in file %s\n", job.file.c_str() );
+    }
+
+    Timecode refTrackDuration( MP4GetTrackDuration( job.fileHandle, refTrackId ), MP4GetTrackTimeScale( job.fileHandle, refTrackId ) );
+    refTrackDuration.setScale( 1000.0 );
+
+    // get the content
+    char * inBuf;
+    io::StdioFile::Size fileSize;
+    if( readChapterFile( job.file.c_str(), &inBuf, fileSize ) )
+    {
+        return FAILURE;
+    }
+
+    // separate the text lines
+    char* pos = inBuf;
+    while (pos < inBuf + fileSize)
+    {
+        if (*pos == '\n' || *pos == '\r')
+        {
+            *pos = 0;
+            if (pos > inBuf)
+            {
+                // remove trailing whitespace
+                char* tmp = pos-1;
+                while ((*tmp == ' ' || *tmp == '\t') && tmp > inBuf)
+                {
+                    *tmp = 0;
+                    tmp--;
+                }
+            }
+        }
+        pos++;
+    }
+    pos = inBuf;
+
+    vector<MP4Chapter_t> chapters;
+
+    // parse the lines
+    bool failure = false;
+    while (pos < inBuf + fileSize)
+    {
+        if (*pos == 0 || *pos == ' ' || *pos == '\t')
+        {
+            // uninteresting chars
+            pos++;
+            continue;
+        }
+        else if (*pos == '#')
+        {
+            // comment line
+            pos += strlen(pos);
+            continue;
+        }
+        else if (isdigit(*pos))
+        {
+            MP4Chapter_t chap;
+
+            char* timeStart = pos;
+
+            // read the title if there is one
+            char* titleStart = strchr(timeStart, ' ');
+            if (titleStart == NULL)
+            {
+                titleStart = strchr(timeStart, '\t');
+            }
+
+            if (titleStart != NULL)
+            {
+                *titleStart = 0;
+                pos = ++titleStart;
+
+                while (*titleStart == ' ' || *titleStart == '\t')
+                {
+                    titleStart++;
+                }
+
+                int titleLen = min(strlen(titleStart), (size_t)MP4V2_CHAPTER_TITLE_MAX);
+                strncpy(chap.title, titleStart, titleLen);
+                chap.title[titleLen] = 0;
+            }
+
+            Timecode tc( 0, 1000.0 );
+            string tm( timeStart );
+            if( tc.parse( tm ) )
+            {
+                failure = true;
+                break;
+            }
+
+            chap.duration = tc.duration;
+            chapters.push_back( chap );
+        }
+
+        pos += strlen(pos);
+    }
+    free( inBuf );
+    if( failure )
+    {
+        return failure;
+    }
+
+
+    // convert start time into duration
+    if (0 < chapters.size())
+    {
+        int chapterIndex = chapters.size();
+        // convert 0..n-1
+        for (int i = 0; i < chapterIndex-1; ++i)
+        {
+            chapters[i].duration = chapters[i+1].duration - chapters[i].duration;
+        }
+
+        // convert last chapter
+        chapters[chapterIndex-1].duration = (refTrackDuration - Timecode( chapters[chapterIndex-1].duration, 1000.0 )).duration;
+
+        // now set the chapters
+        MP4SetChapters( job.fileHandle, &chapters[0], chapters.size(), _ChapterType );
+    }
+
+    fixQtScale( job.fileHandle );
+    job.fileWasModified = true;
+
+    return SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+ChapterUtility::actionRemove( JobContext& job )
+{
+    job.fileHandle = MP4Modify( job.file.c_str(), _debugVerbosity );
+    if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
+    {
+        return herrf( "unable to open for write: %s\n", job.file.c_str() );
+    }
+
+    MP4ChapterType chtp = MP4DeleteChapters( job.fileHandle, _ChapterType );
+    if( MP4ChapterTypeNone == chtp )
+    {
+        return FAILURE;
+    }
+
+    fixQtScale( job.fileHandle );
+    job.fileWasModified = true;
+
+    return SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+ChapterUtility::utility_job( JobContext& job )
+{
+    if( !_action )
+        return herrf( "no action specified\n" );
+
+    return (this->*_action)( job );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+ChapterUtility::utility_option( int code, bool& handled )
+{
+    handled = true;
+
+    switch( code ) {
+        case 'A':
+            _ChapterType = MP4ChapterTypeAny;
+            break;
+
+        case 'Q':
+            _ChapterType = MP4ChapterTypeQt;
+            break;
+
+        case 'N':
+            _ChapterType = MP4ChapterTypeNero;
+            break;
+
+        case 'l':
+            _action = &ChapterUtility::actionList;
+            break;
+
+        case 'e':
+            _action = &ChapterUtility::actionEvery;
+            _ChaptersEvery = std::strtoul( prog::optarg, NULL, 0 );
+            break;
+
+        case 'x':
+            _action = &ChapterUtility::actionExport;
+            //_stTextFile = prog::optarg;
+            //if( _stTextFile.empty() )
+            //{
+            //    return herrf( "invalid TXT file: empty-string\n" );
+            //}
+            break;
+
+        case 'i':
+            _action = &ChapterUtility::actionImport;
+            //_stTextFile = prog::optarg;
+            //if( _stTextFile.empty() )
+            //{
+            //    return herrf( "invalid TXT file: empty-string\n" );
+            //}
+            break;
+
+        case 'c':
+            _action = &ChapterUtility::actionConvert;
+            if( MP4ChapterTypeAny == _ChapterType )
+            {
+                return herrf( "invalid chapter type: define the chapter type to convert to\n" );
+            }
+            break;
+
+        case 'r':
+            _action = &ChapterUtility::actionRemove;
+            break;
+
+        default:
+            handled = false;
+            break;
+    }
+
+    return SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+ChapterUtility::fixQtScale(MP4FileHandle file)
+{
+    // get around a QuickTime/iPod issue with storing the number of samples in a signed 32Bit value
+    if( INT_MAX < (MP4GetDuration(file) * MP4GetTimeScale(file)) )
+    {
+        // timescale too high, lower it
+        MP4ChangeMovieTimeScale(file, 1000);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+MP4TrackId
+ChapterUtility::getReferencingTrack( MP4FileHandle file )
+{
+    uint32_t trackCount = MP4GetNumberOfTracks( file );
+    if( 0 == trackCount )
+    {
+        return MP4_INVALID_TRACK_ID;
+    }
+
+    MP4TrackId refTrackId = MP4_INVALID_TRACK_ID;
+    for( uint32_t i = 0; i < trackCount; ++i )
+    {
+        MP4TrackId    id = MP4FindTrackId( file, i );
+        const char* type = MP4GetTrackType( file, id );
+        if( MP4_IS_VIDEO_TRACK_TYPE( type ) )
+        {
+            refTrackId = id;
+            break;
+        }
+        else if( MP4_IS_AUDIO_TRACK_TYPE( type ) )
+        {
+            refTrackId = id;
+            break;
+        }
+    }
+
+    return refTrackId;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+string
+ChapterUtility::getChapterTypeName( MP4ChapterType chapterType) const
+{
+    if( chapterType == MP4ChapterTypeQt )
+    {
+        return string( "QuickTime" );
+    }
+    else if( chapterType == MP4ChapterTypeNero )
+    {
+        return string( "Nero" );
+    }
+    else if( chapterType == MP4ChapterTypeAny )
+    {
+        return string( "QuickTime or Nero" );
+    }
+
+    return string( "Unknown" );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+ChapterUtility::readChapterFile(const char* mp4Filename, char** buffer, io::StdioFile::Size &fileSize)
+{
+    const string inMode = "rb";
+
+    // create the chapter file name
+    string inName = mp4Filename;
+    io::FileSystem::pathnameStripExtension( inName );
+    inName.append( ".chapters.txt" );
+
+
+    // open the file
+    io::StdioFile in( inName );
+    io::StdioFile::Size nin;
+    if( in.open( inMode ) )
+    {
+        return herrf( "opening chapter file '%s' failed: %s\n", inName, sys::getLastErrorStr() );
+    }
+
+    // get the file size
+    fileSize = 0;
+    in.getSize(fileSize);
+    if (0 >= fileSize)
+    {
+        in.close();
+        return herrf( "getting size of chapter file '%s' failed: %s\n", inName, sys::getLastErrorStr() );
+    }
+
+    // allocate a buffer for the file and read the content
+    char* inBuf = static_cast<char*>( malloc( fileSize+1 ) );
+    if( in.read( inBuf, fileSize, nin ) )
+    {
+        in.close();
+        return herrf( "reading chapter file '%s' failed: %s\n", inName, sys::getLastErrorStr() );
+    }
+    in.close();
+    inBuf[fileSize] = 0;
+
+    *buffer = inBuf;
+
+    return SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+extern "C"
+int main( int argc, char** argv )
+{
+    sinit(); // libutil static initializer
+    ChapterUtility util( argc, argv );
+    const bool result = util.process();
+    sshutdown(); // libutil static initializer
+    return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

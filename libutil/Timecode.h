@@ -46,7 +46,7 @@ namespace mp4v2 { namespace util {
 ///     @li <b>.</b> specifies decimal fractions of a second follow
 ///     @li <b>DDD</b> specifies decimal fractions of a second, rounded down to closest scale
 ///
-class Timecode {
+class MP4V2_EXPORT Timecode {
 public:
     enum Format {
         FRAME,
