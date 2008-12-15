@@ -26,6 +26,29 @@ MP4V2_EXPORT
 MP4TrackId MP4AddSceneTrack(
     MP4FileHandle hFile );
 
+/** Add audio track to mp4 file.
+ *
+ *  MP4AddAudioTrack adds an audio track to the mp4 file. MP4WriteSample()
+ *  can then be used to add the desired audio samples.
+ *
+ *  It is recommended that the time scale be set to the sampling frequency
+ *  (eg. 44100 Hz) of the audio so as to preserve the timing information
+ *  accurately.
+ *
+ *  If the audio encoding uses a fixed duration for each sample that should
+ *  be specified here. If not then the value #MP4_INVALID_SAMPLE_DURATION
+ *  should be given for the sampleDuration argument.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param timeScale the time scale in ticks per second of the track.
+ *  @param sampleDuration the fixed  duration for all track samples.
+ *      Caveat: the value should be in track-timescale units.
+ *  @param audioType the audio encoding type.
+ *      See MP4GetTrackEsdsObjectTypeId() for known values.
+ *
+ *  @return On success, the track-id of the new track.
+ *      On error, #MP4_INVALID_TRACK_ID.
+ */
 MP4V2_EXPORT
 MP4TrackId MP4AddAudioTrack(
     MP4FileHandle hFile,

@@ -15,7 +15,7 @@ Jonathon Rubin              jb.rubin@@gmail.com
 Kona Blend                  kona8lend@@gmail.com
 @end example
 
-@heading Authors from originating MPEG4IP/libmp4v2
+@heading Authors from original MPEG4IP/libmp4v2
 
 @example
 Dave Mackie                 dmackie@@cisco.com

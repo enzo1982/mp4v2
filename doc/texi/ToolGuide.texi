@@ -35,7 +35,7 @@ toolname --something=value ...
 The rest of this guide will use the @i{equals} sign method.
 
 @chapter Common Options
-Many of the tools share a common set of options which. These common options usually have identical behaving short or long syntax. In some cases the short-syntax differs from the long-syntax in that it may not require an argument. This style is used sparingly and only when it truly is convenient. Even though it is common practice in many unix-style tools to permit @i{optional} arguments, the tools used in this project will tend to avoid that because it can create a great deal of confusion.
+Many of the tools share a common set of options which. These common options usually have identically behaving short or long syntax. In some cases short-syntax differs from long-syntax in that it may not require an argument. This style is used sparingly and only when truly convenient. Even though it is common practice in many unix-style tools to permit @i{optional} arguments, the tools used in this project will tend to avoid that because it can create a great deal of confusion.
 
 The following is a list of common options available:
 

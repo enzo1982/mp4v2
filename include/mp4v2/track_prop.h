@@ -43,11 +43,40 @@ MP4Duration MP4GetTrackDuration(
     MP4FileHandle hFile,
     MP4TrackId    trackId );
 
+/** Get the time scale of a track.
+ *
+ *  MP4GetTrackTimeScale returns the time scale of the specified track in
+ *  the mp4 file. The time scale determines the number of clock ticks per
+ *  second for this track.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param trackId id of track for operation.
+ *
+ *  @return timescale (ticks per second) of the track in the mp4 file.
+ */
 MP4V2_EXPORT
 uint32_t MP4GetTrackTimeScale(
     MP4FileHandle hFile,
     MP4TrackId    trackId );
 
+/** Set the time scale of a track.
+ *
+ *  MP4SetTrackTimeScale sets the time scale of the specified track in the
+ *  mp4 file. The time scale determines the number of clock ticks per
+ *  second for this track.
+ *
+ *  Typically this value is set once when the track is created. However
+ *  this call can be used to modify the value if that is desired. Since
+ *  track sample durations are expressed in units of the track time scale,
+ *  any change to the time scale value will effect the real time duration
+ *  of the samples.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param trackId id of track for operation.
+ *  @param timeScale desired time scale for the track.
+ *
+ *  @return On success, true. On failure, false.
+ */
 MP4V2_EXPORT
 void MP4SetTrackTimeScale(
     MP4FileHandle hFile,

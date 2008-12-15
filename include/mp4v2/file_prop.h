@@ -70,9 +70,30 @@ bool MP4SetBytesProperty(
 MP4V2_EXPORT
 MP4Duration MP4GetDuration( MP4FileHandle hFile );
 
+/** Get the time scale of the movie (file).
+ *
+ *  MP4GetTimeScale returns the time scale in units of ticks per second for
+ *  the mp4 file. Caveat: tracks may use the same time scale as the movie
+ *  or may use their own time scale.
+ *
+ *  @param hFile handle of file for operation.
+ *
+ *  @return timescale (ticks per second) of the mp4 file.
+ */
 MP4V2_EXPORT
 uint32_t MP4GetTimeScale( MP4FileHandle hFile );
 
+/** Set the time scale of the movie (file).
+ *
+ *  MP4SetTimeScale sets the time scale of the mp4 file. The time scale is
+ *  in the number of clock ticks per second. Caveat:  tracks may use the
+ *  same time scale as the movie or may use their own time scale.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param value desired timescale for the movie.
+ *
+ *  @return On success, true. On failure, false.
+ */
 MP4V2_EXPORT
 bool MP4SetTimeScale( MP4FileHandle hFile, uint32_t value );
 

@@ -18,4 +18,7 @@ Enhanced @command{mp4art} to support multiple cover-art atoms.
 @item
 Dropped @command{mp4dump} and replaced with @command{mp4file} which supports general file operations.
 
+@item
+Added @command{mp4track} with colr-box and pasp-box support.
+
 @end enumerate
