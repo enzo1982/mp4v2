@@ -533,6 +533,13 @@ ChapterUtility::fixQtScale(MP4FileHandle file)
     // get around a QuickTime/iPod issue with storing the number of samples in a signed 32Bit value
     if( INT_MAX < (MP4GetDuration(file) * MP4GetTimeScale(file)) )
     {
+        const char* type = MP4GetTrackType( file, getReferencingTrack( file ) );
+        if( MP4_IS_VIDEO_TRACK_TYPE( type ) )
+        {
+            // if it is a video, everything is different
+            return;
+        }
+
         // timescale too high, lower it
         MP4ChangeMovieTimeScale(file, 1000);
     }

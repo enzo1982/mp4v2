@@ -2713,7 +2713,13 @@ MP4ChapterType MP4File::SetChapters(MP4Chapter_t * chapterList, uint32_t chapter
                 MP4_IS_AUDIO_TRACK_TYPE( m_pTracks[i]->GetType() ) )
             {
                 refTrack = m_pTracks[i]->GetId();
+                break;
             }
+        }
+
+        if( refTrack == MP4_INVALID_TRACK_ID )
+        {
+            return setType;
         }
 
         // create the chapter track
