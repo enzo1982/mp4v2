@@ -195,7 +195,7 @@ ChapterUtility::actionEvery( JobContext& job )
     {
         MP4Chapter_t chap;
         chap.duration = chapterDuration.duration;
-        sprintf(chap.title, "Chapter %i", chapters.size()+1);
+        sprintf(chap.title, "Chapter %lu", chapters.size()+1);
 
         chapters.push_back( chap );
 
