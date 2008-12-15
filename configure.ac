@@ -94,6 +94,8 @@ AC_MSG_CHECKING([$PACKAGE_NAME platform portability])
 X_PLATFORM=posix
 case ${host} in
 *-*-cygwin)
+    # do not support shared
+    enable_shared=no
     X_CXX_W="$X_CXX_W -Wno-format"
     if test "$enable_cygwin_win32" = "yes"; then
         X_PLATFORM=win32
@@ -101,6 +103,8 @@ case ${host} in
     fi
     ;;
 *-*-mingw32)
+    # do not support shared
+    enable_shared=no
     X_PLATFORM=win32
     X_MINGW_LIBS="$X_MINGW_LIBS -lmsvcr80"
     X_CXX_W="$X_CXX_W -Wno-format"

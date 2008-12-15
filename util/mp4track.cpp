@@ -789,18 +789,6 @@ TrackUtility::utility_option( int code, bool& handled )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-extern "C"
-int main( int argc, char** argv )
-{
-    sinit(); // libutil static initializer
-    TrackUtility util( argc, argv );
-    const bool result = util.process();
-    sshutdown(); // libutil static initializer
-    return result;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 string
 toStringTrackType( string code )
 {
@@ -822,3 +810,17 @@ toStringTrackType( string code )
 ///////////////////////////////////////////////////////////////////////////////
 
 }} // namespace mp4v2::util
+
+///////////////////////////////////////////////////////////////////////////////
+
+extern "C"
+int main( int argc, char** argv )
+{
+    using namespace mp4v2::util;
+
+    sinit(); // libutil static initializer
+    TrackUtility util( argc, argv );
+    const bool result = util.process();
+    sshutdown(); // libutil static initializer
+    return result;
+}

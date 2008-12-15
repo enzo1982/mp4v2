@@ -196,16 +196,18 @@ SubtitleUtility::utility_option( int code, bool& handled )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+}} // namespace mp4v2::util
+
+///////////////////////////////////////////////////////////////////////////////
+
 extern "C"
 int main( int argc, char** argv )
 {
+    using namespace mp4v2::util;
+
     sinit(); // libutil static initializer
     SubtitleUtility util( argc, argv );
     const bool result = util.process();
     sshutdown(); // libutil static initializer
     return result;
 }
-
-///////////////////////////////////////////////////////////////////////////////
-
-}} // namespace mp4v2::util

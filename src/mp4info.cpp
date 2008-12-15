@@ -27,8 +27,7 @@
 
 #include "impl.h"
 
-namespace mp4v2 {
-namespace impl {
+namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -559,7 +558,15 @@ static char* PrintTrackInfo(
     return trackInfo;
 }
 
-extern "C" MP4V2_EXPORT
+///////////////////////////////////////////////////////////////////////////////
+
+}} // namespace mp4v2::impl
+
+///////////////////////////////////////////////////////////////////////////////
+
+using namespace mp4v2::impl;
+
+extern "C"
 char* MP4Info(
         MP4FileHandle mp4File,
         MP4TrackId    trackId )
@@ -598,7 +605,7 @@ char* MP4Info(
     return info;
 }
 
-extern "C" MP4V2_EXPORT
+extern "C"
 char* MP4FileInfo(
     const char* fileName,
     MP4TrackId  trackId )
@@ -615,8 +622,3 @@ char* MP4FileInfo(
 
     return info;    // caller should free this
 }
-
-///////////////////////////////////////////////////////////////////////////////
-
-}
-} // namespace mp4v2::impl

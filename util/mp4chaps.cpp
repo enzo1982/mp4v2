@@ -478,9 +478,14 @@ ChapterUtility::utility_option( int code, bool& handled )
             break;
 
         case 'e':
+        {
+            istringstream iss( prog::optarg );
+            iss >> _ChaptersEvery;
+            if( iss.rdstate() != ios::eofbit )
+                return herrf( "invalid number of seconds: %s\n", prog::optarg );
             _action = &ChapterUtility::actionEvery;
-            _ChaptersEvery = std::strtoul( prog::optarg, NULL, 0 );
             break;
+        }
 
         case 'x':
             _action = &ChapterUtility::actionExport;
@@ -603,16 +608,15 @@ ChapterUtility::readChapterFile(const char* mp4Filename, char** buffer, io::Stdi
     io::StdioFile::Size nin;
     if( in.open( inMode ) )
     {
-        return herrf( "opening chapter file '%s' failed: %s\n", inName, sys::getLastErrorStr() );
+        return herrf( "opening chapter file '%s' failed: %s\n", inName.c_str(), sys::getLastErrorStr() );
     }
 
     // get the file size
     fileSize = 0;
-    in.getSize(fileSize);
-    if (0 >= fileSize)
+    if( in.getSize(fileSize) || 0 >= fileSize )
     {
         in.close();
-        return herrf( "getting size of chapter file '%s' failed: %s\n", inName, sys::getLastErrorStr() );
+        return herrf( "getting size of chapter file '%s' failed: %s\n", inName.c_str(), sys::getLastErrorStr() );
     }
 
     // allocate a buffer for the file and read the content
@@ -620,7 +624,7 @@ ChapterUtility::readChapterFile(const char* mp4Filename, char** buffer, io::Stdi
     if( in.read( inBuf, fileSize, nin ) )
     {
         in.close();
-        return herrf( "reading chapter file '%s' failed: %s\n", inName, sys::getLastErrorStr() );
+        return herrf( "reading chapter file '%s' failed: %s\n", inName.c_str(), sys::getLastErrorStr() );
     }
     in.close();
     inBuf[fileSize] = 0;
@@ -632,16 +636,18 @@ ChapterUtility::readChapterFile(const char* mp4Filename, char** buffer, io::Stdi
 
 ///////////////////////////////////////////////////////////////////////////////
 
+}} // namespace mp4v2::util
+
+///////////////////////////////////////////////////////////////////////////////
+
 extern "C"
 int main( int argc, char** argv )
 {
+    using namespace mp4v2::util;
+
     sinit(); // libutil static initializer
     ChapterUtility util( argc, argv );
     const bool result = util.process();
     sshutdown(); // libutil static initializer
     return result;
 }
-
-///////////////////////////////////////////////////////////////////////////////
-
-}} // namespace mp4v2::util

@@ -38,16 +38,16 @@
 
 #include "impl.h"
 
-extern "C" {
-    using namespace mp4v2::impl;
-
-///////////////////////////////////////////////////////////////////////////////
-
 #define PRINT_ERROR(e) \
     VERBOSE_ERROR(((MP4File*)hFile)->GetVerbosity(), e->Print());
 
+using namespace mp4v2::impl;
+
+extern "C" {
+
+///////////////////////////////////////////////////////////////////////////////
+
     /* file operations */
-// benski>
     MP4FileHandle MP4ReadEx (const char* fileName,
                              void *user,
                              struct Virtual_IO *virtual_IO,

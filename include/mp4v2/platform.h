@@ -21,8 +21,8 @@
 #   include <stdint.h>
 #endif
 
-#if defined( _WIN32 )
-#   if defined( _WINDLL )
+#if defined( _WIN32 ) || defined( __MINGW32__ )
+#   if defined( _WINDLL ) || defined( DLL_EXPORT )
 #       define MP4V2_EXPORT __declspec(dllexport)
 #   else
 #       define MP4V2_EXPORT __declspec(dllimport)

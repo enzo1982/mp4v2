@@ -385,8 +385,13 @@ ArtUtility::utility_option( int code, bool& handled )
             break;
 
         case LC_ART_INDEX:
-            _artFilter = std::strtoul( prog::optarg, NULL, 0 );
+        {
+            istringstream iss( prog::optarg );
+            iss >> _artFilter;
+            if( iss.rdstate() != ios::eofbit )
+                return herrf( "invalid cover-art index: %s\n", prog::optarg );
             break;
+        }
 
         case LC_LIST:
             _action = &ArtUtility::actionList;
@@ -424,16 +429,18 @@ ArtUtility::utility_option( int code, bool& handled )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+}} // namespace mp4v2::util
+
+///////////////////////////////////////////////////////////////////////////////
+
 extern "C"
 int main( int argc, char** argv )
 {
+    using namespace mp4v2::util;
+
     sinit(); // libutil static initializer
     ArtUtility util( argc, argv );
     const bool result = util.process();
     sshutdown(); // libutil static initializer
     return result;
 }
-
-///////////////////////////////////////////////////////////////////////////////
-
-}} // namespace mp4v2::util
