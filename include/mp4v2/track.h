@@ -8,20 +8,86 @@
  *
  *****************************************************************************/
 
+/** Add a user defined track.
+ *
+ *  MP4AddTrack adds a user defined track to the mp4 file. Care should be
+ *  taken to avoid any of the standardized track type names. A useful
+ *  convention is use only uppercase characters for user defined track types.
+ *  The string should be exactly four characters in length, e.g. "MINE".
+ *
+ *  Note this should not be used to add any of the known track types defined
+ *  in the MP4 standard (ISO/IEC 14496−1:2001).
+ *
+ *  @param hFile handle of file for operation.
+ *  @param type specifies the type of track to be added.
+ *
+ *  @return On success, the track-id of new track.
+ *      On failure, #MP4_INVALID_TRACK_ID.
+ */
 MP4V2_EXPORT
 MP4TrackId MP4AddTrack(
     MP4FileHandle hFile,
     const char*   type );
 
+/** Add an MPEG−4 systems track.
+ *
+ *  MP4AddSystemsTrack adds an MPEG−4 Systems track to the mp4 file. Note
+ *  this should not be used to add OD or scene tracks, MP4AddODTrack() and
+ *  MP4AddSceneTrack() should be used for those purposes. Other known
+ *  MPEG−4 System track types are:
+ *      @li #MP4_CLOCK_TRACK_TYPE
+ *      @li #MP4_MPEG7_TRACK_TYPE
+ *      @li #MP4_OCI_TRACK_TYPE
+ *      @li #MP4_IPMP_TRACK_TYPE
+ *      @li #MP4_MPEGJ_TRACK_TYPE
+ *
+ *  @param hFile handle of file for operation.
+ *  @param type specifies the type of track to be added.
+ *
+ *  @return On success, the track-id of new track.
+ *      On failure, #MP4_INVALID_TRACK_ID.
+ */
 MP4V2_EXPORT
 MP4TrackId MP4AddSystemsTrack(
     MP4FileHandle hFile,
     const char*   type );
 
+/** Add a object descriptor (OD) track.
+ *
+ *  MP4AddODTrack adds an object descriptor (aka OD) track to the mp4 file.
+ *  MP4WriteSample() can then be used to add the desired OD commands to the
+ *  track. The burden is currently on the calling application to understand
+ *  OD.
+ *
+ *  Those wishing to have a simple audio/video scene without understanding
+ *  OD may wish to use MP4MakeIsmaCompliant() to create the minimal OD and
+ *  BIFS information.
+ *
+ *  @param hFile handle of file for operation.
+ * 
+ *  @return On success, the track-id of new track.
+ *      On failure, #MP4_INVALID_TRACK_ID.
+ */
 MP4V2_EXPORT
 MP4TrackId MP4AddODTrack(
     MP4FileHandle hFile );
 
+/** Add a scene (BIFS) track.
+ *
+ *  MP4AddSceneTrack adds a scene (aka BIFS) track to the mp4 file.
+ *  MP4WriteSample() can then be used to add the desired BIFS commands to
+ *  the track. The burden is currently on the calling application to
+ *  understand BIFS.
+ *
+ *  Those  wishing to have a simple audio/video scene without understanding
+ *  BIFS may wish to use MP4MakeIsmaCompliant() to create the minimal OD
+ *  and BIFS information.
+ *
+ *  @param hFile handle of file for operation.
+ * 
+ *  @return On success, the track-id of new track.
+ *      On failure, #MP4_INVALID_TRACK_ID.
+ */
 MP4V2_EXPORT
 MP4TrackId MP4AddSceneTrack(
     MP4FileHandle hFile );
@@ -111,6 +177,32 @@ const char* MP4GetHrefTrackBaseUrl(
     MP4FileHandle hFile,
     MP4TrackId    trackId );
 
+/** Add a video track.
+ *
+ *  MP4AddVideoTrack adds a video track to the mp4 file. MP4WriteSample()
+ *  can then be used to add the desired video samples.
+ *
+ *  It is recommended that the time scale be set to 90000 so as to preserve
+ *  the timing information accurately for the range of video frame rates
+ *  commonly in use.
+ *
+ *  If the video frame rate is to be fixed then the sampleDuration argument
+ *  should be give the appropriate fixed value. If the video frame rate is
+ *  to be variable then the value MP4_INVALID_SAMPLE_DURATION should be
+ *  given for the sampleDuration argument.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param timeScale the timescale in ticks per second of the track.
+ *  @param sampleDuration specifies fixed sample duration for all track
+ *      samples. Caveat: the value should be in track timescale units.
+ *  @param width specifies the video frame width in pixels.
+ *  @param height specifies the video frame height in pixels.
+ *  @param videoType specifies the video encoding type.
+ *      See MP4GetTrackVideoType() for known values.
+ *
+ *  @return On success, the track-id of the new track.
+ *      On error, #MP4_INVALID_TRACK_ID.
+ */
 MP4V2_EXPORT
 MP4TrackId MP4AddVideoTrack(
     MP4FileHandle hFile,
