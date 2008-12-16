@@ -844,6 +844,8 @@ public:
         MP4Atom* pAncestorAtom,
         const char* childName);
 
+    void SetDisableWriteProtection( bool );
+
 protected:
     void Open(const char* fmode);
     void ReadFromFile();
@@ -961,7 +963,8 @@ protected:
     MP4TrackId      m_odTrackId;
     uint32_t        m_verbosity;
     char            m_mode;
-    uint32_t               m_createFlags;
+    bool            m_disableWriteProtection;
+    uint32_t        m_createFlags;
     bool            m_useIsma;
 
     // cached properties

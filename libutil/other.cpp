@@ -115,7 +115,7 @@ MP4CopyClose( MP4FileHandle hFile, const string& tmpFileName )
     try {
         success = f.CopyClose( tmpFileName.c_str() );
     }
-    catch ( MP4Error* e ) {
+    catch( MP4Error* e ) {
         e->Print( stdout );
         delete e;
     }
@@ -125,6 +125,26 @@ MP4CopyClose( MP4FileHandle hFile, const string& tmpFileName )
 
     delete &f;
     return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+MP4FileHandle
+MP4ReadCopy( const string& fileName, uint32_t verbosity )
+{
+    MP4File* file = NULL;
+    try {
+            file = new MP4File( verbosity );
+            file->SetDisableWriteProtection( true );
+            file->Read( fileName.c_str() );
+            return static_cast<MP4FileHandle>(file);
+    }
+    catch( MP4Error* e) {
+        e->Print( stdout );
+        delete e;
+        delete file;
+        return MP4_INVALID_FILE_HANDLE;
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

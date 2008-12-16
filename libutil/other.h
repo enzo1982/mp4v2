@@ -33,6 +33,25 @@ bool fileFetchSummaryInfo( MP4FileHandle file, FileSummaryInfo& info );
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/** Read an existing mp4 file and disable write-protection.
+ *
+ *  This function is identical to MP4Read() except that it disables
+ *  write-protection for routines that would be incompatible with
+ *  the MP4CloseCopy() workflow.
+ *
+ *  @param fileName pathname of the file to be read.
+ *  @param verbosity bitmask of diagnostic details the library
+ *      should print to stdout during its functioning.
+ *
+ *  @return On success a handle of the file for use in subsequent calls to
+ *      the library.
+ *      On error, #MP4_INVALID_FILE_HANDLE.
+ *
+ *  @see MP4SetVerbosity() for <b>verbosity</b> values.
+ */
+MP4V2_EXPORT
+MP4FileHandle MP4ReadCopy( const string& fileName, uint32_t verbosity = 0 );
+
 /// Copy-out and close an mp4 file.
 /// This function writes out a copy of all the atoms from an open mp4
 /// file. The new file is written out in optimized-form, so a subsequent

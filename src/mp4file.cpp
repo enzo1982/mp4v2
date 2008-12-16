@@ -30,8 +30,7 @@
 
 #include "impl.h"
 
-namespace mp4v2 {
-namespace impl {
+namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -47,6 +46,7 @@ MP4File::MP4File(uint32_t verbosity)
 
     m_verbosity = verbosity;
     m_mode = 0;
+    m_disableWriteProtection = false;
     m_createFlags = 0;
     m_useIsma = false;
 
@@ -688,9 +688,11 @@ void MP4File::Rename(const char* oldFileName, const char* newFileName)
 
 void MP4File::ProtectWriteOperation(const char* where)
 {
-    if (m_mode == 'r') {
+    if( m_disableWriteProtection )
+        return;
+
+    if( m_mode == 'r' )
         throw new MP4Error("operation not permitted in read mode", where);
-    }
 }
 
 MP4Track* MP4File::GetTrack(MP4TrackId trackId)
@@ -4049,7 +4051,11 @@ MP4SampleId MP4File::GetSampleIdFromEditTime(
                when, pStartTime, pDuration);
 }
 
+void MP4File::SetDisableWriteProtection( bool disable )
+{
+    m_disableWriteProtection = disable;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
-}
-} // namespace mp4v2::impl
+}} // namespace mp4v2::impl

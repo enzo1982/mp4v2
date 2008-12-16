@@ -98,7 +98,7 @@ SubtitleUtility::SubtitleUtility( int argc, char** argv )
 bool
 SubtitleUtility::actionExport( JobContext& job )
 {
-    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4ReadCopy( job.file.c_str(), _debugVerbosity );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
 
@@ -124,7 +124,7 @@ SubtitleUtility::actionImport( JobContext& job )
 bool
 SubtitleUtility::actionList( JobContext& job )
 {
-    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4ReadCopy( job.file.c_str(), _debugVerbosity );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
 
