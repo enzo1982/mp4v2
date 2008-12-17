@@ -107,6 +107,7 @@ protected:
         const string  file;               //!< file job is working on
         MP4FileHandle fileHandle;         //!< handle of file, if applicable to job
         bool          fileWasModified;    //!< indicate file was modified
+        bool          optimizeApplicable; //!< indicate file optimization is applicable
         list<void*>   tofree;             //!< memory to free at end of job
     };
 
@@ -162,7 +163,7 @@ protected:
     char* const* const _argv; //!< arg vector
 
     // common options state
-    bool     _strict;    //!< strict compatibliity
+    bool     _optimize;  //!< optimize mp4 file after modification
     bool     _dryrun;    //!< dry-run, no writing is actually performed
     bool     _keepgoing; //!< contine batch processing even after error
     bool     _overwrite; //!< overwrite file if already exists
@@ -181,6 +182,7 @@ protected:
 
 protected:
     // standard options for concrete utilities to add to _group in constructor
+    const Option STD_OPTIMIZE;
     const Option STD_DRYRUN;
     const Option STD_KEEPGOING;
     const Option STD_OVERWRITE;

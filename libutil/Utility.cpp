@@ -32,6 +32,7 @@ Utility::Utility( string name_, int argc_, char** argv_ )
     , _name             ( name_ )
     , _argc             ( argc_ )
     , _argv             ( argv_ )
+    , _optimize         ( false )
     , _dryrun           ( false )
     , _keepgoing        ( false )
     , _overwrite        ( false )
@@ -43,6 +44,7 @@ Utility::Utility( string name_, int argc_, char** argv_ )
     , _debugImplicits   ( false )
     , _group            ( "OPTIONS" )
 
+,STD_OPTIMIZE( 'z', false, "optimize", false, LC_NONE, "optimize mp4 file after modification" )
 ,STD_DRYRUN( 'y', false, "dryrun", false, LC_NONE, "do not actually create or modify any files" )
 ,STD_KEEPGOING( 'k', false, "keepgoing", false, LC_NONE, "continue batch processing even after errors" )
 ,STD_OVERWRITE( 'o', false, "overwrite", false, LC_NONE, "overwrite existing files when creating" )
@@ -318,6 +320,13 @@ Utility::job( string arg )
         else {
             verbose2f( "closing %s\n", job.file.c_str() );
             MP4Close( job.fileHandle );
+
+            // invoke optimize if flagged
+            if( _optimize && job.optimizeApplicable ) {
+                verbose1f( "optimizing %s\n", job.file.c_str() );
+                if( !MP4Optimize( job.file.c_str(), NULL ))
+                    hwarnf( "optimize failed: %s\n", job.file.c_str() );    
+            }
         }
     }
 
@@ -502,6 +511,10 @@ Utility::process_impl()
             continue;
 
         switch( code ) {
+            case 'z':
+                _optimize = true;
+                break;
+
             case 'y':
                 _dryrun = true;
                 break;
