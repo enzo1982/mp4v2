@@ -767,9 +767,10 @@ Utility::Option::Option(
 ///////////////////////////////////////////////////////////////////////////////
 
 Utility::JobContext::JobContext( string file_ )
-    : file            ( file_ )
-    , fileHandle      ( MP4_INVALID_FILE_HANDLE )
-    , fileWasModified ( false )
+    : file               ( file_ )
+    , fileHandle         ( MP4_INVALID_FILE_HANDLE )
+    , fileWasModified    ( false )
+    , optimizeApplicable ( false )
 {
 }
 
