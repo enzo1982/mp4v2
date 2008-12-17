@@ -269,6 +269,29 @@ MP4TrackId MP4AddH263VideoTrack(
     uint32_t      avgBitrate,
     uint32_t      maxBitrate );
 
+/** Add a hint track.
+ *
+ *  MP4AddHintTrack adds a hint track to the mp4 file. A hint track is used
+ *  to describe how to send the reference media track over a particular
+ *  network transport. In the case of the IETF RTP protocol, the hint track
+ *  describes how the media data should be placed into packets and any
+ *  media specific protocol headers that should be added.
+ *
+ *  Typically there is a one to one correspondence between reference  media
+ *  track  samples  and  hint track samples. The start time, duration, and
+ *  sync flags are typically the same, however provisions are made for
+ *  deviations from this rule.
+ *
+ *  The MP4 library provides extensive support for RTP hint tracks. This
+ *  includes a easy to use API to create RTP hint tracks, and read out
+ *  fully constructed RTP packets based on the hint track.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param refTrackId specifies the reference media track for this hint track.
+ *
+ *  @return On success, the track-id of the new track.
+ *      On error, #MP4_INVALID_TRACK_ID.
+ */
 MP4V2_EXPORT
 MP4TrackId MP4AddHintTrack(
     MP4FileHandle hFile,

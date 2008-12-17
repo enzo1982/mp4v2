@@ -16,6 +16,33 @@ bool MP4HaveTrackAtom(
     MP4TrackId    trackId,
     const char*   atomname );
 
+/** Get the track type.
+ *
+ *  MP4GetTrackType gets the type of the track with the specified track id.
+ *
+ *  Note: the library does not provide a MP4SetTrackType function, the
+ *  track type needs to be specified when the track is created, e.g.
+ *  MP4AddSystemsTrack(MP4_OCI_TRACK_TYPE).
+ *
+ *  Known track types are:
+ *      @li #MP4_OD_TRACK_TYPE
+ *      @li #MP4_SCENE_TRACK_TYPE
+ *      @li #MP4_AUDIO_TRACK_TYPE
+ *      @li #MP4_VIDEO_TRACK_TYPE
+ *      @li #MP4_HINT_TRACK_TYPE
+ *      @li #MP4_CNTL_TRACK_TYPE
+ *      @li #MP4_TEXT_TRACK_TYPE
+ *      @li #MP4_CLOCK_TRACK_TYPE
+ *      @li #MP4_MPEG7_TRACK_TYPE
+ *      @li #MP4_OCI_TRACK_TYPE
+ *      @li #MP4_IPMP_TRACK_TYPE
+ *      @li #MP4_MPEGJ_TRACK_TYPE
+ *
+ *  @param hFile handle of file for operation.
+ *  @param trackId id of track for operation.
+ *
+ *  @return On success, a string indicating track type. On failure, NULL.
+ */
 MP4V2_EXPORT
 const char* MP4GetTrackType(
     MP4FileHandle hFile,

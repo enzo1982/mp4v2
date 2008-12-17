@@ -86,22 +86,22 @@ typedef uint32_t (*encryptFunc_t)( uint32_t, uint32_t, uint8_t*, uint32_t*, uint
  * Note this first group of track types should be created
  * via the MP4Add<Type>Track() functions, and not MP4AddTrack(type)
  */
-#define MP4_OD_TRACK_TYPE       "odsm"
-#define MP4_SCENE_TRACK_TYPE    "sdsm"
-#define MP4_AUDIO_TRACK_TYPE    "soun"
-#define MP4_VIDEO_TRACK_TYPE    "vide"
-#define MP4_HINT_TRACK_TYPE     "hint"
-#define MP4_CNTL_TRACK_TYPE     "cntl"
-#define MP4_TEXT_TRACK_TYPE     "text"
+#define MP4_OD_TRACK_TYPE       "odsm"  /**< Constant: OD track. */
+#define MP4_SCENE_TRACK_TYPE    "sdsm"  /**< Constant: scene track. */
+#define MP4_AUDIO_TRACK_TYPE    "soun"  /**< Constant: audio track. */
+#define MP4_VIDEO_TRACK_TYPE    "vide"  /**< Constant: video track. */
+#define MP4_HINT_TRACK_TYPE     "hint"  /**< Constant: hint track. */
+#define MP4_CNTL_TRACK_TYPE     "cntl"  /**< Constant: control track. */
+#define MP4_TEXT_TRACK_TYPE     "text"  /**< Constant: text track. */
 /*
  * This second set of track types should be created
  * via MP4AddSystemsTrack(type)
  */
-#define MP4_CLOCK_TRACK_TYPE    "crsm"
-#define MP4_MPEG7_TRACK_TYPE    "m7sm"
-#define MP4_OCI_TRACK_TYPE      "ocsm"
-#define MP4_IPMP_TRACK_TYPE     "ipsm"
-#define MP4_MPEGJ_TRACK_TYPE    "mjsm"
+#define MP4_CLOCK_TRACK_TYPE    "crsm"  /**< Constant: clock track. */
+#define MP4_MPEG7_TRACK_TYPE    "m7sm"  /**< Constant: mpeg7 track. */
+#define MP4_OCI_TRACK_TYPE      "ocsm"  /**< Constant: OCI track. */
+#define MP4_IPMP_TRACK_TYPE     "ipsm"  /**< Constant: IPMP track. */
+#define MP4_MPEGJ_TRACK_TYPE    "mjsm"  /**< Constant: MPEGJ track. */
 
 #define MP4_IS_VIDEO_TRACK_TYPE(type) \
     (!strcasecmp(type, MP4_VIDEO_TRACK_TYPE))
