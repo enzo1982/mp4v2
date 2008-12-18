@@ -722,6 +722,8 @@ public:
     bool SetMetadataUint8(const char *atom, uint8_t compilation);
     bool GetMetadataUint8(const char *atom, uint8_t* compilation);
 
+	bool GetMetadataUint32(const char *atom, uint32_t* compilation);
+	
     /* set metadata */
     bool SetMetadataTrack(uint16_t track, uint16_t totalTracks);
     bool SetMetadataDisk(uint16_t disk, uint16_t totalDisks);

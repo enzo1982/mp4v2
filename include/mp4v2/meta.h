@@ -463,6 +463,16 @@ bool MP4GetMetadataEncodedBy(
 MP4V2_EXPORT
 bool MP4DeleteMetadataEncodedBy(
     MP4FileHandle hFile );
+    
+MP4V2_EXPORT
+bool MP4GetMetadataTVEpisode(
+    MP4FileHandle hFile,
+    uint32_t*      value );
+
+MP4V2_EXPORT
+bool MP4GetMetadataTVSeason(
+    MP4FileHandle hFile,
+    uint32_t*      value );
 
 MP4V2_EXPORT
 bool MP4SetMetadataFreeForm(

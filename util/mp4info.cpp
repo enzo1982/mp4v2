@@ -85,6 +85,7 @@ extern "C" int main( int argc, char** argv )
         MP4FileHandle mp4file = MP4Read( mp4FileName ); //, MP4_DETAILS_ERROR);
         if ( mp4file != MP4_INVALID_FILE_HANDLE ) {
             char *value;
+            uint32_t longvalue;
             uint16_t numvalue, numvalue2;
             uint8_t bytevalue;
             if ( MP4GetMetadataName( mp4file, &value ) && value != NULL ) {
@@ -231,6 +232,14 @@ extern "C" int main( int argc, char** argv )
             if ( MP4GetMetadataLyrics( mp4file, &value ) && value != NULL ) {
                 fprintf( stdout, " Lyrics: \n%s\n", value );
                 free( value );
+            }
+            if ( MP4GetMetadataTVEpisode( mp4file, &longvalue ) ) {
+                fprintf( stdout, " TV Episode: %i\n",
+                         longvalue );
+            }
+            if ( MP4GetMetadataTVSeason( mp4file, &longvalue ) ) {
+                fprintf( stdout, " TV Season: %i\n",
+                         longvalue );
             }
             MP4Close( mp4file );
         }

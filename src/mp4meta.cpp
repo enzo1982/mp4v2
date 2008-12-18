@@ -655,6 +655,30 @@ bool MP4File::GetMetadataUint8(const char *atom, uint8_t* retvalue)
     return true;
 }
 
+bool MP4File::GetMetadataUint32(const char *atom, uint32_t* retvalue)
+{
+    unsigned char *val = NULL;
+    uint32_t valSize = 0;
+    char atompath[80];
+    snprintf(atompath, 80, "moov.udta.meta.ilst.%s.data.metadata", atom);
+
+    *retvalue = 0;
+
+    GetBytesProperty(atompath, (uint8_t**)&val, &valSize);
+
+    if (valSize != 4) {
+        CHECK_AND_FREE(val);
+        return false;
+    }
+
+    *retvalue = val[3];
+    *retvalue += (uint32_t)(val[2]<<8);
+    *retvalue += (uint32_t)(val[1]<<16);
+    *retvalue += (uint32_t)(val[0]<<24);
+    free(val);
+    return true;
+}
+
 bool MP4File::SetMetadataCoverArt(uint8_t *coverArt, uint32_t size)
 {
     const char *s = "moov.udta.meta.ilst.covr.data";
