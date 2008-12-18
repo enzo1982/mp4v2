@@ -2519,7 +2519,18 @@ MP4ChapterType MP4File::DeleteChapters(MP4ChapterType chapterType, MP4TrackId ch
         if (MP4_INVALID_TRACK_ID != chapterTrackId && 0 != trackName[0])
         {
             // remove the reference
-            RemoveTrackReference(trackName, chapterTrackId);
+            MP4Atom * pChap = FindAtom( trackName );
+            if( pChap )
+            {
+                MP4Atom * pTref = pChap->GetParentAtom();
+                if( pTref )
+                {
+                    pTref->DeleteChildAtom( pChap );
+
+                    MP4Atom* pParent = pTref->GetParentAtom();
+                    pParent->DeleteChildAtom( pTref );
+                }
+            }
 
             // remove the chapter track
             DeleteTrack(chapterTrackId);
