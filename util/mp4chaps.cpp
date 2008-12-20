@@ -30,6 +30,8 @@ namespace mp4v2 { namespace util {
 class ChapterUtility : public Utility
 {
 private:
+    static const double CHAPTERTIMESCALE;
+
     enum FileLongCode {
         LC_CHPT_ANY = _LC_MAX,
         LC_CHPT_QT,
@@ -66,13 +68,18 @@ private:
     void       fixQtScale(MP4FileHandle );
     MP4TrackId getReferencingTrack( MP4FileHandle );
     string     getChapterTypeName( MP4ChapterType ) const;
-    bool       readChapterFile( const char*, char**, io::StdioFile::Size& );
+    bool       parseChapterFile( const string, vector<MP4Chapter_t>& );
+    bool       readChapterFile( const string, char**, io::StdioFile::Size& );
 
     MP4ChapterType _ChapterType;
     uint32_t       _ChaptersEvery;
 
     string _ChapterFile;
 };
+
+///////////////////////////////////////////////////////////////////////////////
+
+const double ChapterUtility::CHAPTERTIMESCALE = 1000.0;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -143,14 +150,14 @@ ChapterUtility::actionList( JobContext& job )
     // start output (more or less like mp4box does)
     fprintf( stdout, "%s Chapters:\n", getChapterTypeName( chtp ).c_str() );
 
-    Timecode duration(0, 1000.0);
+    Timecode duration(0, CHAPTERTIMESCALE);
     for (uint32_t i = 0; i < chapterCount; ++i)
     {
         // print the infos
         fprintf(stdout, "\tChapter #%u - %s - \"%s\"\n", i+1, duration.svalue.c_str(), chapters[i].title);
 
         // add the duration of this chapter to the sum (is the start time of the next chapter)
-        duration += Timecode(chapters[i].duration, 1000.0);
+        duration += Timecode(chapters[i].duration, CHAPTERTIMESCALE);
     }
 
     // free up the memory
@@ -236,10 +243,10 @@ ChapterUtility::actionEvery( JobContext& job )
     }
 
     Timecode refTrackDuration( MP4GetTrackDuration( job.fileHandle, refTrackId ), MP4GetTrackTimeScale( job.fileHandle, refTrackId ) );
-    refTrackDuration.setScale( 1000.0 );
+    refTrackDuration.setScale( CHAPTERTIMESCALE );
 
-    Timecode chapterDuration( _ChaptersEvery * 1000, 1000.0 );
-    Timecode durationSum( 0, 1000.0 );
+    Timecode chapterDuration( _ChaptersEvery * 1000, CHAPTERTIMESCALE );
+    Timecode durationSum( 0, CHAPTERTIMESCALE );
     vector<MP4Chapter_t> chapters;
 
     while( durationSum + chapterDuration < refTrackDuration )
@@ -326,7 +333,7 @@ ChapterUtility::actionExport( JobContext& job )
     char fileLine[2048] = {0};
     io::StdioFile::Size nout;
     bool failure = SUCCESS;
-    Timecode duration( 0, 1000.0 );
+    Timecode duration( 0, CHAPTERTIMESCALE );
     for( uint32_t i = 0; i < chapterCount; ++i )
     {
         // print the infos
@@ -338,7 +345,7 @@ ChapterUtility::actionExport( JobContext& job )
         }
 
         // add the duration of this chapter to the sum (the start time of the next chapter)
-        duration += Timecode(chapters[i].duration, 1000.0);
+        duration += Timecode(chapters[i].duration, CHAPTERTIMESCALE);
     }
     out.close();
     if( failure )
@@ -358,6 +365,8 @@ ChapterUtility::actionExport( JobContext& job )
 bool
 ChapterUtility::actionImport( JobContext& job )
 {
+    vector<MP4Chapter_t> chapters;
+
     // create the chapter file name
     string inName = job.file;
     if( _ChapterFile.empty() )
@@ -370,108 +379,13 @@ ChapterUtility::actionImport( JobContext& job )
         inName = _ChapterFile;
     }
 
-    // get the content
-    char * inBuf;
-    io::StdioFile::Size fileSize;
-    if( readChapterFile( inName.c_str(), &inBuf, fileSize ) )
+    if( parseChapterFile( inName, chapters ) )
     {
         return FAILURE;
     }
 
-    // separate the text lines
-    char* pos = inBuf;
-    while (pos < inBuf + fileSize)
-    {
-        if (*pos == '\n' || *pos == '\r')
-        {
-            *pos = 0;
-            if (pos > inBuf)
-            {
-                // remove trailing whitespace
-                char* tmp = pos-1;
-                while ((*tmp == ' ' || *tmp == '\t') && tmp > inBuf)
-                {
-                    *tmp = 0;
-                    tmp--;
-                }
-            }
-        }
-        pos++;
-    }
-    pos = inBuf;
-
-    vector<MP4Chapter_t> chapters;
-
-    // parse the lines
-    bool failure = false;
-    while (pos < inBuf + fileSize)
-    {
-        if (*pos == 0 || *pos == ' ' || *pos == '\t')
-        {
-            // uninteresting chars
-            pos++;
-            continue;
-        }
-        else if (*pos == '#')
-        {
-            // comment line
-            pos += strlen(pos);
-            continue;
-        }
-        else if (isdigit(*pos))
-        {
-            MP4Chapter_t chap;
-
-            char* timeStart = pos;
-
-            // read the title if there is one
-            char* titleStart = strchr(timeStart, ' ');
-            if (titleStart == NULL)
-            {
-                titleStart = strchr(timeStart, '\t');
-            }
-
-            if (titleStart != NULL)
-            {
-                *titleStart = 0;
-                pos = ++titleStart;
-
-                while (*titleStart == ' ' || *titleStart == '\t')
-                {
-                    titleStart++;
-                }
-
-                int titleLen = min(strlen(titleStart), (size_t)MP4V2_CHAPTER_TITLE_MAX);
-                strncpy(chap.title, titleStart, titleLen);
-                chap.title[titleLen] = 0;
-            }
-
-            // read the start time
-            Timecode tc( 0, 1000.0 );
-            string tm( timeStart );
-            if( tc.parse( tm ) )
-            {
-                herrf( "Unable to parse time code from \"%s\"\n", tm.c_str() );
-                failure = true;
-                break;
-            }
-            chap.duration = tc.duration;
-
-            chapters.push_back( chap );
-        }
-
-        pos += strlen(pos);
-    }
-    free( inBuf );
-    if( failure )
-    {
-        return failure;
-    }
-
-    int chapterCount = chapters.size();
-
     ostringstream oss;
-    oss << "Importing " << chapterCount << " " << getChapterTypeName( _ChapterType );
+    oss << "Importing " << chapters.size() << " " << getChapterTypeName( _ChapterType );
     oss << " chapters from file " << inName << " into file " << job.file;
 
     verbose1f( "%s\n", oss.str().c_str() );
@@ -480,7 +394,7 @@ ChapterUtility::actionImport( JobContext& job )
         return SUCCESS;
     }
 
-    if( 0 == chapterCount )
+    if( 0 == chapters.size() )
     {
         return herrf( "No chapters found in file %s\n", inName.c_str() );
     }
@@ -500,19 +414,45 @@ ChapterUtility::actionImport( JobContext& job )
     // get duration and recalculate to timescale 1000
     Timecode refTrackDuration( MP4GetTrackDuration( job.fileHandle, refTrackId ),
                                MP4GetTrackTimeScale( job.fileHandle, refTrackId ) );
-    refTrackDuration.setScale( 1000.0 );
+    refTrackDuration.setScale( CHAPTERTIMESCALE );
 
-    // convert start time into duration for (0..n-1)
-    for (int i = 0; i < chapterCount-1; ++i)
+    // check for chapters starting after duration of reftrack
+    for( vector<MP4Chapter_t>::iterator it = chapters.begin(); it != chapters.end(); )
     {
-        chapters[i].duration = chapters[i+1].duration - chapters[i].duration;
+        Timecode curr( (*it).duration, CHAPTERTIMESCALE );
+        if( refTrackDuration <= curr )
+        {
+            hwarnf( "Chapter '%s' start: %s, playlength of file: %s, chapter cannot be set\n",
+                    (*it).title, curr.svalue.c_str(), refTrackDuration.svalue.c_str() );
+            it = chapters.erase( it );
+        }
+        else
+        {
+            ++it;
+        }
+    }
+    if( 0 == chapters.size() )
+    {
+        return SUCCESS;
     }
 
-    // convert last chapter
-    chapters[chapterCount-1].duration = (refTrackDuration - Timecode( chapters[chapterCount-1].duration, 1000.0 )).duration;
+    // convert start time into duration
+    for( vector<MP4Chapter_t>::iterator it = chapters.begin(); it != chapters.end(); ++it )
+    {
+        if( chapters.end() == it+1 )
+        {
+            // last chapter (duration until end of track)
+            (*it).duration = (refTrackDuration - Timecode( (*it).duration, CHAPTERTIMESCALE )).duration;
+        }
+        else
+        {
+            // all other chapters (duration until next chapter)
+            (*it).duration = (*(it+1)).duration - (*it).duration;
+        }
+    }
 
     // now set the chapters
-    MP4SetChapters( job.fileHandle, &chapters[0], chapterCount, _ChapterType );
+    MP4SetChapters( job.fileHandle, &chapters[0], chapters.size(), _ChapterType );
 
     fixQtScale( job.fileHandle );
     job.optimizeApplicable = true;
@@ -732,7 +672,7 @@ ChapterUtility::getChapterTypeName( MP4ChapterType chapterType) const
 ///////////////////////////////////////////////////////////////////////////////
 
 bool
-ChapterUtility::readChapterFile(const char* filename, char** buffer, io::StdioFile::Size &fileSize)
+ChapterUtility::readChapterFile(const string filename, char** buffer, io::StdioFile::Size &fileSize)
 {
     const string inMode = "rb";
 
@@ -741,7 +681,7 @@ ChapterUtility::readChapterFile(const char* filename, char** buffer, io::StdioFi
     io::StdioFile::Size nin;
     if( in.open( inMode ) )
     {
-        return herrf( "opening chapter file '%s' failed: %s\n", filename, sys::getLastErrorStr() );
+        return herrf( "opening chapter file '%s' failed: %s\n", filename.c_str(), sys::getLastErrorStr() );
     }
 
     // get the file size
@@ -749,7 +689,7 @@ ChapterUtility::readChapterFile(const char* filename, char** buffer, io::StdioFi
     if( in.getSize(fileSize) || 0 >= fileSize )
     {
         in.close();
-        return herrf( "getting size of chapter file '%s' failed: %s\n", filename, sys::getLastErrorStr() );
+        return herrf( "getting size of chapter file '%s' failed: %s\n", filename.c_str(), sys::getLastErrorStr() );
     }
 
     // allocate a buffer for the file and read the content
@@ -757,12 +697,116 @@ ChapterUtility::readChapterFile(const char* filename, char** buffer, io::StdioFi
     if( in.read( inBuf, fileSize, nin ) )
     {
         in.close();
-        return herrf( "reading chapter file '%s' failed: %s\n", filename, sys::getLastErrorStr() );
+        return herrf( "reading chapter file '%s' failed: %s\n", filename.c_str(), sys::getLastErrorStr() );
     }
     in.close();
     inBuf[fileSize] = 0;
 
     *buffer = inBuf;
+
+    return SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& chapters )
+{
+    // get the content
+    char * inBuf;
+    io::StdioFile::Size fileSize;
+    if( readChapterFile( filename, &inBuf, fileSize ) )
+    {
+        return FAILURE;
+    }
+
+    // separate the text lines
+    char* pos = inBuf;
+    while (pos < inBuf + fileSize)
+    {
+        if (*pos == '\n' || *pos == '\r')
+        {
+            *pos = 0;
+            if (pos > inBuf)
+            {
+                // remove trailing whitespace
+                char* tmp = pos-1;
+                while ((*tmp == ' ' || *tmp == '\t') && tmp > inBuf)
+                {
+                    *tmp = 0;
+                    tmp--;
+                }
+            }
+        }
+        pos++;
+    }
+    pos = inBuf;
+
+    // parse the lines
+    bool failure = false;
+    while (pos < inBuf + fileSize)
+    {
+        if (*pos == 0 || *pos == ' ' || *pos == '\t')
+        {
+            // uninteresting chars
+            pos++;
+            continue;
+        }
+        else if (*pos == '#')
+        {
+            // comment line
+            pos += strlen(pos);
+            continue;
+        }
+        else if (isdigit(*pos))
+        {
+            MP4Chapter_t chap;
+
+            char* timeStart = pos;
+
+            // read the title if there is one
+            char* titleStart = strchr(timeStart, ' ');
+            if (titleStart == NULL)
+            {
+                titleStart = strchr(timeStart, '\t');
+            }
+
+            if (titleStart != NULL)
+            {
+                *titleStart = 0;
+                pos = ++titleStart;
+
+                while (*titleStart == ' ' || *titleStart == '\t')
+                {
+                    titleStart++;
+                }
+
+                int titleLen = min(strlen(titleStart), (size_t)MP4V2_CHAPTER_TITLE_MAX);
+                strncpy(chap.title, titleStart, titleLen);
+                chap.title[titleLen] = 0;
+            }
+
+            // read the start time
+            Timecode tc( 0, CHAPTERTIMESCALE );
+            string tm( timeStart );
+            if( tc.parse( tm ) )
+            {
+                herrf( "Unable to parse time code from \"%s\"\n", tm.c_str() );
+                failure = true;
+                break;
+            }
+            chap.duration = tc.duration;
+
+            chapters.push_back( chap );
+        }
+
+        pos += strlen(pos);
+    }
+    free( inBuf );
+    if( failure )
+    {
+        return failure;
+    }
 
     return SUCCESS;
 }
