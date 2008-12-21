@@ -475,6 +475,21 @@ bool MP4GetMetadataTVSeason(
     uint32_t*      value );
 
 MP4V2_EXPORT
+bool MP4GetMetadataPodcast(
+    MP4FileHandle hFile,
+    uint8_t*      value );
+    
+MP4V2_EXPORT
+bool MP4GetMetadataKeywords(
+    MP4FileHandle hFile,
+    char**        value );
+    
+MP4V2_EXPORT
+bool MP4GetMetadataCategory(
+    MP4FileHandle hFile,
+    char**        value );
+
+MP4V2_EXPORT
 bool MP4SetMetadataFreeForm(
     MP4FileHandle  hFile,
     const char*    name,

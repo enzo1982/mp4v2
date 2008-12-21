@@ -102,6 +102,11 @@ MP4StandardAtom::MP4StandardAtom (const char *type) : MP4Atom(type)
                ATOMID(type) == ATOMID("soco") ||
                ATOMID(type) == ATOMID("sosn") ||
                ATOMID(type) == ATOMID("©enc") ||
+               ATOMID(type) == ATOMID("pcst") ||
+               ATOMID(type) == ATOMID("keyw") ||
+               ATOMID(type) == ATOMID("catg") ||
+               ATOMID(type) == ATOMID("purl") ||
+               ATOMID(type) == ATOMID("egid") ||
                ATOMID(type) == ATOMID("hdvd")) {
 #if 0
         AddVersionAndFlags();
@@ -240,6 +245,11 @@ MP4StandardAtom::MP4StandardAtom (const char *type) : MP4Atom(type)
         ExpectChildAtom("sosn", Optional, OnlyOne); /* sort show */
         ExpectChildAtom("hdvd", Optional, OnlyOne); /* HD video */
         ExpectChildAtom("©enc", Optional, OnlyOne); /* Encoded by */
+        ExpectChildAtom("pcst", Optional, OnlyOne); /* Podcast flag */
+        ExpectChildAtom("keyw", Optional, OnlyOne); /* Keywords (for podcasts?) */
+        ExpectChildAtom("catg", Optional, OnlyOne); /* Category (for podcasts?) */
+        ExpectChildAtom("purl", Optional, OnlyOne); /* Podcast URL */
+        ExpectChildAtom("egid", Optional, OnlyOne); /* Podcast episode global unique ID */
         
     }  else if (ATOMID(type) == ATOMID("imif")) {
         AddVersionAndFlags();

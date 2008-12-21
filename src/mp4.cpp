@@ -4985,6 +4985,50 @@ extern "C" {
         return false;
     }
     
+    bool MP4GetMetadataPodcast(MP4FileHandle hFile, uint8_t* value)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->GetMetadataUint8("pcst", value);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return false;
+    }
+    
+    bool MP4GetMetadataKeywords (MP4FileHandle hFile,
+                                    char** value)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->GetMetadataString("keyw", value);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return false;
+    }
+    
+    bool MP4GetMetadataCategory (MP4FileHandle hFile,
+                                    char** value)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->GetMetadataString("catg", value);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return false;
+    }
+    
     bool MP4SetMetadataFreeForm(MP4FileHandle hFile,
                                 const char *name,
                                 const uint8_t* pValue,

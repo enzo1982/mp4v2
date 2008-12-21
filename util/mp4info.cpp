@@ -241,6 +241,18 @@ extern "C" int main( int argc, char** argv )
                 fprintf( stdout, " TV Season: %i\n",
                          longvalue );
             }
+            if ( MP4GetMetadataPodcast( mp4file, &bytevalue ) ) {
+                fprintf( stdout, " Podcast: %s\n",
+                         bytevalue ? "yes" : "no" );
+            }
+            if ( MP4GetMetadataKeywords( mp4file, &value ) && value != NULL ) {
+                fprintf( stdout, " Kywords: %s\n", value );
+                free( value );
+            }
+            if ( MP4GetMetadataCategory( mp4file, &value ) && value != NULL ) {
+                fprintf( stdout, " Category: %s\n", value );
+                free( value );
+            }
             MP4Close( mp4file );
         }
         free( info );
