@@ -37,6 +37,7 @@ namespace mp4v2 { namespace util {
 #define OPT_GROUPING     'G'
 #define OPT_HD           'H'
 #define OPT_DESCRIPTION  'm'
+#define OPT_TVEPISODE    'M'
 #define OPT_PICTURE      'P'
 #define OPT_SONG         's'
 #define OPT_TRACK        't'
@@ -46,7 +47,7 @@ namespace mp4v2 { namespace util {
 #define OPT_REMOVE       'r'
 #define OPT_ALBUM_ARTIST 'R'
 
-#define OPT_STRING  "hvA:a:b:c:C:d:D:e:E:g:G:H:m:P:s:t:T:w:y:r:R:"
+#define OPT_STRING  "hvA:a:b:c:C:d:D:e:E:g:G:H:m:M:P:s:t:T:w:y:r:R:"
 
 #define ELEMENT_OF(x,i) x[int(i)]
 
@@ -69,6 +70,7 @@ static const char* const help_text =
     "  -G, -grouping    STR  Set the grouping name\n"
     "  -H, -hdvideo     NUM  Set the HD flag (1\\0)\n"
     "  -m, -description STR  Set the short description\n"
+    "  -M, -episode     NUM  Set the episode number\n"
     "  -P, -picture     PTH  Set the picture as a .png\n"
     "  -s, -song        STR  Set the song title\n"
     "  -t, -track       NUM  Set the track number\n"
@@ -97,6 +99,7 @@ extern "C" int
         { "grouping",    prog::Option::REQUIRED_ARG, 0, OPT_GROUPING     },
         { "hdvideo",     prog::Option::REQUIRED_ARG, 0, OPT_HD           },
         { "description", prog::Option::REQUIRED_ARG, 0, OPT_DESCRIPTION  },
+        { "episode",     prog::Option::REQUIRED_ARG, 0, OPT_TVEPISODE    },
         { "picture",     prog::Option::REQUIRED_ARG, 0, OPT_PICTURE      },
         { "song",        prog::Option::REQUIRED_ARG, 0, OPT_SONG         },
         { "tempo",       prog::Option::REQUIRED_ARG, 0, OPT_TEMPO        },
@@ -145,6 +148,7 @@ extern "C" int
             case OPT_TRACK:
             case OPT_TRACKS:
             case OPT_HD:
+            case OPT_TVEPISODE:
             case OPT_TEMPO:
                 r = sscanf( prog::optarg, "%d", &nums[c] );
                 if ( r < 1 ) {
@@ -234,6 +238,9 @@ extern "C" int
                     case OPT_DESCRIPTION:
                         MP4DeleteMetadataShortDescription( h );
                         break;
+                    case OPT_TVEPISODE:
+                        MP4DeleteMetadataTVEpisode( h );
+                        break;
                     case OPT_SONG:
                         MP4DeleteMetadataName( h );
                         break;
@@ -316,6 +323,9 @@ extern "C" int
                         break;
                     case OPT_DESCRIPTION:
                         MP4SetMetadataShortDescription( h, tags[i] );
+                        break;
+                    case OPT_TVEPISODE:
+                        MP4SetMetadataTVEpisode( h, nums[i] );
                         break;
                     case OPT_SONG:
                         MP4SetMetadataName( h, tags[i] );

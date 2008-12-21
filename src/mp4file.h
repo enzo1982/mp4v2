@@ -722,6 +722,7 @@ public:
     bool SetMetadataUint8(const char *atom, uint8_t compilation);
     bool GetMetadataUint8(const char *atom, uint8_t* compilation);
 
+    bool SetMetadataUint32(const char *atom, uint32_t compilation);
 	bool GetMetadataUint32(const char *atom, uint32_t* compilation);
 	
     /* set metadata */

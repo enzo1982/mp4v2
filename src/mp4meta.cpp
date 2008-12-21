@@ -606,6 +606,7 @@ bool MP4File::GetMetadataTempo(uint16_t* tempo)
     free(val);
     return true;
 }
+
 bool MP4File::SetMetadataUint8 (const char *atom, uint8_t value)
 {
     char atompath[36];
@@ -652,6 +653,41 @@ bool MP4File::GetMetadataUint8(const char *atom, uint8_t* retvalue)
 
     *retvalue = val[0];
     free(val);
+    return true;
+}
+
+bool MP4File::SetMetadataUint32(const char *atom, uint32_t value)
+{
+    char atompath[36];
+    unsigned char t[5];
+    MP4BytesProperty *pMetadataProperty = NULL;
+    MP4Atom *pMetaAtom = NULL;
+
+    snprintf(atompath, 36, "moov.udta.meta.ilst.%s.data", atom);
+
+    pMetaAtom = m_pRootAtom->FindAtom(atompath);
+
+    if (pMetaAtom == NULL) {
+        if (!CreateMetadataAtom(atom))
+            return false;
+
+        pMetaAtom = m_pRootAtom->FindAtom(atompath);
+        if (pMetaAtom == NULL) return false;
+    }
+
+    memset(t, 0, 5*sizeof(unsigned char));
+    t[0] = (unsigned char)(value>>24)&0xFF;
+    t[1] = (unsigned char)(value>>16)&0xFF;
+    t[2] = (unsigned char)(value>>8)&0xFF;
+    t[3] = (unsigned char)(value)&0xFF;
+
+
+    ASSERT(pMetaAtom->FindProperty("data.metadata",
+                                   (MP4Property**)&pMetadataProperty));
+    ASSERT(pMetadataProperty);
+
+    pMetadataProperty->SetValue((uint8_t*)t, 4);
+    
     return true;
 }
 

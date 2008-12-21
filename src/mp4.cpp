@@ -4957,11 +4957,39 @@ extern "C" {
         return false;
     }
     
+    bool MP4SetMetadataTVEpisode(MP4FileHandle hFile, uint32_t value)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->SetMetadataUint32("tves", value);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return false;
+    }
+    
     bool MP4GetMetadataTVEpisode(MP4FileHandle hFile, uint32_t* value)
     {
         if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
             try {
                 return ((MP4File*)hFile)->GetMetadataUint32("tves", value);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return false;
+    }
+    
+    bool MP4DeleteMetadataTVEpisode(MP4FileHandle hFile)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->DeleteMetadataAtom("tves");
             }
             catch (MP4Error* e) {
                 PRINT_ERROR(e);
