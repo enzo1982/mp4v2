@@ -173,6 +173,23 @@ enum Genre {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/// enumerated 8-bit Video Type used by iTunes.
+/// Note values are not formally defined in any specification.
+enum StikType {
+    STIK_MOVIE       = 0,
+    STIK_MUSIC_VIDEO = 6,
+    STIK_TV_SHOW     = 10,
+    STIK_UNDEFINED   = 255,
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/// compute BasicType by examining raw bytes header.
+MP4V2_EXPORT BasicType
+computeBasicType( const void* buffer, uint32_t size );
+
+///////////////////////////////////////////////////////////////////////////////
+
 /// convert #BasicType to string.
 MP4V2_EXPORT string
 convertBasicType( BasicType value );
@@ -201,9 +218,17 @@ convertGenre( const string& value );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// compute BasicType by examining raw bytes header.
-MP4V2_EXPORT BasicType
-computeBasicType( const void* buffer, uint32_t size );
+/// convert #StikType to string.
+MP4V2_EXPORT string
+convertStikType( StikType value );
+
+/// convert #StikType to string with buffer.
+MP4V2_EXPORT string&
+convertStikType( StikType value, string& buffer );
+
+/// convert string to #StikType.
+MP4V2_EXPORT StikType
+convertStikType( const string& value );
 
 ///////////////////////////////////////////////////////////////////////////////
 

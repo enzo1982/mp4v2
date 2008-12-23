@@ -5,22 +5,33 @@ namespace mp4v2 { namespace util { namespace itmf {
 ///////////////////////////////////////////////////////////////////////////////
 
 namespace {
-    typedef map<BasicType,string> BasicTypeToString;
-    typedef map<string,BasicType> BasicTypeFromString;
+    struct CompareIgnoreCase : less<string>
+    {
+        bool operator()( const string&, const string& ) const;
+    };
+
+    typedef map<BasicType,string> BasicToString;
+    typedef map<string,BasicType,CompareIgnoreCase> BasicFromString;
 
     typedef map<Genre,string> GenreToString;
-    typedef map<string,Genre> GenreFromString;
+    typedef map<string,Genre,CompareIgnoreCase> GenreFromString;
+
+    typedef map<StikType,string> StikToString;
+    typedef map<string,StikType,CompareIgnoreCase> StikFromString;
 
     class Singleton
     {
     public:
         Singleton();
 
-        BasicTypeToString   basicTypeToString;
-        BasicTypeFromString basicTypeFromString;
+        BasicToString   basicToString;
+        BasicFromString basicFromString;
 
         GenreToString   genreToString;
         GenreFromString genreFromString;
+
+        StikToString   stikToString;
+        StikFromString stikFromString;
     };
     Singleton* SINGLETON;
 
@@ -91,8 +102,8 @@ convertBasicType( BasicType value )
 string&
 convertBasicType( BasicType value, string& buffer )
 {
-    const BasicTypeToString::const_iterator found = SINGLETON->basicTypeToString.find( value );
-    if( found != SINGLETON->basicTypeToString.end() ) {
+    const BasicToString::const_iterator found = SINGLETON->basicToString.find( value );
+    if( found != SINGLETON->basicToString.end() ) {
         buffer = found->second;
         return buffer;
     }
@@ -109,27 +120,27 @@ BasicType
 convertBasicType( const string& value )
 {
     // if number perform enum lookup
-    istringstream convert;
-    convert.str( value );
     int ivalue;
-    if( convert >> ivalue && ivalue > 0 ) {
-        const BasicTypeToString::const_iterator found = SINGLETON->basicTypeToString.find(
+    istringstream iss( value );
+    iss >> ivalue;
+    if( iss.rdstate() == ios::eofbit ) {
+        const BasicToString::const_iterator found = SINGLETON->basicToString.find(
             static_cast<BasicType>(ivalue) );
-        if( found != SINGLETON->basicTypeToString.end() )
+        if( found != SINGLETON->basicToString.end() )
             return found->first;
     }
 
     // exact match
-    const BasicTypeFromString::const_iterator found = SINGLETON->basicTypeFromString.find( value );
-    if( found != SINGLETON->basicTypeFromString.end() )
+    const BasicFromString::const_iterator found = SINGLETON->basicFromString.find( value );
+    if( found != SINGLETON->basicFromString.end() )
         return found->second;
 
     // partial match
     int matches = 0;
     BasicType matched = BT_UNDEFINED;
 
-    const BasicTypeFromString::const_iterator ie = SINGLETON->basicTypeFromString.end();
-    for( BasicTypeFromString::const_iterator it = SINGLETON->basicTypeFromString.begin(); it != ie; it++ ) {
+    const BasicFromString::const_iterator ie = SINGLETON->basicFromString.end();
+    for( BasicFromString::const_iterator it = SINGLETON->basicFromString.begin(); it != ie; it++ ) {
         if( it->first.find( value ) == 0 ) {
             matches++;
             matched = it->second;
@@ -171,10 +182,10 @@ Genre
 convertGenre( const string& value )
 {
     // if number perform enum lookup
-    istringstream convert;
-    convert.str( value );
     int ivalue;
-    if( convert >> ivalue && ivalue > 0 ) {
+    istringstream iss( value );
+    iss >> ivalue;
+    if( iss.rdstate() == ios::eofbit ) {
         const GenreToString::const_iterator found = SINGLETON->genreToString.find( static_cast<Genre>(ivalue) );
         if( found != SINGLETON->genreToString.end() )
             return found->first;
@@ -202,18 +213,104 @@ convertGenre( const string& value )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+string
+convertStikType( StikType value )
+{
+    string buffer;
+    return convertStikType( value, buffer );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+string&
+convertStikType( StikType value, string& buffer )
+{
+    const StikToString::const_iterator found = SINGLETON->stikToString.find( value );
+    if( found != SINGLETON->stikToString.end() ) {
+        buffer = found->second;
+        return buffer;
+    }
+
+    ostringstream oss;
+    oss << "UNDEFINED(" << value << ")";
+    buffer = oss.str();
+    return buffer;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+StikType
+convertStikType( const string& value )
+{
+    // if number perform enum lookup
+    int ivalue;
+    istringstream iss( value );
+    iss >> ivalue;
+    if( iss.rdstate() == ios::eofbit ) {
+        const StikToString::const_iterator found = SINGLETON->stikToString.find( static_cast<StikType>(ivalue) );
+        if( found != SINGLETON->stikToString.end() )
+            return found->first;
+    }
+
+    // exact match
+    const StikFromString::const_iterator found = SINGLETON->stikFromString.find( value );
+    if( found != SINGLETON->stikFromString.end() )
+        return found->second;
+
+    // partial match
+    int matches = 0;
+    StikType matched = STIK_UNDEFINED;
+
+    const StikFromString::const_iterator ie = SINGLETON->stikFromString.end();
+    for( StikFromString::const_iterator it = SINGLETON->stikFromString.begin(); it != ie; it++ ) {
+        if( it->first.find( value ) == 0 ) {
+            matches++;
+            matched = it->second;
+        }
+    }
+
+    return (matches == 1) ? matched : STIK_UNDEFINED;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 namespace {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Singleton::Singleton()
+bool
+CompareIgnoreCase::operator()( const string& x, const string& y ) const
 {
-    struct BasicTypeData {
+    const string::size_type xlen = x.length();
+    const string::size_type ylen = y.length();
+
+    if( xlen < ylen ) {
+        for( string::size_type i = 0; i < xlen; i++ ) {
+            if( std::toupper(x[i]) < std::toupper(y[i]) )
+                return true;
+        }
+        return true;
+    }
+    else {
+        for( string::size_type i = 0; i < ylen; i++ ) {
+            if( std::toupper(x[i]) < std::toupper(y[i]) )
+                return true;
+        }
+        return false;
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Singleton::Singleton()
+    : stikFromString( *new CompareIgnoreCase() )
+{
+    struct BasicData {
         BasicType         type;
         const char* const text;
     };
 
-    BasicTypeData basicTypeData[] = {
+    BasicData basicData[] = {
         { BT_IMPLICIT,   "IMPLICIT" },
         { BT_UTF8,       "UTF8" },
         { BT_UTF16,      "UTF16" },
@@ -237,9 +334,9 @@ Singleton::Singleton()
         { BT_UNDEFINED,  "" } // must be last
     };
 
-    for( BasicTypeData* p = basicTypeData; p->type != BT_UNDEFINED; p++ ) {
-        basicTypeToString.insert( BasicTypeToString::value_type( p->type, p->text ));
-        basicTypeFromString.insert( BasicTypeFromString::value_type( p->text, p->type ));
+    for( BasicData* p = basicData; p->type != BT_UNDEFINED; p++ ) {
+        basicToString.insert( BasicToString::value_type( p->type, p->text ));
+        basicFromString.insert( BasicFromString::value_type( p->text, p->type ));
     }
 
     struct GenreData {
@@ -381,6 +478,23 @@ Singleton::Singleton()
     for( GenreData* p = genreData; p->type != GENRE_UNDEFINED; p++ ) {
         genreToString.insert( GenreToString::value_type( p->type, p->text ));
         genreFromString.insert( GenreFromString::value_type( p->text, p->type ));
+    }
+
+    struct StikData {
+        StikType          type;
+        const char* const text;
+    };
+
+    StikData stikData[] = {
+        { STIK_MOVIE,       "movie" },
+        { STIK_MUSIC_VIDEO, "musicVideo" },
+        { STIK_TV_SHOW,     "tvShow" },
+        { STIK_UNDEFINED,   "" } // must be last
+    };
+
+    for( StikData* p = stikData; p->type != STIK_UNDEFINED; p++ ) {
+        stikToString.insert( StikToString::value_type( p->type, p->text ));
+        stikFromString.insert( StikFromString::value_type( p->text, p->type ));
     }
 }
 
