@@ -199,6 +199,7 @@ MP4V2_EXPORT string&
 convertBasicType( BasicType value, string& buffer );
 
 /// convert string to #BasicType.
+/// @return On success, a valid enum. On failure, #BT_UNDEFINED.
 MP4V2_EXPORT BasicType
 convertBasicType( const string& value );
 
@@ -213,6 +214,7 @@ MP4V2_EXPORT string&
 convertGenre( Genre value, string& buffer );
 
 /// convert string to #Genre.
+/// @return On success, a valid enum. On failure, #GENRE_UNDEFINED.
 MP4V2_EXPORT Genre
 convertGenre( const string& value );
 
@@ -227,6 +229,7 @@ MP4V2_EXPORT string&
 convertStikType( StikType value, string& buffer );
 
 /// convert string to #StikType.
+/// @return On success, a valid enum. On failure, #STIK_UNDEFINED.
 MP4V2_EXPORT StikType
 convertStikType( const string& value );
 

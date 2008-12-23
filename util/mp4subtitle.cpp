@@ -208,6 +208,6 @@ int main( int argc, char** argv )
     sinit(); // libutil static initializer
     SubtitleUtility util( argc, argv );
     const bool result = util.process();
-    sshutdown(); // libutil static initializer
+    sshutdown(); // libutil static cleanup
     return result;
 }

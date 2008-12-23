@@ -821,6 +821,6 @@ int main( int argc, char** argv )
     sinit(); // libutil static initializer
     TrackUtility util( argc, argv );
     const bool result = util.process();
-    sshutdown(); // libutil static initializer
+    sshutdown(); // libutil static clenup
     return result;
 }
