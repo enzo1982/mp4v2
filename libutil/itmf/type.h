@@ -222,11 +222,11 @@ convertGenre( const string& value );
 
 /// convert #StikType to string.
 MP4V2_EXPORT string
-convertStikType( StikType value );
+convertStikType( StikType value, bool = false );
 
 /// convert #StikType to string with buffer.
 MP4V2_EXPORT string&
-convertStikType( StikType value, string& buffer );
+convertStikType( StikType value, string& buffer, bool = false );
 
 /// convert string to #StikType.
 /// @return On success, a valid enum. On failure, #STIK_UNDEFINED.

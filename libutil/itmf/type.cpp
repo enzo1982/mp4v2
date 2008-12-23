@@ -30,7 +30,8 @@ namespace {
         GenreToString   genreToString;
         GenreFromString genreFromString;
 
-        StikToString   stikToString;
+        StikToString   stikToStringCompact;
+        StikToString   stikToStringFormal;
         StikFromString stikFromString;
     };
     Singleton* SINGLETON;
@@ -214,19 +215,23 @@ convertGenre( const string& value )
 ///////////////////////////////////////////////////////////////////////////////
 
 string
-convertStikType( StikType value )
+convertStikType( StikType value, bool formal )
 {
     string buffer;
-    return convertStikType( value, buffer );
+    return convertStikType( value, buffer, formal );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 string&
-convertStikType( StikType value, string& buffer )
+convertStikType( StikType value, string& buffer, bool formal )
 {
-    const StikToString::const_iterator found = SINGLETON->stikToString.find( value );
-    if( found != SINGLETON->stikToString.end() ) {
+    const StikToString& sts = formal
+        ? SINGLETON->stikToStringFormal
+        : SINGLETON->stikToStringCompact;
+
+    const StikToString::const_iterator found = sts.find( value );
+    if( found != sts.end() ) {
         buffer = found->second;
         return buffer;
     }
@@ -247,8 +252,8 @@ convertStikType( const string& value )
     istringstream iss( value );
     iss >> ivalue;
     if( iss.rdstate() == ios::eofbit ) {
-        const StikToString::const_iterator found = SINGLETON->stikToString.find( static_cast<StikType>(ivalue) );
-        if( found != SINGLETON->stikToString.end() )
+        StikToString::const_iterator found = SINGLETON->stikToStringCompact.find( static_cast<StikType>(ivalue) );
+        if( found != SINGLETON->stikToStringCompact.end() )
             return found->first;
     }
 
@@ -303,7 +308,6 @@ CompareIgnoreCase::operator()( const string& x, const string& y ) const
 ///////////////////////////////////////////////////////////////////////////////
 
 Singleton::Singleton()
-    : stikFromString( *new CompareIgnoreCase() )
 {
     struct BasicData {
         BasicType         type;
@@ -482,19 +486,21 @@ Singleton::Singleton()
 
     struct StikData {
         StikType          type;
-        const char* const text;
+        const char* const compact;
+        const char* const formal;
     };
 
     StikData stikData[] = {
-        { STIK_MOVIE,       "movie" },
-        { STIK_MUSIC_VIDEO, "musicVideo" },
-        { STIK_TV_SHOW,     "tvShow" },
-        { STIK_UNDEFINED,   "" } // must be last
+        { STIK_MOVIE,       "movie",      "Movie" },
+        { STIK_MUSIC_VIDEO, "musicvideo", "Music Video" },
+        { STIK_TV_SHOW,     "tvshow",     "TV Show" },
+        { STIK_UNDEFINED, "", "" } // must be last
     };
 
     for( StikData* p = stikData; p->type != STIK_UNDEFINED; p++ ) {
-        stikToString.insert( StikToString::value_type( p->type, p->text ));
-        stikFromString.insert( StikFromString::value_type( p->text, p->type ));
+        stikToStringCompact.insert( StikToString::value_type( p->type, p->compact ));
+        stikToStringFormal.insert( StikToString::value_type( p->type, p->formal ));
+        stikFromString.insert( StikFromString::value_type( p->compact, p->type ));
     }
 }
 
