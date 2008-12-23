@@ -26,13 +26,12 @@
 
 #include "libutil/util.h"
 
-namespace mp4v2 { namespace util {
-
-///////////////////////////////////////////////////////////////////////////////
+using namespace mp4v2::util;
 
 char* ProgName;
 char* Mp4PathName;
 char* Mp4FileName;
+
 static void DumpTrack ( MP4FileHandle mp4file, MP4TrackId tid )
 {
     uint32_t numSamples;
@@ -240,7 +239,3 @@ extern "C" int main( int argc, char** argv )
 
     return( 0 );
 }
-
-///////////////////////////////////////////////////////////////////////////////
-
-}} // namespace mp4v2::util

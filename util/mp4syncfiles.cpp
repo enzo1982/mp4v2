@@ -21,9 +21,7 @@
 
 #include "libutil/util.h"
 
-namespace mp4v2 { namespace util {
-
-///////////////////////////////////////////////////////////////////////////////
+using namespace mp4v2::util;
 
 #define CHECK_AND_FREE(a) if ((a) != NULL) { free((void *)(a)); (a) = NULL;}
 
@@ -586,7 +584,3 @@ extern "C" int main( int argc, char** argv )
 
     return( 0 );
 }
-
-///////////////////////////////////////////////////////////////////////////////
-
-}} // namespace mp4v2::util

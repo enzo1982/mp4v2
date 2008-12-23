@@ -21,9 +21,7 @@
 
 #include "libutil/util.h"
 
-namespace mp4v2 { namespace util {
-
-///////////////////////////////////////////////////////////////////////////////
+using namespace mp4v2::util;
 
 extern "C" int main( int argc, char** argv )
 {
@@ -260,7 +258,3 @@ extern "C" int main( int argc, char** argv )
 
     return( 0 );
 }
-
-///////////////////////////////////////////////////////////////////////////////
-
-}} // namespace mp4v2::util

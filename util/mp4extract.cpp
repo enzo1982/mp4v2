@@ -26,9 +26,7 @@
 
 #include "libutil/util.h"
 
-namespace mp4v2 { namespace util {
-
-///////////////////////////////////////////////////////////////////////////////
+using namespace mp4v2::util;
 
 char* ProgName;
 char* Mp4PathName;
@@ -255,7 +253,3 @@ void ExtractTrack( MP4FileHandle mp4File, MP4TrackId trackId,
 
     out.close();
 }
-
-///////////////////////////////////////////////////////////////////////////////
-
-}} // namespace mp4v2::util
