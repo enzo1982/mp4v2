@@ -163,7 +163,7 @@ FileUtility::actionOptimize( JobContext& job )
     if( dryrunAbort() )
         return SUCCESS;
 
-    if( !MP4Optimize( job.file.c_str(), NULL ))
+    if( !MP4Optimize( job.file.c_str(), NULL, _debugVerbosity ))
         return herrf( "optimize failed: %s\n", job.file.c_str() );
 
     return SUCCESS;
