@@ -1330,6 +1330,34 @@ extern "C" {
         return false;
     }
     
+    bool MP4GetMetadataCNID(MP4FileHandle hFile, uint32_t* value)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->GetMetadataUint32("cnID", value);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return false;
+    }
+    
+    bool MP4GetMetadataMediaType(MP4FileHandle hFile, uint8_t* value)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->GetMetadataUint8("stik", value);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return false;
+    }
+    
     bool MP4SetMetadataFreeForm(MP4FileHandle hFile,
                                 const char *name,
                                 const uint8_t* pValue,

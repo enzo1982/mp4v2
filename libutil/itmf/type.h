@@ -177,6 +177,8 @@ enum Genre {
 /// Note values are not formally defined in any specification.
 enum StikType {
     STIK_MOVIE       = 0,
+    STIK_NORMAL      = 1,
+    STIK_AUDIOBOOK   = 2,
     STIK_MUSIC_VIDEO = 6,
     STIK_TV_SHOW     = 10,
     STIK_UNDEFINED   = 255,

@@ -492,9 +492,11 @@ Singleton::Singleton()
 
     StikData stikData[] = {
         { STIK_MOVIE,       "movie",      "Movie" },
+        { STIK_NORMAL,      "normal",     "Normal" },
+        { STIK_AUDIOBOOK,   "audiobook",  "Audiobook" },
         { STIK_MUSIC_VIDEO, "musicvideo", "Music Video" },
         { STIK_TV_SHOW,     "tvshow",     "TV Show" },
-        { STIK_UNDEFINED, "", "" } // must be last
+        { STIK_UNDEFINED,   "", "" } // must be last
     };
 
     for( StikData* p = stikData; p->type != STIK_UNDEFINED; p++ ) {

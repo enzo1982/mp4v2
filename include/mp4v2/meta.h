@@ -499,6 +499,16 @@ bool MP4GetMetadataCategory(
     char**        value );
 
 MP4V2_EXPORT
+bool MP4GetMetadataCNID(
+    MP4FileHandle hFile,
+    uint32_t*      value );
+
+MP4V2_EXPORT
+bool MP4GetMetadataMediaType(
+    MP4FileHandle hFile,
+    uint8_t*      value );
+
+MP4V2_EXPORT
 bool MP4SetMetadataFreeForm(
     MP4FileHandle  hFile,
     const char*    name,

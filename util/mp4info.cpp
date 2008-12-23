@@ -25,6 +25,7 @@ using namespace mp4v2::util;
 
 extern "C" int main( int argc, char** argv )
 {
+    sinit(); // libutil static initializer
     const char* const usageString =
         "<file-name>";
 
@@ -189,19 +190,14 @@ extern "C" int main( int argc, char** argv )
                 fprintf( stdout, " Explicit Content: %s\n",
                          bytevalue ? "yes" : "no" );
             }
-            if ( MP4GetMetadataPurchaserAccount( mp4file, &value ) &&
-                    value != NULL ) {
-                fprintf( stdout, " Purchaser Account: %s\n",
-                         value );
-                free( value );
-            }
-            if ( MP4GetMetadataPurchaseDate( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Purchase Date: %s\n", value );
-                free( value );
-            }
             if ( MP4GetMetadataHDVideo( mp4file, &bytevalue ) ) {
                 fprintf( stdout, " HD Video: %s\n",
                          bytevalue ? "yes" : "no" );
+            }
+            if ( MP4GetMetadataMediaType( mp4file, &bytevalue ) ) {
+                string s = itmf::convertStikType( static_cast<itmf::StikType>( bytevalue ), true );
+                fprintf( stdout, " Media Type: %s\n",
+                        s.c_str() );
             }
             if ( MP4GetMetadataTVShow( mp4file, &value ) && value != NULL ) {
                 fprintf( stdout, " TV Show: %s\n", value );
@@ -251,10 +247,24 @@ extern "C" int main( int argc, char** argv )
                 fprintf( stdout, " Category: %s\n", value );
                 free( value );
             }
+            if ( MP4GetMetadataCNID( mp4file, &longvalue ) ) {
+                fprintf( stdout, " cnID: %i\n",
+                         longvalue );
+            }
+            if ( MP4GetMetadataPurchaserAccount( mp4file, &value ) &&
+                    value != NULL ) {
+                fprintf( stdout, " Purchaser Account: %s\n",
+                         value );
+                free( value );
+            }
+            if ( MP4GetMetadataPurchaseDate( mp4file, &value ) && value != NULL ) {
+                fprintf( stdout, " Purchase Date: %s\n", value );
+                free( value );
+            }
             MP4Close( mp4file );
         }
         free( info );
     }
-
+    sshutdown(); // libutil static clenup
     return( 0 );
 }
