@@ -64,6 +64,7 @@ libmp4v2_la_SOURCES = \
     src/atom_video.cpp                   \
     src/atom_vmhd.cpp                    \
     src/atoms.h                          \
+    src/cmeta.cpp                        \
     src/descriptors.cpp                  \
     src/descriptors.h                    \
     src/impl.h                           \
