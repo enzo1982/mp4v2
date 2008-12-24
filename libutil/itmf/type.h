@@ -180,7 +180,9 @@ enum StikType {
     STIK_NORMAL      = 1,
     STIK_AUDIOBOOK   = 2,
     STIK_MUSIC_VIDEO = 6,
+    STIK_SHORT_FILM  = 9,
     STIK_TV_SHOW     = 10,
+    STIK_BOOKLET     = 11,
     STIK_UNDEFINED   = 255,
 };
 

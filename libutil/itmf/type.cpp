@@ -495,7 +495,9 @@ Singleton::Singleton()
         { STIK_NORMAL,      "normal",     "Normal" },
         { STIK_AUDIOBOOK,   "audiobook",  "Audiobook" },
         { STIK_MUSIC_VIDEO, "musicvideo", "Music Video" },
+        { STIK_SHORT_FILM,  "shortfilm",  "Short Film" },
         { STIK_TV_SHOW,     "tvshow",     "TV Show" },
+        { STIK_BOOKLET,     "booklet",    "Booklet" },
         { STIK_UNDEFINED,   "", "" } // must be last
     };
 
