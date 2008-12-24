@@ -504,9 +504,18 @@ bool MP4GetMetadataCNID(
     uint32_t*      value );
 
 MP4V2_EXPORT
+bool MP4SetMetadataMediaType(
+    MP4FileHandle hFile,
+    uint8_t       value );
+
+MP4V2_EXPORT
 bool MP4GetMetadataMediaType(
     MP4FileHandle hFile,
     uint8_t*      value );
+
+MP4V2_EXPORT
+bool MP4DeleteMetadataMediaType(
+    MP4FileHandle hFile );
 
 MP4V2_EXPORT
 bool MP4SetMetadataFreeForm(

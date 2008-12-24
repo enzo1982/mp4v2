@@ -36,6 +36,7 @@ using namespace mp4v2::util;
 #define OPT_GENRE        'g'
 #define OPT_GROUPING     'G'
 #define OPT_HD           'H'
+#define OPT_MEDIA_TYPE   'i'
 #define OPT_DESCRIPTION  'm'
 #define OPT_TVEPISODE    'M'
 #define OPT_PICTURE      'P'
@@ -47,7 +48,7 @@ using namespace mp4v2::util;
 #define OPT_REMOVE       'r'
 #define OPT_ALBUM_ARTIST 'R'
 
-#define OPT_STRING  "hvA:a:b:c:C:d:D:e:E:g:G:H:m:M:P:s:t:T:w:y:r:R:"
+#define OPT_STRING  "hvA:a:b:c:C:d:D:e:E:g:G:H:i:m:M:P:s:t:T:w:y:r:R:"
 
 #define ELEMENT_OF(x,i) x[int(i)]
 
@@ -69,6 +70,7 @@ static const char* const help_text =
     "  -g, -genre       STR  Set the genre name\n"
     "  -G, -grouping    STR  Set the grouping name\n"
     "  -H, -hdvideo     NUM  Set the HD flag (1\\0)\n"
+    "  -i, -type        STR  Set the Type\n"
     "  -m, -description STR  Set the short description\n"
     "  -M, -episode     NUM  Set the episode number\n"
     "  -P, -picture     PTH  Set the picture as a .png\n"
@@ -100,6 +102,7 @@ extern "C" int
         { "genre",       prog::Option::REQUIRED_ARG, 0, OPT_GENRE        },
         { "grouping",    prog::Option::REQUIRED_ARG, 0, OPT_GROUPING     },
         { "hdvideo",     prog::Option::REQUIRED_ARG, 0, OPT_HD           },
+        { "type",        prog::Option::REQUIRED_ARG, 0, OPT_MEDIA_TYPE   },
         { "description", prog::Option::REQUIRED_ARG, 0, OPT_DESCRIPTION  },
         { "episode",     prog::Option::REQUIRED_ARG, 0, OPT_TVEPISODE    },
         { "picture",     prog::Option::REQUIRED_ARG, 0, OPT_PICTURE      },
@@ -237,6 +240,9 @@ extern "C" int
                     case OPT_HD:
                         MP4DeleteMetadataHDVideo( h );
                         break;
+                    case OPT_MEDIA_TYPE:
+                        MP4DeleteMetadataMediaType( h );
+                        break;
                     case OPT_DESCRIPTION:
                         MP4DeleteMetadataShortDescription( h );
                         break;
@@ -323,6 +329,10 @@ extern "C" int
                     case OPT_HD:
                         MP4SetMetadataHDVideo( h, nums[i] );
                         break;
+                    case OPT_MEDIA_TYPE:
+                        itmf::StikType st = itmf::convertStikType( tags[i] );
+                        MP4SetMetadataMediaType( h, st );
+                        break;
                     case OPT_DESCRIPTION:
                         MP4SetMetadataShortDescription( h, tags[i] );
                         break;
@@ -371,6 +381,6 @@ extern "C" int
 
         MP4Close( h );
     } /* end while optind < argc */
-
+    sshutdown(); // libutil static clenup
     return 0;
 }
