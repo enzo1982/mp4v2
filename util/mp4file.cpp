@@ -169,6 +169,10 @@ FileUtility::actionOptimize( JobContext& job )
     if( !MP4Optimize( job.file.c_str(), tfile.c_str(), _debugVerbosity ))
         return herrf( "optimize failed: %s\n", job.file.c_str() );
 
+    verbose2f( "renaming %s -> %s\n", tfile.c_str(), job.file.c_str() );
+    if( io::FileSystem::rename( tfile, job.file ))
+        hwarnf( "rename failed: %s -> %s\n", tfile.c_str(), job.file.c_str() );
+
     return SUCCESS;
 }
 
