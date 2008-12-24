@@ -33,6 +33,7 @@
 
 #include "impl.h"
 #include <list>
+#include <sstream>
 
 namespace mp4v2 { namespace impl {
 
@@ -383,7 +384,9 @@ void MP4Atom::ReadProperties(uint32_t startIndex, uint32_t count)
                                 m_pProperties[i]->GetName(),
                                 m_pFile->GetPosition(), m_end));
 
-            throw new MP4Error("atom is too small", "Atom ReadProperties");
+            ostringstream oss;
+            oss << "atom '" << GetType() << "' is too small; overrun at property: " << m_pProperties[i]->GetName();
+            throw new MP4Error( oss.str().c_str(), "Atom ReadProperties" );
         }
 
         if (m_pProperties[i]->GetType() == TableProperty) {
