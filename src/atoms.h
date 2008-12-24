@@ -523,6 +523,9 @@ class MP4UdtaElementAtom : public MP4Atom
 {
 public:
     MP4UdtaElementAtom( const char* type );
+    void Read();
+
+    MP4BytesProperty& value;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

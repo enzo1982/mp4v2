@@ -738,6 +738,58 @@ MP4Atom::descendsFrom( MP4Atom* parent, const char* type )
     return false;
 }
 
+// UDTA child atom types to be constructed as MP4UdtaElementAtom.
+// List gleaned from QTFF 2007-09-04.
+static const char* const UDTA_ELEMENTS[] = {
+    "\xA9" "arg",
+    "\xA9" "ark",
+    "\xA9" "cok",
+    "\xA9" "com",
+    "\xA9" "cpy",
+    "\xA9" "day",
+    "\xA9" "dir",
+    "\xA9" "ed1",
+    "\xA9" "ed2",
+    "\xA9" "ed3",
+    "\xA9" "ed4",
+    "\xA9" "ed5",
+    "\xA9" "ed6",
+    "\xA9" "ed7",
+    "\xA9" "ed8",
+    "\xA9" "ed9",
+    "\xA9" "fmt",
+    "\xA9" "inf",
+    "\xA9" "isr",
+    "\xA9" "lab",
+    "\xA9" "lal",
+    "\xA9" "mak",
+    "\xA9" "nak",
+    "\xA9" "nam",
+    "\xA9" "pdk",
+    "\xA9" "phg",
+    "\xA9" "prd",
+    "\xA9" "prf",
+    "\xA9" "prk",
+    "\xA9" "prl",
+    "\xA9" "req",
+    "\xA9" "snk",
+    "\xA9" "snm",
+    "\xA9" "src",
+    "\xA9" "swf",
+    "\xA9" "swk",
+    "\xA9" "swr",
+    "\xA9" "wrt",
+    "Allf",
+    "hinf",
+    "hnti",
+    "name",
+    "LOOP",
+    "ptv ",
+    "SelO",
+    "WLOC",
+    NULL // must be last
+};
+
 MP4Atom*
 MP4Atom::factory( MP4Atom* parent, const char* type )
 {
@@ -746,46 +798,27 @@ MP4Atom::factory( MP4Atom* parent, const char* type )
         return new MP4RootAtom();
 
     // construct atoms which are context-savvy
-// TODO-KB
     if( parent ) {
         const char* const ptype = parent->GetType();
-#if 0
-        case 0xa9:
-        {
-            static const char nam[5] = { (char)0xa9, 'n', 'a', 'm', '\0' };
-            static const char cmt[5] = { (char)0xa9, 'c', 'm', 't', '\0' };
-            static const char cpy[5] = { (char)0xa9, 'c', 'p', 'y', '\0' };
-            static const char des[5] = { (char)0xa9, 'd', 'e', 's', '\0' };
-            static const char prd[5] = { (char)0xa9, 'p', 'r', 'd', '\0' };
-            static const char lyr[5] = { (char)0xa9, 'l', 'y', 'r', '\0' };
-
-            if( ATOMID(type) == ATOMID(nam) ||
-                ATOMID(type) == ATOMID(cmt) ||
-                ATOMID(type) == ATOMID(cpy) ||
-                ATOMID(type) == ATOMID(des) ||
-                ATOMID(type) == ATOMID(prd) ||
-                ATOMID(type) == ATOMID(lyr) )
-            {
-                return new MP4Meta2Atom( type );
-            }
-
-            break;
-        }
-#endif
 
         if( descendsFrom( parent, "ilst" )) {
-            if( ATOMID(ptype) == ATOMID("ilst") )
+            if( ATOMID( ptype ) == ATOMID( "ilst" ))
                 return new MP4ItemAtom( type );
 
-            if( ATOMID(type) == ATOMID("data") )
+            if( ATOMID( type ) == ATOMID( "data" ))
                 return new MP4DataAtom();
 
-            if( ATOMID(ptype) == ATOMID("----") ) {
-                if( ATOMID(type) == ATOMID("mean") )
+            if( ATOMID( ptype ) == ATOMID( "----" )) {
+                if( ATOMID( type ) == ATOMID( "mean" ))
                     return new MP4MeanAtom();
-                if( ATOMID(type) == ATOMID("name") )
+                if( ATOMID( type ) == ATOMID( "name" ))
                     return new MP4NameAtom();
             }
+        }
+        else if( ATOMID( ptype ) == ATOMID( "udta" )) {
+            for( const char* const* p = UDTA_ELEMENTS; *p; p++ )
+                if( !strcmp( type, *p ))
+                    return new MP4UdtaElementAtom( type );
         }
     }
 

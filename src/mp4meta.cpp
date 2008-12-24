@@ -117,12 +117,25 @@ bool MP4File::CreateMetadataAtom(const char* name)
     if (!pMetaAtom)
         return false;
 
-    /* some fields need special flags set */
-    if ((uint8_t)name[0] == 0251 || ATOMID(name) == ATOMID("aART"))
+    // set typeCode where appropriate, otherwise default is implicit type
     {
-        pMetaAtom->SetFlags(0x1);
-    } else if ((memcmp(name, "cpil", 4) == 0) || (memcmp(name, "tmpo", 4) == 0)) {
-        pMetaAtom->SetFlags(0x15);
+        MP4DataAtom& data = *(MP4DataAtom*)pMetaAtom; // safe to cast: all ilst data atoms are MP4DataAtom
+        if( name[0] == '\xA9' )
+            data.typeCode.SetValue( 1 ); // utf8
+        else if( ATOMID( name ) == ATOMID( "aART" ))
+            data.typeCode.SetValue( 1 ); // utf8
+        else if( ATOMID( name ) == ATOMID( "cpil" ))
+            data.typeCode.SetValue( 21 ); // integer
+        else if( ATOMID( name ) == ATOMID( "gnre" ))
+            data.typeCode.SetValue( 18 ); // genre enum
+        else if( ATOMID( name ) == ATOMID( "pgap" ))
+            data.typeCode.SetValue( 21 ); // integer
+        else if( ATOMID( name ) == ATOMID( "rtng" ))
+            data.typeCode.SetValue( 21 ); // integer
+        else if( ATOMID( name ) == ATOMID( "tool" ))
+            data.typeCode.SetValue( 21 ); // integer
+        else if( ATOMID( name ) == ATOMID( "tmpo" ))
+            data.typeCode.SetValue( 21 ); // integer
     }
 
     MP4Atom *pHdlrAtom = m_pRootAtom->FindAtom("moov.udta.meta.hdlr");
@@ -846,7 +859,8 @@ bool MP4File::SetMetadataFreeForm (const char *name,
     if (!pMetaAtom)
         return false;
 
-    pMetaAtom->SetFlags(0x1);
+    // all ilst data atoms are of MP4DataAtom type.
+    ((MP4DataAtom*)pMetaAtom)->typeCode.SetValue( 0x01 ); // UTF8
 
     MP4Atom *pHdlrAtom = m_pRootAtom->FindAtom("moov.udta.meta.hdlr");
     MP4StringProperty *pStringProperty = NULL;

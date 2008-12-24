@@ -21,20 +21,9 @@
 
 #include "impl.h"
 
-namespace mp4v2 {
-namespace impl {
+namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
-
-static const char name[5] = { (char)0251, 'n', 'a', 'm', '\0' };
-static const char art[5]  = { (char)0251, 'A', 'R', 'T', '\0' };
-static const char wrt[5]  = { (char)0251, 'w', 'r', 't', '\0' };
-static const char alb[5]  = { (char)0251, 'a', 'l', 'b', '\0' };
-static const char day[5]  = { (char)0251, 'd', 'a', 'y', '\0' };
-static const char too[5]  = { (char)0251, 't', 'o', 'o', '\0' };
-static const char cmt[5]  = { (char)0251, 'c', 'm', 't', '\0' };
-static const char gen[5]  = { (char)0251, 'g', 'e', 'n', '\0' };
-static const char grp[5]  = { (char)0251, 'g', 'r', 'p', '\0' };
 
 MP4StandardAtom::MP4StandardAtom (const char *type) : MP4Atom(type)
 {
@@ -45,15 +34,7 @@ MP4StandardAtom::MP4StandardAtom (const char *type) : MP4Atom(type)
      * Try to keep it in alphabetical order - it should only be called
      * 1 time per atom, so it's not that urgent.
      */
-    if (ATOMID(type) == ATOMID("aART") ||
-            ATOMID(type) == ATOMID("akID") ||
-            ATOMID(type) == ATOMID("apID") ||
-            ATOMID(type) == ATOMID("atID")) {
-        ExpectChildAtom("data", Required, OnlyOne);
-        /*
-         * b???
-         */
-    } else if (ATOMID(type) == ATOMID("bitr")) {
+    if (ATOMID(type) == ATOMID("bitr")) {
         AddProperty( /* 0 */
             new MP4Integer32Property("avgBitrate"));
 
@@ -286,14 +267,6 @@ MP4StandardAtom::MP4StandardAtom (const char *type) : MP4Atom(type)
     } else if (ATOMID(type) == ATOMID("pmax")) {
         AddProperty( // max packet size
             new MP4Integer32Property("bytes"));
-    } else if (ATOMID(type) == ATOMID("pgap") ||
-               ATOMID(type) == ATOMID("plID") ||
-               ATOMID(type) == ATOMID("purd") ||
-               ATOMID(type) == ATOMID("rtng")) {
-        ExpectChildAtom("data", Required, OnlyOne);
-        /*
-         * s???
-         */
     } else if (ATOMID(type) == ATOMID("schi")) {
         // not sure if this is child atoms or table of boxes
         // get clarification on spec 9.1.2.5
@@ -366,12 +339,6 @@ MP4StandardAtom::MP4StandardAtom (const char *type) : MP4Atom(type)
 
         pTable->AddProperty(new MP4Integer32Property("sampleCount"));
         pTable->AddProperty(new MP4Integer32Property("sampleDelta"));
-    } else if (ATOMID(type) == ATOMID("sfID") ||
-               ATOMID(type) == ATOMID("stik")) {
-        ExpectChildAtom("data", Required, OnlyOne);
-        /*
-         * t???
-         */
     } else if (ATOMID(type) == ATOMID("tims")) {
         AddProperty(
             new MP4Integer32Property("timeScale"));
@@ -383,9 +350,6 @@ MP4StandardAtom::MP4StandardAtom (const char *type) : MP4Atom(type)
     } else if (ATOMID(type) == ATOMID("tmax")) {
         AddProperty( // max relative xmit time
             new MP4Integer32Property("milliSecs"));
-
-    } else if (ATOMID(type) == ATOMID("tmpo")) { // iTunes
-        ExpectChildAtom("data", Required, OnlyOne);
 
     } else if (ATOMID(type) == ATOMID("traf")) {
         ExpectChildAtom("tfhd", Required, OnlyOne);
@@ -419,9 +383,6 @@ MP4StandardAtom::MP4StandardAtom (const char *type) : MP4Atom(type)
         AddProperty( /* 6 */
             new MP4Integer32Property("defaultSampleFlags"));
 
-    } else if (ATOMID(type) == ATOMID("trkn")) { // iTunes
-        ExpectChildAtom("data", Required, OnlyOne);
-
     } else if (ATOMID(type) == ATOMID("trpy") ||
                ATOMID(type) == ATOMID("tpyl")) {
         AddProperty( // bytes sent including RTP headers
@@ -432,20 +393,6 @@ MP4StandardAtom::MP4StandardAtom (const char *type) : MP4Atom(type)
             new MP4Integer32Property("offset"));
     } else if (ATOMID(type) == ATOMID("wave")) {
         ExpectChildAtom("esds", Required, OnlyOne);
-        /*
-         * copyright???
-         */
-    } else if (ATOMID(type) == ATOMID(art) ||
-               ATOMID(type) == ATOMID(wrt) ||
-               ATOMID(type) == ATOMID(alb) ||
-               ATOMID(type) == ATOMID(day) ||
-               ATOMID(type) == ATOMID(too) ||
-               ATOMID(type) == ATOMID(gen) ||
-               ATOMID(type) == ATOMID(grp)) { /* Apple iTunes */
-        ExpectChildAtom("data", Required, OnlyOne);
-        /*
-         * ----
-         */
     } else {
         /*
          * default - unknown type
@@ -456,5 +403,4 @@ MP4StandardAtom::MP4StandardAtom (const char *type) : MP4Atom(type)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}
-} // namespace mp4v2::impl
+}} // namespace mp4v2::impl

@@ -107,4 +107,21 @@ MP4NameAtom::Read()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+MP4UdtaElementAtom::MP4UdtaElementAtom( const char* type )
+    : MP4Atom ( type )
+    , value   ( *new MP4BytesProperty( "value" ))
+{
+    AddProperty( &value );
+}
+
+void
+MP4UdtaElementAtom::Read()
+{
+    // calculate size of the metadata from the atom size
+    value.SetValueSize( m_size );
+    MP4Atom::Read();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 }} // namespace mp4v2::impl
