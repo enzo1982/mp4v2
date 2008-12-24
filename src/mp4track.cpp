@@ -1396,9 +1396,9 @@ void MP4Track::UpdateDurations(MP4Duration duration)
     m_pMediaDurationProperty->SetValue(
         m_pMediaDurationProperty->GetValue() + duration);
 
-    MP4Duration movieDuration = ToMovieDuration(duration);
-    m_pTrackDurationProperty->SetValue(
-        m_pTrackDurationProperty->GetValue() + movieDuration);
+    MP4Duration movieDuration = ToMovieDuration(
+        m_pMediaDurationProperty->GetValue());
+    m_pTrackDurationProperty->SetValue(movieDuration);
 
     m_pFile->UpdateDuration(m_pTrackDurationProperty->GetValue());
 }
