@@ -330,9 +330,11 @@ extern "C" int
                         MP4SetMetadataHDVideo( h, nums[i] );
                         break;
                     case OPT_MEDIA_TYPE:
+                    {
                         itmf::StikType st = itmf::convertStikType( tags[i] );
                         MP4SetMetadataMediaType( h, st );
                         break;
+                    }
                     case OPT_DESCRIPTION:
                         MP4SetMetadataShortDescription( h, tags[i] );
                         break;
@@ -354,27 +356,28 @@ extern "C" int
                     case OPT_ALBUM_ARTIST:
                         MP4SetMetadataAlbumArtist( h, tags[i] );
                         break;
-                    case OPT_PICTURE: {
-                            // TODO-KB: test io::StdioFile
-                            io::StdioFile out( tags[i] );
-                            if( !out.open( "rb" )) {
-                                io::StdioFile::Size artSize;
-                                out.getSize( artSize );
+                    case OPT_PICTURE:
+                    {
+                        // TODO-KB: test io::StdioFile
+                        io::StdioFile out( tags[i] );
+                        if( !out.open( "rb" )) {
+                            io::StdioFile::Size artSize;
+                            out.getSize( artSize );
 
-                                uint8_t* art = (uint8_t*)malloc( (size_t)artSize );
+                            uint8_t* art = (uint8_t*)malloc( (size_t)artSize );
 
-                                io::StdioFile::Size nin;
-                                if( out.read( art, artSize, nin ) && nin == artSize ) {
-                                    MP4SetMetadataCoverArt( h, art, artSize );
-                                }
-
-                                free( art );
-                                out.close();
+                            io::StdioFile::Size nin;
+                            if( out.read( art, artSize, nin ) && nin == artSize ) {
+                                MP4SetMetadataCoverArt( h, art, artSize );
                             }
-                            else {
-                                fprintf( stderr, "Art file %s not found\n", tags[i] );
-                            }
+
+                            free( art );
+                            out.close();
                         }
+                        else {
+                            fprintf( stderr, "Art file %s not found\n", tags[i] );
+                        }
+                    }
                 }
             }
         }

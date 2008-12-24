@@ -455,6 +455,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\cmeta.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\descriptors.cpp"
 				>
 			</File>
