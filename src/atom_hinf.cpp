@@ -21,8 +21,7 @@
 
 #include "impl.h"
 
-namespace mp4v2 {
-namespace impl {
+namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -51,7 +50,7 @@ void MP4HinfAtom::Generate()
 
     for (uint32_t i = 0; i < m_pChildAtomInfos.Size(); i++) {
         MP4Atom* pChildAtom =
-            CreateAtom(m_pChildAtomInfos[i]->m_name);
+            CreateAtom(this, m_pChildAtomInfos[i]->m_name);
 
         AddChildAtom(pChildAtom);
 
@@ -62,5 +61,4 @@ void MP4HinfAtom::Generate()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}
-} // namespace mp4v2::impl
+}} // namespace mp4v2::impl

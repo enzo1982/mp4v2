@@ -49,7 +49,7 @@ ColorParameterBox::add( MP4FileHandle file, uint16_t trackIndex, const Item& ite
     if( !findColorParameterBox( file, *coding, colr ))
         throw new UtilException( "colr-box already exists" );
 
-    colr = MP4Atom::CreateAtom( SINGLETON->BOX_TYPE.c_str() );
+    colr = MP4Atom::CreateAtom( coding, SINGLETON->BOX_TYPE.c_str() );
     coding->AddChildAtom( colr );
     colr->Generate();
 

@@ -20,6 +20,9 @@
  */
 
 #include "impl.h"
+#include <iomanip>
+#include <sstream>
+#include <locale>
 
 namespace mp4v2 {
 namespace impl {
@@ -538,22 +541,78 @@ void MP4BytesProperty::Write(MP4File* pFile, uint32_t index)
 void MP4BytesProperty::Dump(FILE* pFile, uint8_t indent,
                             bool dumpImplicits, uint32_t index)
 {
-    if (m_implicit && !dumpImplicits) {
+    if( m_implicit && !dumpImplicits )
+        return;
+
+    const uint32_t size  = m_valueSizes[index];
+    const uint8_t* const value = m_values[index];
+
+    Indent( pFile, indent );
+    fprintf( pFile, "%s = <%u bytes>", m_name, size );
+
+    if( size == 0 ) {
+        fprintf( pFile, "\n" );
+        fflush( pFile );
         return;
     }
-    Indent(pFile, indent);
-    fputs(m_name, pFile);
-    if (index != 0) fprintf(pFile, "[%u]", index);
-    fprintf(pFile, " = <%u bytes> ", m_valueSizes[index]);
-    for (uint32_t i = 0; i < m_valueSizes[index]; i++) {
-        if ((i % 16) == 0 && m_valueSizes[index] > 16) {
-            fprintf(pFile, "\n");
-            Indent(pFile, indent);
+
+    if( size <= 16 ) {
+        ostringstream oss;
+        ostringstream text;
+
+        oss << "  ";
+        for( uint32_t i = 0; i < size; i++ ) {
+            if( i )
+                oss << ' ';
+            oss << hex << setw(2) << setfill('0') << right << static_cast<uint32_t>(value[i]);
+            text << (isprint( static_cast<char>(value[i]) ) ? static_cast<char>(value[i]) : '.');
         }
-        fprintf(pFile, "%02x ", m_values[index][i]);
+
+        oss << "  |" << text.str() << "|\n";
+
+        fprintf( pFile, oss.str().c_str() );
+        fflush( pFile );
+        return;
     }
-    fprintf(pFile, "\n");
-    fflush(pFile);
+
+    ostringstream oss;
+    ostringstream text;
+
+    for( uint32_t i = 0; i < size; i++ ) {
+        if( i % 16 == 0 ) {
+            fprintf( pFile, oss.str().c_str() );
+            oss.str( "" );
+            oss << '\n'
+                << setw(indent) << setfill(' ') << ""
+                << hex << setw(8) << setfill('0') << right << i;
+
+            if( i > 0 ) {
+                fprintf( pFile, "  |" );
+                fprintf( pFile, text.str().c_str() );
+                fprintf( pFile, "|" );
+                text.str( "" );
+            }
+        }
+
+        if( i % 8 == 0 )
+            oss << ' ';
+
+        oss << ' ' << hex << setw(2) << setfill('0') << right << static_cast<uint32_t>(value[i]);
+        text << (isprint( static_cast<char>(value[i]) ) ? static_cast<char>(value[i]) : '.');
+    }
+
+    const string stext = text.str();
+    if( !stext.empty() ) {
+        const string::size_type deficit = 16 - stext.length();
+        if( deficit > 7 )
+            oss << ' ';
+
+        oss << setfill(' ') << setw( deficit*3 ) << "" << "  |" << stext << '|';
+    }
+
+    oss << "\n";
+    fprintf( pFile, oss.str().c_str() );
+    fflush( pFile );
 }
 
 // MP4TableProperty

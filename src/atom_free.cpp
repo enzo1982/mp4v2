@@ -26,8 +26,8 @@ namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MP4FreeAtom::MP4FreeAtom()
-        : MP4Atom("free")
+MP4FreeAtom::MP4FreeAtom( const char* type )
+    : MP4Atom( type ? type : "free" )
 {
 }
 

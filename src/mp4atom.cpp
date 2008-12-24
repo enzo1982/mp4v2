@@ -32,6 +32,7 @@
  */
 
 #include "impl.h"
+#include <list>
 
 namespace mp4v2 { namespace impl {
 
@@ -73,306 +74,11 @@ MP4Atom::~MP4Atom()
     }
 }
 
-MP4Atom* MP4Atom::CreateAtom(const char* type)
+MP4Atom* MP4Atom::CreateAtom( MP4Atom* parent, const char* type )
 {
-    MP4Atom* pAtom = NULL;
-
-    if (type == NULL) {
-        pAtom = new MP4RootAtom();
-    }
-    else {
-        switch ((uint8_t)type[0]) {
-        case 'a':
-            if (ATOMID(type) == ATOMID("avc1")) {
-                pAtom = new MP4Avc1Atom();
-            }
-            else if (ATOMID(type) == ATOMID("ac-3")) {
-                pAtom = new MP4Ac3Atom();
-            }
-            else if (ATOMID(type) == ATOMID("avcC")) {
-                pAtom = new MP4AvcCAtom();
-            }
-            else if (ATOMID(type) == ATOMID("alis")) {
-                pAtom = new MP4UrlAtom("alis");
-            }
-            else if (ATOMID(type) == ATOMID("alaw")) {
-                pAtom = new MP4SoundAtom(type);
-            }
-            else if (ATOMID(type) == ATOMID("alac")) {
-                pAtom = new MP4SoundAtom(type);
-            }
-            break;
-        case 'c':
-            if (ATOMID(type) == ATOMID("chap")) {
-                pAtom = new MP4TrefTypeAtom(type);
-            }
-            else if (ATOMID(type) == ATOMID("chpl")) {
-                pAtom = new MP4ChplAtom();
-            }
-            else if (ATOMID(type) == ATOMID("colr")) {
-                pAtom = new MP4ColrAtom();
-            }
-            break;
-        case 'd':
-            if (ATOMID(type) == ATOMID("d263")) {
-                pAtom = new MP4D263Atom();
-            }
-            else if (ATOMID(type) == ATOMID("damr")) {
-                pAtom = new MP4DamrAtom();
-            }
-            else if (ATOMID(type) == ATOMID("dref")) {
-                pAtom = new MP4DrefAtom();
-            }
-            else if (ATOMID(type) == ATOMID("dpnd")) {
-                pAtom = new MP4TrefTypeAtom(type);
-            }
-            else if (ATOMID(type) == ATOMID("data")) { /* Apple iTunes */
-                pAtom = new MP4DataAtom();
-            } 
-            else if (ATOMID(type) == ATOMID("dac3")) { 
-                pAtom = new MP4DAc3Atom();
-            }
-            break;
-        case 'e':
-            if (ATOMID(type) == ATOMID("elst")) {
-                pAtom = new MP4ElstAtom();
-            }
-            else if (ATOMID(type) == ATOMID("enca")) {
-                pAtom = new MP4EncaAtom();
-            }
-            else if (ATOMID(type) == ATOMID("encv")) {
-                pAtom = new MP4EncvAtom();
-            }
-            break;
-        case 'f':
-            if (ATOMID(type) == ATOMID("free")) {
-                pAtom = new MP4FreeAtom();
-            }
-            else if (ATOMID(type) == ATOMID("ftyp")) {
-                pAtom = new MP4FtypAtom();
-            }
-            else if (ATOMID(type) == ATOMID("ftab")) {
-                pAtom = new MP4FtabAtom();
-            }
-            break;
-        case 'g':
-            if (ATOMID(type) == ATOMID("gmin")) {
-                pAtom = new MP4GminAtom();
-            }
-            break;
-        case 'h':
-            if (ATOMID(type) == ATOMID("hdlr")) {
-                pAtom = new MP4HdlrAtom();
-            }
-            else if (ATOMID(type) == ATOMID("hint")) {
-                pAtom = new MP4TrefTypeAtom(type);
-            }
-            else if (ATOMID(type) == ATOMID("hnti")) {
-                pAtom = new MP4HntiAtom();
-            }
-            else if (ATOMID(type) == ATOMID("hinf")) {
-                pAtom = new MP4HinfAtom();
-            }
-            else if (ATOMID(type) == ATOMID("h263")) {
-                pAtom = new MP4VideoAtom("h263");
-            }
-            else if (ATOMID(type) == ATOMID("href")) {
-                pAtom = new MP4HrefAtom();
-            }
-            break;
-        case 'i':
-            if (ATOMID(type) == ATOMID("ipir")) {
-                pAtom = new MP4TrefTypeAtom(type);
-            }
-            else if (ATOMID(type) == ATOMID("ima4")) {
-                pAtom = new MP4SoundAtom("ima4");
-            }
-            break;
-        case 'j':
-            if (ATOMID(type) == ATOMID("jpeg")) {
-                pAtom = new MP4VideoAtom("jpeg");
-            }
-            break;
-        case 'm':
-            if (ATOMID(type) == ATOMID("mdhd")) {
-                pAtom = new MP4MdhdAtom();
-            }
-            else if (ATOMID(type) == ATOMID("mvhd")) {
-                pAtom = new MP4MvhdAtom();
-            }
-            else if (ATOMID(type) == ATOMID("mdat")) {
-                pAtom = new MP4MdatAtom();
-            }
-            else if (ATOMID(type) == ATOMID("mpod")) {
-                pAtom = new MP4TrefTypeAtom(type);
-            }
-            else if (ATOMID(type) == ATOMID("mp4a")) {
-                pAtom = new MP4SoundAtom("mp4a");
-            }
-            else if (ATOMID(type) == ATOMID("mp4s")) {
-                pAtom = new MP4Mp4sAtom();
-            }
-            else if (ATOMID(type) == ATOMID("mp4v")) {
-                pAtom = new MP4Mp4vAtom();
-            }
-            else if (ATOMID(type) == ATOMID("mean")) { // iTunes
-                pAtom = new MP4Meta1Atom(type);
-            }
-            break;
-        case 'n':
-            if (ATOMID(type) == ATOMID("name")) { // iTunes
-                // Use the new MP4NameAtom instead of the metadata one since we
-                // know the format of the name as being a simple "value".
-                //pAtom = new MP4Meta1Atom(type);
-                pAtom = new MP4NameAtom();
-            }
-            else if (ATOMID(type) == ATOMID("nmhd")) {
-                pAtom = new MP4NmhdAtom();
-            }
-            break;
-        case 'o':
-            if (ATOMID(type) == ATOMID("ohdr")) {
-                pAtom = new MP4OhdrAtom();
-            }
-            break;
-        case 'p':
-            if (ATOMID(type) == ATOMID("pasp")) {
-                pAtom = new MP4PaspAtom();
-            }
-            break;
-        case 'r':
-            if (ATOMID(type) == ATOMID("rtp ")) {
-                pAtom = new MP4RtpAtom();
-            }
-            else if (ATOMID(type) == ATOMID("raw ")) {
-                pAtom = new MP4VideoAtom("raw ");
-            }
-            break;
-        case 's':
-            if (ATOMID(type) == ATOMID("s263"))  {
-                pAtom = new MP4S263Atom();
-            }
-            else if (ATOMID(type) == ATOMID("samr")) {
-                pAtom = new MP4AmrAtom("samr");
-            }
-            else if (ATOMID(type) == ATOMID("sawb")) {
-                pAtom = new MP4AmrAtom("sawb");
-            }
-            else if (ATOMID(type) == ATOMID("stbl")) {
-                pAtom = new MP4StblAtom();
-            }
-            else if (ATOMID(type) == ATOMID("stsd")) {
-                pAtom = new MP4StsdAtom();
-            }
-            else if (ATOMID(type) == ATOMID("stsz")) {
-                pAtom = new MP4StszAtom();
-            }
-            else if (ATOMID(type) == ATOMID("stsc")) {
-                pAtom = new MP4StscAtom();
-            }
-            else if (ATOMID(type) == ATOMID("stz2")) {
-                pAtom = new MP4Stz2Atom();
-            }
-            else if (ATOMID(type) == ATOMID("stdp")) {
-                pAtom = new MP4StdpAtom();
-            }
-            else if (ATOMID(type) == ATOMID("sdp ")) {
-                pAtom = new MP4SdpAtom();
-            }
-            else if (ATOMID(type) == ATOMID("sync")) {
-                pAtom = new MP4TrefTypeAtom(type);
-            }
-            else if (ATOMID(type) == ATOMID("skip")) {
-                pAtom = new MP4FreeAtom();
-                pAtom->SetType("skip");
-            }
-            else if (ATOMID(type) == ATOMID("sowt")) {
-                pAtom = new MP4SoundAtom("sowt");
-            }
-            break;
-        case 't':
-            if (ATOMID(type) == ATOMID("text")) {
-                pAtom = new MP4TextAtom();
-            }
-            else if (ATOMID(type) == ATOMID("tx3g")) {
-                pAtom = new MP4Tx3gAtom();
-            }
-            else if (ATOMID(type) == ATOMID("tkhd")) {
-                pAtom = new MP4TkhdAtom();
-            }
-            else if (ATOMID(type) == ATOMID("tfhd")) {
-                pAtom = new MP4TfhdAtom();
-            }
-            else if (ATOMID(type) == ATOMID("trun")) {
-                pAtom = new MP4TrunAtom();
-            }
-            else if (ATOMID(type) == ATOMID("twos")) {
-                pAtom = new MP4SoundAtom("twos");
-            }
-            break;
-        case 'u':
-            if (ATOMID(type) == ATOMID("udta")) {
-                pAtom = new MP4UdtaAtom();
-            }
-            else if (ATOMID(type) == ATOMID("url ")) {
-                pAtom = new MP4UrlAtom();
-            }
-            else if (ATOMID(type) == ATOMID("urn ")) {
-                pAtom = new MP4UrnAtom();
-            }
-            else if (ATOMID(type) == ATOMID("ulaw")) {
-                pAtom = new MP4SoundAtom("ulaw");
-            }
-            break;
-        case 'v':
-            if (ATOMID(type) == ATOMID("vmhd")) {
-                pAtom = new MP4VmhdAtom();
-            }
-            break;
-        case 'y':
-            if (ATOMID(type) == ATOMID("yuv2")) {
-                pAtom = new MP4VideoAtom("yuv2");
-            }
-            break;
-        case 'S':
-            if (ATOMID(type) == ATOMID("SVQ3")) {
-                pAtom = new MP4VideoAtom("SVQ3");
-            }
-            else if (ATOMID(type) == ATOMID("SMI ")) {
-                pAtom = new MP4SmiAtom();
-            }
-            break;
-        case 0251:
-            {
-                static const char name[5] = { (char)0251, 'n', 'a', 'm', '\0' };
-                static const char cmt[5]  = { (char)0251, 'c', 'm', 't', '\0' };
-                static const char cpy[5]  = { (char)0251, 'c', 'p', 'y', '\0' };
-                static const char des[5]  = { (char)0251, 'd', 'e', 's', '\0' };
-                static const char prd[5]  = { (char)0251, 'p', 'r', 'd', '\0' };
-                static const char lyr[5]  = { (char)0251, 'l', 'y', 'r', '\0' };
-                if( ATOMID(type) == ATOMID(name) ||
-                    ATOMID(type) == ATOMID(cmt) ||
-                    ATOMID(type) == ATOMID(cpy) ||
-                    ATOMID(type) == ATOMID(prd) ||
-                    ATOMID(type) == ATOMID(des) ||
-                    ATOMID(type) == ATOMID(lyr) )
-                {
-                    pAtom = new MP4Meta2Atom(type);
-                }
-            }
-            break;
-        default:
-            break;
-        }
-    }
-
-    if (pAtom == NULL) {
-        pAtom = new MP4StandardAtom(type);
-        // unknown type is set by StandardAtom type
-    }
-
-    ASSERT(pAtom);
-    return pAtom;
+    MP4Atom* atom = factory( parent, type );
+    ASSERT( atom );
+    return atom;
 }
 
 // generate a skeletal self
@@ -394,7 +100,7 @@ void MP4Atom::Generate()
 
             // create the mandatory, single child atom
             MP4Atom* pChildAtom =
-                CreateAtom(m_pChildAtomInfos[i]->m_name);
+                CreateAtom(this, m_pChildAtomInfos[i]->m_name);
 
             AddChildAtom(pChildAtom);
 
@@ -467,8 +173,7 @@ MP4Atom* MP4Atom::ReadAtom(MP4File* pFile, MP4Atom* pParentAtom)
 #endif
     }
 
-
-    MP4Atom* pAtom = CreateAtom(type);
+    MP4Atom* pAtom = CreateAtom(pParentAtom, type);
     pAtom->SetFile(pFile);
     pAtom->SetStart(pos);
     pAtom->SetEnd(pos + hdrSize + dataSize);
@@ -940,10 +645,26 @@ void MP4Atom::SetFlags(uint32_t flags)
 
 void MP4Atom::Dump(FILE* pFile, uint8_t indent, bool dumpImplicits)
 {
-    if (m_type[0] != '\0') {
-        Indent(pFile, indent);
-        fprintf(pFile, "type %s\n", m_type);
-        fflush(pFile);
+    if ( m_type[0] != '\0' ) {
+        // create list of ancestors
+        list<string> tlist;
+        for( MP4Atom* atom = this; atom; atom = atom->GetParentAtom() ) {
+            const char* const type = atom->GetType();
+            if( type && type[0] != '\0' )
+                tlist.push_front( type );
+        }
+
+        // create contextual atom-name
+        string can;
+        const list<string>::iterator ie = tlist.end();
+        for( list<string>::iterator it = tlist.begin(); it != ie; it++ )
+            can += *it + '.';
+        if( can.length() )
+            can.resize( can.length() - 1 );
+
+        Indent( pFile, indent );
+        fprintf( pFile, "type %s (%s)\n", m_type, can.c_str() );
+        fflush( pFile );
     }
 
     uint32_t i;
@@ -1001,6 +722,276 @@ bool MP4Atom::GetLargesizeMode()
 void MP4Atom::SetLargesizeMode( bool mode )
 {
     m_largesizeMode = mode;
+}
+
+bool
+MP4Atom::descendsFrom( MP4Atom* parent, const char* type )
+{
+    const uint32_t id = ATOMID( type );
+    for( MP4Atom* atom = parent; atom; atom = atom->GetParentAtom() ) {
+        if( id == ATOMID(atom->GetType()) )
+            return true;
+    }
+    return false;
+}
+
+MP4Atom*
+MP4Atom::factory( MP4Atom* parent, const char* type )
+{
+    // type may be NULL only in case of root-atom
+    if( !type )
+        return new MP4RootAtom();
+
+    // construct atoms which are context-savvy
+// TODO-KB
+    if( parent ) {
+        const char* const ptype = parent->GetType();
+#if 0
+        case 0xa9:
+        {
+            static const char nam[5] = { (char)0xa9, 'n', 'a', 'm', '\0' };
+            static const char cmt[5] = { (char)0xa9, 'c', 'm', 't', '\0' };
+            static const char cpy[5] = { (char)0xa9, 'c', 'p', 'y', '\0' };
+            static const char des[5] = { (char)0xa9, 'd', 'e', 's', '\0' };
+            static const char prd[5] = { (char)0xa9, 'p', 'r', 'd', '\0' };
+            static const char lyr[5] = { (char)0xa9, 'l', 'y', 'r', '\0' };
+
+            if( ATOMID(type) == ATOMID(nam) ||
+                ATOMID(type) == ATOMID(cmt) ||
+                ATOMID(type) == ATOMID(cpy) ||
+                ATOMID(type) == ATOMID(des) ||
+                ATOMID(type) == ATOMID(prd) ||
+                ATOMID(type) == ATOMID(lyr) )
+            {
+                return new MP4Meta2Atom( type );
+            }
+
+            break;
+        }
+#endif
+
+        if( descendsFrom( parent, "ilst" )) {
+            if( ATOMID(ptype) == ATOMID("ilst") )
+                return new MP4ItemAtom( type );
+
+            if( ATOMID(type) == ATOMID("data") )
+                return new MP4DataAtom();
+
+            if( ATOMID(ptype) == ATOMID("----") ) {
+                if( ATOMID(type) == ATOMID("mean") )
+                    return new MP4MeanAtom();
+                if( ATOMID(type) == ATOMID("name") )
+                    return new MP4NameAtom();
+            }
+        }
+    }
+
+    // no-context construction (old-style)
+    switch( (uint8_t)type[0] ) {
+        case 'S':
+            if( ATOMID(type) == ATOMID("SVQ3") )
+                return new MP4VideoAtom( type );
+            if( ATOMID(type) == ATOMID("SMI ") )
+                return new MP4SmiAtom();
+            break;
+
+        case 'a':
+            if( ATOMID(type) == ATOMID("avc1") )
+                return new MP4Avc1Atom();
+            if( ATOMID(type) == ATOMID("ac-3") )
+                return new MP4Ac3Atom();
+            if( ATOMID(type) == ATOMID("avcC") )
+                return new MP4AvcCAtom();
+            if( ATOMID(type) == ATOMID("alis") )
+                return new MP4UrlAtom( type );
+            if( ATOMID(type) == ATOMID("alaw") )
+                return new MP4SoundAtom( type );
+            if( ATOMID(type) == ATOMID("alac") )
+                return new MP4SoundAtom( type );
+            break;
+
+        case 'c':
+            if( ATOMID(type) == ATOMID("chap") )
+                return new MP4TrefTypeAtom( type );
+            if( ATOMID(type) == ATOMID("chpl") )
+                return new MP4ChplAtom();
+            if( ATOMID(type) == ATOMID("colr") )
+                return new MP4ColrAtom();
+            break;
+
+        case 'd':
+            if( ATOMID(type) == ATOMID("d263") )
+                return new MP4D263Atom();
+            if( ATOMID(type) == ATOMID("damr") )
+                return new MP4DamrAtom();
+            if( ATOMID(type) == ATOMID("dref") )
+                return new MP4DrefAtom();
+            if( ATOMID(type) == ATOMID("dpnd") )
+                return new MP4TrefTypeAtom( type );
+            if( ATOMID(type) == ATOMID("dac3") )
+                return new MP4DAc3Atom();
+            break;
+
+        case 'e':
+            if( ATOMID(type) == ATOMID("elst") )
+                return new MP4ElstAtom();
+            if( ATOMID(type) == ATOMID("enca") )
+                return new MP4EncaAtom();
+            if( ATOMID(type) == ATOMID("encv") )
+                return new MP4EncvAtom();
+            break;
+
+        case 'f':
+            if( ATOMID(type) == ATOMID("free") )
+                return new MP4FreeAtom();
+            if( ATOMID(type) == ATOMID("ftyp") )
+                return new MP4FtypAtom();
+            if( ATOMID(type) == ATOMID("ftab") )
+                return new MP4FtabAtom();
+            break;
+
+        case 'g':
+            if( ATOMID(type) == ATOMID("gmin") )
+                return new MP4GminAtom();
+            break;
+
+        case 'h':
+            if( ATOMID(type) == ATOMID("hdlr") )
+                return new MP4HdlrAtom();
+            if( ATOMID(type) == ATOMID("hint") )
+                return new MP4TrefTypeAtom( type );
+            if( ATOMID(type) == ATOMID("hnti") )
+                return new MP4HntiAtom();
+            if( ATOMID(type) == ATOMID("hinf") )
+                return new MP4HinfAtom();
+            if( ATOMID(type) == ATOMID("h263") )
+                return new MP4VideoAtom( type );
+            if( ATOMID(type) == ATOMID("href") )
+                return new MP4HrefAtom();
+            break;
+
+        case 'i':
+            if( ATOMID(type) == ATOMID("ipir") )
+                return new MP4TrefTypeAtom( type );
+            if( ATOMID(type) == ATOMID("ima4") )
+                return new MP4SoundAtom( type );
+            break;
+
+        case 'j':
+            if( ATOMID(type) == ATOMID("jpeg") )
+                return new MP4VideoAtom("jpeg");
+            break;
+
+        case 'm':
+            if( ATOMID(type) == ATOMID("mdhd") )
+                return new MP4MdhdAtom();
+            if( ATOMID(type) == ATOMID("mvhd") )
+                return new MP4MvhdAtom();
+            if( ATOMID(type) == ATOMID("mdat") )
+                return new MP4MdatAtom();
+            if( ATOMID(type) == ATOMID("mpod") )
+                return new MP4TrefTypeAtom( type );
+            if( ATOMID(type) == ATOMID("mp4a") )
+                return new MP4SoundAtom( type );
+            if( ATOMID(type) == ATOMID("mp4s") )
+                return new MP4Mp4sAtom();
+            if( ATOMID(type) == ATOMID("mp4v") )
+                return new MP4Mp4vAtom();
+            break;
+
+        case 'n':
+            if( ATOMID(type) == ATOMID("nmhd") )
+                return new MP4NmhdAtom();
+            break;
+
+        case 'o':
+            if( ATOMID(type) == ATOMID("ohdr") )
+                return new MP4OhdrAtom();
+            break;
+
+        case 'p':
+            if( ATOMID(type) == ATOMID("pasp") )
+                return new MP4PaspAtom();
+            break;
+
+        case 'r':
+            if( ATOMID(type) == ATOMID("rtp ") )
+                return new MP4RtpAtom();
+            if( ATOMID(type) == ATOMID("raw ") )
+                return new MP4VideoAtom( type );
+            break;
+
+        case 's':
+            if( ATOMID(type) == ATOMID("s263") )
+                return new MP4S263Atom();
+            if( ATOMID(type) == ATOMID("samr") )
+                return new MP4AmrAtom( type );
+            if( ATOMID(type) == ATOMID("sawb") )
+                return new MP4AmrAtom( type );
+            if( ATOMID(type) == ATOMID("stbl") )
+                return new MP4StblAtom();
+            if( ATOMID(type) == ATOMID("stsd") )
+                return new MP4StsdAtom();
+            if( ATOMID(type) == ATOMID("stsz") )
+                return new MP4StszAtom();
+            if( ATOMID(type) == ATOMID("stsc") )
+                return new MP4StscAtom();
+            if( ATOMID(type) == ATOMID("stz2") )
+                return new MP4Stz2Atom();
+            if( ATOMID(type) == ATOMID("stdp") )
+                return new MP4StdpAtom();
+            if( ATOMID(type) == ATOMID("sdp ") )
+                return new MP4SdpAtom();
+            if( ATOMID(type) == ATOMID("sync") )
+                return new MP4TrefTypeAtom( type );
+            if( ATOMID(type) == ATOMID("skip") )
+                return new MP4FreeAtom( type );
+            if (ATOMID(type) == ATOMID("sowt") )
+                return new MP4SoundAtom( type );
+            break;
+
+        case 't':
+            if( ATOMID(type) == ATOMID("text") )
+                return new MP4TextAtom();
+            if( ATOMID(type) == ATOMID("tx3g") )
+                return new MP4Tx3gAtom();
+            if( ATOMID(type) == ATOMID("tkhd") )
+                return new MP4TkhdAtom();
+            if( ATOMID(type) == ATOMID("tfhd") )
+                return new MP4TfhdAtom();
+            if( ATOMID(type) == ATOMID("trun") )
+                return new MP4TrunAtom();
+            if( ATOMID(type) == ATOMID("twos") )
+                return new MP4SoundAtom( type );
+            break;
+
+        case 'u':
+            if( ATOMID(type) == ATOMID("udta") )
+                return new MP4UdtaAtom();
+            if( ATOMID(type) == ATOMID("url ") )
+                return new MP4UrlAtom();
+            if( ATOMID(type) == ATOMID("urn ") )
+                return new MP4UrnAtom();
+            if( ATOMID(type) == ATOMID("ulaw") )
+                return new MP4SoundAtom( type );
+            break;
+
+        case 'v':
+            if( ATOMID(type) == ATOMID("vmhd") )
+                return new MP4VmhdAtom();
+            break;
+
+        case 'y':
+            if( ATOMID(type) == ATOMID("yuv2") )
+                return new MP4VideoAtom( type );
+            break;
+
+        default:
+            break;
+    }
+
+    // default to MP4StandardAtom implementation
+    return new MP4StandardAtom( type ); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////

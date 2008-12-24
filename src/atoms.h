@@ -30,8 +30,7 @@
 #ifndef MP4V2_IMPL_ATOMS_H
 #define MP4V2_IMPL_ATOMS_H
 
-namespace mp4v2 {
-namespace impl {
+namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -189,12 +188,6 @@ public:
  * Specialized Atoms
  ************************************************************************/
 
-class MP4DataAtom : public MP4Atom {
-public:
-    MP4DataAtom();
-    void Read();
-};
-
 class MP4DrefAtom : public MP4Atom {
 public:
     MP4DrefAtom();
@@ -212,7 +205,7 @@ protected:
 
 class MP4FreeAtom : public MP4Atom {
 public:
-    MP4FreeAtom();
+    MP4FreeAtom( const char* = NULL );
     void Read();
     void Write();
 };
@@ -263,25 +256,6 @@ public:
     void Read();
 protected:
     void AddProperties(uint8_t version);
-};
-
-class MP4Meta1Atom : public MP4Atom {
-public:
-    MP4Meta1Atom(const char *name);
-    void Read();
-};
-
-class MP4Meta2Atom : public MP4Atom {
-public:
-    MP4Meta2Atom(const char *name);
-    void Read();
-};
-
-class MP4NameAtom : public MP4Atom {
-public:
-    MP4NameAtom();
-    void Read();
-    void Generate();
 };
 
 class MP4MvhdAtom : public MP4Atom {
@@ -491,7 +465,68 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}
-} // namespace mp4v2::impl
+/// ISO base media full-atom.
+class MP4FullAtom : public MP4Atom
+{
+public:
+    MP4FullAtom( const char* type );
+
+    MP4Integer8Property&  version;
+    MP4Integer24Property& flags;
+};
+
+/// iTMF item-atom.
+class MP4ItemAtom : public MP4Atom
+{
+public:
+    MP4ItemAtom( const char* type );
+};
+
+/// iTMF meaning-atom.
+class MP4MeanAtom : public MP4FullAtom
+{
+public:
+    MP4MeanAtom();
+    void Read();
+
+    MP4StringProperty& value;
+};
+
+/// iTMF name-atom.
+class MP4NameAtom : public MP4FullAtom
+{
+public:
+    MP4NameAtom();
+    void Read();
+
+    MP4StringProperty& value;
+};
+
+/// iTMF data-atom.
+class MP4DataAtom : public MP4Atom
+{
+public:
+    MP4DataAtom();
+    void Read();
+
+    MP4Integer16Property& typeReserved;
+    MP4Integer8Property&  typeSetIdentifier;
+    MP4Integer8Property&  typeCode;
+    MP4Integer32Property& locale;
+    MP4BytesProperty&     metadata;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/// QTFF udta data element-atom.
+class MP4UdtaElementAtom : public MP4Atom
+{
+public:
+    MP4UdtaElementAtom( const char* type );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+}} // namespace mp4v2::impl
 
 #endif // MP4V2_IMPL_ATOMS_H

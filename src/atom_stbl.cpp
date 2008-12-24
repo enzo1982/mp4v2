@@ -21,8 +21,7 @@
 
 #include "impl.h"
 
-namespace mp4v2 {
-namespace impl {
+namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -50,9 +49,9 @@ void MP4StblAtom::Generate()
     // but we also need one of the chunk offset atoms
     MP4Atom* pChunkOffsetAtom;
     if (m_pFile->Use64Bits(GetType())) {
-        pChunkOffsetAtom = CreateAtom("co64");
+        pChunkOffsetAtom = CreateAtom(this, "co64");
     } else {
-        pChunkOffsetAtom = CreateAtom("stco");
+        pChunkOffsetAtom = CreateAtom(this, "stco");
     }
 
     AddChildAtom(pChunkOffsetAtom);
@@ -63,5 +62,4 @@ void MP4StblAtom::Generate()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}
-} // namespace mp4v2::impl
+}} // namespace mp4v2::impl

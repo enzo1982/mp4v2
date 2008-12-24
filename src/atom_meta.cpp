@@ -23,86 +23,88 @@
 
 #include "impl.h"
 
-namespace mp4v2 {
-namespace impl {
+namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
-
-MP4Meta1Atom::MP4Meta1Atom(const char *name)
-        : MP4Atom(name)
-{
-    AddVersionAndFlags(); /* 0, 1 */
-
-    AddProperty(new MP4BytesProperty("metadata")); /* 2 */
-}
-
-void MP4Meta1Atom::Read()
-{
-    // calculate size of the metadata from the atom size
-    ((MP4BytesProperty*)m_pProperties[2])->SetValueSize(m_size - 4);
-
-    MP4Atom::Read();
-}
 
 MP4DataAtom::MP4DataAtom()
-        : MP4Atom("data")
+    : MP4Atom ( "data" )
+    , typeReserved      ( *new MP4Integer16Property( "typeReserved" ))
+    , typeSetIdentifier ( *new MP4Integer8Property( "typeSetIdentifier" ))
+    , typeCode          ( *new MP4Integer8Property( "typeCode" ))
+    , locale            ( *new MP4Integer32Property( "locale" ))
+    , metadata          ( *new MP4BytesProperty( "metadata" ))
 {
-    AddVersionAndFlags(); /* 0, 1 */
-    AddReserved("reserved2", 4); /* 2 */
-
-    AddProperty(
-        new MP4BytesProperty("metadata")); /* 3 */
+    AddProperty( &typeReserved );
+    AddProperty( &typeSetIdentifier );
+    AddProperty( &typeCode );
+    AddProperty( &locale );
+    AddProperty( &metadata );
 }
 
-void MP4DataAtom::Read()
+void
+MP4DataAtom::Read()
 {
     // calculate size of the metadata from the atom size
-    ((MP4BytesProperty*)m_pProperties[3])->SetValueSize(m_size - 8);
-
+    metadata.SetValueSize( m_size - 8 );
     MP4Atom::Read();
-}
-
-
-// MP4Meta2Atom is for \251nam and \251cmt flags, which appear differently
-// in .mov and in itunes file.  In .movs, they appear under udata, in
-// itunes, they appear under ilst.
-MP4Meta2Atom::MP4Meta2Atom (const char *name) : MP4Atom(name)
-{
-}
-
-void MP4Meta2Atom::Read ()
-{
-    MP4Atom *parent = GetParentAtom();
-    if (ATOMID(parent->GetType()) == ATOMID("udta")) {
-        // add data property
-        AddReserved("reserved2", 4); /* 0 */
-
-        AddProperty(
-            new MP4BytesProperty("metadata")); /* 1 */
-        ((MP4BytesProperty*)m_pProperties[1])->SetValueSize(m_size - 4);
-    } else {
-        ExpectChildAtom("data", Required, OnlyOne);
-    }
-    MP4Atom::Read();
-}
-
-MP4NameAtom::MP4NameAtom()
-        : MP4Atom("name")
-{
-    AddProperty(new MP4BytesProperty("value"));
-}
-
-void MP4NameAtom::Read()
-{
-    MP4Atom::Read();
-}
-
-void MP4NameAtom::Generate()
-{
-    MP4Atom::Generate();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
+MP4FullAtom::MP4FullAtom( const char* type )
+    : MP4Atom ( type )
+    , version ( *new MP4Integer8Property( "version" ))
+    , flags   ( *new MP4Integer24Property( "flags" ))
+{
+    AddProperty( &version );
+    AddProperty( &flags );
 }
-} // namespace mp4v2::impl
+
+///////////////////////////////////////////////////////////////////////////////
+
+MP4ItemAtom::MP4ItemAtom( const char* type )
+    : MP4Atom( type )
+{
+    ExpectChildAtom( "mean", Optional, OnlyOne );
+    ExpectChildAtom( "name", Optional, OnlyOne );
+    ExpectChildAtom( "data", Required, Many );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+MP4MeanAtom::MP4MeanAtom()
+    : MP4FullAtom ( "mean" )
+    , value       ( *new MP4StringProperty( "value" ))
+{
+    AddProperty( &value );
+}
+
+void
+MP4MeanAtom::Read()
+{
+    // calculate size of the metadata from the atom size
+    value.SetFixedLength( m_size - 4 );
+    MP4Atom::Read();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+MP4NameAtom::MP4NameAtom()
+    : MP4FullAtom( "name" )
+    , value       ( *new MP4StringProperty( "value" ))
+{
+    AddProperty( &value );
+}
+
+void
+MP4NameAtom::Read()
+{
+    // calculate size of the metadata from the atom size
+    value.SetFixedLength( m_size - 4 );
+    MP4Atom::Read();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+}} // namespace mp4v2::impl

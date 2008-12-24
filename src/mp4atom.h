@@ -29,8 +29,7 @@
 #ifndef MP4V2_IMPL_MP4ATOM_H
 #define MP4V2_IMPL_MP4ATOM_H
 
-namespace mp4v2 {
-namespace impl {
+namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -59,14 +58,20 @@ public:
 
 MP4ARRAY_DECL(MP4AtomInfo, MP4AtomInfo*);
 
-class MP4Atom {
+class MP4Atom
+{
+public:
+    static MP4Atom* ReadAtom( MP4File* pFile, MP4Atom* pParentAtom );
+    static MP4Atom* CreateAtom( MP4Atom* parent, const char* type );
+    static bool IsReasonableType( const char* type );
+
+private:
+    static MP4Atom* factory( MP4Atom* parent, const char* type );
+    static bool descendsFrom( MP4Atom* parent, const char* type );
+
 public:
     MP4Atom(const char* type = NULL);
     virtual ~MP4Atom();
-
-    static MP4Atom* ReadAtom(MP4File* pFile, MP4Atom* pParentAtom);
-    static MP4Atom* CreateAtom(const char* type);
-    static bool IsReasonableType(const char* type);
 
     MP4File* GetFile() {
         return m_pFile;
@@ -257,7 +262,6 @@ inline void IDATOM(uint32_t type, char *s) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}
-} // namespace mp4v2::impl
+}} // namespace mp4v2::impl
 
 #endif // MP4V2_IMPL_MP4ATOM_H

@@ -128,7 +128,7 @@ void MP4File::Create(const char* fileName, uint32_t flags,
     Open("wb+");
 
     // generate a skeletal atom tree
-    m_pRootAtom = MP4Atom::CreateAtom(NULL);
+    m_pRootAtom = MP4Atom::CreateAtom(NULL, NULL);
     m_pRootAtom->SetFile(this);
     m_pRootAtom->Generate();
 
@@ -239,7 +239,7 @@ bool MP4File::Modify(const char* fileName)
 
             } else { // last atom isn't moov
                 // need to place a free atom
-                MP4Atom* pFreeAtom = MP4Atom::CreateAtom("free");
+                MP4Atom* pFreeAtom = MP4Atom::CreateAtom(NULL, "free");
 
                 // in existing position of the moov atom
                 m_pRootAtom->InsertChildAtom(pFreeAtom, i);
@@ -457,7 +457,7 @@ void MP4File::ReadFromFile()
 
     // create a new root atom
     ASSERT(m_pRootAtom == NULL);
-    m_pRootAtom = MP4Atom::CreateAtom(NULL);
+    m_pRootAtom = MP4Atom::CreateAtom(NULL, NULL);
 
     uint64_t fileSize = GetSize();
 
@@ -567,7 +567,7 @@ void MP4File::FinishWrite()
     if (GetSize() < m_orgFileSize) {
         // just use a free atom to mark unused space
         // MP4Optimize() should be used to clean up this space
-        MP4Atom* pFreeAtom = MP4Atom::CreateAtom("free");
+        MP4Atom* pFreeAtom = MP4Atom::CreateAtom(NULL, "free");
         ASSERT(pFreeAtom);
         pFreeAtom->SetFile(this);
         int64_t size = m_orgFileSize - (m_fileSize + 8);
@@ -739,7 +739,7 @@ MP4Atom* MP4File::InsertChildAtom(
     const char* childName,
     uint32_t index)
 {
-    MP4Atom* pChildAtom = MP4Atom::CreateAtom(childName);
+    MP4Atom* pChildAtom = MP4Atom::CreateAtom(pParentAtom, childName);
 
     ASSERT(pParentAtom);
     pParentAtom->InsertChildAtom(pChildAtom, index);

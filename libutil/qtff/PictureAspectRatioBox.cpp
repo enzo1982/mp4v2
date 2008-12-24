@@ -49,7 +49,7 @@ PictureAspectRatioBox::add( MP4FileHandle file, uint16_t trackIndex, const Item&
     if( !findPictureAspectRatioBox( file, *coding, pasp ))
         throw new UtilException( "pasp-box already exists" );
 
-    pasp = MP4Atom::CreateAtom( SINGLETON->BOX_TYPE.c_str() );
+    pasp = MP4Atom::CreateAtom( coding, SINGLETON->BOX_TYPE.c_str() );
     coding->AddChildAtom( pasp );
     pasp->Generate();
 

@@ -81,43 +81,6 @@ MP4StandardAtom::MP4StandardAtom (const char *type) : MP4Atom(type)
 
         pTable->AddProperty(
             new MP4Integer64Property("chunkOffset"));
-
-    } else if (ATOMID(type) == ATOMID("cpil")) {
-        ExpectChildAtom("data", Required, OnlyOne);
-    } else if (ATOMID(type) == ATOMID("covr")) { /* Apple iTunes */
-        ExpectChildAtom("data", Required, Many);
-    } else if (ATOMID(type) == ATOMID("cprt") ||
-               ATOMID(type) == ATOMID("cnID") ||
-               ATOMID(type) == ATOMID("tvsh") ||
-               ATOMID(type) == ATOMID("tvsn") ||
-               ATOMID(type) == ATOMID("tven") ||
-               ATOMID(type) == ATOMID("tvnn") ||
-               ATOMID(type) == ATOMID("tves") ||
-               ATOMID(type) == ATOMID("desc") ||
-               ATOMID(type) == ATOMID("ldes") ||
-               ATOMID(type) == ATOMID("soal") ||
-               ATOMID(type) == ATOMID("soar") ||
-               ATOMID(type) == ATOMID("soaa") ||
-               ATOMID(type) == ATOMID("sonm") ||
-               ATOMID(type) == ATOMID("soco") ||
-               ATOMID(type) == ATOMID("sosn") ||
-               ATOMID(type) == ATOMID("©enc") ||
-               ATOMID(type) == ATOMID("pcst") ||
-               ATOMID(type) == ATOMID("keyw") ||
-               ATOMID(type) == ATOMID("catg") ||
-               ATOMID(type) == ATOMID("purl") ||
-               ATOMID(type) == ATOMID("egid") ||
-               ATOMID(type) == ATOMID("hdvd")) {
-#if 0
-        AddVersionAndFlags();
-        AddProperty(
-            new MP4Integer16Property("language"));
-        AddProperty(
-            new MP4StringProperty("notice"));
-#else
-        ExpectChildAtom("data", Required, OnlyOne);
-#endif
-
     } else if (ATOMID(type) == ATOMID("ctts")) {
         AddVersionAndFlags();
 
@@ -139,9 +102,6 @@ MP4StandardAtom::MP4StandardAtom (const char *type) : MP4Atom(type)
     } else if (ATOMID(type) == ATOMID("dimm")) {
         AddProperty( // bytes of immediate data
             new MP4Integer64Property("bytes"));
-
-    } else if (ATOMID(type) == ATOMID("disk")) { /* Apple iTunes */
-        ExpectChildAtom("data", Required, OnlyOne);
 
     } else if (ATOMID(type) == ATOMID("dmax")) {
         AddProperty( // max packet duration
@@ -178,13 +138,6 @@ MP4StandardAtom::MP4StandardAtom (const char *type) : MP4Atom(type)
         ExpectChildAtom("gmin", Required, OnlyOne);
         ExpectChildAtom("tmcd", Optional, OnlyOne);
         ExpectChildAtom("text", Optional, OnlyOne);
-    } else if (ATOMID(type) == ATOMID("gnre") ||
-               ATOMID(type) == ATOMID("geID")) { // Apple iTunes
-        ExpectChildAtom("data", Optional, OnlyOne);
-
-        /*
-         * h???
-         */
     } else if (ATOMID(type) == ATOMID("hmhd")) {
         AddVersionAndFlags();
 
@@ -493,17 +446,12 @@ MP4StandardAtom::MP4StandardAtom (const char *type) : MP4Atom(type)
         /*
          * ----
          */
-    } else if (ATOMID(type) == ATOMID("----")) { /* Apple iTunes */
-        ExpectChildAtom("mean", Required, OnlyOne);
-        ExpectChildAtom("name", Required, OnlyOne);
-        ExpectChildAtom("data", Required, OnlyOne);
     } else {
         /*
          * default - unknown type
          */
         SetUnknownType(true);
     }
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////
