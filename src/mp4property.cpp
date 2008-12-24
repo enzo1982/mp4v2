@@ -578,9 +578,13 @@ void MP4BytesProperty::Dump(FILE* pFile, uint8_t indent,
     ostringstream oss;
     ostringstream text;
 
+    string s;
     for( uint32_t i = 0; i < size; i++ ) {
         if( i % 16 == 0 ) {
-            fprintf( pFile, oss.str().c_str() );
+            // not safe to use format because bytes may contain format specifies
+            s = oss.str();
+            fwrite( s.c_str(), s.length(), 1, pFile );
+
             oss.str( "" );
             oss << '\n'
                 << setw(indent) << setfill(' ') << ""
@@ -588,10 +592,16 @@ void MP4BytesProperty::Dump(FILE* pFile, uint8_t indent,
 
             if( i > 0 ) {
                 fprintf( pFile, "  |" );
-                fprintf( pFile, text.str().c_str() );
+
+                // not safe to use format because bytes may contain format specifies
+                s = text.str();
+                fwrite( s.c_str(), s.length(), 1, pFile );
+
                 fprintf( pFile, "|" );
                 text.str( "" );
             }
+
+            fflush( pFile );
         }
 
         if( i % 8 == 0 )
@@ -611,7 +621,11 @@ void MP4BytesProperty::Dump(FILE* pFile, uint8_t indent,
     }
 
     oss << "\n";
-    fprintf( pFile, oss.str().c_str() );
+
+    // not safe to use format because bytes may contain format specifies
+    s = oss.str();
+    fwrite( s.c_str(), s.length(), 1, pFile );
+
     fflush( pFile );
 }
 
