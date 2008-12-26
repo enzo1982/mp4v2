@@ -476,12 +476,12 @@ Timecode::recompute()
 
     switch( _format ) {
         case FRAME:
-            oss << ':' << setw(2) << _subseconds;
+            oss << ':' << setw(2) << setfill( '0' ) << _subseconds;
             break;
 
         case DECIMAL:
         {
-            oss << '.' << setw(3) << static_cast<uint64_t>(_subseconds / _scale * 1000.0 + 0.5);
+            oss << '.' << setw(3) << setfill( '0' ) << static_cast<uint64_t>(_subseconds / _scale * 1000.0 + 0.5);
             break;
         }
     }

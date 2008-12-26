@@ -26,11 +26,21 @@
 namespace mp4v2 { namespace util {
 
 ///////////////////////////////////////////////////////////////////////////////
-
+///
+/// Chapter utility program class.
+///
+/// This class provides an implementation for a QuickTime/Nero chapter utility which
+/// allows to add, delete, convert export or import QuickTime and Nero chapters
+/// in MP4 container files.
+///
+///
+/// @see Utility
+///
+///////////////////////////////////////////////////////////////////////////////
 class ChapterUtility : public Utility
 {
 private:
-    static const double CHAPTERTIMESCALE;
+    static const double CHAPTERTIMESCALE; //!< the timescale used for chapter tracks (1000)
 
     enum FileLongCode {
         LC_CHPT_ANY = _LC_MAX,
@@ -53,7 +63,7 @@ protected:
     bool utility_job( JobContext& );
 
 private:
-    bool actionList    ( JobContext& );
+    bool actionList    ( JobContext& ); 
     bool actionConvert ( JobContext& );
     bool actionEvery   ( JobContext& );
     bool actionExport  ( JobContext& );
@@ -64,17 +74,17 @@ private:
     Group  _actionGroup;
     Group  _parmGroup;
 
-    bool       (ChapterUtility::*_action)( JobContext& );
-    void       fixQtScale(MP4FileHandle );
-    MP4TrackId getReferencingTrack( MP4FileHandle );
-    string     getChapterTypeName( MP4ChapterType ) const;
-    bool       parseChapterFile( const string, vector<MP4Chapter_t>& );
-    bool       readChapterFile( const string, char**, io::StdioFile::Size& );
+    bool        (ChapterUtility::*_action)( JobContext& );
+    void        fixQtScale(MP4FileHandle );
+    MP4TrackId  getReferencingTrack( MP4FileHandle, bool& );
+    string      getChapterTypeName( MP4ChapterType ) const;
+    bool        parseChapterFile( const string, vector<MP4Chapter_t>&, Timecode::Format& );
+    bool        readChapterFile( const string, char**, io::StdioFile::Size& );
+    MP4Duration convertFrameToMillis( MP4Duration, uint32_t );
 
     MP4ChapterType _ChapterType;
     uint32_t       _ChaptersEvery;
-
-    string _ChapterFile;
+    string         _ChapterFile;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -127,6 +137,12 @@ ChapterUtility::ChapterUtility( int argc, char** argv )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/** Action for listing chapters from <b>job.file</b>
+ *
+ *  
+ *  @param job the job to process
+ *  @return mp4v2::util::SUCCESS if successful, mp4v2::util::FAILURE otherwise
+ */
 bool
 ChapterUtility::actionList( JobContext& job )
 {
@@ -143,22 +159,28 @@ ChapterUtility::actionList( JobContext& job )
     MP4ChapterType chtp = MP4GetChapters(job.fileHandle, &chapters, &chapterCount, _ChapterType);
     if (0 == chapterCount)
     {
-        verbose1f( "File %s does not contain chapters of type %s\n", job.file.c_str(), getChapterTypeName( chtp ).c_str() );
+        verbose1f( "File \"%s\" does not contain chapters of type %s\n", job.file.c_str(),
+                   getChapterTypeName( _ChapterType ).c_str() );
         return SUCCESS;
     }
 
     // start output (more or less like mp4box does)
-    fprintf( stdout, "%s Chapters:\n", getChapterTypeName( chtp ).c_str() );
+    ostringstream report;
+    report << getChapterTypeName( chtp ) << ' ' << "Chapters of " << '"' << job.file << '"' << endl;
 
     Timecode duration(0, CHAPTERTIMESCALE);
+    duration.setFormat( Timecode::DECIMAL );
     for (uint32_t i = 0; i < chapterCount; ++i)
     {
         // print the infos
-        fprintf(stdout, "\tChapter #%u - %s - \"%s\"\n", i+1, duration.svalue.c_str(), chapters[i].title);
+        report << '\t' << "Chapter #" << setw( 3 ) << setfill( '0' ) << i+1
+               << " - " << duration.svalue << " - " << '"' << chapters[i].title << '"' << endl;
 
         // add the duration of this chapter to the sum (is the start time of the next chapter)
         duration += Timecode(chapters[i].duration, CHAPTERTIMESCALE);
     }
+
+    verbose1f( "%s", report.str().c_str() );
 
     // free up the memory
     MP4Free(chapters);
@@ -168,6 +190,12 @@ ChapterUtility::actionList( JobContext& job )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/** Action for converting chapters in <b>job.file</b>
+ *
+ *  
+ *  @param job the job to process
+ *  @return mp4v2::util::SUCCESS if successful, mp4v2::util::FAILURE otherwise
+ */
 bool
 ChapterUtility::actionConvert( JobContext& job )
 {
@@ -187,10 +215,10 @@ ChapterUtility::actionConvert( JobContext& job )
     }
 
     ostringstream oss;
-    oss << "converting chapters in file " << job.file;
-    oss << " from " << getChapterTypeName( sourceType ) << " to " << getChapterTypeName( _ChapterType );
+    oss << "converting chapters in file " << '"' << job.file << '"'
+        << " from " << getChapterTypeName( sourceType ) << " to " << getChapterTypeName( _ChapterType ) << endl;
 
-    verbose1f( "%s\n", oss.str().c_str() );
+    verbose1f( "%s", oss.str().c_str() );
     if( dryrunAbort() )
     {
         return SUCCESS;
@@ -217,14 +245,20 @@ ChapterUtility::actionConvert( JobContext& job )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/** Action for setting chapters every n second in <b>job.file</b>
+ *
+ *  
+ *  @param job the job to process
+ *  @return mp4v2::util::SUCCESS if successful, mp4v2::util::FAILURE otherwise
+ */
 bool
 ChapterUtility::actionEvery( JobContext& job )
 {
     ostringstream oss;
     oss << "Setting " << getChapterTypeName( _ChapterType ) << " chapters every "
-        << _ChaptersEvery << " seconds in file " << job.file;
+        << _ChaptersEvery << " seconds in file " << '"' << job.file << '"' << endl;
 
-    verbose1f( "%s\n", oss.str().c_str() );
+    verbose1f( "%s", oss.str().c_str() );
     if( dryrunAbort() )
     {
         return SUCCESS;
@@ -236,7 +270,8 @@ ChapterUtility::actionEvery( JobContext& job )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
     }
 
-    MP4TrackId refTrackId = getReferencingTrack( job.fileHandle );
+    bool isVideoTrack = false;
+    MP4TrackId refTrackId = getReferencingTrack( job.fileHandle, isVideoTrack );
     if( !MP4_IS_VALID_TRACK_ID(refTrackId) )
     {
         return herrf( "unable to find a video or audio track in file %s\n", job.file.c_str() );
@@ -246,7 +281,9 @@ ChapterUtility::actionEvery( JobContext& job )
     refTrackDuration.setScale( CHAPTERTIMESCALE );
 
     Timecode chapterDuration( _ChaptersEvery * 1000, CHAPTERTIMESCALE );
+    chapterDuration.setFormat( Timecode::DECIMAL );
     Timecode durationSum( 0, CHAPTERTIMESCALE );
+    durationSum.setFormat( Timecode::DECIMAL );
     vector<MP4Chapter_t> chapters;
 
     while( durationSum + chapterDuration < refTrackDuration )
@@ -275,6 +312,12 @@ ChapterUtility::actionEvery( JobContext& job )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/** Action for exporting chapters from the <b>job.file</b>
+ *
+ *  
+ *  @param job the job to process
+ *  @return mp4v2::util::SUCCESS if successful, mp4v2::util::FAILURE otherwise
+ */
 bool
 ChapterUtility::actionExport( JobContext& job )
 {
@@ -290,7 +333,7 @@ ChapterUtility::actionExport( JobContext& job )
     MP4ChapterType chtp = MP4GetChapters( job.fileHandle, &chapters, &chapterCount, _ChapterType );
     if (0 == chapterCount)
     {
-        return herrf( "File %s does not contain chapters of type %s\n", job.file.c_str(),
+        return herrf( "File \"%s\" does not contain chapters of type %s\n", job.file.c_str(),
                       getChapterTypeName( chtp ).c_str() );
     }
 
@@ -308,9 +351,9 @@ ChapterUtility::actionExport( JobContext& job )
 
     ostringstream oss;
     oss << "Exporting " << chapterCount << " " << getChapterTypeName( chtp );
-    oss << " chapters from file " << job.file << " into chapter file " << outName;
+    oss << " chapters from file " << '"' << job.file << '"' << " into chapter file " << '"' << outName << '"' << endl;
 
-    verbose1f( "%s\n", oss.str().c_str() );
+    verbose1f( "%s", oss.str().c_str() );
     if( dryrunAbort() )
     {
         // free up the memory
@@ -330,15 +373,22 @@ ChapterUtility::actionExport( JobContext& job )
     }
 
     // write the chapters
-    char fileLine[2048] = {0};
+#if defined( _WIN32 )
+    static const char* LINEND = "\r\n";
+#else
+    static const char* LINEND = "\n";
+#endif
     io::StdioFile::Size nout;
     bool failure = SUCCESS;
     Timecode duration( 0, CHAPTERTIMESCALE );
+    duration.setFormat( Timecode::DECIMAL );
     for( uint32_t i = 0; i < chapterCount; ++i )
     {
         // print the infos
-        sprintf( fileLine, "%s %s\n", duration.svalue.c_str(), chapters[i].title );
-        if( out.write(fileLine, strlen(fileLine), nout) )
+        ostringstream oss;
+        oss << duration.svalue << ' ' << chapters[i].title << LINEND;
+        string str = oss.str();
+        if( out.write( str.c_str(), str.size(), nout ) )
         {
             failure = herrf( "write to %s failed: %s\n", outName.c_str(), sys::getLastErrorStr() );
             break;
@@ -362,10 +412,17 @@ ChapterUtility::actionExport( JobContext& job )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/** Action for importing chapters into the <b>job.file</b>
+ *
+ *  
+ *  @param job the job to process
+ *  @return mp4v2::util::SUCCESS if successful, mp4v2::util::FAILURE otherwise
+ */
 bool
 ChapterUtility::actionImport( JobContext& job )
 {
     vector<MP4Chapter_t> chapters;
+    Timecode::Format format;
 
     // create the chapter file name
     string inName = job.file;
@@ -379,16 +436,16 @@ ChapterUtility::actionImport( JobContext& job )
         inName = _ChapterFile;
     }
 
-    if( parseChapterFile( inName, chapters ) )
+    if( parseChapterFile( inName, chapters, format ) )
     {
         return FAILURE;
     }
 
     ostringstream oss;
     oss << "Importing " << chapters.size() << " " << getChapterTypeName( _ChapterType );
-    oss << " chapters from file " << inName << " into file " << job.file;
+    oss << " chapters from file " << inName << " into file " << '"' << job.file << '"' << endl;
 
-    verbose1f( "%s\n", oss.str().c_str() );
+    verbose1f( "%s", oss.str().c_str() );
     if( dryrunAbort() )
     {
         return SUCCESS;
@@ -405,13 +462,19 @@ ChapterUtility::actionImport( JobContext& job )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
     }
 
-    MP4TrackId refTrackId = getReferencingTrack( job.fileHandle );
+    bool isVideoTrack = false;
+    MP4TrackId refTrackId = getReferencingTrack( job.fileHandle, isVideoTrack );
     if( !MP4_IS_VALID_TRACK_ID(refTrackId) )
     {
         return herrf( "unable to find a video or audio track in file %s\n", job.file.c_str() );
     }
+    if( Timecode::FRAME == format && !isVideoTrack )
+    {
+        // we need a video track for this
+        return herrf( "unable to find a video track in file %s but chapter file contains frame timestamps\n", job.file.c_str() );
+    }
 
-    // get duration and recalculate to timescale 1000
+    // get duration and recalculate scale
     Timecode refTrackDuration( MP4GetTrackDuration( job.fileHandle, refTrackId ),
                                MP4GetTrackTimeScale( job.fileHandle, refTrackId ) );
     refTrackDuration.setScale( CHAPTERTIMESCALE );
@@ -437,18 +500,32 @@ ChapterUtility::actionImport( JobContext& job )
     }
 
     // convert start time into duration
+    uint64_t framerate = CHAPTERTIMESCALE;
+    if( Timecode::FRAME == format )
+    {
+        // get the framerate
+        MP4SampleId sampleCount = MP4GetTrackNumberOfSamples( job.fileHandle, refTrackId );
+        Timecode tmpcd( refTrackDuration.svalue, CHAPTERTIMESCALE );
+        framerate = std::ceil( ((double)sampleCount / (double)tmpcd.duration) * CHAPTERTIMESCALE );
+    }
+
     for( vector<MP4Chapter_t>::iterator it = chapters.begin(); it != chapters.end(); ++it )
     {
-        if( chapters.end() == it+1 )
+        MP4Duration currDur = (*it).duration;
+        MP4Duration nextDur =  chapters.end() == it+1 ? refTrackDuration.duration : (*(it+1)).duration;
+
+        if( Timecode::FRAME == format )
         {
-            // last chapter (duration until end of track)
-            (*it).duration = (refTrackDuration - Timecode( (*it).duration, CHAPTERTIMESCALE )).duration;
+            // convert from frame nr to milliseconds
+            currDur = convertFrameToMillis( (*it).duration, framerate );
+
+            if( chapters.end() != it+1 )
+            {
+                nextDur = convertFrameToMillis( (*(it+1)).duration, framerate );
+            }
         }
-        else
-        {
-            // all other chapters (duration until next chapter)
-            (*it).duration = (*(it+1)).duration - (*it).duration;
-        }
+
+        (*it).duration = nextDur - currDur;
     }
 
     // now set the chapters
@@ -462,13 +539,19 @@ ChapterUtility::actionImport( JobContext& job )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/** Action for removing chapters from the <b>job.file</b>
+ *
+ *  
+ *  @param job the job to process
+ *  @return mp4v2::util::SUCCESS if successful, mp4v2::util::FAILURE otherwise
+ */
 bool
 ChapterUtility::actionRemove( JobContext& job )
 {
     ostringstream oss;
-    oss << "Deleting " << getChapterTypeName( _ChapterType ) << " chapters from file " << job.file;
+    oss << "Deleting " << getChapterTypeName( _ChapterType ) << " chapters from file " << '"' << job.file << '"' << endl;
 
-    verbose1f( "%s\n", oss.str().c_str() );
+    verbose1f( "%s", oss.str().c_str() );
     if( dryrunAbort() )
     {
         return SUCCESS;
@@ -494,6 +577,10 @@ ChapterUtility::actionRemove( JobContext& job )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/** process positional argument
+ *
+ *  @see Utility::utility_job( JobContext& )
+ */
 bool
 ChapterUtility::utility_job( JobContext& job )
 {
@@ -507,6 +594,10 @@ ChapterUtility::utility_job( JobContext& job )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/** process command-line option
+ *
+ *  @see Utility::utility_option( int, bool& )
+ */
 bool
 ChapterUtility::utility_option( int code, bool& handled )
 {
@@ -596,14 +687,22 @@ ChapterUtility::utility_option( int code, bool& handled )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/** Fix a QuickTime/iPod issue with long audio files.
+ *
+ *  This function checks if the <b>file</b> is a long audio file (more than
+ *  about 6 1/2 hours) and modifies the timescale if necessary to allow
+ *  playback of the file in QuickTime player and on some iPod models.
+ *
+ *  @param file the opened MP4 file
+ */
 void
 ChapterUtility::fixQtScale(MP4FileHandle file)
 {
     // get around a QuickTime/iPod issue with storing the number of samples in a signed 32Bit value
     if( INT_MAX < (MP4GetDuration(file) * MP4GetTimeScale(file)) )
     {
-        const char* type = MP4GetTrackType( file, getReferencingTrack( file ) );
-        if( MP4_IS_VIDEO_TRACK_TYPE( type ) )
+        bool isVideoTrack = false;
+        if( MP4_IS_VALID_TRACK_ID(getReferencingTrack( file, isVideoTrack )) & isVideoTrack )
         {
             // if it is a video, everything is different
             return;
@@ -616,9 +715,21 @@ ChapterUtility::fixQtScale(MP4FileHandle file)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/** Finds a suitable track that can reference a chapter track.
+ *
+ *  This function returns the first video or audio track that is found
+ *  in the <b>file</b>.
+ *  This track ca be used to reference the QuickTime chapter track.
+ *
+ *  @param file the opened MP4 file
+ *  @param isVideoTrack receives true if the found track is video, false otherwise
+ *  @return the <b>MP4TrackId</b> of the found track
+ */
 MP4TrackId
-ChapterUtility::getReferencingTrack( MP4FileHandle file )
+ChapterUtility::getReferencingTrack( MP4FileHandle file, bool& isVideoTrack )
 {
+    isVideoTrack = false;
+
     uint32_t trackCount = MP4GetNumberOfTracks( file );
     if( 0 == trackCount )
     {
@@ -633,6 +744,7 @@ ChapterUtility::getReferencingTrack( MP4FileHandle file )
         if( MP4_IS_VIDEO_TRACK_TYPE( type ) )
         {
             refTrackId = id;
+            isVideoTrack = true;
             break;
         }
         else if( MP4_IS_AUDIO_TRACK_TYPE( type ) )
@@ -647,6 +759,11 @@ ChapterUtility::getReferencingTrack( MP4FileHandle file )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/** Return a human readable representation of a <b>MP4ChapterType</b>.
+ *
+ *  @param chapterType the chapter type
+ *  @return a string representing the chapter type
+ */
 string
 ChapterUtility::getChapterTypeName( MP4ChapterType chapterType) const
 {
@@ -671,8 +788,19 @@ ChapterUtility::getChapterTypeName( MP4ChapterType chapterType) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/** Read a file into a buffer.
+ *
+ *  This function reads the file named by <b>filename</b> into a buffer allocated
+ *  by malloc and returns the pointer to this buffer in <b>buffer</b> and the size
+ *  of this buffer in <b>fileSize</b>.
+ *
+ *  @param filename  the name of the file.
+ *  @param buffer    receives a pointer to the created buffer
+ *  @param fileSize  reference to a <b>io::StdioFile::Size</b> that receives the size of the file
+ *  @return true if there was an error, false otherwise
+ */
 bool
-ChapterUtility::readChapterFile(const string filename, char** buffer, io::StdioFile::Size &fileSize)
+ChapterUtility::readChapterFile( const string filename, char** buffer, io::StdioFile::Size &fileSize )
 {
     const string inMode = "rb";
 
@@ -709,8 +837,18 @@ ChapterUtility::readChapterFile(const string filename, char** buffer, io::StdioF
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/** Read and parse a chapter file.
+ *
+ *  This function reads and parses a chapter file and returns a vector of
+ *  <b>MP4Chapter_t</b> elements.
+ *
+ *  @param filename the name of the file.
+ *  @param vector   receives a vector of chapters
+ *  @param format   receives the <b>Timecode::Format</b> of the timestamps
+ *  @return true if there was an error, false otherwise
+ */
 bool
-ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& chapters )
+ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& chapters, Timecode::Format& format )
 {
     // get the content
     char * inBuf;
@@ -741,6 +879,36 @@ ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& c
         pos++;
     }
     pos = inBuf;
+
+    // check for a BOM
+    char bom[5] = {0};
+    int bomLen = 0;
+    unsigned char* uPos = reinterpret_cast<unsigned char*>( pos );
+    if( *uPos == 0xEF && *(uPos+1) == 0xBB && *(uPos+2) == 0xBF )
+    {
+        // UTF-8 (we do not need the BOM)
+        pos += 3;
+    }
+    else if(   ( *uPos = 0xFE && *(uPos+1) == 0xFF )   // UTF-16 big endian
+            || ( *uPos = 0xFF && *(uPos+1) == 0xFE ) ) // UTF-16 little endian
+    {
+        bom[0] = *pos++;
+        bom[1] = *pos++;
+        bomLen = 2;
+        return herrf( "chapter file '%s' has UTF-16 encoding which is not supported (only UTF-8 is allowed)\n",
+                      filename.c_str() );
+    }
+    else if(   ( *uPos = 0x0 && *(uPos+1) == 0x0 && *(uPos+2) == 0xFE && *(uPos+3) == 0xFF )   // UTF-32 big endian
+            || ( *uPos = 0xFF && *(uPos+1) == 0xFE && *(uPos+2) == 0x0 && *(uPos+3) == 0x0 ) ) // UTF-32 little endian
+    {
+        bom[0] = *pos++;
+        bom[1] = *pos++;
+        bom[2] = *pos++;
+        bom[3] = *pos++;
+        bomLen = 4;
+        return herrf( "chapter file '%s' has UTF-32 encoding which is not supported (only UTF-8 is allowed)\n",
+                      filename.c_str() );
+    }
 
     // parse the lines
     bool failure = false;
@@ -796,6 +964,7 @@ ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& c
                 break;
             }
             chap.duration = tc.duration;
+            format = tc.format;
 
             chapters.push_back( chap );
         }
@@ -813,6 +982,34 @@ ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& c
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/** Convert from frame to millisecond timestamp.
+ *
+ *  This function converts a timestamp from hh:mm:ss:ff to hh:mm:ss.sss
+ *
+ *  @param duration  the timestamp in hours:minutes:seconds:frames.
+ *  @param framerate the frames per second
+ *  @return the timestamp in milliseconds
+ */
+MP4Duration
+ChapterUtility::convertFrameToMillis( MP4Duration duration, uint32_t framerate )
+{
+    Timecode tc( duration, CHAPTERTIMESCALE );
+    if( framerate < tc.subseconds )
+    {
+        uint64_t seconds = tc.subseconds / framerate;
+        tc.setSeconds( tc.seconds + seconds );
+        tc.setSubseconds( (tc.subseconds - (seconds * framerate)) * framerate );
+    }
+    else
+    {
+        tc.setSubseconds( tc.subseconds * framerate );
+    }
+
+    return tc.duration;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 }} // namespace mp4v2::util
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -825,6 +1022,6 @@ int main( int argc, char** argv )
     sinit(); // libutil static initializer
     ChapterUtility util( argc, argv );
     const bool result = util.process();
-    sshutdown(); // libutil static initializer
+    sshutdown(); // libutil static cleanup
     return result;
 }
