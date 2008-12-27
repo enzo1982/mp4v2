@@ -603,7 +603,7 @@ extern "C" {
     {
         if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
             try {
-                return ((MP4File*)hFile)->SetMetadataTempo(tempo);
+                return ((MP4File*)hFile)->SetMetadataUint16("tmpo", tempo);
             }
             catch (MP4Error* e) {
                 PRINT_ERROR(e);
@@ -617,7 +617,7 @@ extern "C" {
     {
         if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
             try {
-                return ((MP4File*)hFile)->GetMetadataTempo(tempo);
+                return ((MP4File*)hFile)->GetMetadataUint16("tmpo", tempo);
             }
             catch (MP4Error* e) {
                 PRINT_ERROR(e);

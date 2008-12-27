@@ -719,17 +719,19 @@ public:
     bool SetMetadataString(const char *atom, const char *value);
     bool MetadataDelete(void);
 
-    bool SetMetadataUint8(const char *atom, uint8_t compilation);
-    bool GetMetadataUint8(const char *atom, uint8_t* compilation);
+    bool SetMetadataUint8(const char *atom, uint8_t value);
+    bool GetMetadataUint8(const char *atom, uint8_t* retvalue);
 
-    bool SetMetadataUint32(const char *atom, uint32_t compilation);
-	bool GetMetadataUint32(const char *atom, uint32_t* compilation);
+    bool SetMetadataUint16(const char *atom, uint16_t value);
+    bool GetMetadataUint16(const char *atom, uint16_t* retvalue);
+
+    bool SetMetadataUint32(const char *atom, uint32_t value);
+	bool GetMetadataUint32(const char *atom, uint32_t* retvalue);
 	
     /* set metadata */
     bool SetMetadataTrack(uint16_t track, uint16_t totalTracks);
     bool SetMetadataDisk(uint16_t disk, uint16_t totalDisks);
     bool SetMetadataGenre(const char *value);
-    bool SetMetadataTempo(uint16_t tempo);
     bool SetMetadataCoverArt(uint8_t *coverArt, uint32_t size);
     bool SetMetadataFreeForm(const char *name,
                              const uint8_t* pValue,
@@ -744,7 +746,7 @@ public:
     bool GetMetadataTrack(uint16_t* track, uint16_t* totalTracks);
     bool GetMetadataDisk(uint16_t* disk, uint16_t* totalDisks);
     bool GetMetadataGenre(char **value);
-    bool GetMetadataTempo(uint16_t* tempo);
+    
     bool GetMetadataCoverArt(uint8_t **coverArt, uint32_t* size,
                              uint32_t index = 0);
     uint32_t GetMetadataCoverArtCount(void);
