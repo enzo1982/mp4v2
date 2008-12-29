@@ -67,6 +67,10 @@ libmp4v2_la_SOURCES = \
     src/cmeta.cpp                        \
     src/descriptors.cpp                  \
     src/descriptors.h                    \
+    src/exception.cpp                    \
+    src/exception.h                      \
+    src/enum.h                           \
+    src/enum.tcc                         \
     src/impl.h                           \
     src/isma.cpp                         \
     src/mp4.cpp                          \
@@ -97,9 +101,29 @@ libmp4v2_la_SOURCES = \
     src/qosqualifiers.h                  \
     src/rtphint.cpp                      \
     src/rtphint.h                        \
+    src/text.cpp                         \
+    src/text.h                           \
     src/util.h                           \
     src/virtual_io.cpp                   \
     src/virtual_io.h
+
+libmp4v2_la_SOURCES += \
+    src/itmf/CoverArtBox.cpp  \
+    src/itmf/CoverArtBox.h    \
+    src/itmf/impl.h           \
+    src/itmf/itmf.h           \
+    src/itmf/type.cpp         \
+    src/itmf/type.h
+
+libmp4v2_la_SOURCES += \
+    src/qtff/ColorParameterBox.cpp      \
+    src/qtff/ColorParameterBox.h        \
+    src/qtff/PictureAspectRatioBox.cpp  \
+    src/qtff/PictureAspectRatioBox.h    \
+    src/qtff/coding.cpp                 \
+    src/qtff/coding.h                   \
+    src/qtff/impl.h                     \
+    src/qtff/qtff.h
 
 libmp4v2_la_SOURCES += \
     libplatform/endian.h                 \
@@ -145,8 +169,6 @@ if ADD_UTIL
         libutil/Database.h         \
         libutil/Timecode.cpp       \
         libutil/Timecode.h         \
-        libutil/UtilException.cpp  \
-        libutil/UtilException.h    \
         libutil/Utility.cpp        \
         libutil/Utility.h          \
         libutil/crc.cpp            \
@@ -154,26 +176,7 @@ if ADD_UTIL
         libutil/impl.h             \
         libutil/other.cpp          \
         libutil/other.h            \
-        libutil/util.cpp           \
         libutil/util.h
-
-    libmp4v2_la_SOURCES += \
-        libutil/itmf/CoverArtBox.cpp  \
-        libutil/itmf/CoverArtBox.h    \
-        libutil/itmf/impl.h           \
-        libutil/itmf/itmf.h           \
-        libutil/itmf/type.cpp         \
-        libutil/itmf/type.h
-
-    libmp4v2_la_SOURCES += \
-        libutil/qtff/ColorParameterBox.cpp      \
-        libutil/qtff/ColorParameterBox.h        \
-        libutil/qtff/PictureAspectRatioBox.cpp  \
-        libutil/qtff/PictureAspectRatioBox.h    \
-        libutil/qtff/coding.cpp                 \
-        libutil/qtff/coding.h                   \
-        libutil/qtff/impl.h                     \
-        libutil/qtff/qtff.h
 
     bin_PROGRAMS += mp4art
     bin_PROGRAMS += mp4chaps

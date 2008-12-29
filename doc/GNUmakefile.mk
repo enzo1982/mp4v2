@@ -30,10 +30,11 @@ vpath COPYING       $(top_srcdir)
 vpath INSTALL       $(top_srcdir)
 vpath README        $(top_srcdir)
 vpath autoaux/%     $(top_srcdir)
+vpath %.1           $(top_srcdir)
 vpath %.cpp         $(top_srcdir)
 vpath %.h           $(top_srcdir)
 vpath %.m4          $(top_srcdir)
-vpath %.1           $(top_srcdir)
+vpath %.tcc         $(top_srcdir)
 
 ###############################################################################
 

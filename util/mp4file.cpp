@@ -224,11 +224,6 @@ FileUtility::utility_option( int code, bool& handled )
 extern "C"
 int main( int argc, char** argv )
 {
-    using namespace mp4v2::util;
-
-    sinit(); // libutil static initializer
-    FileUtility util( argc, argv );
-    const bool result = util.process();
-    sshutdown(); // libutil static cleanup
-    return result;
+    mp4v2::util::FileUtility util( argc, argv );
+    return util.process();
 }

@@ -237,7 +237,7 @@ ArtUtility::actionList( JobContext& job )
         report << setw(widx) << right << i
                << sep << setw(wsize) << item.size
                << sep << setw(8) << setfill('0') << hex << crc << setfill(' ') << dec
-               << sep << setw(wtype) << left << convertBasicType(item.type);
+               << sep << setw(wtype) << left << enumBasicType.toString( item.type );
 
         if( line++ == 0 )
             report << sep << setw(0) << job.file;
@@ -332,8 +332,13 @@ ArtUtility::extractSingle( JobContext& job, const CoverArtBox::Item& item, uint3
     ostringstream oss;
     oss << out_name << ".art[" << index << ']';
 
+    // if implicit we try to determine type by inspecting data
+    BasicType bt = item.type;
+    if( bt == BT_IMPLICIT )
+        bt = computeBasicType( item.buffer, item.size );
+
     // add file extension appropriate for known covr-box types
-    switch( item.type ) {
+    switch( bt ) {
         case BT_GIF:    oss << ".gif"; break;
         case BT_JPEG:   oss << ".jpg"; break;
         case BT_PNG:    oss << ".png"; break;
@@ -436,11 +441,6 @@ ArtUtility::utility_option( int code, bool& handled )
 extern "C"
 int main( int argc, char** argv )
 {
-    using namespace mp4v2::util;
-
-    sinit(); // libutil static initializer
-    ArtUtility util( argc, argv );
-    const bool result = util.process();
-    sshutdown(); // libutil static cleanup
-    return result;
+    mp4v2::util::ArtUtility util( argc, argv );
+    return util.process();
 }

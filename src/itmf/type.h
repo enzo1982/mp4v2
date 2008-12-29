@@ -1,14 +1,35 @@
-#ifndef MP4V2_UTIL_ITMF_TYPE_H
-#define MP4V2_UTIL_ITMF_TYPE_H
+///////////////////////////////////////////////////////////////////////////////
+//
+//  The contents of this file are subject to the Mozilla Public License
+//  Version 1.1 (the "License"); you may not use this file except in
+//  compliance with the License. You may obtain a copy of the License at
+//  http://www.mozilla.org/MPL/
+//
+//  Software distributed under the License is distributed on an "AS IS"
+//  basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//  License for the specific language governing rights and limitations
+//  under the License.
+// 
+//  The Original Code is MP4v2.
+// 
+//  The Initial Developer of the Original Code is Kona Blend.
+//  Portions created by Kona Blend are Copyright (C) 2008.
+//  All Rights Reserved.
+//
+//  Contributors:
+//      Kona Blend, kona8lend@@gmail.com
+//
+///////////////////////////////////////////////////////////////////////////////
 
-namespace mp4v2 { namespace util { namespace itmf {
+#ifndef MP4V2_IMPL_ITMF_TYPE_H
+#define MP4V2_IMPL_ITMF_TYPE_H
+
+namespace mp4v2 { namespace impl { namespace itmf {
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /// Basic set of types as detailed in spec.
 enum BasicType {
-    BT_UNDEFINED = -1,
-
     BT_IMPLICIT  = 0,   ///< for use with tags for which no type needs to be indicated
     BT_UTF8      = 1,   ///< without any count or null terminator
     BT_UTF16     = 2,   ///< also known as UTF-16BE
@@ -29,13 +50,18 @@ enum BasicType {
     BT_RIAA_PA   = 24,  ///< RIAA parental advisory; { -1=no, 1=yes, 0=unspecified }, 8-bit ingteger
     BT_UPC       = 25,  ///< Universal Product Code, in text UTF-8 format (valid as an ID)
     BT_BMP       = 27,  ///< Windows bitmap image
+
+    BT_UNDEFINED = 255
 };
+
+typedef Enum<BasicType,BT_UNDEFINED> EnumBasicType;
+MP4V2_EXPORT extern const EnumBasicType enumBasicType;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /// enumerated genre as defined in ID3v1 specification but +1 as per iTMF spec.
 /// Note values beyond 80 are Winamp extensions.
-enum Genre {
+enum GenreType {
     GENRE_UNDEFINED          = 0,
 
     /* ID3v1 standard */
@@ -106,7 +132,7 @@ enum Genre {
     GENRE_NATIVE_AMERICAN    = 65,
     GENRE_CABARET            = 66,
     GENRE_NEW_WAVE           = 67,
-    GENRE_PSYCHADELIC        = 68,
+    GENRE_PSYCHEDELIC        = 68,
     GENRE_RAVE               = 69,
     GENRE_SHOWTUNES          = 70,
     GENRE_TRAILER            = 71,
@@ -168,8 +194,11 @@ enum Genre {
     GENRE_EURO_HOUSE         = 125,
     GENRE_DANCE_HALL         = 126,
 
-    GENRE_NONE               = 255,
+    GENRE_NONE = 255
 };
+
+typedef Enum<GenreType,GENRE_UNDEFINED> EnumGenreType;
+MP4V2_EXPORT extern const EnumGenreType enumGenreType;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -183,8 +212,12 @@ enum StikType {
     STIK_SHORT_FILM  = 9,
     STIK_TV_SHOW     = 10,
     STIK_BOOKLET     = 11,
-    STIK_UNDEFINED   = 255,
+
+    STIK_UNDEFINED = 255
 };
+
+typedef Enum<StikType,STIK_UNDEFINED> EnumStikType;
+MP4V2_EXPORT extern const EnumStikType enumStikType;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -194,51 +227,6 @@ computeBasicType( const void* buffer, uint32_t size );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// convert #BasicType to string.
-MP4V2_EXPORT string
-convertBasicType( BasicType value );
+}}} // namespace mp4v2::impl::itmf
 
-/// convert #BasicType to string with buffer.
-MP4V2_EXPORT string&
-convertBasicType( BasicType value, string& buffer );
-
-/// convert string to #BasicType.
-/// @return On success, a valid enum. On failure, #BT_UNDEFINED.
-MP4V2_EXPORT BasicType
-convertBasicType( const string& value );
-
-///////////////////////////////////////////////////////////////////////////////
-
-/// convert #Genre to string.
-MP4V2_EXPORT string
-convertGenre( Genre value );
-
-/// convert #Genre to string with buffer.
-MP4V2_EXPORT string&
-convertGenre( Genre value, string& buffer );
-
-/// convert string to #Genre.
-/// @return On success, a valid enum. On failure, #GENRE_UNDEFINED.
-MP4V2_EXPORT Genre
-convertGenre( const string& value );
-
-///////////////////////////////////////////////////////////////////////////////
-
-/// convert #StikType to string.
-MP4V2_EXPORT string
-convertStikType( StikType value, bool = false );
-
-/// convert #StikType to string with buffer.
-MP4V2_EXPORT string&
-convertStikType( StikType value, string& buffer, bool = false );
-
-/// convert string to #StikType.
-/// @return On success, a valid enum. On failure, #STIK_UNDEFINED.
-MP4V2_EXPORT StikType
-convertStikType( const string& value );
-
-///////////////////////////////////////////////////////////////////////////////
-
-}}} // namespace mp4v2::util::itmf
-
-#endif // MP4V2_UTIL_ITMF_TYPE_H
+#endif // MP4V2_IMPL_ITMF_TYPE_H

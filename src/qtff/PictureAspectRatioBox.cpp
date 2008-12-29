@@ -1,39 +1,36 @@
+///////////////////////////////////////////////////////////////////////////////
+//
+//  The contents of this file are subject to the Mozilla Public License
+//  Version 1.1 (the "License"); you may not use this file except in
+//  compliance with the License. You may obtain a copy of the License at
+//  http://www.mozilla.org/MPL/
+//
+//  Software distributed under the License is distributed on an "AS IS"
+//  basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//  License for the specific language governing rights and limitations
+//  under the License.
+// 
+//  The Original Code is MP4v2.
+// 
+//  The Initial Developer of the Original Code is Kona Blend.
+//  Portions created by Kona Blend are Copyright (C) 2008.
+//  All Rights Reserved.
+//
+//  Contributors:
+//      Kona Blend, kona8lend@@gmail.com
+//
+///////////////////////////////////////////////////////////////////////////////
+
 #include "impl.h"
 
-namespace mp4v2 { namespace util { namespace qtff {
+namespace mp4v2 { namespace impl { namespace qtff {
 
 ///////////////////////////////////////////////////////////////////////////////
 
 namespace {
+    const string BOX_CODE = "pasp";
+
     bool findPictureAspectRatioBox( MP4FileHandle file, MP4Atom& coding, MP4Atom*& pasp );
-
-    class Singleton
-    {
-    public:
-        Singleton()
-            : BOX_TYPE( "pasp" )
-        {
-        }
-
-        const string BOX_TYPE; // 4-char type code
-    };
-    Singleton* SINGLETON;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void
-PictureAspectRatioBox_sinit()
-{
-    SINGLETON = new Singleton();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void
-PictureAspectRatioBox_sshutdown()
-{
-    delete SINGLETON;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -43,13 +40,13 @@ PictureAspectRatioBox::add( MP4FileHandle file, uint16_t trackIndex, const Item&
 {
     MP4Atom* coding;
     if( findCoding( file, trackIndex, coding ))
-        throw new UtilException( "supported coding not found" );
+        throw new MP4Exception( "supported coding not found" );
 
     MP4Atom* pasp;
     if( !findPictureAspectRatioBox( file, *coding, pasp ))
-        throw new UtilException( "pasp-box already exists" );
+        throw new MP4Exception( "pasp-box already exists" );
 
-    pasp = MP4Atom::CreateAtom( coding, SINGLETON->BOX_TYPE.c_str() );
+    pasp = MP4Atom::CreateAtom( coding, BOX_CODE.c_str() );
     coding->AddChildAtom( pasp );
     pasp->Generate();
 
@@ -83,11 +80,11 @@ PictureAspectRatioBox::get( MP4FileHandle file, uint16_t trackIndex, Item& item 
 
     MP4Atom* coding;
     if( findCoding( file, trackIndex, coding ))
-        throw new UtilException( "supported coding not found" );
+        throw new MP4Exception( "supported coding not found" );
 
     MP4Atom* pasp;
     if( findPictureAspectRatioBox( file, *coding, pasp ))
-        throw new UtilException( "pasp-box not found" );
+        throw new MP4Exception( "pasp-box not found" );
 
     MP4Integer16Property* hSpacing;
     MP4Integer16Property* vSpacing;
@@ -138,7 +135,7 @@ PictureAspectRatioBox::list( MP4FileHandle file, ItemList& itemList )
         try {
             success = !get( file, i, xitem.item );
         }
-        catch( UtilException* x ) {
+        catch( MP4Exception* x ) {
             delete x;
         }
 
@@ -158,11 +155,11 @@ PictureAspectRatioBox::remove( MP4FileHandle file, uint16_t trackIndex )
 {
     MP4Atom* coding;
     if( findCoding( file, trackIndex, coding ))
-        throw new UtilException( "supported coding not found" );
+        throw new MP4Exception( "supported coding not found" );
 
     MP4Atom* pasp;
     if( findPictureAspectRatioBox( file, *coding, pasp ))
-        throw new UtilException( "pasp-box not found" );
+        throw new MP4Exception( "pasp-box not found" );
 
     coding->DeleteChildAtom( pasp );
     delete pasp;
@@ -186,11 +183,11 @@ PictureAspectRatioBox::set( MP4FileHandle file, uint16_t trackIndex, const Item&
 {
     MP4Atom* coding;
     if( findCoding( file, trackIndex, coding ))
-        throw new UtilException( "supported coding not found" );
+        throw new MP4Exception( "supported coding not found" );
 
     MP4Atom* pasp;
     if( findPictureAspectRatioBox( file, *coding, pasp ))
-        throw new UtilException( "pasp-box not found" );
+        throw new MP4Exception( "pasp-box not found" );
 
     MP4Integer16Property* hSpacing;
     MP4Integer16Property* vSpacing;
@@ -257,7 +254,7 @@ PictureAspectRatioBox::Item::convertFromCSV( const string& text )
         xss << "invalid PcitureAspectRatioBox format"
             << " (expecting: hSpacing,vSpacing)"
             << " got: " << text;
-        throw new UtilException( xss );
+        throw new MP4Exception( xss );
     }
 }
 
@@ -296,7 +293,7 @@ findPictureAspectRatioBox( MP4FileHandle file, MP4Atom& coding, MP4Atom*& pasp )
     const uint32_t atomc = coding.GetNumberOfChildAtoms();
     for( uint32_t i = 0; i < atomc; i++ ) {
         MP4Atom* atom = coding.GetChildAtom( i );
-        if( SINGLETON->BOX_TYPE != atom->GetType() )
+        if( BOX_CODE != atom->GetType() )
             continue;
         found = atom;
     }
@@ -309,4 +306,4 @@ findPictureAspectRatioBox( MP4FileHandle file, MP4Atom& coding, MP4Atom*& pasp )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}}}} // namespace mp4v2::util::qtff::anonymous
+}}}} // namespace mp4v2::impl::qtff::anonymous

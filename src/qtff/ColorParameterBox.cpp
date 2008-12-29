@@ -1,39 +1,36 @@
+///////////////////////////////////////////////////////////////////////////////
+//
+//  The contents of this file are subject to the Mozilla Public License
+//  Version 1.1 (the "License"); you may not use this file except in
+//  compliance with the License. You may obtain a copy of the License at
+//  http://www.mozilla.org/MPL/
+//
+//  Software distributed under the License is distributed on an "AS IS"
+//  basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//  License for the specific language governing rights and limitations
+//  under the License.
+// 
+//  The Original Code is MP4v2.
+// 
+//  The Initial Developer of the Original Code is Kona Blend.
+//  Portions created by Kona Blend are Copyright (C) 2008.
+//  All Rights Reserved.
+//
+//  Contributors:
+//      Kona Blend, kona8lend@@gmail.com
+//
+///////////////////////////////////////////////////////////////////////////////
+
 #include "impl.h"
 
-namespace mp4v2 { namespace util { namespace qtff {
+namespace mp4v2 { namespace impl { namespace qtff {
 
 ///////////////////////////////////////////////////////////////////////////////
 
 namespace {
+    const string BOX_CODE = "colr";
+
     bool findColorParameterBox( MP4FileHandle file, MP4Atom& coding, MP4Atom*& colr );
-
-    class Singleton
-    {
-    public:
-        Singleton()
-            : BOX_TYPE( "colr" )
-        {
-        }
-
-        const string BOX_TYPE; // 4-char type code
-    };
-    Singleton* SINGLETON;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void
-ColorParameterBox_sinit()
-{
-    SINGLETON = new Singleton();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void
-ColorParameterBox_sshutdown()
-{
-    delete SINGLETON;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -43,13 +40,13 @@ ColorParameterBox::add( MP4FileHandle file, uint16_t trackIndex, const Item& ite
 {
     MP4Atom* coding;
     if( findCoding( file, trackIndex, coding ))
-        throw new UtilException( "supported coding not found" );
+        throw new MP4Exception( "supported coding not found" );
 
     MP4Atom* colr;
     if( !findColorParameterBox( file, *coding, colr ))
-        throw new UtilException( "colr-box already exists" );
+        throw new MP4Exception( "colr-box already exists" );
 
-    colr = MP4Atom::CreateAtom( coding, SINGLETON->BOX_TYPE.c_str() );
+    colr = MP4Atom::CreateAtom( coding, BOX_CODE.c_str() );
     coding->AddChildAtom( colr );
     colr->Generate();
 
@@ -91,11 +88,11 @@ ColorParameterBox::get( MP4FileHandle file, uint16_t trackIndex, Item& item )
 
     MP4Atom* coding;
     if( findCoding( file, trackIndex, coding ))
-        throw new UtilException( "supported coding not found" );
+        throw new MP4Exception( "supported coding not found" );
 
     MP4Atom* colr;
     if( findColorParameterBox( file, *coding, colr ))
-        throw new UtilException( "colr-box not found" );
+        throw new MP4Exception( "colr-box not found" );
 
     MP4Integer16Property* primariesIndex;
     MP4Integer16Property* transferFunctionIndex;
@@ -150,7 +147,7 @@ ColorParameterBox::list( MP4FileHandle file, ItemList& itemList )
         try {
             success = !get( file, i, xitem.item );
         }
-        catch( UtilException* x ) {
+        catch( MP4Exception* x ) {
             delete x;
         }
 
@@ -170,11 +167,11 @@ ColorParameterBox::remove( MP4FileHandle file, uint16_t trackIndex )
 {
     MP4Atom* coding;
     if( findCoding( file, trackIndex, coding ))
-        throw new UtilException( "supported coding not found" );
+        throw new MP4Exception( "supported coding not found" );
 
     MP4Atom* colr;
     if( findColorParameterBox( file, *coding, colr ))
-        throw new UtilException( "colr-box not found" );
+        throw new MP4Exception( "colr-box not found" );
 
     coding->DeleteChildAtom( colr );
     delete colr;
@@ -198,11 +195,11 @@ ColorParameterBox::set( MP4FileHandle file, uint16_t trackIndex, const Item& ite
 {
     MP4Atom* coding;
     if( findCoding( file, trackIndex, coding ))
-        throw new UtilException( "supported coding not found" );
+        throw new MP4Exception( "supported coding not found" );
 
     MP4Atom* colr;
     if( findColorParameterBox( file, *coding, colr ))
-        throw new UtilException( "colr-box not found" );
+        throw new MP4Exception( "colr-box not found" );
 
     MP4Integer16Property* primariesIndex;
     MP4Integer16Property* transferFunctionIndex;
@@ -267,7 +264,7 @@ ColorParameterBox::Item::convertFromCSV( const string& text )
         xss << "invalid ColorParameterBox format"
             << " (expecting: INDEX1,INDEX2,INDEX3)"
             << " got: " << text;
-        throw new UtilException( xss );
+        throw new MP4Exception( xss );
     }
 }
 
@@ -316,7 +313,7 @@ findColorParameterBox( MP4FileHandle file, MP4Atom& coding, MP4Atom*& colr )
     const uint32_t atomc = coding.GetNumberOfChildAtoms();
     for( uint32_t i = 0; i < atomc; i++ ) {
         MP4Atom* atom = coding.GetChildAtom( i );
-        if( SINGLETON->BOX_TYPE != atom->GetType() )
+        if( BOX_CODE != atom->GetType() )
             continue;
         found = atom;
     }
@@ -341,4 +338,4 @@ findColorParameterBox( MP4FileHandle file, MP4Atom& coding, MP4Atom*& colr )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}}} // namespace mp4v2::util::qtff
+}}} // namespace mp4v2::impl::qtff

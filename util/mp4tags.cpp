@@ -86,8 +86,6 @@ static const char* const help_text =
 extern "C" int
     main( int argc, char** argv )
 {
-    sinit(); // libutil static initializer
-
     const prog::Option long_options[] = {
         { "help",        prog::Option::NO_ARG,       0, OPT_HELP         },
         { "version",     prog::Option::NO_ARG,       0, OPT_VERSION      },
@@ -331,7 +329,7 @@ extern "C" int
                         break;
                     case OPT_MEDIA_TYPE:
                     {
-                        itmf::StikType st = itmf::convertStikType( tags[i] );
+                        itmf::StikType st = itmf::enumStikType.toType( tags[i] );
                         MP4SetMetadataMediaType( h, st );
                         break;
                     }
@@ -384,6 +382,5 @@ extern "C" int
 
         MP4Close( h );
     } /* end while optind < argc */
-    sshutdown(); // libutil static clenup
     return 0;
 }

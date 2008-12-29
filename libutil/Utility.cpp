@@ -108,7 +108,7 @@ Utility::batch( int argi )
             x->Print( stderr );
             delete x;
         }
-        catch( UtilException* x ) {
+        catch( MP4Exception* x ) {
             herrf( "%s\n", x->what.c_str() );
             delete x;
         }
@@ -298,7 +298,7 @@ Utility::job( string arg )
         x->Print( stderr );
         delete x;
     }
-    catch( UtilException* x ) {
+    catch( MP4Exception* x ) {
         herrf( "%s\n", x->what.c_str() );
         delete x;
     }
@@ -468,7 +468,7 @@ Utility::process()
     try {
         rv = process_impl();
     }
-    catch( UtilException* x ) {
+    catch( MP4Exception* x ) {
         // rare usage of herrf, make sure its not a warning header.
         _keepgoing = false;
         herrf( "%s\n", x->what.c_str() );

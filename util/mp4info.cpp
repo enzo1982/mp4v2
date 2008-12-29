@@ -25,7 +25,6 @@ using namespace mp4v2::util;
 
 extern "C" int main( int argc, char** argv )
 {
-    sinit(); // libutil static initializer
     const char* const usageString =
         "<file-name>";
 
@@ -195,7 +194,7 @@ extern "C" int main( int argc, char** argv )
                          bytevalue ? "yes" : "no" );
             }
             if ( MP4GetMetadataMediaType( mp4file, &bytevalue ) ) {
-                string s = itmf::convertStikType( static_cast<itmf::StikType>( bytevalue ), true );
+                string s = itmf::enumStikType.toString( static_cast<itmf::StikType>( bytevalue ), true );
                 fprintf( stdout, " Media Type: %s\n",
                         s.c_str() );
             }
@@ -265,6 +264,5 @@ extern "C" int main( int argc, char** argv )
         }
         free( info );
     }
-    sshutdown(); // libutil static clenup
     return( 0 );
 }

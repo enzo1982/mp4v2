@@ -17,15 +17,7 @@
 ///
 namespace mp4v2 { namespace util {
     using namespace std;
-    using namespace platform;
-
-    //< static init which must be called to init libutil @ runtime begin.
-    MP4V2_EXPORT
-    void sinit();
-
-    //< static shutdown which must be called to cleanup libutil @ runtime end.
-    MP4V2_EXPORT
-    void sshutdown();
+    using namespace mp4v2::impl;
 }} // namespace mp4v2::util
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -34,19 +26,13 @@ namespace mp4v2 { namespace util {
 #include <iomanip>
 #include <list>
 #include <map>
-#include <set>
-#include <sstream>
 #include <vector>
 
-#include "UtilException.h"
 #include "Database.h"
 #include "Timecode.h"
 #include "Utility.h"
 #include "crc.h"
 #include "other.h"
-
-#include "itmf/itmf.h"
-#include "qtff/qtff.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 

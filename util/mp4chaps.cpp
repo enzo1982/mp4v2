@@ -949,7 +949,7 @@ ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& c
                     titleStart++;
                 }
 
-                int titleLen = min(strlen(titleStart), (size_t)MP4V2_CHAPTER_TITLE_MAX);
+                int titleLen = min( (uint32_t)strlen(titleStart), (uint32_t)MP4V2_CHAPTER_TITLE_MAX );
                 strncpy(chap.title, titleStart, titleLen);
                 chap.title[titleLen] = 0;
             }
@@ -1017,11 +1017,6 @@ ChapterUtility::convertFrameToMillis( MP4Duration duration, uint32_t framerate )
 extern "C"
 int main( int argc, char** argv )
 {
-    using namespace mp4v2::util;
-
-    sinit(); // libutil static initializer
-    ChapterUtility util( argc, argv );
-    const bool result = util.process();
-    sshutdown(); // libutil static cleanup
-    return result;
+    mp4v2::util::ChapterUtility util( argc, argv );
+    return util.process();
 }

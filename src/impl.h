@@ -9,10 +9,14 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 namespace mp4v2 { namespace impl {
-    using namespace platform;
+    using namespace mp4v2::platform;
 }} // namspace mp4v2::impl
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#include "text.h"
+#include "enum.h"
+#include "exception.h"
 
 #include "util.h"
 #include "mp4error.h"
@@ -25,6 +29,9 @@ namespace mp4v2 { namespace impl {
 
 #include "mp4atom.h"
 #include "atoms.h"
+
+#include "itmf/itmf.h"
+#include "qtff/qtff.h"
 
 #include "mp4descriptor.h"
 #include "descriptors.h"

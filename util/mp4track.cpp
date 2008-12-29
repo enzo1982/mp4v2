@@ -816,11 +816,6 @@ toStringTrackType( string code )
 extern "C"
 int main( int argc, char** argv )
 {
-    using namespace mp4v2::util;
-
-    sinit(); // libutil static initializer
-    TrackUtility util( argc, argv );
-    const bool result = util.process();
-    sshutdown(); // libutil static clenup
-    return result;
+    mp4v2::util::TrackUtility util( argc, argv );
+    return util.process();
 }
