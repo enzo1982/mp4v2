@@ -23,7 +23,14 @@
 
 #include "src/impl.h"
 
+// VStudio idiocy prevents defining template instanced static data
+// in a namespace. Workaround it by defining in global scope.
+// Other platforms will continue to put things in the proper namespace.
+#if defined( _MSC_VER )
+using namespace mp4v2::impl::itmf;
+#else
 namespace mp4v2 { namespace impl { namespace itmf {
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -52,9 +59,6 @@ const EnumBasicType::Entry EnumBasicType::data[] = {
 
     { mp4v2::impl::itmf::BT_UNDEFINED } // must be last
 };
-
-// must come after static data init
-const EnumBasicType enumBasicType;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -192,9 +196,6 @@ const EnumGenreType::Entry EnumGenreType::data[] = {
     { mp4v2::impl::itmf::GENRE_UNDEFINED } // must be last
 };
 
-// must come after static data init
-const EnumGenreType enumGenreType;
-
 ///////////////////////////////////////////////////////////////////////////////
 
 template <>
@@ -210,7 +211,17 @@ const EnumStikType::Entry EnumStikType::data[] = {
     { mp4v2::impl::itmf::STIK_UNDEFINED } // must be last
 };
 
+///////////////////////////////////////////////////////////////////////////////
+
+#if defined( _MSC_VER )
+namespace mp4v2 { namespace impl { namespace itmf {
+#endif
+
+///////////////////////////////////////////////////////////////////////////////
+
 // must come after static data init
+const EnumBasicType enumBasicType;
+const EnumGenreType enumGenreType;
 const EnumStikType enumStikType;
 
 ///////////////////////////////////////////////////////////////////////////////

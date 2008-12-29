@@ -68,10 +68,10 @@ namespace mp4v2 { namespace impl {
 /// in the <b>same file</b> and <b>before</b> instantiation.
 ///
 template <typename T, T UNDEFINED>
-class MP4V2_EXPORT Enum
+class Enum
 {
 public:
-    struct MP4V2_EXPORT Entry
+    struct Entry
     {
         T type;
         const string compact;

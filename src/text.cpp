@@ -5,22 +5,32 @@ namespace mp4v2 { namespace impl {
 ///////////////////////////////////////////////////////////////////////////////
 
 bool
-LessIgnoreCase::operator()( const string& x, const string& y ) const
+LessIgnoreCase::operator()( const string& xstr, const string& ystr ) const
 {
-    const string::size_type xlen = x.length();
-    const string::size_type ylen = y.length();
+    const string::size_type xlen = xstr.length();
+    const string::size_type ylen = ystr.length();
 
     if( xlen < ylen ) {
         for( string::size_type i = 0; i < xlen; i++ ) {
-            if( std::toupper(x[i]) < std::toupper(y[i]) )
+            const char x = std::toupper( xstr[i] );
+            const char y = std::toupper( ystr[i] );
+
+            if( x < y )
                 return true;
+            else if ( x > y )
+                return false;
         }
         return true;
     }
     else {
         for( string::size_type i = 0; i < ylen; i++ ) {
-            if( std::toupper(x[i]) < std::toupper(y[i]) )
+            const char x = std::toupper( xstr[i] );
+            const char y = std::toupper( ystr[i] );
+
+            if( x < y )
                 return true;
+            else if ( x > y )
+                return false;
         }
         return false;
     }

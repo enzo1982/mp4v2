@@ -467,6 +467,22 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\enum.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\enum.tcc"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\exception.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\exception.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\impl.h"
 				>
 			</File>
@@ -587,6 +603,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\text.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\text.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\util.h"
 				>
 			</File>
@@ -598,6 +622,70 @@
 				RelativePath="..\..\src\virtual_io.h"
 				>
 			</File>
+			<Filter
+				Name="itmf"
+				>
+				<File
+					RelativePath="..\..\src\itmf\CoverArtBox.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\itmf\CoverArtBox.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\itmf\impl.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\itmf\itmf.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\itmf\type.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\itmf\type.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="qtff"
+				>
+				<File
+					RelativePath="..\..\src\qtff\coding.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\qtff\coding.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\qtff\ColorParameterBox.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\qtff\ColorParameterBox.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\qtff\impl.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\qtff\PictureAspectRatioBox.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\qtff\PictureAspectRatioBox.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\qtff\qtff.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="platform"
@@ -759,19 +847,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\libutil\util.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\libutil\util.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\libutil\UtilException.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\libutil\UtilException.h"
 				>
 			</File>
 			<File
@@ -782,70 +858,6 @@
 				RelativePath="..\..\libutil\Utility.h"
 				>
 			</File>
-			<Filter
-				Name="qtff"
-				>
-				<File
-					RelativePath="..\..\libutil\qtff\coding.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libutil\qtff\coding.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libutil\qtff\ColorParameterBox.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libutil\qtff\ColorParameterBox.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libutil\qtff\impl.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libutil\qtff\PictureAspectRatioBox.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libutil\qtff\PictureAspectRatioBox.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libutil\qtff\qtff.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="itmf"
-				>
-				<File
-					RelativePath="..\..\libutil\itmf\CoverArtBox.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libutil\itmf\CoverArtBox.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libutil\itmf\impl.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libutil\itmf\itmf.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libutil\itmf\type.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libutil\itmf\type.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
