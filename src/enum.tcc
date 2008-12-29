@@ -104,7 +104,7 @@ Enum<T,UNDEFINED>::toType( const string& value ) const
 
     const typename MapToType::const_iterator ie = _mapToType.end();
     for( typename MapToType::const_iterator it = _mapToType.begin(); it != ie; it++ ) {
-        const Entry& entry = *(found->second);
+        const Entry& entry = *(it->second);
         if( entry.compact.find( value ) == 0 ) {
             matches++;
             matched = entry.type;

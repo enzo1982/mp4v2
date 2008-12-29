@@ -71,7 +71,7 @@ template <typename T, T UNDEFINED>
 class Enum
 {
 public:
-    struct Entry
+    struct MP4V2_EXPORT Entry
     {
         T type;
         const string compact;
