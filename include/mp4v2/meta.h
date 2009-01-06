@@ -499,6 +499,15 @@ bool MP4GetMetadataCategory(
     char**        value );
 
 MP4V2_EXPORT
+bool MP4SetMetadataCNID(
+    MP4FileHandle hFile,
+    uint32_t       value );
+
+MP4V2_EXPORT
+bool MP4DeleteMetadataCNID(
+    MP4FileHandle hFile );
+
+MP4V2_EXPORT
 bool MP4GetMetadataCNID(
     MP4FileHandle hFile,
     uint32_t*      value );
