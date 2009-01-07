@@ -16,8 +16,8 @@ MP4V2_EXPORT
 bool MP4GetMetadataByIndex(
     MP4FileHandle hFile,
     uint32_t      index,
-    char**        ppName,   // need to free memory
-    uint8_t**     ppValue,  // need to free
+    char**        ppName,   /* need to free memory */
+    uint8_t**     ppValue,  /* need to free */
     uint32_t*     pValueSize );
 
 MP4V2_EXPORT
@@ -552,6 +552,66 @@ MP4V2_EXPORT
 void MP4AddIPodUUID(
     MP4FileHandle hFile,
     MP4TrackId    trackId );
+
+/*****************************************************************************/
+
+struct MP4Metadata
+{
+    void* __handle; /* private use */
+
+    const char*     albumName;
+    const char*     artist;
+    const char*     userComment;
+    const char*     copyright;
+    const char*     releaseDate;
+    const char*     encodedBy;
+    const uint8_t*  predefinedGenre;
+    const char*     userGenre;
+    const char*     songName;
+    const char*     trackSubtitle;
+    const char*     encodingTool;
+    const char*     composer;
+    const char*     albumArtist;
+    const char*     grouping;
+    const uint8_t*  contentRating;
+    const uint32_t* beatsPerMinute;
+    const char*     soundCheck;
+    const uint32_t* toolInfo;
+    const char*     cddb_id1;
+    const char*     cddb_id2;
+    const char*     cddb_id3;
+
+    // extended tags
+    const char* artDirector;
+    const char* arranger;
+    const char* lyricist;
+    const char* copyrightAcks;
+    const char* conductor;
+    const char* songDescription;
+    const char* director;
+    const char* equalizationPresetName;
+    const char* linerNotes;
+    const char* recordCompany;
+    const char* originalArtist;
+    const char* phonogramRights;
+    const char* producer;
+    const char* performer;
+    const char* publisher;
+    const char* soundEngineer;
+    const char* soloist;
+    const char* credits;
+    const char* thanks;
+    const char* onlineExtras;
+    const char* executiveProducer;
+};
+
+MP4V2_EXPORT const MP4Metadata* MP4MetadataAlloc ( MP4FileHandle );
+MP4V2_EXPORT void               MP4MetadataFetch ( const MP4Metadata* );
+MP4V2_EXPORT void               MP4MetadataStore ( const MP4Metadata* );
+MP4V2_EXPORT void               MP4MetadataFree  ( const MP4Metadata* );
+
+MP4V2_EXPORT void MP4MetadataSetAlbumName ( const MP4Metadata*, const char* );
+MP4V2_EXPORT void MP4MetadataSetArtist    ( const MP4Metadata*, const char* );
 
 /** @} ***********************************************************************/
 

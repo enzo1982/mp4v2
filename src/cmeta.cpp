@@ -22,10 +22,10 @@
  * Copyright (C) Ximpo Group Ltd. 2003, 2004.  All Rights Reserved.
  *
  * Contributor(s):
- *      Dave Mackie         dmackie@cisco.com
- *      Alix Marchandise-Franquet   alix@cisco.com
- *              Ximpo Group Ltd.                mp4v2@ximpo.com
- *              Bill May                        wmay@cisco.com
+ *      Dave Mackie                dmackie@cisco.com
+ *      Alix Marchandise-Franquet  alix@cisco.com
+ *      Ximpo Group Ltd.           mp4v2@ximpo.com
+ *      Bill May                   wmay@cisco.com
  */
 
 /*
@@ -1460,6 +1460,95 @@ extern "C" {
         }
         return false;
     }
+
+///////////////////////////////////////////////////////////////////////////////
+
+const MP4Metadata*
+MP4MetadataAlloc( MP4FileHandle file )
+{
+    MP4Metadata* result = NULL;
+
+    if( !MP4_IS_VALID_FILE_HANDLE( file ))
+        return result;
+
+    try {
+        itmf::Metadata& m = *new itmf::Metadata( file );
+        m.c_alloc( result );
+        return result;
+    }
+    catch( MP4Error* e ) {
+        VERBOSE_ERROR( static_cast<MP4File*>(file)->GetVerbosity(), e->Print() );
+        delete e;
+    }
+
+    delete result;
+    return NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4MetadataFree( const MP4Metadata* m )
+{
+    itmf::Metadata* cpp = static_cast<itmf::Metadata*>(m->__handle);
+    MP4Metadata* c = const_cast<MP4Metadata*>(m);
+    cpp->c_free( c );
+    delete cpp;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4MetadataFetch( const MP4Metadata* m )
+{
+    itmf::Metadata* cpp = static_cast<itmf::Metadata*>(m->__handle);
+    MP4Metadata* c = const_cast<MP4Metadata*>(m);
+
+    try {
+        cpp->c_fetch( c );
+    }
+    catch( MP4Error* e ) {
+        VERBOSE_ERROR( cpp->file.GetVerbosity(), e->Print() );
+        delete e;
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4MetadataStore( const MP4Metadata* m )
+{
+    itmf::Metadata* cpp = static_cast<itmf::Metadata*>(m->__handle);
+    MP4Metadata* c = const_cast<MP4Metadata*>(m);
+
+    try {
+        cpp->c_store( c );
+    }
+    catch( MP4Error* e ) {
+        VERBOSE_ERROR( cpp->file.GetVerbosity(), e->Print() );
+        delete e;
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4MetadataSetAlbumName( const MP4Metadata* m, const char* value )
+{
+    itmf::Metadata& cpp = *static_cast<itmf::Metadata*>(m->__handle);
+    MP4Metadata& c = *const_cast<MP4Metadata*>(m);
+    cpp.setString( value, cpp.albumName, c.albumName );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4MetadataSetArtist( const MP4Metadata* m, const char* value )
+{
+    itmf::Metadata& cpp = *static_cast<itmf::Metadata*>(m->__handle);
+    MP4Metadata& c = *const_cast<MP4Metadata*>(m);
+    cpp.setString( value, cpp.artist, c.artist );
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
