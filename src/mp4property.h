@@ -22,8 +22,7 @@
 #ifndef MP4V2_IMPL_MP4PROPERTY_H
 #define MP4V2_IMPL_MP4PROPERTY_H
 
-namespace mp4v2 {
-namespace impl {
+namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -44,6 +43,7 @@ enum MP4PropertyType {
     BytesProperty,
     TableProperty,
     DescriptorProperty,
+    LanguageCodeProperty,
 };
 
 class MP4Property {
@@ -547,7 +547,31 @@ protected:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}
-} // namespace mp4v2::impl
+/// ISO-639-2/T langauge code.
+/// Language codes are 3-alpha (always lowercase) codes which are then
+/// offset using 0x60 and packed as 5-bit values into 16-bits, most
+/// significant bit is zero-padding.
+
+class MP4LanguageCodeProperty : public MP4Property {
+private:
+    string _value;
+    bool   _invalid;
+
+public:
+    explicit MP4LanguageCodeProperty( const char* , const string& = "und" );
+
+    MP4PropertyType GetType();
+    uint32_t        GetCount();
+    void            SetCount( uint32_t );
+    void            Read( MP4File*, uint32_t = 0 );
+    void            Write( MP4File*, uint32_t = 0 );
+    void            Dump( FILE*, uint8_t, bool, uint32_t = 0 );
+    const char*     GetValue();
+    void            SetValue( const string& );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+}} // namespace mp4v2::impl
 
 #endif // MP4V2_IMPL_MP4PROPERTY_H

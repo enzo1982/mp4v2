@@ -21,8 +21,7 @@
 
 #include "impl.h"
 
-namespace mp4v2 {
-namespace impl {
+namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -57,8 +56,7 @@ void MP4MdhdAtom::AddProperties(uint8_t version)
             new MP4Integer32Property("duration"));
     }
 
-    AddProperty(
-        new MP4Integer16Property("language"));
+    AddProperty( new MP4LanguageCodeProperty( "language" ));
     AddReserved("reserved", 2);
 }
 
@@ -97,5 +95,4 @@ void MP4MdhdAtom::Read()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}
-} // namespace mp4v2::impl
+}} // namespace mp4v2::impl

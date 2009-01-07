@@ -17,6 +17,7 @@
  *
  * Contributor(s):
  *      Dave Mackie     dmackie@cisco.com
+ *      Kona Blend      kona8lend@@gmail.com
  */
 
 #include "impl.h"
@@ -24,8 +25,7 @@
 #include <sstream>
 #include <locale>
 
-namespace mp4v2 {
-namespace impl {
+namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -1008,5 +1008,78 @@ void MP4DescriptorProperty::Dump(FILE* pFile, uint8_t indent,
 
 ///////////////////////////////////////////////////////////////////////////////
 
+MP4LanguageCodeProperty::MP4LanguageCodeProperty( const char* name, const string& code )
+    : MP4Property( name )
+{
+    SetValue( code );
 }
-} // namespace mp4v2::impl
+
+void
+MP4LanguageCodeProperty::Dump( FILE* file, uint8_t indent, bool dumpImplicits, uint32_t index )
+{
+    Indent( file, indent );
+
+    if( _invalid )
+        fprintf( file, "%s = %s (invalid)\n", m_name, _value.c_str() );
+    else
+        fprintf( file, "%s = %s\n", m_name, _value.c_str() );
+}
+
+uint32_t
+MP4LanguageCodeProperty::GetCount()
+{
+    return 1;
+}
+
+MP4PropertyType
+MP4LanguageCodeProperty::GetType()
+{
+    return LanguageCodeProperty;
+}
+
+const char*
+MP4LanguageCodeProperty::GetValue()
+{
+    return _value.c_str();
+}
+
+void
+MP4LanguageCodeProperty::Read( MP4File* file, uint32_t index )
+{
+    uint16_t data = file->ReadBits( 16 );
+
+    char code[3];
+    code[0] = ((data & 0x7c00) >> 10) + 0x60;
+    code[1] = ((data & 0x03e0) >>  5) + 0x60;
+    code[2] = ((data & 0x001f)      ) + 0x60;
+
+    SetValue( string( code, sizeof(code) ));
+}
+
+void
+MP4LanguageCodeProperty::SetCount( uint32_t count )
+{
+    // do nothing; count is always 1
+}
+
+void
+MP4LanguageCodeProperty::SetValue( const string& value )
+{
+    _value = value;
+    _invalid = value[0] == 0x60 || value[1] == 0x60 || value[2] == 0x60;
+}
+
+void
+MP4LanguageCodeProperty::Write( MP4File* file, uint32_t index )
+{
+    uint16_t data =
+          (((_value[0] - 0x60) & 0x001f) << 10)
+        | (((_value[1] - 0x60) & 0x001f) <<  5)
+        | (((_value[2] - 0x60) & 0x001f)      );
+
+    file->WriteBits( data, 16 );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+}} // namespace mp4v2::impl
