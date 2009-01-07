@@ -150,6 +150,9 @@ public: /* equivalent to MP4 library API */
         MP4TrackId trackId, const char* name,
         const uint8_t* pValue, uint32_t valueSize);
 
+    bool GetTrackLanguage( MP4TrackId, char* );
+    bool SetTrackLanguage( MP4TrackId, const char* );
+
     /* sample operations */
 
     uint32_t GetSampleSize(MP4TrackId trackId, MP4SampleId sampleId);

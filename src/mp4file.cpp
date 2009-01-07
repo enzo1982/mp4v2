@@ -3124,6 +3124,44 @@ void MP4File::SetTrackBytesProperty(MP4TrackId trackId, const char* name,
     SetBytesProperty(MakeTrackName(trackId, name), pValue, valueSize);
 }
 
+bool MP4File::GetTrackLanguage( MP4TrackId trackId, char* code )
+{
+    ostringstream oss;
+    oss << "moov.trak[" << FindTrakAtomIndex(trackId) << "].mdia.mdhd.language";
+
+    MP4Property* prop;
+    if( !m_pRootAtom->FindProperty( oss.str().c_str(), &prop ))
+        return false;
+
+    if( prop->GetType() != LanguageCodeProperty )
+        return false;
+
+    MP4LanguageCodeProperty& lang = *static_cast<MP4LanguageCodeProperty*>(prop);
+    memcpy( code, lang.GetValue(), 3 );
+    code[3] = '\0';
+
+    return true;
+}
+
+bool MP4File::SetTrackLanguage( MP4TrackId trackId, const char* code )
+{
+    ProtectWriteOperation( "SetTrackLanguage" );
+
+    ostringstream oss;
+    oss << "moov.trak[" << FindTrakAtomIndex(trackId) << "].mdia.mdhd.language";
+
+    MP4Property* prop;
+    if( !m_pRootAtom->FindProperty( oss.str().c_str(), &prop ))
+        return false;
+
+    if( prop->GetType() != LanguageCodeProperty )
+        return false;
+
+    MP4LanguageCodeProperty& lang = *static_cast<MP4LanguageCodeProperty*>(prop);
+    lang.SetValue( code );
+
+    return true;
+}
 
 // file level convenience functions
 

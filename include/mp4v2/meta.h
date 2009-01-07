@@ -555,7 +555,7 @@ void MP4AddIPodUUID(
 
 /*****************************************************************************/
 
-struct MP4Metadata
+typedef struct MP4Metadata_s
 {
     void* __handle; /* private use */
 
@@ -603,7 +603,7 @@ struct MP4Metadata
     const char* thanks;
     const char* onlineExtras;
     const char* executiveProducer;
-};
+} MP4Metadata;
 
 MP4V2_EXPORT const MP4Metadata* MP4MetadataAlloc ( MP4FileHandle );
 MP4V2_EXPORT void               MP4MetadataFetch ( const MP4Metadata* );

@@ -101,14 +101,42 @@ uint32_t MP4GetTrackTimeScale(
  *  @param hFile handle of file for operation.
  *  @param trackId id of track for operation.
  *  @param timeScale desired time scale for the track.
- *
- *  @return On success, true. On failure, false.
  */
 MP4V2_EXPORT
 void MP4SetTrackTimeScale(
     MP4FileHandle hFile,
     MP4TrackId    trackId,
     uint32_t      value );
+
+/** Get ISO-639-2/T langauge code of a track.
+ *  The language code is a 3-char alpha code consisting of lower-case letters.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param trackId id of track for operation.
+ *  @param code buffer to hold 3-char+null (4-bytes total).
+ *
+ *  @return <b>true</b> on success, <b>false</b> on failure.
+ */
+MP4V2_EXPORT
+bool MP4GetTrackLanguage(
+    MP4FileHandle hFile,
+    MP4TrackId    trackId,
+    char*         code );
+
+/** Set ISO-639-2/T langauge code of a track.
+ *  The language code is a 3-char alpha code consisting of lower-case letters.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param trackId id of track for operation.
+ *  @param code 3-char language code.
+ *
+ *  @return <b>true</b> on success, <b>false</b> on failure.
+ */
+MP4V2_EXPORT
+bool MP4SetTrackLanguage(
+    MP4FileHandle hFile,
+    MP4TrackId    trackId,
+    const char*   code );
 
 MP4V2_EXPORT
 uint8_t MP4GetTrackAudioMpeg4Type(
