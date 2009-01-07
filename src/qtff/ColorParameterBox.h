@@ -43,7 +43,7 @@ namespace mp4v2 { namespace impl { namespace qtff {
 class MP4V2_EXPORT ColorParameterBox
 {
 public:
-    /// Object structure for colr-box item.
+    /// Opqaue data object for colr-box item.
     /// This object correlates to one colr-box (Color Parameter Box).
     ///
     class MP4V2_EXPORT Item

@@ -33,7 +33,7 @@ namespace mp4v2 { namespace impl { namespace itmf {
 class MP4V2_EXPORT CoverArtBox
 {
 public:
-    /// Object structure for covr-box item.
+    /// Opaque data object for covr-box item.
     /// This object correlates to one covr->data atom and offers automatic
     /// memory freeing when <b>autofree</b> is true.
     ///
