@@ -558,7 +558,7 @@ private:
     bool   _invalid;
 
 public:
-    explicit MP4LanguageCodeProperty( const char* , const string& = "eng" );
+    explicit MP4LanguageCodeProperty( const char* , const string& = "und" );
 
     MP4PropertyType GetType();
     uint32_t        GetCount();
