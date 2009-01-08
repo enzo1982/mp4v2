@@ -108,8 +108,8 @@ libmp4v2_la_SOURCES = \
     src/virtual_io.h
 
 libmp4v2_la_SOURCES += \
+    src/bmff/bmff.h    \
     src/bmff/impl.h    \
-    src/bmff/itmf.h    \
     src/bmff/type.cpp  \
     src/bmff/type.h
 
