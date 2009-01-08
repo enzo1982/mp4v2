@@ -313,15 +313,22 @@ dist-hb: distdir
 ## to match. The reason for this is the precompiled-header will not be used if
 ## (relevent) compilation flags differ.
 
-CXX.gch.static.flags =
-CXX.gch.shared.flags = -fno-common -DPIC
+CXX.gch.static.flags = $(X_GCH_STATIC_FLAGS)
+CXX.gch.static.in    = libplatform/impl.h src/impl.h libutil/impl.h
+CXX.gch.static.out   = $(CXX.gch.static.in:%=$(BUILD/)%.gch/static)
 
-CXX.gch.h          = libplatform/impl.h src/impl.h
-CXX.gch.out.static = $(CXX.gch.h:%=$(BUILD/)%.gch/static)
-CXX.gch.out.shared = $(CXX.gch.h:%=$(BUILD/)%.gch/shared)
+CXX.gch.shared.flags = $(X_GCH_SHARED_FLAGS)
+CXX.gch.shared.in    = libplatform/impl.h src/impl.h libutil/impl.h
+CXX.gch.shared.out   = $(CXX.gch.shared.in:%=$(BUILD/)%.gch/shared)
 
-CXX.gch.dependents = \
-    $(libmp4v2_la_OBJECTS)   \
+CXX.gch.exe.flags = $(X_GCH_FLAGS)
+CXX.gch.exe.in    = util/impl.h
+CXX.gch.exe.out   = $(CXX.gch.exe.in:%=$(BUILD/)%.gch/exe)
+
+CXX.gch.static.dependents = $(libmp4v2_la_OBJECTS)
+CXX.gch.shared.dependents = $(libmp4v2_la_OBJECTS)
+
+CXX.gch.exe.dependents = \
     $(mp4art_OBJECTS)        \
     $(mp4chaps_OBJECTS)      \
     $(mp4extract_OBJECTS)    \
@@ -334,27 +341,37 @@ CXX.gch.dependents = \
     $(mp4trackdump_OBJECTS)
 
 ifeq ($(X_GCH_STATIC),1)
-$(CXX.gch.dependents): $(CXX.gch.out.static)
+$(CXX.gch.static.dependents): $(CXX.gch.static.out)
 endif
 
 ifeq ($(X_GCH_SHARED),1)
-$(CXX.gch.dependents): $(CXX.gch.out.shared)
+$(CXX.gch.shared.dependents): $(CXX.gch.shared.out)
 endif
 
-$(CXX.gch.out.static): | $(sort $(dir $(CXX.gch.out.static)))
-$(CXX.gch.out.static): $(BUILD/)%.gch/static: %
+ifeq ($(X_GCH),1)
+$(CXX.gch.exe.dependents): $(CXX.gch.exe.out)
+endif
+
+$(CXX.gch.static.out): | $(sort $(dir $(CXX.gch.static.out)))
+$(CXX.gch.static.out): $(BUILD/)%.gch/static: %
 	$(CXXCOMPILE) $(CXX.gch.static.flags) -c $< -o $@
 
-$(CXX.gch.out.shared): | $(sort $(dir $(CXX.gch.out.shared)))
-$(CXX.gch.out.shared): $(BUILD/)%.gch/shared: %
+$(CXX.gch.shared.out): | $(sort $(dir $(CXX.gch.shared.out)))
+$(CXX.gch.shared.out): $(BUILD/)%.gch/shared: %
 	$(CXXCOMPILE) $(CXX.gch.shared.flags) -c $< -o $@
 
-MKDIRS += $(dir $(CXX.gch.out.static))
-MKDIRS += $(dir $(CXX.gch.out.shared))
+$(CXX.gch.exe.out): | $(sort $(dir $(CXX.gch.exe.out)))
+$(CXX.gch.exe.out): $(BUILD/)%.gch/exe: %
+	$(CXXCOMPILE) $(CXX.gch.exe.flags) -c $< -o $@
+
+MKDIRS += $(dir $(CXX.gch.static.out))
+MKDIRS += $(dir $(CXX.gch.shared.out))
+MKDIRS += $(dir $(CXX.gch.exe.out))
 
 clean-local:
-	rm -f $(CXX.gch.out.static)
-	rm -f $(CXX.gch.out.shared)
+	rm -f $(CXX.gch.static.out)
+	rm -f $(CXX.gch.shared.out)
+	rm -f $(CXX.gch.exe.out)
 
 ###############################################################################
 

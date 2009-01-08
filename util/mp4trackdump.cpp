@@ -24,7 +24,7 @@
 // elementary stream (ES). Use "mp4creator -extract=<trackId>" if
 // you need the ES reconstructed.
 
-#include "libutil/util.h"
+#include "util/impl.h"
 
 using namespace mp4v2::util;
 

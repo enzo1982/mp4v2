@@ -89,7 +89,7 @@ int   opterr = 1;    /* if error message should be printed */
 int   optind = 1;    /* index into parent argv vector */
 int   optopt = '?';  /* character checked for validity */
 int   optreset;      /* reset getopt */
-char* optarg;        /* argument associated with option */
+const char* optarg;  /* argument associated with option */
 #endif
 
 #define PRINT_ERROR ((opterr) && (*options != ':'))
@@ -117,7 +117,7 @@ static int parse_long_options(char * const *, const char *, const Option*, int *
 static int gcd(int, int);
 static void permute_args(int, int, int, char * const *);
 
-static char *place = EMSG; /* option letter processing */
+static const char *place = EMSG; /* option letter processing */
 
 /* XXX: set optreset to 1 rather than these two */
 static int nonopt_start = -1; /* first non option argument (for permute) */
@@ -202,9 +202,10 @@ permute_args(int panonopt_start, int panonopt_end, int opt_end,
 static int
 parse_long_options(char * const *nargv, const char *options,
                    const Option* long_options, int* idx, int short_too, int flags) {
-    char *current_argv, *has_equal;
+    const char *current_argv;
+    char *has_equal;
 #ifdef GNU_COMPATIBLE
-    char *current_dash;
+    const char *current_dash;
 #endif
     size_t current_argv_len;
     int i, match, exact_match, second_partial_match;

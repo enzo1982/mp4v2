@@ -14,7 +14,7 @@
  * by Christopher League <league@contrapunctus.net>
  */
 
-#include "libutil/util.h"
+#include "util/impl.h"
 
 using namespace mp4v2::util;
 
@@ -121,7 +121,7 @@ extern "C" int
     /* Sparse arrays of tag data: some space is wasted, but it's more
        convenient to say tags[OPT_SONG] than to enumerate all the
        metadata types (again) as a struct. */
-    char *tags[UCHAR_MAX];
+    const char *tags[UCHAR_MAX];
     int nums[UCHAR_MAX];
 
     memset( tags, 0, sizeof( tags ) );

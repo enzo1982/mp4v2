@@ -1255,10 +1255,11 @@ MP4TrackId MP4File::AddSceneTrack()
 }
 
 // NULL terminated list of brands which require the IODS atom
-char *brandsWithIods[] = { "mp42",
-                           "isom",
-                           NULL
-                         };
+const char* brandsWithIods[] = {
+    "mp42",
+    "isom",
+    NULL
+};
 
 bool MP4File::ShallHaveIods()
 {
@@ -2753,7 +2754,7 @@ MP4ChapterType MP4File::SetChapters(MP4Chapter_t * chapterList, uint32_t chapter
 MP4ChapterType MP4File::ConvertChapters(MP4ChapterType toChapterType)
 {
     MP4ChapterType sourceType = MP4ChapterTypeNone;
-    char* errMsg = 0;
+    const char* errMsg = 0;
 
     if( MP4ChapterTypeQt == toChapterType )
     {

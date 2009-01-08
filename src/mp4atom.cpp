@@ -25,15 +25,13 @@
  *  Copyright (C) Adnecto d.o.o. 2005.  All Rights Reserved
  *
  * Contributor(s):
- *      Dave Mackie         dmackie@cisco.com
- *      Alix Marchandise-Franquet   alix@cisco.com
- *              Ximpo Group Ltd.                mp4v2@ximpo.com
- *              Danijel Kopcinovic              danijel.kopcinovic@adnecto.net
+ *      Dave Mackie                dmackie@cisco.com
+ *      Alix Marchandise-Franquet  alix@cisco.com
+ *      Ximpo Group Ltd.           mp4v2@ximpo.com
+ *      Danijel Kopcinovic         danijel.kopcinovic@adnecto.net
  */
 
 #include "src/impl.h"
-#include <list>
-#include <sstream>
 
 namespace mp4v2 { namespace impl {
 

@@ -219,27 +219,32 @@ fi
 ###############################################################################
 
 AC_MSG_CHECKING([if GCC precompiled-headers should be created])
-x_gch=0
+
+X_GCH=0
+X_GCH_FLAGS=
+X_GCH_STATIC=0
+X_GCH_STATIC_FLAGS
+X_GCH_SHARED=0
+X_GCH_SHARED_FLAGS=
 
 if test "$enable_gch" = "yes"; then
-    x_gch=1
+    X_GCH=1
 elif test "$enable_gch" != "no"; then
     if test "$GXX" = "yes"; then
         case ${host} in
             *-*-darwin*)
-                x_gch=1
+                X_GCH=1
+                X_GCH_SHARED_FLAGS="-fno-common -DPIC"
                 ;;
             *-*-linux*)
-                x_gch=1
+                X_GCH=1
+                X_GCH_SHARED_FLAGS="-fPIC -DPIC"
                 ;;
         esac
     fi
-    #set > /tmp/mike
 fi
 
-X_GCH_STATIC=0
-X_GCH_SHARED=0
-if test "$x_gch" -eq 1; then
+if test "$X_GCH" -eq 1; then
     x_gch_result="yes"
     if test "$enable_static" = "yes"; then
         X_GCH_STATIC=1
@@ -252,8 +257,13 @@ else
 fi
 
 AC_MSG_RESULT([$x_gch_result])
+
+AC_SUBST([X_GCH])
+AC_SUBST([X_GCH_FLAGS])
 AC_SUBST([X_GCH_STATIC])
+AC_SUBST([X_GCH_STATIC_FLAGS])
 AC_SUBST([X_GCH_SHARED])
+AC_SUBST([X_GCH_SHARED_FLAGS])
 
 ###############################################################################
 # check for --disable-largefile

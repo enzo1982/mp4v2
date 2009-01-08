@@ -19,7 +19,7 @@
  *      Bill May wmay@cisco.com
  */
 
-#include "libutil/util.h"
+#include "util/impl.h"
 
 using namespace mp4v2::util;
 

@@ -21,7 +21,7 @@
 //      Ullrich Pollaehne, u.pollaehne@@gmail.com
 //
 ///////////////////////////////////////////////////////////////////////////////
-#include "libutil/util.h"
+#include "util/impl.h"
 
 namespace mp4v2 { namespace util {
 

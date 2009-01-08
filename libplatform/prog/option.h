@@ -23,7 +23,7 @@ namespace mp4v2 { namespace platform { namespace prog {
 
 //! On return from getOption() or getOptionSingle(),
 //! points to an option argument, if it is anticipated.
-MP4V2_EXPORT extern char* optarg;
+MP4V2_EXPORT extern const char* optarg;
 
 //! On return from getOption() or getOptionSingle(),
 //! contains the index to the next argv argument for a subsequent call to
@@ -62,7 +62,7 @@ struct MP4V2_EXPORT Option
     };
 
     //! contains the option name without leading double-dash
-    char* name;
+    const char* name;
 
     //! option expectation-type
     Type type;

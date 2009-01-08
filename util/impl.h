@@ -1,10 +1,10 @@
-#ifndef MP4V2_PLATFORM_IMPL_H
-#define MP4V2_PLATFORM_IMPL_H
+#ifndef MP4V2_UTIL_IMPL_H
+#define MP4V2_UTIL_IMPL_H
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "libplatform/platform.h"
+#include "libutil/util.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#endif // MP4V2_PLATFORM_IMPL_H
+#endif // MP4V2_UTIL_IMPL_H
