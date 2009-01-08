@@ -511,7 +511,7 @@ public:
 
     MP4Integer16Property& typeReserved;
     MP4Integer8Property&  typeSetIdentifier;
-    MP4Integer8Property&  typeCode;
+    MP4BasicTypeProperty& typeCode;
     MP4Integer32Property& locale;
     MP4BytesProperty&     metadata;
 };

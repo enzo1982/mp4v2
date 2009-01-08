@@ -31,12 +31,11 @@
 /// iTunes Metadata Format Specification, revision 2008-04-16.
 ///
 namespace mp4v2 { namespace impl { namespace itmf {
-    using namespace std;
+    ;
 }}}
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "type.h"
 #include "CoverArtBox.h"
 #include "Metadata.h"
 

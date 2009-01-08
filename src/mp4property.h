@@ -44,6 +44,7 @@ enum MP4PropertyType {
     TableProperty,
     DescriptorProperty,
     LanguageCodeProperty,
+    BasicTypeProperty,
 };
 
 class MP4Property {
@@ -568,6 +569,25 @@ public:
     void            Dump( FILE*, uint8_t, bool, uint32_t = 0 );
     const char*     GetValue();
     void            SetValue( const string& );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class MP4BasicTypeProperty : public MP4Property {
+private:
+    itmf::BasicType _value;
+
+public:
+    explicit MP4BasicTypeProperty( const char* , itmf::BasicType = itmf::BT_UNDEFINED );
+
+    MP4PropertyType GetType();
+    uint32_t        GetCount();
+    void            SetCount( uint32_t );
+    void            Read( MP4File*, uint32_t = 0 );
+    void            Write( MP4File*, uint32_t = 0 );
+    void            Dump( FILE*, uint8_t, bool, uint32_t = 0 );
+    itmf::BasicType GetValue();
+    void            SetValue( itmf::BasicType );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

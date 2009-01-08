@@ -31,7 +31,7 @@ MP4DataAtom::MP4DataAtom()
     : MP4Atom ( "data" )
     , typeReserved      ( *new MP4Integer16Property( "typeReserved" ))
     , typeSetIdentifier ( *new MP4Integer8Property( "typeSetIdentifier" ))
-    , typeCode          ( *new MP4Integer8Property( "typeCode" ))
+    , typeCode          ( *new MP4BasicTypeProperty( "typeCode" ))
     , locale            ( *new MP4Integer32Property( "locale" ))
     , metadata          ( *new MP4BytesProperty( "metadata" ))
 {

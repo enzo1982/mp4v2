@@ -1016,10 +1016,15 @@ MP4LanguageCodeProperty::Dump( FILE* file, uint8_t indent, bool dumpImplicits, u
 {
     Indent( file, indent );
 
+    const uint16_t data =
+          (((_value[0] - 0x60) & 0x001f) << 10)
+        | (((_value[1] - 0x60) & 0x001f) <<  5)
+        | (((_value[2] - 0x60) & 0x001f)      );
+
     if( _invalid )
-        fprintf( file, "%s = %s (invalid)\n", m_name, _value.c_str() );
+        fprintf( file, "%s = %s (0x%04x) (invalid)\n", m_name, _value.c_str(), data );
     else
-        fprintf( file, "%s = %s\n", m_name, _value.c_str() );
+        fprintf( file, "%s = %s (0x%04x)\n", m_name, _value.c_str(), data );
 }
 
 uint32_t
@@ -1069,12 +1074,69 @@ MP4LanguageCodeProperty::SetValue( const string& value )
 void
 MP4LanguageCodeProperty::Write( MP4File* file, uint32_t index )
 {
-    uint16_t data =
+    const uint16_t data =
           (((_value[0] - 0x60) & 0x001f) << 10)
         | (((_value[1] - 0x60) & 0x001f) <<  5)
         | (((_value[2] - 0x60) & 0x001f)      );
 
     file->WriteBits( data, 16 );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+MP4BasicTypeProperty::MP4BasicTypeProperty( const char* name, itmf::BasicType type )
+    : MP4Property( name )
+{
+    SetValue( type );
+}
+
+void
+MP4BasicTypeProperty::Dump( FILE* file, uint8_t indent, bool dumpImplicits, uint32_t index )
+{
+    Indent( file, indent );
+    fprintf( file, "%s = %s (0x%02x)\n", m_name, itmf::enumBasicType.toString( _value, true ).c_str(), _value );
+}
+
+uint32_t
+MP4BasicTypeProperty::GetCount()
+{
+    return 1;
+}
+
+MP4PropertyType
+MP4BasicTypeProperty::GetType()
+{
+    return BasicTypeProperty;
+}
+
+itmf::BasicType
+MP4BasicTypeProperty::GetValue()
+{
+    return _value;
+}
+
+void
+MP4BasicTypeProperty::Read( MP4File* file, uint32_t index )
+{
+    SetValue( static_cast<itmf::BasicType>( file->ReadBits( 8 )));
+}
+
+void
+MP4BasicTypeProperty::SetCount( uint32_t count )
+{
+    // do nothing; count is always 1
+}
+
+void
+MP4BasicTypeProperty::SetValue( itmf::BasicType value )
+{
+    _value = value;
+}
+
+void
+MP4BasicTypeProperty::Write( MP4File* file, uint32_t index )
+{
+    file->WriteBits( _value, 8 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
