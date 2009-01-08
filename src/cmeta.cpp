@@ -1533,11 +1533,11 @@ MP4MetadataStore( const MP4Metadata* m )
 ///////////////////////////////////////////////////////////////////////////////
 
 void
-MP4MetadataSetAlbum( const MP4Metadata* m, const char* value )
+MP4MetadataSetName( const MP4Metadata* m, const char* value )
 {
     itmf::Metadata& cpp = *static_cast<itmf::Metadata*>(m->__handle);
     MP4Metadata& c = *const_cast<MP4Metadata*>(m);
-    cpp.setString( value, cpp.album, c.album );
+    cpp.setString( value, cpp.name, c.name );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1552,4 +1552,103 @@ MP4MetadataSetArtist( const MP4Metadata* m, const char* value )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void
+MP4MetadataSetAlbumArtist( const MP4Metadata* m, const char* value )
+{
+    itmf::Metadata& cpp = *static_cast<itmf::Metadata*>(m->__handle);
+    MP4Metadata& c = *const_cast<MP4Metadata*>(m);
+    cpp.setString( value, cpp.albumArtist, c.albumArtist );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4MetadataSetAlbum( const MP4Metadata* m, const char* value )
+{
+    itmf::Metadata& cpp = *static_cast<itmf::Metadata*>(m->__handle);
+    MP4Metadata& c = *const_cast<MP4Metadata*>(m);
+    cpp.setString( value, cpp.album, c.album );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4MetadataSetGrouping( const MP4Metadata* m, const char* value )
+{
+    itmf::Metadata& cpp = *static_cast<itmf::Metadata*>(m->__handle);
+    MP4Metadata& c = *const_cast<MP4Metadata*>(m);
+    cpp.setString( value, cpp.grouping, c.grouping );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4MetadataSetComposer( const MP4Metadata* m, const char* value )
+{
+    itmf::Metadata& cpp = *static_cast<itmf::Metadata*>(m->__handle);
+    MP4Metadata& c = *const_cast<MP4Metadata*>(m);
+    cpp.setString( value, cpp.composer, c.composer );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4MetadataSetComments( const MP4Metadata* m, const char* value )
+{
+    itmf::Metadata& cpp = *static_cast<itmf::Metadata*>(m->__handle);
+    MP4Metadata& c = *const_cast<MP4Metadata*>(m);
+    cpp.setString( value, cpp.comments, c.comments );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4MetadataSetReleaseDate( const MP4Metadata* m, const char* value )
+{
+    itmf::Metadata& cpp = *static_cast<itmf::Metadata*>(m->__handle);
+    MP4Metadata& c = *const_cast<MP4Metadata*>(m);
+    cpp.setString( value, cpp.releaseDate, c.releaseDate );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4MetadataSetDescription( const MP4Metadata* m, const char* value )
+{
+    itmf::Metadata& cpp = *static_cast<itmf::Metadata*>(m->__handle);
+    MP4Metadata& c = *const_cast<MP4Metadata*>(m);
+    cpp.setString( value, cpp.description, c.description );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4MetadataSetCopyright( const MP4Metadata* m, const char* value )
+{
+    itmf::Metadata& cpp = *static_cast<itmf::Metadata*>(m->__handle);
+    MP4Metadata& c = *const_cast<MP4Metadata*>(m);
+    cpp.setString( value, cpp.copyright, c.copyright );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4MetadataSetEncodingTool( const MP4Metadata* m, const char* value )
+{
+    itmf::Metadata& cpp = *static_cast<itmf::Metadata*>(m->__handle);
+    MP4Metadata& c = *const_cast<MP4Metadata*>(m);
+    cpp.setString( value, cpp.encodingTool, c.encodingTool );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4MetadataSetEncodedBy( const MP4Metadata* m, const char* value )
+{
+    itmf::Metadata& cpp = *static_cast<itmf::Metadata*>(m->__handle);
+    MP4Metadata& c = *const_cast<MP4Metadata*>(m);
+    cpp.setString( value, cpp.encodedBy, c.encodedBy );
+}
+
+///////////////////////////////////////////////////////////////////////////////
 } // extern "C"

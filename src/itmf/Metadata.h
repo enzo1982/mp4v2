@@ -39,10 +39,13 @@ public:
     static const string CODE_COMPOSER;
     static const string CODE_COMMENTS;
     static const string CODE_RELEASEDATE;
+    static const string CODE_COMPILATION;
         
     static const string CODE_TVSHOW;
     static const string CODE_TVNETWORK;
     static const string CODE_TVEPISODEID;
+    static const string CODE_TVSEASON;
+    static const string CODE_TVEPISODE;
 
     static const string CODE_DESCRIPTION;
     static const string CODE_LONGDESCRIPTION;
@@ -62,6 +65,15 @@ public:
 
     static const string CODE_CATEGORY;
     static const string CODE_KEYWORDS;
+    static const string CODE_PODCAST;
+    
+    static const string CODE_HDVIDEO;
+    static const string CODE_MEDIATYPE;
+    static const string CODE_CONTENTRATING;
+    static const string CODE_GAPLESS;
+    
+    static const string CODE_ITUNESACCOUNT;
+    static const string CODE_CNID;
 public:
     MP4File& file;
 
@@ -74,10 +86,13 @@ public:
     string    composer;
     string    comments;
     string    releaseDate;
+    uint8_t   compilation;
     
     string    tvShow;
     string    tvNetwork;
     string    tvEpisodeID;
+    uint32_t  tvSeason;
+    uint32_t  tvEpisode;
 
     string    description;
     string    longDescription;
@@ -97,13 +112,20 @@ public:
     
     string    category;
     string    keywords;
+    uint8_t   podcast;
+
+    uint8_t   hdVideo;
+    uint8_t   mediaType;
+    uint8_t   contentRating;
+    uint8_t   gapless;
+    
+    string    iTunesAccount;
+    uint32_t  cnID;
 
 
     GenreType predefinedGenre;
     string    userGenre;
-    string    trackSubtitle;
-    uint8_t   contentRating;
-    uint32_t  beatsPerMinute;
+    uint16_t  beatsPerMinute;
 public:
     Metadata( MP4File& );
     Metadata( MP4FileHandle );

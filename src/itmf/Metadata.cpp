@@ -73,10 +73,13 @@ Metadata::c_fetch( MP4Metadata*& mdata )
     fetchString( CODE_COMPOSER,    composer,    c.composer );
     fetchString( CODE_COMMENTS,    comments,    c.comments );
     fetchString( CODE_RELEASEDATE,    releaseDate,    c.releaseDate );
+    fetchInteger( CODE_COMPILATION,    compilation,    c.compilation );
 
     fetchString( CODE_TVSHOW,    tvShow,    c.tvShow );
     fetchString( CODE_TVNETWORK,    tvNetwork,    c.tvNetwork );
     fetchString( CODE_TVEPISODEID,    tvEpisodeID,    c.tvEpisodeID );
+    fetchInteger( CODE_TVSEASON,    tvSeason,    c.tvSeason );
+    fetchInteger( CODE_TVEPISODE,    tvEpisode,    c.tvEpisode );
 
     fetchString( CODE_SORTNAME, sortName, c.sortName );
     fetchString( CODE_SORTARTIST,    sortArtist,    c.sortArtist );
@@ -96,6 +99,15 @@ Metadata::c_fetch( MP4Metadata*& mdata )
         
     fetchString( CODE_CATEGORY,    category,    c.category );
     fetchString( CODE_KEYWORDS,    keywords,    c.keywords );
+    fetchInteger( CODE_PODCAST,    podcast,    c.podcast );
+    
+    fetchInteger( CODE_HDVIDEO,    hdVideo,    c.hdVideo );
+    fetchInteger( CODE_MEDIATYPE,    mediaType,    c.mediaType );
+    fetchInteger( CODE_CONTENTRATING,    contentRating,    c.contentRating );
+    fetchInteger( CODE_GAPLESS,    gapless,    c.gapless );
+
+    fetchString( CODE_ITUNESACCOUNT,    iTunesAccount,    c.iTunesAccount );
+    fetchInteger( CODE_CNID,    cnID,    c.cnID );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -114,9 +126,22 @@ void
 Metadata::c_store( MP4Metadata*& mdata )
 {
     MP4Metadata& c = *mdata;
-
-    storeString( CODE_ALBUM, album, c.album );
+   
+    storeString( CODE_NAME, name, c.name );
     storeString( CODE_ARTIST,    artist,    c.artist );
+    storeString( CODE_ALBUMARTIST,    albumArtist,    c.albumArtist );
+    storeString( CODE_ALBUM, album, c.album );
+    storeString( CODE_GROUPING,    grouping,    c.grouping );
+    storeString( CODE_COMPOSER,    composer,    c.composer );
+    storeString( CODE_COMMENTS,    comments,    c.comments );
+    storeString( CODE_RELEASEDATE,    releaseDate,    c.releaseDate );
+    
+    storeString( CODE_DESCRIPTION,    description,    c.description );
+
+    storeString( CODE_COPYRIGHT,    copyright,    c.copyright );
+    storeString( CODE_ENCODINGTOOL,    encodingTool,    c.encodingTool );
+    storeString( CODE_ENCODEDBY,    encodedBy,    c.encodedBy );
+    
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -177,10 +202,10 @@ Metadata::fetchInteger( const string& code, uint32_t& cpp, const uint32_t*& c )
     if( fetchData( code, buffer, size ))
         return;
 
-    cpp = (uint32_t(buffer[3]) << 24)
-        | (uint32_t(buffer[2]) << 16)
-        | (uint32_t(buffer[1]) <<  8)
-        | (uint32_t(buffer[0])      );
+    cpp = (uint32_t(buffer[0]) << 24)
+        | (uint32_t(buffer[1]) << 16)
+        | (uint32_t(buffer[2]) <<  8)
+        | (uint32_t(buffer[3])      );
 
     c = &cpp;
 
@@ -294,10 +319,13 @@ const string Metadata::CODE_GROUPING        = "\xa9" "grp";
 const string Metadata::CODE_COMPOSER        = "\xa9" "wrt";
 const string Metadata::CODE_COMMENTS        = "\xa9" "cmt";
 const string Metadata::CODE_RELEASEDATE     = "\xa9" "day";
+const string Metadata::CODE_COMPILATION     = "cpil";
 
 const string Metadata::CODE_TVSHOW          = "tvsh";
 const string Metadata::CODE_TVNETWORK       = "tvnn";
 const string Metadata::CODE_TVEPISODEID     = "tven";
+const string Metadata::CODE_TVSEASON        = "tvsn";
+const string Metadata::CODE_TVEPISODE       = "tves";
 
 const string Metadata::CODE_DESCRIPTION     = "desc";
 const string Metadata::CODE_LONGDESCRIPTION = "ldes";
@@ -317,6 +345,15 @@ const string Metadata::CODE_PURCHASEDATE    = "purd";
 
 const string Metadata::CODE_CATEGORY        = "catg";
 const string Metadata::CODE_KEYWORDS        = "keyw";
+const string Metadata::CODE_PODCAST         = "pcst";
+
+const string Metadata::CODE_HDVIDEO         = "hdvd";
+const string Metadata::CODE_MEDIATYPE       = "stik";
+const string Metadata::CODE_CONTENTRATING   = "rtng";
+const string Metadata::CODE_GAPLESS         = "pgap";
+
+const string Metadata::CODE_ITUNESACCOUNT   = "apID";
+const string Metadata::CODE_CNID            = "cnID";
 
 ///////////////////////////////////////////////////////////////////////////////
 

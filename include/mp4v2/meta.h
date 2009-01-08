@@ -567,10 +567,13 @@ typedef struct MP4Metadata_s
     const char*     composer;
     const char*     comments;
     const char*     releaseDate;
+    const uint8_t*  compilation;
     
     const char*     tvShow;
     const char*     tvNetwork;
     const char*     tvEpisodeID;
+    const uint32_t* tvSeason;
+    const uint32_t* tvEpisode;
     
     const char*     description;
     const char*     longDescription;
@@ -585,20 +588,25 @@ typedef struct MP4Metadata_s
 
     const char*     copyright;
     const char*     encodingTool;
-    const char*     encodedBy; //TODO: Needs testing
+    const char*     encodedBy;
     const char*     purchaseDate;
  
     const char*     keywords;  //TODO: Needs testing
     const char*     category;
+    const uint8_t*  podcast;
     
-
+    const uint8_t*  hdVideo;
+    const uint8_t*  mediaType;
+    const uint8_t*  contentRating;
+    const uint8_t*  gapless;
+    
+    const char*     iTunesAccount;
+    const uint32_t* cnID;
 
 
     const uint8_t*  predefinedGenre;
     const char*     userGenre;
-    const char*     trackSubtitle;     
-    const uint8_t*  contentRating;
-    const uint32_t* beatsPerMinute;
+    const uint16_t* beatsPerMinute;
 } MP4Metadata;
 
 MP4V2_EXPORT const MP4Metadata* MP4MetadataAlloc ( MP4FileHandle );
@@ -606,8 +614,21 @@ MP4V2_EXPORT void               MP4MetadataFetch ( const MP4Metadata* );
 MP4V2_EXPORT void               MP4MetadataStore ( const MP4Metadata* );
 MP4V2_EXPORT void               MP4MetadataFree  ( const MP4Metadata* );
 
-MP4V2_EXPORT void MP4MetadataSetAlbum ( const MP4Metadata*, const char* );
+MP4V2_EXPORT void MP4MetadataSetName  ( const MP4Metadata*, const char* );
 MP4V2_EXPORT void MP4MetadataSetArtist    ( const MP4Metadata*, const char* );
+MP4V2_EXPORT void MP4MetadataSetAlbumArtist ( const MP4Metadata*, const char* );
+MP4V2_EXPORT void MP4MetadataSetAlbum ( const MP4Metadata*, const char* );
+MP4V2_EXPORT void MP4MetadataSetGrouping ( const MP4Metadata*, const char* );
+MP4V2_EXPORT void MP4MetadataSetComposer ( const MP4Metadata*, const char* );
+MP4V2_EXPORT void MP4MetadataSetComments ( const MP4Metadata*, const char* );
+MP4V2_EXPORT void MP4MetadataSetReleaseDate( const MP4Metadata*, const char* );
+
+MP4V2_EXPORT void MP4MetadataSetDescription  ( const MP4Metadata*, const char* );  //TODO: Writing the short description is broken
+
+MP4V2_EXPORT void MP4MetadataSetCopyright  ( const MP4Metadata*, const char* );
+MP4V2_EXPORT void MP4MetadataSetEncodingTool  ( const MP4Metadata*, const char* );
+MP4V2_EXPORT void MP4MetadataSetEncodedBy  ( const MP4Metadata*, const char* );
+
 
 /** @} ***********************************************************************/
 
