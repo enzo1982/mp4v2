@@ -1533,11 +1533,11 @@ MP4MetadataStore( const MP4Metadata* m )
 ///////////////////////////////////////////////////////////////////////////////
 
 void
-MP4MetadataSetAlbumName( const MP4Metadata* m, const char* value )
+MP4MetadataSetAlbum( const MP4Metadata* m, const char* value )
 {
     itmf::Metadata& cpp = *static_cast<itmf::Metadata*>(m->__handle);
     MP4Metadata& c = *const_cast<MP4Metadata*>(m);
-    cpp.setString( value, cpp.albumName, c.albumName );
+    cpp.setString( value, cpp.album, c.album );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

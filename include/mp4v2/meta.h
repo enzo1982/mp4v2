@@ -559,50 +559,46 @@ typedef struct MP4Metadata_s
 {
     void* __handle; /* private use */
 
-    const char*     albumName;
+    const char*     name;
     const char*     artist;
-    const char*     userComment;
-    const char*     copyright;
+    const char*     albumArtist; 
+    const char*     album;
+    const char*     grouping;
+    const char*     composer;
+    const char*     comments;
     const char*     releaseDate;
-    const char*     encodedBy;
+    
+    const char*     tvShow;
+    const char*     tvNetwork;
+    const char*     tvEpisodeID;
+    
+    const char*     description;
+    const char*     longDescription;
+    const char*     lyrics;
+    
+    const char*     sortName;
+    const char*     sortArtist;
+    const char*     sortAlbumArtist; 
+    const char*     sortAlbum;
+    const char*     sortComposer;
+    const char*     sortTVShow;
+
+    const char*     copyright;
+    const char*     encodingTool;
+    const char*     encodedBy; //TODO: Needs testing
+    const char*     purchaseDate;
+ 
+    const char*     keywords;  //TODO: Needs testing
+    const char*     category;
+    
+
+
+
     const uint8_t*  predefinedGenre;
     const char*     userGenre;
-    const char*     songName;
-    const char*     trackSubtitle;
-    const char*     encodingTool;
-    const char*     composer;
-    const char*     albumArtist;
-    const char*     grouping;
+    const char*     trackSubtitle;     
     const uint8_t*  contentRating;
     const uint32_t* beatsPerMinute;
-    const char*     soundCheck;
-    const uint32_t* toolInfo;
-    const char*     cddb_id1;
-    const char*     cddb_id2;
-    const char*     cddb_id3;
-
-    // extended tags
-    const char* artDirector;
-    const char* arranger;
-    const char* lyricist;
-    const char* copyrightAcks;
-    const char* conductor;
-    const char* songDescription;
-    const char* director;
-    const char* equalizationPresetName;
-    const char* linerNotes;
-    const char* recordCompany;
-    const char* originalArtist;
-    const char* phonogramRights;
-    const char* producer;
-    const char* performer;
-    const char* publisher;
-    const char* soundEngineer;
-    const char* soloist;
-    const char* credits;
-    const char* thanks;
-    const char* onlineExtras;
-    const char* executiveProducer;
 } MP4Metadata;
 
 MP4V2_EXPORT const MP4Metadata* MP4MetadataAlloc ( MP4FileHandle );
@@ -610,7 +606,7 @@ MP4V2_EXPORT void               MP4MetadataFetch ( const MP4Metadata* );
 MP4V2_EXPORT void               MP4MetadataStore ( const MP4Metadata* );
 MP4V2_EXPORT void               MP4MetadataFree  ( const MP4Metadata* );
 
-MP4V2_EXPORT void MP4MetadataSetAlbumName ( const MP4Metadata*, const char* );
+MP4V2_EXPORT void MP4MetadataSetAlbum ( const MP4Metadata*, const char* );
 MP4V2_EXPORT void MP4MetadataSetArtist    ( const MP4Metadata*, const char* );
 
 /** @} ***********************************************************************/

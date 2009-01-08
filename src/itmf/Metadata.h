@@ -31,57 +31,79 @@ namespace mp4v2 { namespace impl { namespace itmf {
 class Metadata
 {
 public:
-    static const string CODE_ALBUMNAME;
+    static const string CODE_NAME;
     static const string CODE_ARTIST;
+    static const string CODE_ALBUMARTIST;
+    static const string CODE_ALBUM;
+    static const string CODE_GROUPING;
+    static const string CODE_COMPOSER;
+    static const string CODE_COMMENTS;
+    static const string CODE_RELEASEDATE;
+        
+    static const string CODE_TVSHOW;
+    static const string CODE_TVNETWORK;
+    static const string CODE_TVEPISODEID;
 
+    static const string CODE_DESCRIPTION;
+    static const string CODE_LONGDESCRIPTION;
+    static const string CODE_LYRICS;
+    
+    static const string CODE_SORTNAME;
+    static const string CODE_SORTARTIST;
+    static const string CODE_SORTALBUMARTIST;
+    static const string CODE_SORTALBUM;
+    static const string CODE_SORTCOMPOSER;
+    static const string CODE_SORTTVSHOW;
+       
+    static const string CODE_COPYRIGHT;
+    static const string CODE_ENCODINGTOOL;   
+    static const string CODE_ENCODEDBY;
+    static const string CODE_PURCHASEDATE;
+
+    static const string CODE_CATEGORY;
+    static const string CODE_KEYWORDS;
 public:
     MP4File& file;
 
-    string    albumName;
+
+    string    name;
     string    artist;
-    string    userComment;
-    string    copyright;
+    string    albumArtist;
+    string    album;
+    string    grouping;
+    string    composer;
+    string    comments;
     string    releaseDate;
+    
+    string    tvShow;
+    string    tvNetwork;
+    string    tvEpisodeID;
+
+    string    description;
+    string    longDescription;
+    string    lyrics;
+    
+    string    sortName;
+    string    sortArtist;
+    string    sortAlbumArtist;
+    string    sortAlbum;
+    string    sortComposer;
+    string    sortTVShow;
+
+    string    copyright;
+    string    encodingTool;  
     string    encodedBy;
+    string    purchaseDate;
+    
+    string    category;
+    string    keywords;
+
+
     GenreType predefinedGenre;
     string    userGenre;
-    string    songName;
     string    trackSubtitle;
-    string    encodingTool;
-    string    composer;
-    string    albumArtist;
-    string    grouping;
     uint8_t   contentRating;
     uint32_t  beatsPerMinute;
-    string    soundCheck;
-    uint32_t  toolInfo;
-    string    cddb_id1;
-    string    cddb_id2;
-    string    cddb_id3;
-
-    // extended tags
-    string artDirector;
-    string arranger;
-    string lyricist;
-    string copyrightAcks;
-    string conductor;
-    string songDescription;
-    string director;
-    string equalizationPresetName;
-    string linerNotes;
-    string recordCompany;
-    string originalArtist;
-    string phonogramRights;
-    string producer;
-    string performer;
-    string publisher;
-    string soundEngineer;
-    string soloist;
-    string credits;
-    string thanks;
-    string onlineExtras;
-    string executiveProducer;
-
 public:
     Metadata( MP4File& );
     Metadata( MP4FileHandle );

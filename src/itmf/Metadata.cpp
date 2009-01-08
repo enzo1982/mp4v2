@@ -65,8 +65,37 @@ Metadata::c_fetch( MP4Metadata*& mdata )
 {
     MP4Metadata& c = *mdata;
 
-    fetchString( CODE_ALBUMNAME, albumName, c.albumName );
+    fetchString( CODE_NAME, name, c.name );
     fetchString( CODE_ARTIST,    artist,    c.artist );
+    fetchString( CODE_ALBUMARTIST,    albumArtist,    c.albumArtist );
+    fetchString( CODE_ALBUM, album, c.album );
+    fetchString( CODE_GROUPING,    grouping,    c.grouping );
+    fetchString( CODE_COMPOSER,    composer,    c.composer );
+    fetchString( CODE_COMMENTS,    comments,    c.comments );
+    fetchString( CODE_RELEASEDATE,    releaseDate,    c.releaseDate );
+
+    fetchString( CODE_TVSHOW,    tvShow,    c.tvShow );
+    fetchString( CODE_TVNETWORK,    tvNetwork,    c.tvNetwork );
+    fetchString( CODE_TVEPISODEID,    tvEpisodeID,    c.tvEpisodeID );
+
+    fetchString( CODE_SORTNAME, sortName, c.sortName );
+    fetchString( CODE_SORTARTIST,    sortArtist,    c.sortArtist );
+    fetchString( CODE_SORTALBUMARTIST,    sortAlbumArtist,    c.sortAlbumArtist );
+    fetchString( CODE_SORTALBUM, sortAlbum, c.sortAlbum );
+    fetchString( CODE_SORTCOMPOSER,    sortComposer,    c.sortComposer );
+    fetchString( CODE_SORTTVSHOW,    sortTVShow,    c.sortTVShow );
+    
+    fetchString( CODE_DESCRIPTION,    description,    c.description );
+    fetchString( CODE_LONGDESCRIPTION,    longDescription,    c.longDescription );
+    fetchString( CODE_LYRICS,    lyrics,    c.lyrics );
+
+    fetchString( CODE_COPYRIGHT,    copyright,    c.copyright );
+    fetchString( CODE_ENCODINGTOOL,    encodingTool,    c.encodingTool ); 
+    fetchString( CODE_ENCODEDBY,    encodedBy,    c.encodedBy );
+    fetchString( CODE_PURCHASEDATE,    purchaseDate,    c.purchaseDate );
+        
+    fetchString( CODE_CATEGORY,    category,    c.category );
+    fetchString( CODE_KEYWORDS,    keywords,    c.keywords );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -86,7 +115,7 @@ Metadata::c_store( MP4Metadata*& mdata )
 {
     MP4Metadata& c = *mdata;
 
-    storeString( CODE_ALBUMNAME, albumName, c.albumName );
+    storeString( CODE_ALBUM, album, c.album );
     storeString( CODE_ARTIST,    artist,    c.artist );
 }
 
@@ -257,8 +286,37 @@ Metadata::storeString( const string& code, const string& cpp, const char* c )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const string Metadata::CODE_ALBUMNAME = "\xa9" "alb";
-const string Metadata::CODE_ARTIST    = "\xa9" "ART";
+const string Metadata::CODE_NAME            = "\xa9" "nam";
+const string Metadata::CODE_ARTIST          = "\xa9" "ART";
+const string Metadata::CODE_ALBUMARTIST     = "aART";
+const string Metadata::CODE_ALBUM           = "\xa9" "alb";
+const string Metadata::CODE_GROUPING        = "\xa9" "grp";
+const string Metadata::CODE_COMPOSER        = "\xa9" "wrt";
+const string Metadata::CODE_COMMENTS        = "\xa9" "cmt";
+const string Metadata::CODE_RELEASEDATE     = "\xa9" "day";
+
+const string Metadata::CODE_TVSHOW          = "tvsh";
+const string Metadata::CODE_TVNETWORK       = "tvnn";
+const string Metadata::CODE_TVEPISODEID     = "tven";
+
+const string Metadata::CODE_DESCRIPTION     = "desc";
+const string Metadata::CODE_LONGDESCRIPTION = "ldes";
+const string Metadata::CODE_LYRICS          = "\xa9" "lyr";
+
+const string Metadata::CODE_SORTNAME        = "sonm";
+const string Metadata::CODE_SORTARTIST      = "soar";
+const string Metadata::CODE_SORTALBUMARTIST = "soaa";
+const string Metadata::CODE_SORTALBUM       = "soal";
+const string Metadata::CODE_SORTCOMPOSER    = "soco";
+const string Metadata::CODE_SORTTVSHOW      = "sosn";
+
+const string Metadata::CODE_COPYRIGHT       = "cprt";
+const string Metadata::CODE_ENCODINGTOOL    = "\xa9" "too";
+const string Metadata::CODE_ENCODEDBY       = "\xa9" "enc";
+const string Metadata::CODE_PURCHASEDATE    = "purd";
+
+const string Metadata::CODE_CATEGORY        = "catg";
+const string Metadata::CODE_KEYWORDS        = "keyw";
 
 ///////////////////////////////////////////////////////////////////////////////
 
