@@ -1,5 +1,4 @@
 #include "libplatform/impl.h"
-#include <iomanip>
 
 namespace mp4v2 { namespace platform { namespace io {
 

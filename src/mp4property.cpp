@@ -20,10 +20,7 @@
  *      Kona Blend      kona8lend@@gmail.com
  */
 
-#include "impl.h"
-#include <iomanip>
-#include <sstream>
-#include <locale>
+#include "src/impl.h"
 
 namespace mp4v2 { namespace impl {
 

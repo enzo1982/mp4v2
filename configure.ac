@@ -63,6 +63,8 @@ AC_ARG_ENABLE([optimize],
     [AS_HELP_STRING([--disable-optimize],[disable optimizing compilation])])
 AC_ARG_ENABLE([fvisibility],
     [AS_HELP_STRING([--disable-fvisibility],[disable use of -fvisibility])])
+AC_ARG_ENABLE([gch],
+    [AS_HELP_STRING([--disable-gch],[disable GCC precompiled-headers])])
 AC_ARG_ENABLE([largefile],
     [AS_HELP_STRING([--disable-largefile],[disable LFS (large file support)])])
 AC_ARG_ENABLE([util],
@@ -81,7 +83,6 @@ AC_ARG_ENABLE([mingw_mt],
 ###############################################################################
 
 AC_PROG_CXX
-#AC_LIBTOOL_WIN32_DLL
 AC_PROG_LIBTOOL
 
 AC_CHECK_PROG([FOUND_HELP2MAN],[help2man],[yes],[no])
@@ -212,6 +213,47 @@ if test "$enable_fvisibility" != "no" -a "$GXX" = "yes"; then
             ;;
     esac
 fi
+
+###############################################################################
+# check for --disable-gch
+###############################################################################
+
+AC_MSG_CHECKING([if GCC precompiled-headers should be created])
+x_gch=0
+
+if test "$enable_gch" = "yes"; then
+    x_gch=1
+elif test "$enable_gch" != "no"; then
+    if test "$GXX" = "yes"; then
+        case ${host} in
+            *-*-darwin*)
+                x_gch=1
+                ;;
+            *-*-linux*)
+                x_gch=1
+                ;;
+        esac
+    fi
+    #set > /tmp/mike
+fi
+
+X_GCH_STATIC=0
+X_GCH_SHARED=0
+if test "$x_gch" -eq 1; then
+    x_gch_result="yes"
+    if test "$enable_static" = "yes"; then
+        X_GCH_STATIC=1
+    fi
+    if test "$enable_shared" = "yes"; then
+        X_GCH_SHARED=1
+    fi
+else
+    x_gch_result="no"
+fi
+
+AC_MSG_RESULT([$x_gch_result])
+AC_SUBST([X_GCH_STATIC])
+AC_SUBST([X_GCH_SHARED])
 
 ###############################################################################
 # check for --disable-largefile

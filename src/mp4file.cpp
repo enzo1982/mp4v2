@@ -28,7 +28,7 @@
  *              Bill May                  wmay@cisco.com
  */
 
-#include "impl.h"
+#include "src/impl.h"
 
 namespace mp4v2 { namespace impl {
 

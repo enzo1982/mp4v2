@@ -19,6 +19,9 @@ Do not optimize. Do not direct compiler to optimize code. By default compiler op
 @item --disable-fvisibility
 Do not set default ELF symbol visibility. By default configure attempts to detect if the compiler supports this feature. However on some platforms detecting incompatibilty of this feature might not be accurate in which case this option should be given.
 
+@item --disable-gch
+By default certain platforms are marked to use GCC precompiled headers. Generally this greatly decrease build times but may require more diligence for iterative development; that is to say dependencies may not properly be tracked and more frequent @command{make clean} may be required when headers are changed. Use this option to disable GCC precompiled headers.
+
 @item --disable-largefile
 On some 32-bit platforms or configurations it might be desirable to build without largefile (LFS) support. By default configure attempts to detect formal LFS support and enables it if found.
 

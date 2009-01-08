@@ -36,7 +36,7 @@
  * a proper return value is given.
  */
 
-#include "impl.h"
+#include "src/impl.h"
 
 #define PRINT_ERROR(e) \
     VERBOSE_ERROR(((MP4File*)hFile)->GetVerbosity(), e->Print());

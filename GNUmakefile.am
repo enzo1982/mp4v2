@@ -254,6 +254,8 @@ EXTRA_DIST = project/project.m4
 
 ###############################################################################
 
+clean-local:
+
 distclean-local:
 	rm -f $(top_builddir)/Makefile
 	rm -f $(top_builddir)/testlog/*.log
@@ -307,7 +309,8 @@ dist-hook:
 
 ##
 ## include GNUmakefiles which are not full-fledged automake citizens but
-## they are aware of automake variables and targets. Note that we wrap in
-## an eval to prevent automake from parsing GNU make extensions therein.
+## they are aware of automake variables and targets. Note that we purposely
+## use a GNUmakefile extension (-include) to prevent automake from parsing
+## the file.
 ##
 -include $(top_srcdir)/doc/GNUmakefile.mk

@@ -24,6 +24,10 @@
 ##
 ###############################################################################
 
+# Conventional VPATH directive breaks too many things so we use vpath and its
+# pattern-spec feature. If new files or extensions are introduced they may need
+# to be added here.
+
 VPATH =
 
 vpath COPYING       $(top_srcdir)
@@ -297,6 +301,60 @@ dist-hb: distdir=lib$(PACKAGE)
 dist-hb: distdir
 	tardir=$(distdir) && $(am__tar) | GZIP=$(GZIP_ENV) gzip -c >$(PACKAGE)-$(VERSION).tar.gz
 	$(am__remove_distdir)
+
+###############################################################################
+
+## Precompiled header support is tricky given libtool's complexity and its
+## historical aversion to supporting it.
+##
+## What we do is add rules to precompile. Unfortunately, we cannot
+## automatically determine what flags libtool adds for compilation variants;
+## ie: PIC or non-PIC compilation. So instead we will hardcode the flags
+## to match. The reason for this is the precompiled-header will not be used if
+## (relevent) compilation flags differ.
+
+CXX.gch.static.flags =
+CXX.gch.shared.flags = -fno-common -DPIC
+
+CXX.gch.h          = libplatform/impl.h src/impl.h
+CXX.gch.out.static = $(CXX.gch.h:%=$(BUILD/)%.gch/static)
+CXX.gch.out.shared = $(CXX.gch.h:%=$(BUILD/)%.gch/shared)
+
+CXX.gch.dependents = \
+    $(libmp4v2_la_OBJECTS)   \
+    $(mp4art_OBJECTS)        \
+    $(mp4chaps_OBJECTS)      \
+    $(mp4extract_OBJECTS)    \
+    $(mp4file_OBJECTS)       \
+    $(mp4info_OBJECTS)       \
+    $(mp4subtitle_OBJECTS)   \
+    $(mp4syncfiles_OBJECTS)  \
+    $(mp4tags_OBJECTS)       \
+    $(mp4track_OBJECTS)      \
+    $(mp4trackdump_OBJECTS)
+
+ifeq ($(X_GCH_STATIC),1)
+$(CXX.gch.dependents): $(CXX.gch.out.static)
+endif
+
+ifeq ($(X_GCH_SHARED),1)
+$(CXX.gch.dependents): $(CXX.gch.out.shared)
+endif
+
+$(CXX.gch.out.static): | $(sort $(dir $(CXX.gch.out.static)))
+$(CXX.gch.out.static): $(BUILD/)%.gch/static: %
+	$(CXXCOMPILE) $(CXX.gch.static.flags) -c $< -o $@
+
+$(CXX.gch.out.shared): | $(sort $(dir $(CXX.gch.out.shared)))
+$(CXX.gch.out.shared): $(BUILD/)%.gch/shared: %
+	$(CXXCOMPILE) $(CXX.gch.shared.flags) -c $< -o $@
+
+MKDIRS += $(dir $(CXX.gch.out.static))
+MKDIRS += $(dir $(CXX.gch.out.shared))
+
+clean-local:
+	rm -f $(CXX.gch.out.static)
+	rm -f $(CXX.gch.out.shared)
 
 ###############################################################################
 

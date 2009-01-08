@@ -25,7 +25,7 @@
  *      Ximpo Group Ltd.          mp4v2@ximpo.com
  */
 
-#include "impl.h"
+#include "src/impl.h"
 
 namespace mp4v2 { namespace impl {
 

@@ -31,7 +31,7 @@
  *              Danijel Kopcinovic              danijel.kopcinovic@adnecto.net
  */
 
-#include "impl.h"
+#include "src/impl.h"
 #include <list>
 #include <sstream>
 

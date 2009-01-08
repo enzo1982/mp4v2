@@ -22,12 +22,6 @@ namespace mp4v2 { namespace util {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <fstream>
-#include <iomanip>
-#include <list>
-#include <map>
-#include <vector>
-
 #include "Database.h"
 #include "Timecode.h"
 #include "Utility.h"
