@@ -108,6 +108,12 @@ libmp4v2_la_SOURCES = \
     src/virtual_io.h
 
 libmp4v2_la_SOURCES += \
+    src/bmff/impl.h    \
+    src/bmff/itmf.h    \
+    src/bmff/type.cpp  \
+    src/bmff/type.h
+
+libmp4v2_la_SOURCES += \
     src/itmf/CoverArtBox.cpp  \
     src/itmf/CoverArtBox.h    \
     src/itmf/Metadata.cpp     \

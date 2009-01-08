@@ -30,6 +30,7 @@ namespace mp4v2 { namespace impl {
 #include "mp4atom.h"
 #include "atoms.h"
 
+#include "bmff/bmff.h"
 #include "itmf/itmf.h"
 #include "qtff/qtff.h"
 

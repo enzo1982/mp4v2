@@ -21,7 +21,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "src/impl.h"
+#include "impl.h"
 
 // VStudio idiocy prevents defining template instanced static data
 // in a namespace. Workaround it by defining in global scope.
