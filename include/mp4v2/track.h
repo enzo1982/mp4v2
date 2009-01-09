@@ -102,7 +102,7 @@ MP4TrackId MP4AddSceneTrack(
  *  accurately.
  *
  *  If the audio encoding uses a fixed duration for each sample that should
- *  be specified here. If not then the value #MP4_INVALID_SAMPLE_DURATION
+ *  be specified here. If not then the value #MP4_INVALID_DURATION
  *  should be given for the sampleDuration argument.
  *
  *  @param hFile handle of file for operation.
@@ -188,7 +188,7 @@ const char* MP4GetHrefTrackBaseUrl(
  *
  *  If the video frame rate is to be fixed then the sampleDuration argument
  *  should be give the appropriate fixed value. If the video frame rate is
- *  to be variable then the value MP4_INVALID_SAMPLE_DURATION should be
+ *  to be variable then the value #MP4_INVALID_DURATION should be
  *  given for the sampleDuration argument.
  *
  *  @param hFile handle of file for operation.
