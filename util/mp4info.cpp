@@ -82,53 +82,41 @@ extern "C" int main( int argc, char** argv )
         fputs( info, stdout );
         MP4FileHandle mp4file = MP4Read( mp4FileName ); //, MP4_DETAILS_ERROR);
         if ( mp4file != MP4_INVALID_FILE_HANDLE ) {
+            const MP4Metadata* tags = MP4MetadataAlloc( mp4file );
             char *value;
-            uint32_t longvalue;
             uint16_t numvalue, numvalue2;
-            uint8_t bytevalue;
-            if ( MP4GetMetadataName( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Name: %s\n", value );
-                free( value );
+            if ( tags->name ) {
+                fprintf( stdout, " Name: %s\n", tags->name );
             }
-            if ( MP4GetMetadataSortName( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Sort Name: %s\n", value );
-                free( value );
+            if ( tags->sortName ) {
+                fprintf( stdout, " Sort Name: %s\n", tags->sortName );
             }
-            if ( MP4GetMetadataArtist( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Artist: %s\n", value );
-                free( value );
+            if ( tags->artist ) {
+                fprintf( stdout, " Artist: %s\n", tags->artist );
             }
-            if ( MP4GetMetadataSortArtist( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Sort Artist: %s\n", value );
-                free( value );
+            if ( tags->sortArtist ) {
+                fprintf( stdout, " Sort Artist: %s\n", tags->sortArtist );
             }
-            if ( MP4GetMetadataComposer( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Composer: %s\n", value );
-                free( value );
+            if ( tags->composer ) {
+                fprintf( stdout, " Composer: %s\n", tags->composer );
             }
-            if ( MP4GetMetadataSortComposer( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Sort Composer: %s\n", value );
-                free( value );
+            if ( tags->sortComposer ) {
+                fprintf( stdout, " Sort Composer: %s\n", tags->sortComposer );
             }
-            if ( MP4GetMetadataTool( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Encoded with: %s\n", value );
-                free( value );
+            if ( tags->encodingTool ) {
+                fprintf( stdout, " Encoded with: %s\n", tags->encodingTool );
             }
-            if ( MP4GetMetadataEncodedBy( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Encoded by: %s\n", value );
-                free( value );
+            if ( tags->encodedBy ) {
+                fprintf( stdout, " Encoded by: %s\n", tags->encodedBy );
             }
-            if ( MP4GetMetadataReleaseDate( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Release Date: %s\n", value );
-                free( value );
+            if ( tags->releaseDate ) {
+                fprintf( stdout, " Release Date: %s\n", tags->releaseDate );
             }
-            if ( MP4GetMetadataAlbum( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Album: %s\n", value );
-                free( value );
+            if ( tags->album ) {
+                fprintf( stdout, " Album: %s\n", tags->album );
             }
-            if ( MP4GetMetadataSortAlbum( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Sort Album: %s\n", value );
-                free( value );
+            if ( tags->sortAlbum ) {
+                fprintf( stdout, " Sort Album: %s\n", tags->sortAlbum );
             }
             if ( MP4GetMetadataTrack( mp4file, &numvalue, &numvalue2 ) ) {
                 fprintf( stdout, " Track: %u of %u\n", numvalue,
@@ -142,124 +130,92 @@ extern "C" int main( int argc, char** argv )
                 fprintf( stdout, " Genre: %s\n", value );
                 free( value );
             }
-            if ( MP4GetMetadataGrouping( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Grouping: %s\n", value );
-                free( value );
+            if ( tags->grouping ) {
+                fprintf( stdout, " Grouping: %s\n", tags->grouping );
             }
             if ( MP4GetMetadataBPM( mp4file, &numvalue ) ) {
                 fprintf( stdout, " BPM: %u\n", numvalue );
             }
-            if ( MP4GetMetadataComment( mp4file, &value ) &&
-                    value != NULL ) {
-                fprintf( stdout, " Comment: %s\n", value );
-                free( value );
+            if ( tags->comments ) {
+                fprintf( stdout, " Comments: %s\n", tags->comments );
             }
-            if ( MP4GetMetadataCompilation( mp4file, &bytevalue ) ) {
-                fprintf( stdout, " Part of Compilation: %s\n",
-                         bytevalue ? "yes" : "no" );
+            if ( tags->compilation ) {
+                fprintf( stdout, " Part of Compilation: %s\n", *tags->compilation ? "yes" : "no" );
             }
-            if ( MP4GetMetadataPartOfGaplessAlbum( mp4file, &bytevalue ) ) {
-                fprintf( stdout, " Part of Gapless Album: %s\n",
-                         bytevalue ? "yes" : "no" );
+            if ( tags->gapless ) {
+                fprintf( stdout, " Part of Gapless Album: %s\n", *tags->gapless ? "yes" : "no" );
             }
             uint32_t artcount = MP4GetMetadataCoverArtCount( mp4file );
             if ( artcount > 0 ) {
                 fprintf( stdout, " Cover Art pieces: %u\n",
                          artcount );
             }
-            if ( MP4GetMetadataAlbumArtist( mp4file, &value ) &&
-                    value != NULL ) {
-                fprintf( stdout, " Album Artist: %s\n",
-                         value );
-                free( value );
+            if ( tags->albumArtist ) {
+                fprintf( stdout, " Album Artist: %s\n", tags->albumArtist );
             }
-            if ( MP4GetMetadataSortAlbumArtist( mp4file, &value ) &&
-                    value != NULL ) {
-                fprintf( stdout, " Sort Album Artist: %s\n",
-                         value );
-                free( value );
+            if ( tags->sortAlbumArtist ) {
+                fprintf( stdout, " Sort Album Artist: %s\n", tags->sortAlbumArtist );
             }
-            if ( MP4GetMetadataCopyright( mp4file, &value ) &&
-                    value != NULL ) {
-                fprintf( stdout, " Copyright: %s\n",
-                         value );
-                free( value );
+            if ( tags->copyright ) {
+                fprintf( stdout, " Copyright: %s\n", tags->copyright );
             }
-            if ( MP4GetMetadataExplicit( mp4file, &bytevalue ) ) {
-                fprintf( stdout, " Explicit Content: %s\n",
-                         bytevalue ? "yes" : "no" );
+            if ( tags->contentRating ) {
+                fprintf( stdout, " Explicit Content: %s\n", tags->contentRating ? "yes" : "no" );
             }
-            if ( MP4GetMetadataHDVideo( mp4file, &bytevalue ) ) {
-                fprintf( stdout, " HD Video: %s\n",
-                         bytevalue ? "yes" : "no" );
+            if ( tags->hdVideo ) {
+                fprintf( stdout, " HD Video: %s\n", *tags->hdVideo ? "yes" : "no");
             }
-            if ( MP4GetMetadataMediaType( mp4file, &bytevalue ) ) {
-                string s = itmf::enumStikType.toString( static_cast<itmf::StikType>( bytevalue ), true );
+            if ( tags->mediaType ) {
+                string s = itmf::enumStikType.toString( static_cast<itmf::StikType>( *tags->mediaType ), true );
                 fprintf( stdout, " Media Type: %s\n",
                         s.c_str() );
             }
-            if ( MP4GetMetadataTVShow( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " TV Show: %s\n", value );
-                free( value );
+            if ( tags->tvShow ) {
+                fprintf( stdout, " TV Show: %s\n", tags->tvShow );
             }
-            if ( MP4GetMetadataSortTVShow( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Sort TV Show: %s\n", value );
-                free( value );
+            if ( tags->sortTVShow ) {
+                fprintf( stdout, " Sort TV Show: %s\n", tags->sortTVShow );
             }
-            if ( MP4GetMetadataTVNetworkName( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " TV Network: %s\n", value );
-                free( value );
+            if ( tags->tvNetwork ) {
+                fprintf( stdout, " TV Network: %s\n", tags->tvNetwork );
             }
-            if ( MP4GetMetadataTVEpisodeNumber( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " TV Episode Number: %s\n", value );
-                free( value );
+            if ( tags->tvEpisodeID ) {
+                fprintf( stdout, " TV Episode Number: %s\n", tags->tvEpisodeID );
             }
-            if ( MP4GetMetadataShortDescription( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Short Description: %s\n", value );
-                free( value );
+            if ( tags->description ) {
+                fprintf( stdout, " Short Description: %s\n", tags->description );
             }
-            if ( MP4GetMetadataLongDescription( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Long Description: %s\n", value );
-                free( value );
+            if ( tags->longDescription ) {
+                fprintf( stdout, " Long Description: %s\n", tags->longDescription );
             }
-            if ( MP4GetMetadataLyrics( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Lyrics: \n%s\n", value );
-                free( value );
+            if ( tags->lyrics ) {
+                fprintf( stdout, " Lyrics: \n%s\n", tags->lyrics );
             }
-            if ( MP4GetMetadataTVEpisode( mp4file, &longvalue ) ) {
-                fprintf( stdout, " TV Episode: %i\n",
-                         longvalue );
+            if ( tags->tvEpisode ) {
+                fprintf( stdout, " TV Episode: %u\n", *tags->tvEpisode );
             }
-            if ( MP4GetMetadataTVSeason( mp4file, &longvalue ) ) {
-                fprintf( stdout, " TV Season: %i\n",
-                         longvalue );
+            if ( tags->tvSeason ) {
+                fprintf( stdout, " TV Season: %u\n", *tags->tvSeason );
             }
-            if ( MP4GetMetadataPodcast( mp4file, &bytevalue ) ) {
-                fprintf( stdout, " Podcast: %s\n",
-                         bytevalue ? "yes" : "no" );
+            if ( tags->podcast) {
+                fprintf( stdout, " Podcast: %s\n", *tags->podcast ? "yes" : "no" );
             }
-            if ( MP4GetMetadataKeywords( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Kywords: %s\n", value );
-                free( value );
+            if ( tags->keywords ) {
+                fprintf( stdout, " Keywords: %s\n", tags->keywords );
             }
-            if ( MP4GetMetadataCategory( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Category: %s\n", value );
-                free( value );
+            if ( tags->category ) {
+                fprintf( stdout, " Category: %s\n", tags->category );
             }
-            if ( MP4GetMetadataCNID( mp4file, &longvalue ) ) {
-                fprintf( stdout, " cnID: %i\n",
-                         longvalue );
+            if ( tags->cnID ) {
+                fprintf( stdout, " cnID: %u\n", *tags->cnID );
             }
-            if ( MP4GetMetadataPurchaserAccount( mp4file, &value ) &&
-                    value != NULL ) {
-                fprintf( stdout, " Purchaser Account: %s\n",
-                         value );
-                free( value );
+            if ( tags->iTunesAccount ) {
+                fprintf( stdout, " iTunes Account: %s\n", tags->iTunesAccount );
             }
-            if ( MP4GetMetadataPurchaseDate( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Purchase Date: %s\n", value );
-                free( value );
+            if ( tags->purchaseDate ) {
+                fprintf( stdout, " Purchase Date: %s\n", tags->purchaseDate );
             }
+            MP4MetadataFree( tags );
             MP4Close( mp4file );
         }
         free( info );

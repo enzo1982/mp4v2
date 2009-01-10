@@ -41,11 +41,11 @@ using namespace mp4v2::util;
 #define OPT_DESCRIPTION  'm'
 #define OPT_TVEPISODE    'M'
 #define OPT_PICTURE      'P'
-#define OPT_SONG         's'
+#define OPT_NAME         's'
 #define OPT_TRACK        't'
 #define OPT_TRACKS       'T'
 #define OPT_COMPOSER     'w'
-#define OPT_YEAR         'y'
+#define OPT_RELEASEDATE  'y'
 #define OPT_REMOVE       'r'
 #define OPT_ALBUM_ARTIST 'R'
 
@@ -107,12 +107,12 @@ extern "C" int
         { "description", prog::Option::REQUIRED_ARG, 0, OPT_DESCRIPTION  },
         { "episode",     prog::Option::REQUIRED_ARG, 0, OPT_TVEPISODE    },
         { "picture",     prog::Option::REQUIRED_ARG, 0, OPT_PICTURE      },
-        { "song",        prog::Option::REQUIRED_ARG, 0, OPT_SONG         },
+        { "song",        prog::Option::REQUIRED_ARG, 0, OPT_NAME         },
         { "tempo",       prog::Option::REQUIRED_ARG, 0, OPT_TEMPO        },
         { "track",       prog::Option::REQUIRED_ARG, 0, OPT_TRACK        },
         { "tracks",      prog::Option::REQUIRED_ARG, 0, OPT_TRACKS       },
         { "writer",      prog::Option::REQUIRED_ARG, 0, OPT_COMPOSER     },
-        { "year",        prog::Option::REQUIRED_ARG, 0, OPT_YEAR         },
+        { "year",        prog::Option::REQUIRED_ARG, 0, OPT_RELEASEDATE  },
         { "remove",      prog::Option::REQUIRED_ARG, 0, OPT_REMOVE       },
         { "albumartist", prog::Option::REQUIRED_ARG, 0, OPT_ALBUM_ARTIST },
         { NULL, prog::Option::NO_ARG, 0, 0 }
@@ -204,22 +204,24 @@ extern "C" int
             fprintf( stderr, "Could not open '%s'... aborting\n", mp4 );
             return 5;
         }
+        /* Read out the existing metadata */
+        const MP4Metadata* mdata = MP4MetadataAlloc( h );
 
         /* Remove any tags */
         if ( ELEMENT_OF(tags,OPT_REMOVE) ) {
             for ( const char *p = ELEMENT_OF(tags,OPT_REMOVE); *p; p++ ) {
                 switch ( *p ) {
                     case OPT_ALBUM:
-                        MP4DeleteMetadataAlbum( h );
+                        MP4MetadataSetAlbum( mdata, NULL );
                         break;
                     case OPT_ARTIST:
-                        MP4DeleteMetadataArtist( h );
+                        MP4MetadataSetArtist( mdata, NULL );
                         break;
                     case OPT_COMMENT:
-                        MP4DeleteMetadataComment( h );
+                        MP4MetadataSetComments( mdata, NULL );
                         break;
                     case OPT_COPYRIGHT:
-                        MP4DeleteMetadataCopyright( h );
+                        MP4MetadataSetCopyright( mdata, NULL );
                         break;
                     case OPT_DISK:
                         MP4DeleteMetadataDisk( h );
@@ -228,16 +230,16 @@ extern "C" int
                         MP4DeleteMetadataDisk( h );
                         break;
                     case OPT_ENCODEDBY:
-                        MP4DeleteMetadataEncodedBy( h );
+                        MP4MetadataSetEncodedBy( mdata, NULL );
                         break;
                     case OPT_TOOL:
-                        MP4DeleteMetadataTool( h );
+                        MP4MetadataSetEncodingTool( mdata, NULL );
                         break;
                     case OPT_GENRE:
                         MP4DeleteMetadataGenre( h );
                         break;
                     case OPT_GROUPING:
-                        MP4DeleteMetadataGrouping( h );
+                        MP4MetadataSetGrouping( mdata, NULL );
                         break;
                     case OPT_HD:
                         MP4DeleteMetadataHDVideo( h );
@@ -249,19 +251,19 @@ extern "C" int
                         MP4DeleteMetadataMediaType( h );
                         break;
                     case OPT_DESCRIPTION:
-                        MP4DeleteMetadataShortDescription( h );
+                        MP4MetadataSetDescription( mdata , NULL );
                         break;
                     case OPT_TVEPISODE:
                         MP4DeleteMetadataTVEpisode( h );
                         break;
-                    case OPT_SONG:
-                        MP4DeleteMetadataName( h );
+                    case OPT_NAME:
+                        MP4MetadataSetName( mdata, NULL );
                         break;
                     case OPT_COMPOSER:
-                        MP4DeleteMetadataComposer( h );
+                        MP4MetadataSetComposer( mdata, NULL );
                         break;
-                    case OPT_YEAR:
-                        MP4DeleteMetadataReleaseDate( h );
+                    case OPT_RELEASEDATE:
+                        MP4MetadataSetReleaseDate( mdata, NULL );
                         break;
                     case OPT_TEMPO:
                         MP4DeleteMetadataBPM( h );
@@ -276,7 +278,7 @@ extern "C" int
                         MP4DeleteMetadataCoverArt( h );
                         break;
                     case OPT_ALBUM_ARTIST:
-                        MP4DeleteMetadataAlbumArtist( h );
+                        MP4MetadataSetAlbumArtist( mdata, NULL );
                         break ;
                 }
             }
@@ -308,28 +310,28 @@ extern "C" int
             if ( tags[i] ) {
                 switch ( i ) {
                     case OPT_ALBUM:
-                        MP4SetMetadataAlbum( h, tags[i] );
+                        MP4MetadataSetAlbum( mdata, tags[i] );
                         break;
                     case OPT_ARTIST:
-                        MP4SetMetadataArtist( h, tags[i] );
+                        MP4MetadataSetArtist( mdata, tags[i] );
                         break;
                     case OPT_COMMENT:
-                        MP4SetMetadataComment( h, tags[i] );
+                        MP4MetadataSetComments( mdata, tags[i] );
                         break;
                     case OPT_COPYRIGHT:
-                        MP4SetMetadataCopyright( h, tags[i] );
+                        MP4MetadataSetCopyright( mdata, tags[i] );
                         break;
                     case OPT_ENCODEDBY:
-                        MP4SetMetadataEncodedBy( h, tags[i] );
+                        MP4MetadataSetEncodedBy( mdata, tags[i] );
                         break;
                     case OPT_TOOL:
-                        MP4SetMetadataTool( h, tags[i] );
+                        MP4MetadataSetEncodingTool( mdata, tags[i] );
                         break;
                     case OPT_GENRE:
                         MP4SetMetadataGenre( h, tags[i] );
                         break;
                     case OPT_GROUPING:
-                        MP4SetMetadataGrouping( h, tags[i] );
+                        MP4MetadataSetGrouping( mdata, tags[i] );
                         break;
                     case OPT_HD:
                         MP4SetMetadataHDVideo( h, nums[i] );
@@ -344,25 +346,25 @@ extern "C" int
                         break;
                     }
                     case OPT_DESCRIPTION:
-                        MP4SetMetadataShortDescription( h, tags[i] );
+                        MP4MetadataSetDescription( mdata, tags[i] );
                         break;
                     case OPT_TVEPISODE:
                         MP4SetMetadataTVEpisode( h, nums[i] );
                         break;
-                    case OPT_SONG:
-                        MP4SetMetadataName( h, tags[i] );
+                    case OPT_NAME:
+                        MP4MetadataSetName( mdata, tags[i] );
                         break;
                     case OPT_COMPOSER:
-                        MP4SetMetadataComposer( h, tags[i] );
+                        MP4MetadataSetComposer( mdata, tags[i] );
                         break;
-                    case OPT_YEAR:
-                        MP4SetMetadataReleaseDate( h, tags[i] );
+                    case OPT_RELEASEDATE:
+                        MP4MetadataSetReleaseDate( mdata, tags[i] );
                         break;
                     case OPT_TEMPO:
                         MP4SetMetadataBPM( h, nums[i] );
                         break;
                     case OPT_ALBUM_ARTIST:
-                        MP4SetMetadataAlbumArtist( h, tags[i] );
+                        MP4MetadataSetAlbumArtist( mdata, tags[i] );
                         break;
                     case OPT_PICTURE:
                     {
@@ -389,7 +391,10 @@ extern "C" int
                 }
             }
         }
-
+        /* Write out all tag modifications */
+        MP4MetadataStore( mdata );
+        
+        MP4MetadataFree( mdata );
         MP4Close( h );
     } /* end while optind < argc */
     return 0;
