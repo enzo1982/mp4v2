@@ -38,7 +38,7 @@ AC_MSG_NOTICE([
   -->])
 
 AC_CONFIG_AUX_DIR([autoaux])
-AM_INIT_AUTOMAKE([1.10 foreign -Wall -Wno-portability -Werror subdir-objects nostdinc no-dist-gzip dist-bzip2 dist-zip dejagnu])
+AM_INIT_AUTOMAKE([1.9.6 foreign -Wall -Wno-portability -Werror subdir-objects nostdinc no-dist-gzip dist-bzip2 dist-zip dejagnu])
 
 AC_CONFIG_SRCDIR([src/mp4.cpp])
 
