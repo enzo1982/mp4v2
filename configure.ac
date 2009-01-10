@@ -223,22 +223,17 @@ AC_MSG_CHECKING([if GCC precompiled-headers should be created])
 X_GCH=0
 X_GCH_FLAGS=
 X_GCH_STATIC=0
-X_GCH_STATIC_FLAGS=
+X_GCH_STATIC_FLAGS="$lt_prog_compiler_static_CXX"
 X_GCH_SHARED=0
-X_GCH_SHARED_FLAGS=
+X_GCH_SHARED_FLAGS="$lt_prog_compiler_pic_CXX"
 
 if test "$enable_gch" = "yes"; then
     X_GCH=1
 elif test "$enable_gch" != "no"; then
     if test "$GXX" = "yes"; then
-        case ${host} in
-            *-*-darwin*)
+        case ${host_os} in
+            cygwin*|darwin*|freebsd*|linux*|solaris*)
                 X_GCH=1
-                X_GCH_SHARED_FLAGS="-fno-common -DPIC"
-                ;;
-            *-*-linux*)
-                X_GCH=1
-                X_GCH_SHARED_FLAGS="-fPIC -DPIC"
                 ;;
         esac
     fi
