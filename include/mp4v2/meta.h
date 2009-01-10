@@ -353,11 +353,6 @@ bool MP4DeleteMetadataCopyright(
     MP4FileHandle hFile );
 
 MP4V2_EXPORT
-bool MP4GetMetadataExplicit(
-    MP4FileHandle hFile,
-    uint8_t*      value );
-
-MP4V2_EXPORT
 bool MP4GetMetadataPurchaserAccount(
     MP4FileHandle hFile,
     char**        value );
@@ -380,89 +375,6 @@ bool MP4GetMetadataHDVideo(
 MP4V2_EXPORT
 bool MP4DeleteMetadataHDVideo(
     MP4FileHandle hFile );
-    
-MP4V2_EXPORT
-bool MP4GetMetadataTVShow(
-    MP4FileHandle hFile,
-    char**        value );
-
-MP4V2_EXPORT
-bool MP4SetMetadataShortDescription(
-    MP4FileHandle hFile,
-    const char*   value );
-
-MP4V2_EXPORT
-bool MP4GetMetadataShortDescription(
-    MP4FileHandle hFile,
-    char**        value );
-
-MP4V2_EXPORT
-bool MP4DeleteMetadataShortDescription(
-    MP4FileHandle hFile );
-
-MP4V2_EXPORT
-bool MP4GetMetadataSortName(
-    MP4FileHandle hFile,
-    char**        value );
-
-MP4V2_EXPORT
-bool MP4GetMetadataSortArtist(
-    MP4FileHandle hFile,
-    char**        value );
-
-MP4V2_EXPORT
-bool MP4GetMetadataSortAlbum(
-    MP4FileHandle hFile,
-    char**        value );
-
-MP4V2_EXPORT
-bool MP4GetMetadataSortAlbumArtist(
-    MP4FileHandle hFile,
-    char**        value );
-
-MP4V2_EXPORT
-bool MP4GetMetadataSortComposer(
-    MP4FileHandle hFile,
-    char**        value );
-
-MP4V2_EXPORT
-bool MP4GetMetadataSortTVShow(
-    MP4FileHandle hFile,
-    char**        value );
-
-MP4V2_EXPORT
-bool MP4GetMetadataTVNetworkName(
-    MP4FileHandle hFile,
-    char**        value );
-
-MP4V2_EXPORT
-bool MP4GetMetadataTVEpisodeNumber(
-    MP4FileHandle hFile,
-    char**        value );
-    
-MP4V2_EXPORT
-bool MP4GetMetadataLongDescription(
-    MP4FileHandle hFile,
-    char**        value );
-
-MP4V2_EXPORT
-bool MP4GetMetadataLyrics(
-    MP4FileHandle hFile,
-    char**        value );
-
-MP4V2_EXPORT
-bool MP4SetMetadataEncodedBy(
-    MP4FileHandle hFile,
-    const char*   value );
-
-MP4V2_EXPORT
-bool MP4GetMetadataEncodedBy(
-    MP4FileHandle hFile,
-    char**        value );
-    
-MP4V2_EXPORT
-bool MP4DeleteMetadataEncodedBy(
-    MP4FileHandle hFile );
   
 MP4V2_EXPORT
 bool MP4SetMetadataTVEpisode(
@@ -482,19 +394,9 @@ MP4V2_EXPORT
 bool MP4GetMetadataTVSeason(
     MP4FileHandle hFile,
     uint32_t*      value );
-
-MP4V2_EXPORT
-bool MP4GetMetadataPodcast(
-    MP4FileHandle hFile,
-    uint8_t*      value );
     
 MP4V2_EXPORT
 bool MP4GetMetadataKeywords(
-    MP4FileHandle hFile,
-    char**        value );
-    
-MP4V2_EXPORT
-bool MP4GetMetadataCategory(
     MP4FileHandle hFile,
     char**        value );
 
