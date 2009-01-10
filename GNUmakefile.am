@@ -302,7 +302,7 @@ endif
 ##
 Makefile: ${Makefile}
 	touch $@
-	$(MKDIR_P) $(TESTLOGDIR)
+	$(mkdir_p) $(TESTLOGDIR)
 
 dist-hook:
 

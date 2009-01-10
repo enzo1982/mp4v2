@@ -138,9 +138,9 @@ EXTRA_DIST += \
 
 dist-hook: $(DOC.texi2txt.out) $(DOC.man.out)
 	rm -fr $(distdir)/doc
-	$(MKDIR_P) $(distdir)/doc
+	$(mkdir_p) $(distdir)/doc
 	$(INSTALL_DATA) $(DOC.texi2txt.out) $(distdir)/doc/.
-	$(MKDIR_P) $(distdir)/doc/man/man1
+	$(mkdir_p) $(distdir)/doc/man/man1
 	$(INSTALL_DATA) $(DOC.man.out) $(distdir)/doc/man/man1
 
 distclean-local: docclean
@@ -376,4 +376,4 @@ clean-local:
 ###############################################################################
 
 $(sort $(MKDIRS)):
-	$(MKDIR_P) $@
+	$(mkdir_p) $@
