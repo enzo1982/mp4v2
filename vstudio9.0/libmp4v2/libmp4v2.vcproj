@@ -603,6 +603,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\src.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\text.cpp"
 				>
 			</File>
@@ -639,6 +643,14 @@
 				</File>
 				<File
 					RelativePath="..\..\src\itmf\itmf.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\itmf\Metadata.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\itmf\Metadata.h"
 					>
 				</File>
 				<File
