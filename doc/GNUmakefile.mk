@@ -299,7 +299,7 @@ google.propset:
 
 dist-hb: distdir=lib$(PACKAGE)
 dist-hb: distdir
-	tardir=$(distdir) && $(am__tar) | GZIP=$(GZIP_ENV) gzip -c >$(PACKAGE)-$(VERSION).tar.gz
+	tardir=$(distdir) && $(am__tar) | GZIP=$(GZIP_ENV) gzip -c >lib$(PACKAGE)-$(VERSION).tar.gz
 	$(am__remove_distdir)
 
 ###############################################################################
