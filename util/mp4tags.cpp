@@ -26,7 +26,7 @@ using namespace mp4v2::util;
 #define OPT_VERSION      'v'
 #define OPT_ALBUM        'A'
 #define OPT_ARTIST       'a'
-#define OPT_TEMPO        'b'
+#define OPT_BPM          'b'
 #define OPT_COMMENT      'c'
 #define OPT_COPYRIGHT    'C'
 #define OPT_DISK         'd'
@@ -108,7 +108,7 @@ extern "C" int
         { "episode",     prog::Option::REQUIRED_ARG, 0, OPT_TVEPISODE    },
         { "picture",     prog::Option::REQUIRED_ARG, 0, OPT_PICTURE      },
         { "song",        prog::Option::REQUIRED_ARG, 0, OPT_NAME         },
-        { "tempo",       prog::Option::REQUIRED_ARG, 0, OPT_TEMPO        },
+        { "tempo",       prog::Option::REQUIRED_ARG, 0, OPT_BPM          },
         { "track",       prog::Option::REQUIRED_ARG, 0, OPT_TRACK        },
         { "tracks",      prog::Option::REQUIRED_ARG, 0, OPT_TRACKS       },
         { "writer",      prog::Option::REQUIRED_ARG, 0, OPT_COMPOSER     },
@@ -156,7 +156,7 @@ extern "C" int
             case OPT_HD:
             case OPT_CNID:
             case OPT_TVEPISODE:
-            case OPT_TEMPO:
+            case OPT_BPM:
                 r = sscanf( prog::optarg, "%d", &nums[c] );
                 if ( r < 1 ) {
                     fprintf( stderr, "%s: option requires numeric argument -- %c\n",
@@ -265,8 +265,8 @@ extern "C" int
                     case OPT_RELEASEDATE:
                         MP4MetadataSetReleaseDate( mdata, NULL );
                         break;
-                    case OPT_TEMPO:
-                        MP4DeleteMetadataBPM( h );
+                    case OPT_BPM:
+                        MP4DeleteMetadataTempo( h );
                         break;
                     case OPT_TRACK:
                         MP4DeleteMetadataTrack( h );
@@ -360,8 +360,8 @@ extern "C" int
                     case OPT_RELEASEDATE:
                         MP4MetadataSetReleaseDate( mdata, tags[i] );
                         break;
-                    case OPT_TEMPO:
-                        MP4SetMetadataBPM( h, nums[i] );
+                    case OPT_BPM:
+                        MP4SetMetadataTempo( h, nums[i] );
                         break;
                     case OPT_ALBUM_ARTIST:
                         MP4MetadataSetAlbumArtist( mdata, tags[i] );

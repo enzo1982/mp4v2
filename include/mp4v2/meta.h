@@ -20,36 +20,60 @@ bool MP4GetMetadataByIndex(
     uint8_t**     ppValue,  /* need to free */
     uint32_t*     pValueSize );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4SetMetadataName(
     MP4FileHandle hFile,
     const char*   value );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4GetMetadataName(
     MP4FileHandle hFile,
     char**        value );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4DeleteMetadataName(
     MP4FileHandle hFile );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4SetMetadataArtist(
     MP4FileHandle hFile,
     const char*   value );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4GetMetadataArtist(
     MP4FileHandle hFile,
     char**        value );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4DeleteMetadataArtist(
     MP4FileHandle hFile );
 
 /** 
-  * @deprecated scheduled for removal, use MP4SetMetadataComposer().
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
   */
 MP4V2_DEPRECATED
 MP4V2_EXPORT
@@ -58,7 +82,7 @@ bool MP4SetMetadataWriter(
     const char*   value );
 
 /** 
-  * @deprecated scheduled for removal, use MP4GetMetadataComposer().
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
   */
 MP4V2_DEPRECATED
 MP4V2_EXPORT
@@ -67,57 +91,67 @@ bool MP4GetMetadataWriter(
     char**        value );
 
 /** 
-  * @deprecated scheduled for removal,use MP4DeleteMetadataComposer().
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
   */
 MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4DeleteMetadataWriter(
     MP4FileHandle hFile );
 
-MP4V2_EXPORT
-bool MP4SetMetadataComposer(
-    MP4FileHandle hFile,
-    const char*   value );
-
-MP4V2_EXPORT
-bool MP4GetMetadataComposer(
-    MP4FileHandle hFile,
-    char**        value );
-
-MP4V2_EXPORT
-bool MP4DeleteMetadataComposer(
-    MP4FileHandle hFile );
-
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4SetMetadataComment(
     MP4FileHandle hFile,
     const char*   value );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4GetMetadataComment(
     MP4FileHandle hFile,
     char**        value );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4DeleteMetadataComment(
     MP4FileHandle hFile );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4SetMetadataTool(
     MP4FileHandle hFile,
     const char*   value );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4GetMetadataTool(
     MP4FileHandle hFile,
     char**        value );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4DeleteMetadataTool(
     MP4FileHandle hFile );
 
 /** 
-  * @deprecated scheduled for removal, use MP4SetMetadataReleaseDate().
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
   */
 MP4V2_DEPRECATED
 MP4V2_EXPORT
@@ -126,7 +160,7 @@ bool MP4SetMetadataYear(
     const char*   value );
 
 /** 
-  * @deprecated scheduled for removal, use MP4GetMetadataReleaseDate().
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
   */
 MP4V2_DEPRECATED
 MP4V2_EXPORT
@@ -135,37 +169,35 @@ bool MP4GetMetadataYear(
     char**        value );
 
 /** 
-  * @deprecated scheduled for removal, use MP4DeleteMetadataReleaseDate().
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
   */
 MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4DeleteMetadataYear(
     MP4FileHandle hFile );
 
-MP4V2_EXPORT
-bool MP4SetMetadataReleaseDate(
-    MP4FileHandle hFile,
-    const char*   value );
-
-MP4V2_EXPORT
-bool MP4GetMetadataReleaseDate(
-    MP4FileHandle hFile,
-    char**        value );
-
-MP4V2_EXPORT
-bool MP4DeleteMetadataReleaseDate(
-    MP4FileHandle hFile );
-
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4SetMetadataAlbum(
     MP4FileHandle hFile,
     const char*   value );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4GetMetadataAlbum(
     MP4FileHandle hFile,
     char**        value );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4DeleteMetadataAlbum(
     MP4FileHandle hFile );
@@ -216,62 +248,43 @@ MP4V2_EXPORT
 bool MP4DeleteMetadataGenre(
     MP4FileHandle hFile );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4SetMetadataGrouping(
     MP4FileHandle hFile,
     const char* grouping );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4GetMetadataGrouping(
     MP4FileHandle hFile,
     char**        grouping );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4DeleteMetadataGrouping(
     MP4FileHandle hFile );
 
-/** 
-  * @deprecated scheduled for removal, use MP4SetMetadataBPM().
-  */
-MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4SetMetadataTempo(
     MP4FileHandle hFile,
     uint16_t      tempo );
 
-/** 
-  * @deprecated scheduled for removal, use MP4GetMetadataBPM().
-  */
-MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4GetMetadataTempo(
     MP4FileHandle hFile,
     uint16_t*     tempo );
 
-/** 
-  * @deprecated scheduled for removal, use MP4DeleteMetadataBPM().
-  */
-MP4V2_DEPRECATED
 MP4V2_EXPORT
-bool MP4DeleteMetadataTempo(
-    MP4FileHandle hFile );
-    
-MP4V2_EXPORT
-bool MP4SetMetadataBPM(
-    MP4FileHandle hFile,
-    uint16_t      tempo );
-
-MP4V2_EXPORT
-bool MP4GetMetadataBPM(
-    MP4FileHandle hFile,
-    uint16_t*     tempo );
-
-MP4V2_EXPORT
-bool MP4DeleteMetadataBPM(
-    MP4FileHandle hFile );
-
-MP4V2_EXPORT
-MP4V2_DEPRECATED
 bool MP4DeleteMetadataTempo(
     MP4FileHandle hFile );
 
@@ -324,38 +337,31 @@ MP4V2_EXPORT
 bool MP4DeleteMetadataCoverArt(
     MP4FileHandle hFile );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4SetMetadataAlbumArtist(
     MP4FileHandle hFile,
     const char*   value );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4GetMetadataAlbumArtist(
     MP4FileHandle hFile,
     char**        value );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4DeleteMetadataAlbumArtist(
     MP4FileHandle hFile );
-
-MP4V2_EXPORT
-bool MP4SetMetadataCopyright(
-    MP4FileHandle hFile,
-    const char*   value );
-
-MP4V2_EXPORT
-bool MP4GetMetadataCopyright(
-    MP4FileHandle hFile,
-    char**        value );
-    
-MP4V2_EXPORT
-bool MP4DeleteMetadataCopyright(
-    MP4FileHandle hFile );
-
-MP4V2_EXPORT
-bool MP4GetMetadataPurchaseDate(
-    MP4FileHandle hFile,
-    char**        value );
 
 MP4V2_EXPORT
 bool MP4SetMetadataHDVideo(
