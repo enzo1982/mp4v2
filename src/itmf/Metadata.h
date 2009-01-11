@@ -39,6 +39,7 @@ public:
     static const string CODE_COMPOSER;
     static const string CODE_COMMENTS;
     static const string CODE_RELEASEDATE;
+    static const string CODE_BEATSPERMINUTE;
     static const string CODE_COMPILATION;
         
     static const string CODE_TVSHOW;
@@ -85,7 +86,9 @@ public:
     string    grouping;
     string    composer;
     string    comments;
+    string    genre;
     string    releaseDate;
+    uint16_t  beatsPerMinute;
     uint8_t   compilation;
     
     string    tvShow;
@@ -121,11 +124,6 @@ public:
     
     string    iTunesAccount;
     uint32_t  cnID;
-
-
-    GenreType predefinedGenre;
-    string    userGenre;
-    uint16_t  beatsPerMinute;
 public:
     Metadata( MP4File& );
     Metadata( MP4FileHandle );
@@ -143,9 +141,11 @@ public:
 private:
     void fetchString  ( const string&, string&, const char*& );
     void fetchInteger ( const string&, uint8_t&, const uint8_t*& );
+    void fetchInteger ( const string&, uint16_t&, const uint16_t*& );
     void fetchInteger ( const string&, uint32_t&, const uint32_t*& );
+    void fetchGenre   ( string&, const char*& );
 
-    bool fetchData( const string&, uint8_t*&, uint32_t& );
+    bool fetchData ( const string&, uint8_t*&, uint32_t& );
 
     void storeString  ( const string&, const string&, const char* );
     void storeInteger ( const string&, uint8_t, const uint8_t* );

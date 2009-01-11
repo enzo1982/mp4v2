@@ -29,7 +29,6 @@ namespace mp4v2 { namespace impl { namespace itmf {
 
 Metadata::Metadata( MP4File& file_ )
     : file            ( file_ )
-    , predefinedGenre ( GENRE_UNDEFINED )
 {
 }
 
@@ -37,7 +36,6 @@ Metadata::Metadata( MP4File& file_ )
 
 Metadata::Metadata( MP4FileHandle file_ )
     : file            ( *static_cast<MP4File*>(file_) )
-    , predefinedGenre ( GENRE_UNDEFINED )
 {
 }
 
@@ -63,6 +61,8 @@ Metadata::c_alloc( MP4Metadata*& mdata )
 void
 Metadata::c_fetch( MP4Metadata*& mdata )
 {
+
+
     MP4Metadata& c = *mdata;
 
     fetchString( CODE_NAME, name, c.name );
@@ -72,7 +72,9 @@ Metadata::c_fetch( MP4Metadata*& mdata )
     fetchString( CODE_GROUPING,    grouping,    c.grouping );
     fetchString( CODE_COMPOSER,    composer,    c.composer );
     fetchString( CODE_COMMENTS,    comments,    c.comments );
+    fetchGenre( genre, c.genre);
     fetchString( CODE_RELEASEDATE,    releaseDate,    c.releaseDate );
+    fetchInteger( CODE_BEATSPERMINUTE,    beatsPerMinute,    c.beatsPerMinute );
     fetchInteger( CODE_COMPILATION,    compilation,    c.compilation );
 
     fetchString( CODE_TVSHOW,    tvShow,    c.tvShow );
@@ -192,6 +194,27 @@ Metadata::fetchInteger( const string& code, uint8_t& cpp, const uint8_t*& c )
 ///////////////////////////////////////////////////////////////////////////////
 
 void
+Metadata::fetchInteger( const string& code, uint16_t& cpp, const uint16_t*& c )
+{
+    cpp = 0;
+    c = NULL;
+
+    uint8_t* buffer; 
+    uint32_t size;
+    if( fetchData( code, buffer, size ))
+        return;
+
+    cpp = (uint16_t(buffer[0]) <<  8)
+        | (uint16_t(buffer[1])      );
+
+    c = &cpp;
+
+    MP4Free( buffer );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
 Metadata::fetchInteger( const string& code, uint32_t& cpp, const uint32_t*& c )
 {
     cpp = 0;
@@ -229,6 +252,20 @@ Metadata::fetchString( const string& code, string& cpp, const char*& c )
     c = cpp.c_str();
 
     MP4Free( buffer );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+Metadata::fetchGenre( string& cpp, const char*& c )
+{
+    cpp.clear();
+    c = NULL;
+    char* value;
+
+    file.GetMetadataGenre(&value);
+    cpp = value;
+    c = cpp.c_str();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -319,6 +356,7 @@ const string Metadata::CODE_GROUPING        = "\xa9" "grp";
 const string Metadata::CODE_COMPOSER        = "\xa9" "wrt";
 const string Metadata::CODE_COMMENTS        = "\xa9" "cmt";
 const string Metadata::CODE_RELEASEDATE     = "\xa9" "day";
+const string Metadata::CODE_BEATSPERMINUTE  = "tmpo";
 const string Metadata::CODE_COMPILATION     = "cpil";
 
 const string Metadata::CODE_TVSHOW          = "tvsh";

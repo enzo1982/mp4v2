@@ -353,11 +353,6 @@ bool MP4DeleteMetadataCopyright(
     MP4FileHandle hFile );
 
 MP4V2_EXPORT
-bool MP4GetMetadataPurchaserAccount(
-    MP4FileHandle hFile,
-    char**        value );
-
-MP4V2_EXPORT
 bool MP4GetMetadataPurchaseDate(
     MP4FileHandle hFile,
     char**        value );
@@ -519,7 +514,9 @@ typedef struct MP4Metadata_s
     const char*     grouping;
     const char*     composer;
     const char*     comments;
+    const char*     genre;
     const char*     releaseDate;
+    const uint16_t* beatsPerMinute;
     const uint8_t*  compilation;
     
     const char*     tvShow;
@@ -555,11 +552,6 @@ typedef struct MP4Metadata_s
     
     const char*     iTunesAccount;
     const uint32_t* cnID;
-
-
-    const uint8_t*  predefinedGenre;
-    const char*     userGenre;
-    const uint16_t* beatsPerMinute;
 } MP4Metadata;
 
 /** Allocate metadata convenience structure for reading and settings tags.

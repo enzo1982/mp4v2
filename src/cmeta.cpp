@@ -892,21 +892,6 @@ extern "C" {
         return false;
     }
 
-    bool MP4GetMetadataPurchaserAccount (MP4FileHandle hFile,
-                                    char** value)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->GetMetadataString("apID", value);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
-        }
-        return false;
-    }
-    
     bool MP4GetMetadataPurchaseDate(MP4FileHandle hFile,
                             char** value)
     {

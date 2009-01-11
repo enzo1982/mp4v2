@@ -130,11 +130,14 @@ extern "C" int main( int argc, char** argv )
                 fprintf( stdout, " Genre: %s\n", value );
                 free( value );
             }
+            if ( tags->genre ) {
+                fprintf( stdout, " New Genre: %s\n", tags->genre );
+            }
             if ( tags->grouping ) {
                 fprintf( stdout, " Grouping: %s\n", tags->grouping );
             }
-            if ( MP4GetMetadataBPM( mp4file, &numvalue ) ) {
-                fprintf( stdout, " BPM: %u\n", numvalue );
+            if ( tags->beatsPerMinute ) {
+                fprintf( stdout, " BPM: %u\n", *tags->beatsPerMinute );
             }
             if ( tags->comments ) {
                 fprintf( stdout, " Comments: %s\n", tags->comments );
