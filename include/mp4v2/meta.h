@@ -458,15 +458,15 @@ void MP4AddIPodUUID(
 
 /*****************************************************************************/
 
-/** Metadata <b>convenience</b> structure.
+/** Tags <b>convenience</b> structure.
  *
- *  This structure is used in the metadata convenience API which allows for
+ *  This structure is used in the tags convenience API which allows for
  *  simplified retrieval and modification of the majority of known tags.
  *
  *  This is a read-only structure and each tag is present if and only if the
  *  pointer is a <b>non-NULL</b> value. The actual data is backed by a hidden
  *  data cache which is only updated when the appropriate metadata <b>set</b>
- *  function is used, or if MP4MetadataFetch() is invoked. Thus, if other API
+ *  function is used, or if MP4TagsFetch() is invoked. Thus, if other API
  *  is used to manipulate relevent atom structure of the MP4 file, the user
  *  is responsible for re-fetching the data in this structure.
  *
@@ -476,7 +476,7 @@ void MP4AddIPodUUID(
 // ...MP4 file has been opened by other code for modification
 
 // allocate structure and pull data from file
-const MP4Metadata* m = MP4MetadataAlloc( file );
+const MP4Tags* m = MP4TagsAlloc( file );
 
 // show tag name if present
 if( m->name )
@@ -487,10 +487,10 @@ if( m->artist )
     printf( "artist: %s\n", m->artist );
 
 // set a new name
-MP4MetadataSetName( m, "This is our new name" );
+MP4TagsSetName( m, "This is our new name" );
 
 // remove tag artist
-MP4MetadataSetArtist( m, NULL );
+MP4TagsSetArtist( m, NULL );
 
 // show tag name if present
 if( m->name )
@@ -501,15 +501,15 @@ if( m->artist )
     printf( "artist: %s\n", m->artist );
 
 // push data to MP4 file atom structure
-MP4MetadataStore( m );
+MP4TagsStore( m );
 
 // free memory associated with structure
-MP4MetadataFree( m );
+MP4TagsFree( m );
 
 // ...MP4 file is eventually closed (written-out)
 @endcode
  */
-typedef struct MP4Metadata_s
+typedef struct MP4Tags_s
 {
     void* __handle; /* private use */
 
@@ -558,66 +558,67 @@ typedef struct MP4Metadata_s
     
     const char*     iTunesAccount;
     const uint32_t* cnID;
-} MP4Metadata;
+} MP4Tags;
 
-/** Allocate metadata convenience structure for reading and settings tags.
+/** Allocate tags convenience structure for reading and settings tags.
  *
  *  This function allocates a new structure for reading and setting of
  *  metadata tags and populates the structure by automatically invoking
- *  MP4MetadataFetch(). It is the caller's responsibility to free the
- *  structure with MP4MetadataFree().
+ *  MP4TagsFetch(). It is the caller's responsibility to free the
+ *  structure with MP4TagsFree().
  *
  *  @param hFile handle of file to operate upon.
  *
  *  @return convenience structure associated with file.
  */
 MP4V2_EXPORT
-const MP4Metadata* MP4MetadataAlloc( MP4FileHandle hFile );
+const MP4Tags* MP4TagsAlloc( MP4FileHandle hFile );
 
 /** Fetch data from mp4 file and populate structure.
  *
- *  The metadata structure and its hidden data-cache is updated to
- *  reflect the actual metadata found in the file to which <b>tags</b>
- *  was associated with.
+ *  The tags structure and its hidden data-cache is updated to
+ *  reflect the actual tags values found in the file to which <b>tags</b>
+ *  was associated to during allocation.
  *
- *  @param tags metadata structure to fetch (write) into.
+ *  @param tags structure to fetch (write) into.
  */
 MP4V2_EXPORT
-void MP4MetadataFetch( const MP4Metadata* tags );
+void MP4TagsFetch( const MP4Tags* tags );
 
 /** Store data to mp4 file from structure.
  *
- *  The metadata structure's state is pushed out to the mp4 file,
+ *  The tags structure state is pushed out to the mp4 file,
  *  adding tags if needed, removing tags if needed, and updating
  *  the values to modified tags.
  *
- *  @param tags metadata structure to store (read) from.
+ *  @param tags structure to store (read) from.
  */
 MP4V2_EXPORT
-void MP4MetadataStore( const MP4Metadata* tags );
+void MP4TagsStore( const MP4Tags* tags );
 
-/** Free metadata convenience structure.
+/** Free tags convenience structure.
+ *
  *  This function frees any memory associated with the structure.
  *
- *  @param tags metadata structure to destroy.
+ *  @param tags structure to destroy.
  */
 MP4V2_EXPORT
-void MP4MetadataFree( const MP4Metadata* tags );
+void MP4TagsFree( const MP4Tags* tags );
 
-MP4V2_EXPORT void MP4MetadataSetName  ( const MP4Metadata*, const char* );
-MP4V2_EXPORT void MP4MetadataSetArtist    ( const MP4Metadata*, const char* );
-MP4V2_EXPORT void MP4MetadataSetAlbumArtist ( const MP4Metadata*, const char* );
-MP4V2_EXPORT void MP4MetadataSetAlbum ( const MP4Metadata*, const char* );
-MP4V2_EXPORT void MP4MetadataSetGrouping ( const MP4Metadata*, const char* );
-MP4V2_EXPORT void MP4MetadataSetComposer ( const MP4Metadata*, const char* );
-MP4V2_EXPORT void MP4MetadataSetComments ( const MP4Metadata*, const char* );
-MP4V2_EXPORT void MP4MetadataSetReleaseDate( const MP4Metadata*, const char* );
+MP4V2_EXPORT void MP4TagsSetName        ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetArtist      ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetAlbumArtist ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetAlbum       ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetGrouping    ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetComposer    ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetComments    ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetReleaseDate ( const MP4Tags*, const char* );
 
-MP4V2_EXPORT void MP4MetadataSetDescription  ( const MP4Metadata*, const char* );
+MP4V2_EXPORT void MP4TagsSetDescription( const MP4Tags*, const char* );
 
-MP4V2_EXPORT void MP4MetadataSetCopyright  ( const MP4Metadata*, const char* );
-MP4V2_EXPORT void MP4MetadataSetEncodingTool  ( const MP4Metadata*, const char* );
-MP4V2_EXPORT void MP4MetadataSetEncodedBy  ( const MP4Metadata*, const char* );
+MP4V2_EXPORT void MP4TagsSetCopyright    ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetEncodingTool ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetEncodedBy    ( const MP4Tags*, const char* );
 
 /** @} ***********************************************************************/
 

@@ -21,14 +21,14 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef MP4V2_IMPL_ITMF_METADATA_H
-#define MP4V2_IMPL_ITMF_METADATA_H
+#ifndef MP4V2_IMPL_ITMF_TAGS_H
+#define MP4V2_IMPL_ITMF_TAGS_H
 
 namespace mp4v2 { namespace impl { namespace itmf {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Metadata
+class Tags
 {
 public:
     static const string CODE_NAME;
@@ -125,14 +125,14 @@ public:
     string    iTunesAccount;
     uint32_t  cnID;
 public:
-    Metadata( MP4File& );
-    Metadata( MP4FileHandle );
-    ~Metadata();
+    Tags( MP4File& );
+    Tags( MP4FileHandle );
+    ~Tags();
 
-    void c_alloc ( MP4Metadata*& );
-    void c_fetch ( MP4Metadata*& );
-    void c_store ( MP4Metadata*& );
-    void c_free  ( MP4Metadata*& );
+    void c_alloc ( MP4Tags*& );
+    void c_fetch ( MP4Tags*& );
+    void c_store ( MP4Tags*& );
+    void c_free  ( MP4Tags*& );
 
     void setString  ( const char*, string&, const char*& );
     void setInteger ( const uint8_t*, uint8_t&, const uint8_t*& );
@@ -156,4 +156,4 @@ private:
 
 }}} // namespace mp4v2::impl::itmf
 
-#endif // MP4V2_IMPL_ITMF_METADATA_H
+#endif // MP4V2_IMPL_ITMF_TAGS_H

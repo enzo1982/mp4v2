@@ -205,23 +205,23 @@ extern "C" int
             return 5;
         }
         /* Read out the existing metadata */
-        const MP4Metadata* mdata = MP4MetadataAlloc( h );
+        const MP4Tags* mdata = MP4TagsAlloc( h );
 
         /* Remove any tags */
         if ( ELEMENT_OF(tags,OPT_REMOVE) ) {
             for ( const char *p = ELEMENT_OF(tags,OPT_REMOVE); *p; p++ ) {
                 switch ( *p ) {
                     case OPT_ALBUM:
-                        MP4MetadataSetAlbum( mdata, NULL );
+                        MP4TagsSetAlbum( mdata, NULL );
                         break;
                     case OPT_ARTIST:
-                        MP4MetadataSetArtist( mdata, NULL );
+                        MP4TagsSetArtist( mdata, NULL );
                         break;
                     case OPT_COMMENT:
-                        MP4MetadataSetComments( mdata, NULL );
+                        MP4TagsSetComments( mdata, NULL );
                         break;
                     case OPT_COPYRIGHT:
-                        MP4MetadataSetCopyright( mdata, NULL );
+                        MP4TagsSetCopyright( mdata, NULL );
                         break;
                     case OPT_DISK:
                         MP4DeleteMetadataDisk( h );
@@ -230,16 +230,16 @@ extern "C" int
                         MP4DeleteMetadataDisk( h );
                         break;
                     case OPT_ENCODEDBY:
-                        MP4MetadataSetEncodedBy( mdata, NULL );
+                        MP4TagsSetEncodedBy( mdata, NULL );
                         break;
                     case OPT_TOOL:
-                        MP4MetadataSetEncodingTool( mdata, NULL );
+                        MP4TagsSetEncodingTool( mdata, NULL );
                         break;
                     case OPT_GENRE:
                         MP4DeleteMetadataGenre( h );
                         break;
                     case OPT_GROUPING:
-                        MP4MetadataSetGrouping( mdata, NULL );
+                        MP4TagsSetGrouping( mdata, NULL );
                         break;
                     case OPT_HD:
                         MP4DeleteMetadataHDVideo( h );
@@ -251,19 +251,19 @@ extern "C" int
                         MP4DeleteMetadataMediaType( h );
                         break;
                     case OPT_DESCRIPTION:
-                        MP4MetadataSetDescription( mdata , NULL );
+                        MP4TagsSetDescription( mdata , NULL );
                         break;
                     case OPT_TVEPISODE:
                         MP4DeleteMetadataTVEpisode( h );
                         break;
                     case OPT_NAME:
-                        MP4MetadataSetName( mdata, NULL );
+                        MP4TagsSetName( mdata, NULL );
                         break;
                     case OPT_COMPOSER:
-                        MP4MetadataSetComposer( mdata, NULL );
+                        MP4TagsSetComposer( mdata, NULL );
                         break;
                     case OPT_RELEASEDATE:
-                        MP4MetadataSetReleaseDate( mdata, NULL );
+                        MP4TagsSetReleaseDate( mdata, NULL );
                         break;
                     case OPT_BPM:
                         MP4DeleteMetadataTempo( h );
@@ -278,7 +278,7 @@ extern "C" int
                         MP4DeleteMetadataCoverArt( h );
                         break;
                     case OPT_ALBUM_ARTIST:
-                        MP4MetadataSetAlbumArtist( mdata, NULL );
+                        MP4TagsSetAlbumArtist( mdata, NULL );
                         break ;
                 }
             }
@@ -310,28 +310,28 @@ extern "C" int
             if ( tags[i] ) {
                 switch ( i ) {
                     case OPT_ALBUM:
-                        MP4MetadataSetAlbum( mdata, tags[i] );
+                        MP4TagsSetAlbum( mdata, tags[i] );
                         break;
                     case OPT_ARTIST:
-                        MP4MetadataSetArtist( mdata, tags[i] );
+                        MP4TagsSetArtist( mdata, tags[i] );
                         break;
                     case OPT_COMMENT:
-                        MP4MetadataSetComments( mdata, tags[i] );
+                        MP4TagsSetComments( mdata, tags[i] );
                         break;
                     case OPT_COPYRIGHT:
-                        MP4MetadataSetCopyright( mdata, tags[i] );
+                        MP4TagsSetCopyright( mdata, tags[i] );
                         break;
                     case OPT_ENCODEDBY:
-                        MP4MetadataSetEncodedBy( mdata, tags[i] );
+                        MP4TagsSetEncodedBy( mdata, tags[i] );
                         break;
                     case OPT_TOOL:
-                        MP4MetadataSetEncodingTool( mdata, tags[i] );
+                        MP4TagsSetEncodingTool( mdata, tags[i] );
                         break;
                     case OPT_GENRE:
                         MP4SetMetadataGenre( h, tags[i] );
                         break;
                     case OPT_GROUPING:
-                        MP4MetadataSetGrouping( mdata, tags[i] );
+                        MP4TagsSetGrouping( mdata, tags[i] );
                         break;
                     case OPT_HD:
                         MP4SetMetadataHDVideo( h, nums[i] );
@@ -346,25 +346,25 @@ extern "C" int
                         break;
                     }
                     case OPT_DESCRIPTION:
-                        MP4MetadataSetDescription( mdata, tags[i] );
+                        MP4TagsSetDescription( mdata, tags[i] );
                         break;
                     case OPT_TVEPISODE:
                         MP4SetMetadataTVEpisode( h, nums[i] );
                         break;
                     case OPT_NAME:
-                        MP4MetadataSetName( mdata, tags[i] );
+                        MP4TagsSetName( mdata, tags[i] );
                         break;
                     case OPT_COMPOSER:
-                        MP4MetadataSetComposer( mdata, tags[i] );
+                        MP4TagsSetComposer( mdata, tags[i] );
                         break;
                     case OPT_RELEASEDATE:
-                        MP4MetadataSetReleaseDate( mdata, tags[i] );
+                        MP4TagsSetReleaseDate( mdata, tags[i] );
                         break;
                     case OPT_BPM:
                         MP4SetMetadataTempo( h, nums[i] );
                         break;
                     case OPT_ALBUM_ARTIST:
-                        MP4MetadataSetAlbumArtist( mdata, tags[i] );
+                        MP4TagsSetAlbumArtist( mdata, tags[i] );
                         break;
                     case OPT_PICTURE:
                     {
@@ -392,9 +392,9 @@ extern "C" int
             }
         }
         /* Write out all tag modifications */
-        MP4MetadataStore( mdata );
+        MP4TagsStore( mdata );
         
-        MP4MetadataFree( mdata );
+        MP4TagsFree( mdata );
         MP4Close( h );
     } /* end while optind < argc */
     return 0;

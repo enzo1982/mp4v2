@@ -82,7 +82,7 @@ extern "C" int main( int argc, char** argv )
         fputs( info, stdout );
         MP4FileHandle mp4file = MP4Read( mp4FileName ); //, MP4_DETAILS_ERROR);
         if ( mp4file != MP4_INVALID_FILE_HANDLE ) {
-            const MP4Metadata* tags = MP4MetadataAlloc( mp4file );
+            const MP4Tags* tags = MP4TagsAlloc( mp4file );
             char *value;
             uint16_t numvalue, numvalue2;
             if ( tags->name ) {
@@ -218,7 +218,7 @@ extern "C" int main( int argc, char** argv )
             if ( tags->purchaseDate ) {
                 fprintf( stdout, " Purchase Date: %s\n", tags->purchaseDate );
             }
-            MP4MetadataFree( tags );
+            MP4TagsFree( tags );
             MP4Close( mp4file );
         }
         free( info );
