@@ -3138,8 +3138,15 @@ bool MP4File::GetTrackLanguage( MP4TrackId trackId, char* code )
         return false;
 
     MP4LanguageCodeProperty& lang = *static_cast<MP4LanguageCodeProperty*>(prop);
-    memcpy( code, lang.GetValue(), 3 );
-    code[3] = '\0';
+    string slang;
+    bmff::enumLanguageCode.toString( lang.GetValue(), slang );
+    if( slang.length() != 3 ) {
+        memset( code, '\0', 4 );
+    }
+    else {
+        memcpy( code, slang.c_str(), 3 );
+        code[3] = '\0';
+    }
 
     return true;
 }
@@ -3159,7 +3166,7 @@ bool MP4File::SetTrackLanguage( MP4TrackId trackId, const char* code )
         return false;
 
     MP4LanguageCodeProperty& lang = *static_cast<MP4LanguageCodeProperty*>(prop);
-    lang.SetValue( code );
+    lang.SetValue( bmff::enumLanguageCode.toType( code ));
 
     return true;
 }

@@ -555,11 +555,11 @@ protected:
 
 class MP4LanguageCodeProperty : public MP4Property {
 private:
-    string _value;
-    bool   _invalid;
+    bmff::LanguageCode _value;
 
 public:
-    explicit MP4LanguageCodeProperty( const char* , const string& = "und" );
+    explicit MP4LanguageCodeProperty( const char* , bmff::LanguageCode = bmff::ILC_UND );
+    MP4LanguageCodeProperty( const char* , const string& );
 
     MP4PropertyType GetType();
     uint32_t        GetCount();
@@ -567,8 +567,9 @@ public:
     void            Read( MP4File*, uint32_t = 0 );
     void            Write( MP4File*, uint32_t = 0 );
     void            Dump( FILE*, uint8_t, bool, uint32_t = 0 );
-    const char*     GetValue();
-    void            SetValue( const string& );
+
+    bmff::LanguageCode GetValue();
+    void               SetValue( bmff::LanguageCode );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

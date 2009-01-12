@@ -1005,10 +1005,16 @@ void MP4DescriptorProperty::Dump(FILE* pFile, uint8_t indent,
 
 ///////////////////////////////////////////////////////////////////////////////
 
+MP4LanguageCodeProperty::MP4LanguageCodeProperty( const char* name, bmff::LanguageCode value )
+    : MP4Property( name )
+{
+    SetValue( value );
+}
+
 MP4LanguageCodeProperty::MP4LanguageCodeProperty( const char* name, const string& code )
     : MP4Property( name )
 {
-    SetValue( code );
+    SetValue( bmff::enumLanguageCode.toType( code ));
 }
 
 void
@@ -1016,15 +1022,17 @@ MP4LanguageCodeProperty::Dump( FILE* file, uint8_t indent, bool dumpImplicits, u
 {
     Indent( file, indent );
 
-    const uint16_t data =
-          (((_value[0] - 0x60) & 0x001f) << 10)
-        | (((_value[1] - 0x60) & 0x001f) <<  5)
-        | (((_value[2] - 0x60) & 0x001f)      );
+    uint16_t data = 0;
 
-    if( _invalid )
-        fprintf( file, "%s = %s (0x%04x) (invalid)\n", m_name, _value.c_str(), data );
-    else
-        fprintf( file, "%s = %s (0x%04x)\n", m_name, _value.c_str(), data );
+    string svalue;
+    bmff::enumLanguageCode.toString( _value, svalue );
+    if( svalue.length() == 3 ) {
+        data = (((svalue[0] - 0x60) & 0x001f) << 10)
+             | (((svalue[1] - 0x60) & 0x001f) <<  5)
+             | (((svalue[2] - 0x60) & 0x001f)      );
+    }
+
+    fprintf( file, "%s = %s (0x%04x)\n", m_name, bmff::enumLanguageCode.toString( _value, true ).c_str(), data );
 }
 
 uint32_t
@@ -1039,10 +1047,10 @@ MP4LanguageCodeProperty::GetType()
     return LanguageCodeProperty;
 }
 
-const char*
+bmff::LanguageCode
 MP4LanguageCodeProperty::GetValue()
 {
-    return _value.c_str();
+    return _value;
 }
 
 void
@@ -1055,7 +1063,7 @@ MP4LanguageCodeProperty::Read( MP4File* file, uint32_t index )
     code[1] = ((data & 0x03e0) >>  5) + 0x60;
     code[2] = ((data & 0x001f)      ) + 0x60;
 
-    SetValue( string( code, sizeof(code) ));
+    SetValue( bmff::enumLanguageCode.toType( string( code, sizeof(code) )));
 }
 
 void
@@ -1065,19 +1073,23 @@ MP4LanguageCodeProperty::SetCount( uint32_t count )
 }
 
 void
-MP4LanguageCodeProperty::SetValue( const string& value )
+MP4LanguageCodeProperty::SetValue( bmff::LanguageCode value )
 {
     _value = value;
-    _invalid = value[0] == 0x60 || value[1] == 0x60 || value[2] == 0x60;
 }
 
 void
 MP4LanguageCodeProperty::Write( MP4File* file, uint32_t index )
 {
-    const uint16_t data =
-          (((_value[0] - 0x60) & 0x001f) << 10)
-        | (((_value[1] - 0x60) & 0x001f) <<  5)
-        | (((_value[2] - 0x60) & 0x001f)      );
+    uint16_t data = 0;
+
+    string svalue;
+    bmff::enumLanguageCode.toString( _value, svalue );
+    if( svalue.length() == 3 ) {
+        data = (((svalue[0] - 0x60) & 0x001f) << 10)
+             | (((svalue[1] - 0x60) & 0x001f) <<  5)
+             | (((svalue[2] - 0x60) & 0x001f)      );
+    }
 
     file->WriteBits( data, 16 );
 }
