@@ -37,10 +37,41 @@ CoverArtBox::Item::Item()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+CoverArtBox::Item::Item( const Item& rhs )
+    : type     ( BT_UNDEFINED )
+    , buffer   ( NULL )
+    , size     ( 0 )
+    , autofree ( false )
+{
+    operator=( rhs );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 CoverArtBox::Item::~Item()
 {
     if( autofree && buffer )
         free( buffer );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+CoverArtBox::Item&
+CoverArtBox::Item::operator=( const Item& rhs )
+{
+    type     = rhs.type;
+    size     = rhs.size;
+    autofree = rhs.autofree;
+
+    if( rhs.autofree ) {
+        buffer = new uint8_t[rhs.size];
+        memcpy( buffer, rhs.buffer, rhs.size );
+    }
+    else {
+        buffer = rhs.buffer;
+    }
+
+    return *this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -129,7 +160,7 @@ CoverArtBox::get( MP4FileHandle file, Item& item, uint32_t index )
 
     metadata->GetValue( &item.buffer, &item.size );
     item.autofree = true;
-    item.type = static_cast<BasicType>( data->typeCode.GetValue() );
+    item.type = data->typeCode.GetValue();
 
     return false;
 }
@@ -194,7 +225,7 @@ CoverArtBox::set( MP4FileHandle file, const Item& item, uint32_t index )
     if( !(index < covr->GetNumberOfChildAtoms()) )
         return true;
 
-    MP4Atom* data = covr->GetChildAtom( index );
+    MP4DataAtom* data = static_cast<MP4DataAtom*>( covr->GetChildAtom( index ));
     if( !data )
         return true;
 
@@ -208,7 +239,7 @@ CoverArtBox::set( MP4FileHandle file, const Item& item, uint32_t index )
         : item.type;
 
     // set type; note: not really flags due to b0rked atom structure
-    data->SetFlags( final_type );
+    data->typeCode.SetValue( final_type );
     metadata->SetValue( item.buffer, item.size );
 
     return false;

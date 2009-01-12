@@ -458,6 +458,24 @@ void MP4AddIPodUUID(
 
 /*****************************************************************************/
 
+/** Enumeration of possible MP4TagArtwork::type values. */
+typedef enum MP4TagArtworkType_e
+{
+    MP4_ART_UNDEFINED = 0,
+    MP4_ART_BMP       = 1,
+    MP4_ART_GIF       = 2,
+    MP4_ART_JPEG      = 3,
+    MP4_ART_PNG       = 4,
+} MP4TagArtworkType;
+
+/** Data object representing a single piece of artwork. */
+typedef struct MP4TagArtwork_s
+{
+    const void*       data; /**< raw picture data */
+    uint32_t          size; /**< data size in bytes */
+    MP4TagArtworkType type; /**< data type */
+} MP4TagArtwork;
+
 /** Tags <b>convenience</b> structure.
  *
  *  This structure is used in the tags convenience API which allows for
@@ -471,46 +489,7 @@ void MP4AddIPodUUID(
  *  is responsible for re-fetching the data in this structure.
  *
  *  Example usage:
- *
-@code
-// ...MP4 file has been opened by other code for modification
-
-// allocate structure
-const MP4Tags* m = MP4TagsAlloc();
-
-// fetch data from MP4 file and populate structure
-MP4TagsFetch( m, file );
-
-// show tag name if present
-if( m->name )
-    printf( "name: %s\n", m->name );
-
-// show tag artist if present
-if( m->artist )
-    printf( "artist: %s\n", m->artist );
-
-// set a new name
-MP4TagsSetName( m, "This is our new name" );
-
-// remove tag artist
-MP4TagsSetArtist( m, NULL );
-
-// show tag name if present
-if( m->name )
-    printf( "name: %s\n", m->name );
-
-// show tag artist if present
-if( m->artist )
-    printf( "artist: %s\n", m->artist );
-
-// push data from structure to MP4 file
-MP4TagsStore( m, file );
-
-// free memory associated with structure
-MP4TagsFree( m );
-
-// ...MP4 file is eventually closed (written-out)
-@endcode
+ *  @include example/tags/tags.c
  */
 typedef struct MP4Tags_s
 {
@@ -545,12 +524,15 @@ typedef struct MP4Tags_s
     const char*     sortComposer;
     const char*     sortTVShow;
 
+    const MP4TagArtwork* artwork;
+    uint32_t             artworkSize;
+
     const char*     copyright;
     const char*     encodingTool;
     const char*     encodedBy;
     const char*     purchaseDate;
  
-    const char*     keywords;  //TODO: Needs testing
+    const char*     keywords;  /* TODO: Needs testing */
     const char*     category;
     const uint8_t*  podcast;
     
@@ -621,6 +603,10 @@ MP4V2_EXPORT void MP4TagsSetDescription( const MP4Tags*, const char* );
 MP4V2_EXPORT void MP4TagsSetCopyright    ( const MP4Tags*, const char* );
 MP4V2_EXPORT void MP4TagsSetEncodingTool ( const MP4Tags*, const char* );
 MP4V2_EXPORT void MP4TagsSetEncodedBy    ( const MP4Tags*, const char* );
+
+MP4V2_EXPORT void MP4TagsAddArtwork    ( const MP4Tags*, MP4TagArtwork* );
+MP4V2_EXPORT void MP4TagsSetArtwork    ( const MP4Tags*, uint32_t, MP4TagArtwork* );
+MP4V2_EXPORT void MP4TagsRemoveArtwork ( const MP4Tags*, uint32_t );
 
 /** @} ***********************************************************************/
 

@@ -1036,6 +1036,16 @@ extern "C" {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void
+MP4TagsAddArtwork( const MP4Tags* tags, MP4TagArtwork* artwork )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(tags->__handle);
+    MP4Tags* c = const_cast<MP4Tags*>(tags);
+    cpp.c_addArtwork( c, *artwork );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 const MP4Tags*
 MP4TagsAlloc()
 {
@@ -1079,6 +1089,26 @@ MP4TagsFetch( const MP4Tags* tags, MP4FileHandle hFile )
 ///////////////////////////////////////////////////////////////////////////////
 
 void
+MP4TagsRemoveArtwork( const MP4Tags* tags, uint32_t index )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(tags->__handle);
+    MP4Tags* c = const_cast<MP4Tags*>(tags);
+    cpp.c_removeArtwork( c, index );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4TagsSetArtwork( const MP4Tags* tags, uint32_t index, MP4TagArtwork* artwork )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(tags->__handle);
+    MP4Tags* c = const_cast<MP4Tags*>(tags);
+    cpp.c_setArtwork( c, index, *artwork );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
 MP4TagsStore( const MP4Tags* tags, MP4FileHandle hFile )
 {
     itmf::Tags* cpp = static_cast<itmf::Tags*>(tags->__handle);
@@ -1100,7 +1130,7 @@ MP4TagsSetName( const MP4Tags* m, const char* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
     MP4Tags& c = *const_cast<MP4Tags*>(m);
-    cpp.setString( value, cpp.name, c.name );
+    cpp.c_setString( value, cpp.name, c.name );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1110,7 +1140,7 @@ MP4TagsSetArtist( const MP4Tags* m, const char* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
     MP4Tags& c = *const_cast<MP4Tags*>(m);
-    cpp.setString( value, cpp.artist, c.artist );
+    cpp.c_setString( value, cpp.artist, c.artist );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1120,7 +1150,7 @@ MP4TagsSetAlbumArtist( const MP4Tags* m, const char* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
     MP4Tags& c = *const_cast<MP4Tags*>(m);
-    cpp.setString( value, cpp.albumArtist, c.albumArtist );
+    cpp.c_setString( value, cpp.albumArtist, c.albumArtist );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1130,7 +1160,7 @@ MP4TagsSetAlbum( const MP4Tags* m, const char* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
     MP4Tags& c = *const_cast<MP4Tags*>(m);
-    cpp.setString( value, cpp.album, c.album );
+    cpp.c_setString( value, cpp.album, c.album );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1140,7 +1170,7 @@ MP4TagsSetGrouping( const MP4Tags* m, const char* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
     MP4Tags& c = *const_cast<MP4Tags*>(m);
-    cpp.setString( value, cpp.grouping, c.grouping );
+    cpp.c_setString( value, cpp.grouping, c.grouping );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1150,7 +1180,7 @@ MP4TagsSetComposer( const MP4Tags* m, const char* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
     MP4Tags& c = *const_cast<MP4Tags*>(m);
-    cpp.setString( value, cpp.composer, c.composer );
+    cpp.c_setString( value, cpp.composer, c.composer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1160,7 +1190,7 @@ MP4TagsSetComments( const MP4Tags* m, const char* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
     MP4Tags& c = *const_cast<MP4Tags*>(m);
-    cpp.setString( value, cpp.comments, c.comments );
+    cpp.c_setString( value, cpp.comments, c.comments );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1170,7 +1200,7 @@ MP4TagsSetReleaseDate( const MP4Tags* m, const char* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
     MP4Tags& c = *const_cast<MP4Tags*>(m);
-    cpp.setString( value, cpp.releaseDate, c.releaseDate );
+    cpp.c_setString( value, cpp.releaseDate, c.releaseDate );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1180,7 +1210,7 @@ MP4TagsSetDescription( const MP4Tags* m, const char* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
     MP4Tags& c = *const_cast<MP4Tags*>(m);
-    cpp.setString( value, cpp.description, c.description );
+    cpp.c_setString( value, cpp.description, c.description );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1190,7 +1220,7 @@ MP4TagsSetCopyright( const MP4Tags* m, const char* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
     MP4Tags& c = *const_cast<MP4Tags*>(m);
-    cpp.setString( value, cpp.copyright, c.copyright );
+    cpp.c_setString( value, cpp.copyright, c.copyright );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1200,7 +1230,7 @@ MP4TagsSetEncodingTool( const MP4Tags* m, const char* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
     MP4Tags& c = *const_cast<MP4Tags*>(m);
-    cpp.setString( value, cpp.encodingTool, c.encodingTool );
+    cpp.c_setString( value, cpp.encodingTool, c.encodingTool );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1210,7 +1240,7 @@ MP4TagsSetEncodedBy( const MP4Tags* m, const char* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
     MP4Tags& c = *const_cast<MP4Tags*>(m);
-    cpp.setString( value, cpp.encodedBy, c.encodedBy );
+    cpp.c_setString( value, cpp.encodedBy, c.encodedBy );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -106,6 +106,8 @@ public:
     string    sortComposer;
     string    sortTVShow;
 
+    CoverArtBox::ItemList artwork;
+
     string    copyright;
     string    encodingTool;  
     string    encodedBy;
@@ -132,9 +134,13 @@ public:
     void c_store ( MP4Tags*&, MP4FileHandle );
     void c_free  ( MP4Tags*& );
 
-    void setString  ( const char*, string&, const char*& );
-    void setInteger ( const uint8_t*, uint8_t&, const uint8_t*& );
-    void setInteger ( const uint32_t*, uint32_t&, const uint32_t*& );
+    void c_addArtwork    ( MP4Tags*&, MP4TagArtwork& );
+    void c_setArtwork    ( MP4Tags*&, uint32_t, MP4TagArtwork& );
+    void c_removeArtwork ( MP4Tags*&, uint32_t );
+
+    void c_setString  ( const char*, string&, const char*& );
+    void c_setInteger ( const uint8_t*, uint8_t&, const uint8_t*& );
+    void c_setInteger ( const uint32_t*, uint32_t&, const uint32_t*& );
 
 private:
     void fetchString  ( MP4File&, const string&, string&, const char*& );
@@ -148,6 +154,8 @@ private:
     void storeString  ( MP4File&, const string&, const string&, const char* );
     void storeInteger ( MP4File&, const string&, uint8_t, const uint8_t* );
     void storeInteger ( MP4File&, const string&, uint32_t, const uint32_t* );
+
+    void updateArtworkShadow( MP4Tags*& );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

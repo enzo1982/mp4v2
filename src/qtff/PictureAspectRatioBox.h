@@ -42,7 +42,7 @@ namespace mp4v2 { namespace impl { namespace qtff {
 class MP4V2_EXPORT PictureAspectRatioBox
 {
 public:
-    /// Opaque data object for pasp-box item.
+    /// Data object for pasp-box item.
     /// This object correlates to one pasp-box (Picture Aspect Ratio Box).
     class MP4V2_EXPORT Item
     {
