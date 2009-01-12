@@ -475,8 +475,11 @@ void MP4AddIPodUUID(
 @code
 // ...MP4 file has been opened by other code for modification
 
-// allocate structure and pull data from file
-const MP4Tags* m = MP4TagsAlloc( file );
+// allocate structure
+const MP4Tags* m = MP4TagsAlloc();
+
+// fetch data from MP4 file and populate structure
+MP4TagsFetch( m, file );
 
 // show tag name if present
 if( m->name )
@@ -500,8 +503,8 @@ if( m->name )
 if( m->artist )
     printf( "artist: %s\n", m->artist );
 
-// push data to MP4 file atom structure
-MP4TagsStore( m );
+// push data from structure to MP4 file
+MP4TagsStore( m, file );
 
 // free memory associated with structure
 MP4TagsFree( m );
@@ -562,43 +565,42 @@ typedef struct MP4Tags_s
 
 /** Allocate tags convenience structure for reading and settings tags.
  *
- *  This function allocates a new structure for reading and setting of
- *  metadata tags and populates the structure by automatically invoking
- *  MP4TagsFetch(). It is the caller's responsibility to free the
- *  structure with MP4TagsFree().
+ *  This function allocates a new structure which represents a snapshot
+ *  of all the tags therein, tracking if the tag is missing,
+ *  or present and with value. It is the caller's responsibility to free
+ *  the structure with MP4TagsFree().
  *
- *  @param hFile handle of file to operate upon.
- *
- *  @return convenience structure associated with file.
+ *  @return structure with all tags missing.
  */
 MP4V2_EXPORT
-const MP4Tags* MP4TagsAlloc( MP4FileHandle hFile );
+const MP4Tags* MP4TagsAlloc();
 
 /** Fetch data from mp4 file and populate structure.
  *
  *  The tags structure and its hidden data-cache is updated to
- *  reflect the actual tags values found in the file to which <b>tags</b>
- *  was associated to during allocation.
+ *  reflect the actual tags values found in the <b>hFile</b>.
  *
  *  @param tags structure to fetch (write) into.
+ *  @param hFile handle of file to fetch data from.
  */
 MP4V2_EXPORT
-void MP4TagsFetch( const MP4Tags* tags );
+void MP4TagsFetch( const MP4Tags* tags, MP4FileHandle hFile );
 
 /** Store data to mp4 file from structure.
  *
- *  The tags structure state is pushed out to the mp4 file,
+ *  The tags structure is pushed out to the mp4 file,
  *  adding tags if needed, removing tags if needed, and updating
  *  the values to modified tags.
  *
  *  @param tags structure to store (read) from.
+ *  @param hFile handle of file to store data to.
  */
 MP4V2_EXPORT
-void MP4TagsStore( const MP4Tags* tags );
+void MP4TagsStore( const MP4Tags* tags, MP4FileHandle hFile );
 
 /** Free tags convenience structure.
  *
- *  This function frees any memory associated with the structure.
+ *  This function frees memory associated with the structure.
  *
  *  @param tags structure to destroy.
  */

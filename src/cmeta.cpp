@@ -1037,34 +1037,21 @@ extern "C" {
 ///////////////////////////////////////////////////////////////////////////////
 
 const MP4Tags*
-MP4TagsAlloc( MP4FileHandle file )
+MP4TagsAlloc()
 {
     MP4Tags* result = NULL;
-
-    if( !MP4_IS_VALID_FILE_HANDLE( file ))
-        return result;
-
-    try {
-        itmf::Tags& m = *new itmf::Tags( file );
-        m.c_alloc( result );
-        return result;
-    }
-    catch( MP4Error* e ) {
-        VERBOSE_ERROR( static_cast<MP4File*>(file)->GetVerbosity(), e->Print() );
-        delete e;
-    }
-
-    delete result;
-    return NULL;
+    itmf::Tags& m = *new itmf::Tags();
+    m.c_alloc( result );
+    return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void
-MP4TagsFree( const MP4Tags* m )
+MP4TagsFree( const MP4Tags* tags )
 {
-    itmf::Tags* cpp = static_cast<itmf::Tags*>(m->__handle);
-    MP4Tags* c = const_cast<MP4Tags*>(m);
+    itmf::Tags* cpp = static_cast<itmf::Tags*>(tags->__handle);
+    MP4Tags* c = const_cast<MP4Tags*>(tags);
     cpp->c_free( c );
     delete cpp;
 }
@@ -1072,16 +1059,19 @@ MP4TagsFree( const MP4Tags* m )
 ///////////////////////////////////////////////////////////////////////////////
 
 void
-MP4TagsFetch( const MP4Tags* m )
+MP4TagsFetch( const MP4Tags* tags, MP4FileHandle hFile )
 {
-    itmf::Tags* cpp = static_cast<itmf::Tags*>(m->__handle);
-    MP4Tags* c = const_cast<MP4Tags*>(m);
+    if( !MP4_IS_VALID_FILE_HANDLE( hFile ))
+        return;
+
+    itmf::Tags* cpp = static_cast<itmf::Tags*>(tags->__handle);
+    MP4Tags* c = const_cast<MP4Tags*>(tags);
 
     try {
-        cpp->c_fetch( c );
+        cpp->c_fetch( c, hFile );
     }
     catch( MP4Error* e ) {
-        VERBOSE_ERROR( cpp->file.GetVerbosity(), e->Print() );
+        VERBOSE_ERROR( static_cast<MP4File*>(hFile)->GetVerbosity(), e->Print() );
         delete e;
     }
 }
@@ -1089,16 +1079,16 @@ MP4TagsFetch( const MP4Tags* m )
 ///////////////////////////////////////////////////////////////////////////////
 
 void
-MP4TagsStore( const MP4Tags* m )
+MP4TagsStore( const MP4Tags* tags, MP4FileHandle hFile )
 {
-    itmf::Tags* cpp = static_cast<itmf::Tags*>(m->__handle);
-    MP4Tags* c = const_cast<MP4Tags*>(m);
+    itmf::Tags* cpp = static_cast<itmf::Tags*>(tags->__handle);
+    MP4Tags* c = const_cast<MP4Tags*>(tags);
 
     try {
-        cpp->c_store( c );
+        cpp->c_store( c, hFile );
     }
     catch( MP4Error* e ) {
-        VERBOSE_ERROR( cpp->file.GetVerbosity(), e->Print() );
+        VERBOSE_ERROR( static_cast<MP4File*>(hFile)->GetVerbosity(), e->Print() );
         delete e;
     }
 }

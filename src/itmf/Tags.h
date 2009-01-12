@@ -75,10 +75,8 @@ public:
     
     static const string CODE_ITUNESACCOUNT;
     static const string CODE_CNID;
+
 public:
-    MP4File& file;
-
-
     string    name;
     string    artist;
     string    albumArtist;
@@ -124,14 +122,14 @@ public:
     
     string    iTunesAccount;
     uint32_t  cnID;
+
 public:
-    Tags( MP4File& );
-    Tags( MP4FileHandle );
+    Tags();
     ~Tags();
 
     void c_alloc ( MP4Tags*& );
-    void c_fetch ( MP4Tags*& );
-    void c_store ( MP4Tags*& );
+    void c_fetch ( MP4Tags*&, MP4FileHandle );
+    void c_store ( MP4Tags*&, MP4FileHandle );
     void c_free  ( MP4Tags*& );
 
     void setString  ( const char*, string&, const char*& );
@@ -139,17 +137,17 @@ public:
     void setInteger ( const uint32_t*, uint32_t&, const uint32_t*& );
 
 private:
-    void fetchString  ( const string&, string&, const char*& );
-    void fetchInteger ( const string&, uint8_t&, const uint8_t*& );
-    void fetchInteger ( const string&, uint16_t&, const uint16_t*& );
-    void fetchInteger ( const string&, uint32_t&, const uint32_t*& );
-    void fetchGenre   ( string&, const char*& );
+    void fetchString  ( MP4File&, const string&, string&, const char*& );
+    void fetchInteger ( MP4File&, const string&, uint8_t&, const uint8_t*& );
+    void fetchInteger ( MP4File&, const string&, uint16_t&, const uint16_t*& );
+    void fetchInteger ( MP4File&, const string&, uint32_t&, const uint32_t*& );
+    void fetchGenre   ( MP4File&, string&, const char*& );
 
-    bool fetchData ( const string&, uint8_t*&, uint32_t& );
+    bool fetchData ( MP4File&, const string&, uint8_t*&, uint32_t& );
 
-    void storeString  ( const string&, const string&, const char* );
-    void storeInteger ( const string&, uint8_t, const uint8_t* );
-    void storeInteger ( const string&, uint32_t, const uint32_t* );
+    void storeString  ( MP4File&, const string&, const string&, const char* );
+    void storeInteger ( MP4File&, const string&, uint8_t, const uint8_t* );
+    void storeInteger ( MP4File&, const string&, uint32_t, const uint32_t* );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

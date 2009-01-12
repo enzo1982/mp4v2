@@ -205,7 +205,8 @@ extern "C" int
             return 5;
         }
         /* Read out the existing metadata */
-        const MP4Tags* mdata = MP4TagsAlloc( h );
+        const MP4Tags* mdata = MP4TagsAlloc();
+        MP4TagsFetch( mdata, h );
 
         /* Remove any tags */
         if ( ELEMENT_OF(tags,OPT_REMOVE) ) {
@@ -391,9 +392,8 @@ extern "C" int
                 }
             }
         }
-        /* Write out all tag modifications */
-        MP4TagsStore( mdata );
-        
+        /* Write out all tag modifications, free and close */
+        MP4TagsStore( mdata, h );
         MP4TagsFree( mdata );
         MP4Close( h );
     } /* end while optind < argc */
