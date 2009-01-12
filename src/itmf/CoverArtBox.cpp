@@ -119,7 +119,7 @@ CoverArtBox::get( MP4FileHandle file, Item& item, uint32_t index )
     if( !(index < covr->GetNumberOfChildAtoms()) )
         return true;
 
-    MP4Atom* data = covr->GetChildAtom( index );
+    MP4DataAtom* data = static_cast<MP4DataAtom*>( covr->GetChildAtom( index ));
     if( !data )
         return true;
 
@@ -129,7 +129,7 @@ CoverArtBox::get( MP4FileHandle file, Item& item, uint32_t index )
 
     metadata->GetValue( &item.buffer, &item.size );
     item.autofree = true;
-    item.type = static_cast<BasicType>( data->GetFlags() );
+    item.type = static_cast<BasicType>( data->typeCode.GetValue() );
 
     return false;
 }
