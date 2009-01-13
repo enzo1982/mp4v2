@@ -513,14 +513,17 @@ bool MP4File::GetMetadataGenre(char** value)
     unsigned char *val = NULL;
     uint32_t valSize = 0;
     const char *t = "moov.udta.meta.ilst.gnre";
-    const char *s = "moov.udta.meta.ilst.gnre.data.metadata";
+    const char *t2 = "moov.udta.meta.ilst.\251gen";    
 
     *value = NULL;
 
     MP4Atom *gnre = FindAtom(t);
+    MP4Atom *cgen = FindAtom(t2);
 
     if (gnre)
     {
+        const char *s = "moov.udta.meta.ilst.gnre.data.metadata";
+        
         GetBytesProperty(s, (uint8_t**)&val, &valSize);
 
         if (valSize != 2) {
@@ -536,7 +539,7 @@ bool MP4File::GetMetadataGenre(char** value)
         (void)DeleteMetadataAtom( "gnre" );
         free(val);
         return true;
-    } else {
+     } else if (cgen) {
         const char *s2 = "moov.udta.meta.ilst.\251gen.data.metadata";
 
         val = NULL;
@@ -557,7 +560,7 @@ bool MP4File::GetMetadataGenre(char** value)
             CHECK_AND_FREE(val);
         }
     }
-
+    free(val);
     return false;
 }
 

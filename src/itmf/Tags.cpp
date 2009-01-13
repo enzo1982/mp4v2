@@ -72,12 +72,7 @@ Tags::c_fetch( MP4Tags*& tags, MP4FileHandle hFile )
     fetchString( file, CODE_GROUPING,     grouping,     c.grouping );
     fetchString( file, CODE_COMPOSER,     composer,     c.composer );
     fetchString( file, CODE_COMMENTS,     comments,     c.comments );
-
-    // TODO: fix fetchGenre; or more specifically MP4File::GetMetadataGenre()
-    // which always throws an exception if the tag is not present.
-#if 0
     fetchGenre( file, genre, c.genre );
-#endif
 
     fetchString  ( file, CODE_RELEASEDATE,     releaseDate,     c.releaseDate );
     fetchInteger ( file, CODE_BEATSPERMINUTE,  beatsPerMinute,  c.beatsPerMinute );
@@ -309,8 +304,13 @@ Tags::fetchGenre( MP4File& file, string& cpp, const char*& c )
     char* value;
     file.GetMetadataGenre( &value );
 
-    cpp = value;
-    c = cpp.c_str();
+    if ( value != NULL ) { 
+       cpp = value;
+       c = cpp.c_str();    
+    } else {
+        cpp.clear();
+        c = NULL;
+    }
 
     free( value );
 }

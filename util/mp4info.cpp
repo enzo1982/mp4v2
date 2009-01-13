@@ -127,12 +127,8 @@ extern "C" int main( int argc, char** argv )
                 fprintf( stdout, " Disk: %u of %u\n", numvalue,
                          numvalue2 );
             }
-            if ( MP4GetMetadataGenre( mp4file, &value ) && value != NULL ) {
-                fprintf( stdout, " Genre: %s\n", value );
-                free( value );
-            }
             if ( tags->genre ) {
-                fprintf( stdout, " New Genre: %s\n", tags->genre );
+                fprintf( stdout, " Genre: %s\n", tags->genre );
             }
             if ( tags->grouping ) {
                 fprintf( stdout, " Grouping: %s\n", tags->grouping );
