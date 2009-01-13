@@ -60,7 +60,7 @@ MP4V2_EXPORT extern const EnumBasicType enumBasicType;
 ///////////////////////////////////////////////////////////////////////////////
 
 /// enumerated genre as defined in ID3v1 specification but +1 as per iTMF spec.
-/// Note values beyond 80 are Winamp extensions.
+/// Note values 80 and higher are Winamp extensions.
 enum GenreType {
     GENRE_UNDEFINED          = 0,
 

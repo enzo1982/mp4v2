@@ -31,11 +31,12 @@ int main( int argc, char** argv )
         printf( "artist: %s\n", tags->artist );
 
     // show artwork if present
-    printf( "artwork: %d items\n", tags->artworkSize );
-    for( i = 0; i < tags->artworkSize; i++ ) {
-        const MP4TagArtwork* art = tags->artwork + i;
+    printf( "artwork: %u items\n", tags->artworkCount );
+
+    // NOTE: artwork != NULL when artworkCount > 0
+    const MP4TagArtwork* art = tags->artwork;
+    for( i = 0; i < tags->artworkCount; i++, art++ )
         printf( "art[%d]: type=%d size=%u data=%p\n", i, art->type, art->size, art->data );
-    }
 
     // set a new name
     MP4TagsSetName( tags, "This is our new name" );

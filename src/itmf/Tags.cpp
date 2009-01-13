@@ -438,7 +438,7 @@ Tags::updateArtworkShadow( MP4Tags*& tags )
     if( tags->artwork ) {
         delete[] tags->artwork;
         tags->artwork = NULL;
-        tags->artworkSize = 0;
+        tags->artworkCount = 0;
     }
 
     if( artwork.empty() )
@@ -477,8 +477,8 @@ Tags::updateArtworkShadow( MP4Tags*& tags )
         }
     }
 
-    tags->artwork     = cartwork;
-    tags->artworkSize = max;
+    tags->artwork      = cartwork;
+    tags->artworkCount = max;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

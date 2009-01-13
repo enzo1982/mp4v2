@@ -525,7 +525,7 @@ typedef struct MP4Tags_s
     const char*     sortTVShow;
 
     const MP4TagArtwork* artwork;
-    uint32_t             artworkSize;
+    uint32_t             artworkCount;
 
     const char*     copyright;
     const char*     encodingTool;
