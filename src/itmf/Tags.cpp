@@ -301,13 +301,13 @@ Tags::fetchGenre( MP4File& file, string& cpp, const char*& c )
     cpp.clear();
     c = NULL;
 
-    char* value;
+    char* value = NULL;
     try {
         file.GetMetadataGenre( &value );
     }
     catch( MP4Error* e ) {
         delete e;
-        value = NULL;
+        CHECK_AND_FREE( value );
     }
 
     if ( value != NULL ) { 
@@ -318,7 +318,7 @@ Tags::fetchGenre( MP4File& file, string& cpp, const char*& c )
         c = NULL;
     }
 
-    free( value );
+    CHECK_AND_FREE( value );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
