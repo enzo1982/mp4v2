@@ -258,6 +258,9 @@ $(DOC.site.out.html): $(DOC.out.site/)%: $(DOC.out.articles/)html/%
 GOOGLE.out/      = $(top_builddir)/google/
 GOOGLE.repo.doc  = $(if $(filter release,$(PROJECT_repo_type)),$(PROJECT_version),trunk)
 
+google.clean:
+	rm -fr $(GOOGLE.out/)
+
 google.post: site wiki
 google.post: | $(GOOGLE.out/)
 google.post: google.rsync google.rm google.add google.propset
