@@ -58,7 +58,7 @@ int main( int argc, char** argv )
     // push data from structure to MP4 file
     MP4TagsStore( tags, file );
 
-    // free memory associated with structure and close>
+    // free memory associated with structure and close
     MP4TagsFree( tags );
     MP4Close( file );
 

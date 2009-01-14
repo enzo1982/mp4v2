@@ -37,5 +37,6 @@ This chapter is for the impatient or those just looking for a quick summary of a
 @include build/process.install.texi
 @include build/process.dist.texi
 @include build/process.doc.texi
+@include build/process.google.texi
 
 @include build/platforms.texi
