@@ -304,7 +304,11 @@ Tags::fetchGenre( MP4File& file, string& cpp, const char*& c )
     char* value;
     try {
         file.GetMetadataGenre( &value );
-    }    catch ( MP4Error*) {}
+    }
+    catch( MP4Error* e ) {
+        delete e;
+        value = NULL;
+    }
 
     if ( value != NULL ) { 
        cpp = value;
