@@ -73,7 +73,6 @@ Tags::c_fetch( MP4Tags*& tags, MP4FileHandle hFile )
     fetchString( file, CODE_COMPOSER,     composer,     c.composer );
     fetchString( file, CODE_COMMENTS,     comments,     c.comments );
     fetchGenre( file, genre, c.genre );
-
     fetchString  ( file, CODE_RELEASEDATE,     releaseDate,     c.releaseDate );
     fetchInteger ( file, CODE_BEATSPERMINUTE,  beatsPerMinute,  c.beatsPerMinute );
     fetchInteger ( file, CODE_COMPILATION,     compilation,     c.compilation );
@@ -250,6 +249,7 @@ Tags::c_store( MP4Tags*& tags, MP4FileHandle hFile )
     storeString( file, CODE_GROUPING,     grouping,     c.grouping );
     storeString( file, CODE_COMPOSER,     composer,     c.composer );
     storeString( file, CODE_COMMENTS,     comments,     c.comments );
+    storeGenre( file, genre, c.genre );
     storeString( file, CODE_RELEASEDATE,  releaseDate,  c.releaseDate );
     
     storeString( file, CODE_DESCRIPTION, description, c.description );
@@ -302,7 +302,9 @@ Tags::fetchGenre( MP4File& file, string& cpp, const char*& c )
     c = NULL;
 
     char* value;
-    file.GetMetadataGenre( &value );
+    try {
+        file.GetMetadataGenre( &value );
+    }    catch ( MP4Error*) {}
 
     if ( value != NULL ) { 
        cpp = value;
@@ -395,6 +397,17 @@ Tags::fetchString( MP4File& file, const string& code, string& cpp, const char*& 
     c = cpp.c_str();
 
     MP4Free( buffer );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+Tags::storeGenre( MP4File& file, const string& cpp, const char* c )
+{
+    if( c )
+        file.SetMetadataGenre( cpp.c_str() );
+    else
+        file.DeleteMetadataGenre();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

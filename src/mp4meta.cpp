@@ -556,11 +556,9 @@ bool MP4File::GetMetadataGenre(char** value)
             }
             free(val);
             return true;
-        } else {
-            CHECK_AND_FREE(val);
         }
     }
-    free(val);
+    CHECK_AND_FREE(val);
     return false;
 }
 

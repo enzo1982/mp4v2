@@ -234,16 +234,28 @@ MP4V2_EXPORT
 bool MP4DeleteMetadataDisk(
     MP4FileHandle hFile );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4SetMetadataGenre(
     MP4FileHandle hFile,
     const char*   genre );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4GetMetadataGenre(
     MP4FileHandle hFile,
     char**        genre );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4DeleteMetadataGenre(
     MP4FileHandle hFile );
@@ -596,6 +608,7 @@ MP4V2_EXPORT void MP4TagsSetAlbum       ( const MP4Tags*, const char* );
 MP4V2_EXPORT void MP4TagsSetGrouping    ( const MP4Tags*, const char* );
 MP4V2_EXPORT void MP4TagsSetComposer    ( const MP4Tags*, const char* );
 MP4V2_EXPORT void MP4TagsSetComments    ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetGenre       ( const MP4Tags*, const char* );
 MP4V2_EXPORT void MP4TagsSetReleaseDate ( const MP4Tags*, const char* );
 
 MP4V2_EXPORT void MP4TagsSetDescription( const MP4Tags*, const char* );

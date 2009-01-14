@@ -151,6 +151,7 @@ private:
 
     bool fetchData ( MP4File&, const string&, uint8_t*&, uint32_t& );
 
+    void storeGenre  ( MP4File&, const string&, const char* );
     void storeString  ( MP4File&, const string&, const string&, const char* );
     void storeInteger ( MP4File&, const string&, uint8_t, const uint8_t* );
     void storeInteger ( MP4File&, const string&, uint32_t, const uint32_t* );

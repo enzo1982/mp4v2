@@ -1196,6 +1196,16 @@ MP4TagsSetComments( const MP4Tags* m, const char* value )
 ///////////////////////////////////////////////////////////////////////////////
 
 void
+MP4TagsSetGenre( const MP4Tags* m, const char* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setString( value, cpp.genre, c.genre );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
 MP4TagsSetReleaseDate( const MP4Tags* m, const char* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);

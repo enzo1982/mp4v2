@@ -237,7 +237,7 @@ extern "C" int
                         MP4TagsSetEncodingTool( mdata, NULL );
                         break;
                     case OPT_GENRE:
-                        MP4DeleteMetadataGenre( h );
+                        MP4TagsSetGenre( mdata, NULL );
                         break;
                     case OPT_GROUPING:
                         MP4TagsSetGrouping( mdata, NULL );
@@ -329,7 +329,7 @@ extern "C" int
                         MP4TagsSetEncodingTool( mdata, tags[i] );
                         break;
                     case OPT_GENRE:
-                        MP4SetMetadataGenre( h, tags[i] );
+                        MP4TagsSetGenre( mdata, tags[i] );
                         break;
                     case OPT_GROUPING:
                         MP4TagsSetGrouping( mdata, tags[i] );
