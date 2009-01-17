@@ -42,4 +42,7 @@ Added new public-API: MP4SetTrackLanguage().
 @item
 Added support for GCC precompiled-headers on various *nix platforms to speed up builds as we are using quite a few C++ headers.
 
+@item
+Enhanced @command{mp4track} to facilitate modification of @{ enabled, inmovie, inpreview, altgroup, volume, width, height, language, hdlrname, udtaname @} properties.
+
 @end enumerate

@@ -29,8 +29,7 @@
 
 #include "src/impl.h"
 
-namespace mp4v2 {
-namespace impl {
+namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -1816,6 +1815,5 @@ void MP4Track::CalculateBytesPerSample ()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}
-} // namespace mp4v2::impl
+}} // namespace mp4v2::impl
 

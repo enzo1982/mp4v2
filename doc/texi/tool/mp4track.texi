@@ -1,40 +1,96 @@
 @chapter mp4track
-This tool is used to manage various aspects of individual tracks in an mp4 file. Some of the actions are mp4 (generic) while others may support standards based on mp4 files such as @samp{.m4a} or @samp{.m4v} files. The default is to try and act on all tracks in a file; but some actions will require an individual track be specified.
+This tool is used to manage various aspects of individual tracks in an mp4 file. Some of the actions are mp4 (generic) while others may support standards based on mp4 files such as @samp{.m4a} or @samp{.m4v} files. Each action has an appropriate scope upon which it acts. See individual actions for details. The following parameters are used to set scopes for actions:
 
 @table @samp
 @item --track-any
-act on any track (default).
-Specifies the scope of the action to operate on all, if applicable, tracks.
+act on any/all tracks.
 
 @item --track-index IDX
-act on track id INDEX.
-Specifies the scope of the action to operate on track-index IDX.
+act on a single track specified by @b{index} value.
+A track index is 0-based and counts upwards for each track available.
 
 @item --track-id ID
-act on track id ID.
-Specifies the scope of the action to operate on track-id ID.
+act on a single track specified by @b{id} value.
+A track id is a unique value assigned to each track and never changes.
 @end table
+
+The @b{list} action will produce a brief report of each track for each mp4 file.
+Many (but not all) of the values shown may be modified by actions documented later in this article.
+This will produce a brief report of each track for each mp4 file.
 
 @table @samp
 @item --list
 list all tracks in mp4.
-This will produce a brief report of each track for each mp4 file.
-@b{IDX} shows the track-index (0-based).
-@b{ID} shows the track-id.
-@b{TYPE} shows the track type.
-@b{FLAGS} shows track flags in hex.
 Example output:
 @example
-IDX    ID  TYPE      FLAGS   #SAMPL  FILE
-----------------------------------------------------------------------
-  0     1  audio     000001  238500  Song.m4a
-  0     1  video     000001  239800  Movie1.m4v
-  1     2  audio     000003  468100
-  2     3  text      00000e  100000
-  0     1  video     000001  239800  Movie2.m4v
-  1     2  audio     000003  468100
-  2     3  text      00000e  100000
+track[0] id=1
+  type           = video
+  enabled        = true
+  inMovie        = false
+  inPreview      = false
+  layer          = 0
+  alternateGroup = 0
+  volume         = 0.0000
+  width          = 850.96295166
+  height         = 360.00000000
+  language       = UNDEFINED(0)
+  handlerName    = 
+  userDataName   = <absent>
 @end example
+@end table
+
+The following group of actions are used to modify the values shown by @b{--list} action. The modification of these values should be done with great care on any files, and as always you are cautioned to @b{backup} your media files before modification.
+
+@table @samp
+@item --enabled BOOL
+set trak.tkhd.flags (enabled bit).
+When @b{true} indicates the track is enabled.
+
+@item --inmovie BOOL
+set trak.tkhd.flags (inMovie bit).
+When @b{true} indicates the track is used in the movie.
+
+@item --inpreview BOOL
+set trak.tkhd.flags (inPreview bit).
+When @b{true} indicates the track is used in the movie's preview.
+
+@item --layer NUM
+set trak.tkhd.layer.
+Specifies the front-to-back ordering of video tracks; tracks with lower numbers are closer to the viewer.
+@b{0} is the normal value, and @b{-1} would be in front of track 0, and so on.
+
+@item --altgroup NUM
+set trak.tkhd.alternate_group.
+An integer that specifies a group or collection of tracks. If this field is 0 there is no information on possible relations to other tracks. If this field is not 0, it should be the same for tracks that contain alternate data for one another and different for tracks belonging to different such groups. Only one track within an alternate group should be played or streamed at any one time, and must be distinguishable from other tracks in the group via attributes such as bitrate, codec, language, packet size etc. A group may have only one member.
+
+@item --volume FLOAT
+set trak.tkhd.volume.
+Specifies the track's relative audio volume. Full volume is @b{1.0} and is the normal value.
+
+@item --width FLOAT
+set trak.tkhd.width.
+Specifies the track's visual presentation width. By default this is the same as the pixel width of the images. All images in the sequence are scaled to this size @b{before} any overall transformation by the matrix.
+
+@item --height FLOAT
+set trak.tkhd.height.
+Specifies the track's visual presentation height. By default this is the same as the pixel width of the images. All images in the sequence are scaled to this size @b{before} any overall transformation by the matrix.
+
+@item --language CODE
+set trak.mdia.mdhd.language.
+Specifies the ISO-639-2/T langauge code of the track. For example, @samp{eng} for English, @samp{fra} for French.
+
+@item --hdlrname STR
+set trak.mdia.hdlr.name.
+Specifies a human-readable track type (for debugging and inspection purposes).
+
+@item --udtaname STR
+set trak.udta.name.value.
+Specifies an arbitrary track-name. This value is optional (may be absent).
+
+@item --udtaname-remove
+remove trak.udta.name atom.
+This action will remove the @b{optional} atom.
+
 @end table
 
 The @b{colr} related actions manage @b{Color Parameter} boxes which are used by QuickTime to map numerical values of pixels in a file to a common representation of color for video tracks. They may or may not be suitable for other Apple media players. Community feedback on compatibility is welcome.

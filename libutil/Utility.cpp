@@ -91,8 +91,11 @@ Utility::~Utility()
 bool
 Utility::batch( int argi )
 {
+    _jobCount = 0;
+    _jobTotal = _argc - argi;
+
     // nothing to be done
-    if( !(argi < _argc) )
+    if( !_jobTotal )
         return SUCCESS;
 
     bool batchResult = FAILURE;

@@ -178,6 +178,8 @@ if ADD_UTIL
         libutil/Database.h         \
         libutil/Timecode.cpp       \
         libutil/Timecode.h         \
+        libutil/TrackModifier.cpp  \
+        libutil/TrackModifier.h    \
         libutil/Utility.cpp        \
         libutil/Utility.h          \
         libutil/crc.cpp            \

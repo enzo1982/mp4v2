@@ -41,6 +41,19 @@ private:
 
         LC_LIST,
 
+        LC_ENABLED,
+        LC_INMOVIE,
+        LC_INPREVIEW,
+        LC_LAYER,
+        LC_ALTGROUP,
+        LC_VOLUME,
+        LC_WIDTH,
+        LC_HEIGHT,
+        LC_LANGUAGE,
+        LC_HDLRNAME,
+        LC_UDTANAME,
+        LC_UDTANAME_R,
+
         LC_COLR_PARMS,
         LC_COLR_PARM_HD,
         LC_COLR_PARM_SD,
@@ -68,6 +81,7 @@ protected:
 
 private:
     bool actionList( JobContext& );
+    bool actionListSingle( JobContext&, uint16_t );
 
     bool actionColorParameterList   ( JobContext& );
     bool actionColorParameterAdd    ( JobContext& );
@@ -79,14 +93,19 @@ private:
     bool actionPictureAspectRatioSet    ( JobContext& );
     bool actionPictureAspectRatioRemove ( JobContext& );
 
+    bool actionTrackModifierSet    ( JobContext& );
+    bool actionTrackModifierRemove ( JobContext& );
+
 private:
     enum TrackMode {
+        TM_UNDEFINED,
         TM_INDEX,
         TM_ID,
         TM_WILDCARD,
     };
 
     enum SampleMode {
+        SM_UNDEFINED,
         SM_INDEX,
         SM_ID,
         SM_WILDCARD,
@@ -107,6 +126,13 @@ private:
 
     qtff::ColorParameterBox::Item     _colorParameterItem;
     qtff::PictureAspectRatioBox::Item _pictureAspectRatioItem;
+
+    void (TrackModifier::*_actionTrackModifierSet_function)( const string& );
+    string _actionTrackModifierSet_name;
+    string _actionTrackModifierSet_value;
+
+    void (TrackModifier::*_actionTrackModifierRemove_function)();
+    string _actionTrackModifierRemove_name;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -120,10 +146,10 @@ TrackUtility::TrackUtility( int argc, char** argv )
     , _actionGroup ( "ACTIONS" )
     , _parmGroup   ( "PARAMETERS" )
     , _action      ( NULL )
-    , _trackMode   ( TM_WILDCARD )
+    , _trackMode   ( TM_UNDEFINED )
     , _trackIndex  ( 0 )
     , _trackId     ( MP4_INVALID_TRACK_ID )
-    , _sampleMode  ( SM_INDEX )
+    , _sampleMode  ( SM_UNDEFINED )
     , _sampleIndex ( 0 )
     , _sampleId    ( MP4_INVALID_SAMPLE_ID )
 {
@@ -139,7 +165,7 @@ TrackUtility::TrackUtility( int argc, char** argv )
     _group.add( STD_VERSION );
     _group.add( STD_VERSIONX );
 
-    _parmGroup.add( "track-any",    false, LC_TRACK_WILDCARD,  "act on any track (default)" );
+    _parmGroup.add( "track-any",    false, LC_TRACK_WILDCARD,  "act on any/all tracks" );
     _parmGroup.add( "track-index",  true,  LC_TRACK_INDEX,     "act on track index IDX", "IDX" );
     _parmGroup.add( "track-id",     true,  LC_TRACK_ID,        "act on track id ID", "ID" );
 /*
@@ -153,7 +179,21 @@ TrackUtility::TrackUtility( int argc, char** argv )
     _parmGroup.add( "pasp-parms",   true,  LC_PASP_PARMS,      "where CSV is hSPACING,vSPACING", "CSV" );
     _groups.push_back( &_parmGroup );
 
-    _actionGroup.add( "list",        false, LC_LIST,        "list all tracks in mp4" );
+    _actionGroup.add( "list", false, LC_LIST, "list all tracks in mp4" );
+
+    _actionGroup.add( "enabled",         true,  LC_ENABLED,    "set trak.tkhd.flags (enabled bit)", "BOOL" );
+    _actionGroup.add( "inmovie",         true,  LC_INMOVIE,    "set trak.tkhd.flags (inMovie bit)", "BOOL" );
+    _actionGroup.add( "inpreview",       true,  LC_INPREVIEW,  "set trak.tkhd.flags (inPreview bit)", "BOOL" );
+    _actionGroup.add( "layer",           true,  LC_LAYER,      "set trak.tkhd.layer", "NUM" );
+    _actionGroup.add( "altgroup",        true,  LC_ALTGROUP,   "set trak.tkhd.alternate_group", "NUM" );
+    _actionGroup.add( "volume",          true,  LC_VOLUME,     "set trak.tkhd.volume", "FLOAT" );
+    _actionGroup.add( "width",           true,  LC_WIDTH,      "set trak.tkhd.width", "FLOAT" );
+    _actionGroup.add( "height",          true,  LC_HEIGHT,     "set trak.tkhd.height", "FLOAT" );
+    _actionGroup.add( "language",        true,  LC_LANGUAGE,   "set trak.mdia.mdhd.language", "CODE" );
+    _actionGroup.add( "hdlrname",        true,  LC_HDLRNAME,   "set trak.mdia.hdlr.name", "STR" );
+    _actionGroup.add( "udtaname",        true,  LC_UDTANAME,   "set trak.udta.name.value", "STR" );
+    _actionGroup.add( "udtaname-remove", false, LC_UDTANAME_R, "remove trak.udta.name atom" );
+
     _actionGroup.add( "colr-list",   false, LC_COLR_LIST,   "list all colr-boxes in mp4" );
     _actionGroup.add( "colr-add",    false, LC_COLR_ADD,    "add colr-box to a video track" );
     _actionGroup.add( "colr-set",    false, LC_COLR_SET,    "set colr-box parms" );
@@ -162,6 +202,7 @@ TrackUtility::TrackUtility( int argc, char** argv )
     _actionGroup.add( "pasp-add",    false, LC_PASP_ADD,    "add pasp-box to a video track" );
     _actionGroup.add( "pasp-set",    false, LC_PASP_SET,    "set pasp-box parms" );
     _actionGroup.add( "pasp-remove", false, LC_PASP_REMOVE, "remove pasp-box from track" );
+
     _groups.push_back( &_actionGroup );
 
     _usage = "[OPTION]... [PARAMETERS]... ACTION file...";
@@ -295,9 +336,12 @@ TrackUtility::actionColorParameterRemove( JobContext& job )
             oss << " (track id=" << _trackId << ')';
             break;
 
-        default:
         case TM_WILDCARD:
             oss << " (all tracks)";
+            break;
+
+        default:
+            return herrf( "track(s) not specified\n" );
     }
 
     verbose1f( "%s\n", oss.str().c_str() );
@@ -393,77 +437,48 @@ TrackUtility::actionColorParameterSet( JobContext& job )
 bool
 TrackUtility::actionList( JobContext& job )
 {
+    if( _jobTotal > 1 )
+        verbose1f( "file %u of %u: %s\n", _jobCount+1, _jobTotal, job.file.c_str() );
+
     ostringstream report;
-
-    const int widx = 3;
-    const int wid = 3;
-    const int wtype = 8;
-    const int wflags = 6;
-    const int wnsamp = 6;
-    const string sep = "  ";
-
-    if( _jobCount == 0 ) {
-        report << setw(widx) << right << "IDX" << left
-               << ' '
-               << sep << setw(wid) << right << "ID" << left
-               << sep << setw(wtype) << "TYPE"
-               << sep << setw(wflags) << "FLAGS"
-               << sep << setw(wnsamp) << "#SAMPL"
-               << sep << setw(0) << "FILE"
-               << '\n';
-
-        report << setfill('-') << setw(70) << "" << setfill(' ') << '\n';
-    }
 
     job.fileHandle = MP4ReadCopy( job.file.c_str(), _debugVerbosity );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
 
-    const uint32_t trackc = MP4GetNumberOfTracks( job.fileHandle );
-    for( uint32_t i = 0; i < trackc; i++ ) {
-        ostringstream oss;
-        oss << right << setw(widx) << i << left;
+    switch( _trackMode ) {
+        case TM_INDEX:
+            return actionListSingle( job, _trackIndex );
 
-        MP4TrackId id = MP4FindTrackId( job.fileHandle, i );
-        if( id == MP4_INVALID_TRACK_ID ) {
-            report << oss.str() << " [invalid]\n";
-            continue;
+        case TM_ID:
+            return actionListSingle( job, MP4FindTrackIndex( job.fileHandle, _trackId ));
+
+        case TM_WILDCARD:
+        default:
+        {
+            bool result = SUCCESS;
+            const uint16_t trackc = static_cast<uint16_t>( MP4GetNumberOfTracks( job.fileHandle ));
+            for( uint16_t i = 0; i < trackc; i++ ) {
+                if( actionListSingle( job, i ))
+                    result = FAILURE;
+            }
+            return result;
         }
-
-        uint64_t flags;
-        if( !MP4GetTrackIntegerProperty( job.fileHandle, id, "tkhd.flags", &flags )) {
-            report << oss.str() << " [invalid]\n";
-            continue;
-        }
-
-        uint64_t version;
-        if( !MP4GetTrackIntegerProperty( job.fileHandle, id, "tkhd.version", &version )) {
-            report << oss.str() << " [invalid]\n";
-            continue;
-        }
-
-        const char* type = MP4GetTrackType( job.fileHandle, id );
-        if( !type) {
-            report << oss.str() << " [invalid]\n";
-            continue;
-        }
-
-        MP4SampleId nsamp = MP4GetTrackNumberOfSamples( job.fileHandle, id );
-
-        oss << (version == 0 ? ' ' : '*')
-            << sep << setw(wid) << right << id << left
-            << sep << setw(wtype) << toStringTrackType( type )
-            << sep << setw(wflags) << setfill('0') << right << hex << (flags & 0x00ffffff) << left << dec
-            << sep << setw(wnsamp) << nsamp;
-
-        if( i == 0 )
-            oss << sep << setw(0) << job.file;
-
-        report << oss.str() << '\n';
     }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+TrackUtility::actionListSingle( JobContext& job, uint16_t index )
+{
+    TrackModifier tm( job.fileHandle, index );
+
+    ostringstream report;
+    tm.dump( report, ( _jobTotal > 1 ? "  " : "" ));
 
     verbose1f( "%s", report.str().c_str() );
-    return SUCCESS;
+    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -683,6 +698,86 @@ TrackUtility::actionPictureAspectRatioSet( JobContext& job )
 ///////////////////////////////////////////////////////////////////////////////
 
 bool
+TrackUtility::actionTrackModifierRemove( JobContext& job )
+{
+    ostringstream oss;
+    oss << "removing " << _actionTrackModifierRemove_name << " -> " << job.file;
+
+    switch( _trackMode ) {
+        case TM_INDEX:
+            oss << " (track index=" << _trackIndex << ')';
+            break;
+
+        case TM_ID:
+            oss << " (track id=" << _trackId << ')';
+            break;
+
+        default:
+        case TM_WILDCARD:
+            return herrf( "track not specified\n" );
+    }
+
+    verbose1f( "%s\n", oss.str().c_str() );
+    if( dryrunAbort() )
+        return SUCCESS;
+
+    job.fileHandle = MP4ReadCopy( job.file.c_str(), _debugVerbosity );
+    if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
+        return herrf( "unable to open for write: %s\n", job.file.c_str() );
+
+    if( _trackMode == TM_ID )
+        _trackIndex = MP4FindTrackIndex( job.fileHandle, _trackId );
+
+    TrackModifier tm( job.fileHandle, _trackIndex );
+    (tm.*_actionTrackModifierRemove_function)();
+
+    job.fileWasModified = true;
+    return SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+TrackUtility::actionTrackModifierSet( JobContext& job )
+{
+    ostringstream oss;
+    oss << "setting " << _actionTrackModifierSet_name << "=" << _actionTrackModifierSet_value << " -> " << job.file;
+
+    switch( _trackMode ) {
+        case TM_INDEX:
+            oss << " (track index=" << _trackIndex << ')';
+            break;
+
+        case TM_ID:
+            oss << " (track id=" << _trackId << ')';
+            break;
+
+        default:
+        case TM_WILDCARD:
+            return herrf( "track not specified\n" );
+    }
+
+    verbose1f( "%s\n", oss.str().c_str() );
+    if( dryrunAbort() )
+        return SUCCESS;
+
+    job.fileHandle = MP4ReadCopy( job.file.c_str(), _debugVerbosity );
+    if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
+        return herrf( "unable to open for write: %s\n", job.file.c_str() );
+
+    if( _trackMode == TM_ID )
+        _trackIndex = MP4FindTrackIndex( job.fileHandle, _trackId );
+
+    TrackModifier tm( job.fileHandle, _trackIndex );
+    (tm.*_actionTrackModifierSet_function)( _actionTrackModifierSet_value );
+
+    job.fileWasModified = true;
+    return SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
 TrackUtility::utility_job( JobContext& job )
 {
     if( !_action )
@@ -747,6 +842,89 @@ TrackUtility::utility_option( int code, bool& handled )
             _action = &TrackUtility::actionColorParameterList;
             break;
 
+        case LC_ENABLED:
+            _action = &TrackUtility::actionTrackModifierSet;
+            _actionTrackModifierSet_function = &TrackModifier::setEnabled;
+            _actionTrackModifierSet_name     = "enabled";
+            _actionTrackModifierSet_value    = prog::optarg;
+            break;
+
+        case LC_INMOVIE:
+            _action = &TrackUtility::actionTrackModifierSet;
+            _actionTrackModifierSet_function = &TrackModifier::setInMovie;
+            _actionTrackModifierSet_name     = "inMovie";
+            _actionTrackModifierSet_value    = prog::optarg;
+            break;
+
+        case LC_INPREVIEW:
+            _action = &TrackUtility::actionTrackModifierSet;
+            _actionTrackModifierSet_function = &TrackModifier::setInPreview;
+            _actionTrackModifierSet_name     = "inPreview";
+            _actionTrackModifierSet_value    = prog::optarg;
+            break;
+
+        case LC_LAYER:
+            _action = &TrackUtility::actionTrackModifierSet;
+            _actionTrackModifierSet_function = &TrackModifier::setLayer;
+            _actionTrackModifierSet_name     = "layer";
+            _actionTrackModifierSet_value    = prog::optarg;
+            break;
+
+        case LC_ALTGROUP:
+            _action = &TrackUtility::actionTrackModifierSet;
+            _actionTrackModifierSet_function = &TrackModifier::setAlternateGroup;
+            _actionTrackModifierSet_name     = "alternateGroup";
+            _actionTrackModifierSet_value    = prog::optarg;
+            break;
+
+        case LC_VOLUME:
+            _action = &TrackUtility::actionTrackModifierSet;
+            _actionTrackModifierSet_function = &TrackModifier::setVolume;
+            _actionTrackModifierSet_name     = "volume";
+            _actionTrackModifierSet_value    = prog::optarg;
+            break;
+
+        case LC_WIDTH:
+            _action = &TrackUtility::actionTrackModifierSet;
+            _actionTrackModifierSet_function = &TrackModifier::setWidth;
+            _actionTrackModifierSet_name     = "width";
+            _actionTrackModifierSet_value    = prog::optarg;
+            break;
+
+        case LC_HEIGHT:
+            _action = &TrackUtility::actionTrackModifierSet;
+            _actionTrackModifierSet_function = &TrackModifier::setHeight;
+            _actionTrackModifierSet_name     = "height";
+            _actionTrackModifierSet_value    = prog::optarg;
+            break;
+
+        case LC_LANGUAGE:
+            _action = &TrackUtility::actionTrackModifierSet;
+            _actionTrackModifierSet_function = &TrackModifier::setLanguage;
+            _actionTrackModifierSet_name     = "langauge";
+            _actionTrackModifierSet_value    = prog::optarg;
+            break;
+
+        case LC_HDLRNAME:
+            _action = &TrackUtility::actionTrackModifierSet;
+            _actionTrackModifierSet_function = &TrackModifier::setHandlerName;
+            _actionTrackModifierSet_name     = "handlerName";
+            _actionTrackModifierSet_value    = prog::optarg;
+            break;
+
+        case LC_UDTANAME:
+            _action = &TrackUtility::actionTrackModifierSet;
+            _actionTrackModifierSet_function = &TrackModifier::setUserDataName;
+            _actionTrackModifierSet_name     = "userDataName";
+            _actionTrackModifierSet_value    = prog::optarg;
+            break;
+
+        case LC_UDTANAME_R:
+            _action = &TrackUtility::actionTrackModifierRemove;
+            _actionTrackModifierRemove_function = &TrackModifier::removeUserDataName;
+            _actionTrackModifierRemove_name     = "userDataName";
+            break;
+
         case LC_COLR_ADD:
             _action = &TrackUtility::actionColorParameterAdd;
             break;
@@ -803,6 +981,9 @@ toStringTrackType( string code )
         return "text";
     if( !code.compare( "tmcd" ))    // QTFF
         return "timecode";
+
+    if( !code.compare( "subt" ))    // QTFF
+        return "subtitle";
 
     return string( "(" ) + code + ")";
 }

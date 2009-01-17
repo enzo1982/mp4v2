@@ -29,8 +29,7 @@
 #ifndef MP4V2_IMPL_MP4TRACK_H
 #define MP4V2_IMPL_MP4TRACK_H
 
-namespace mp4v2 {
-namespace impl {
+namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -266,7 +265,6 @@ MP4ARRAY_DECL(MP4Track, MP4Track*);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}
-} // namespace mp4v2::impl
+}} // namespace mp4v2::impl
 
 #endif // MP4V2_IMPL_MP4TRACK_H

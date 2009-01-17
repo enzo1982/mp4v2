@@ -24,6 +24,7 @@ namespace mp4v2 { namespace util {
 
 #include "Database.h"
 #include "Timecode.h"
+#include "TrackModifier.h"
 #include "Utility.h"
 #include "crc.h"
 #include "other.h"
