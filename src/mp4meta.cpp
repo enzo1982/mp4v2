@@ -104,7 +104,7 @@ bool MP4File::GetMetadataByIndex(uint32_t index,
     return true;
 }
 
-bool MP4File::CreateMetadataAtom(const char* name)
+bool MP4File::CreateMetadataAtom(const char* name, itmf::BasicType typeCode)
 {
     char s[256];
     char t[256];
@@ -116,27 +116,9 @@ bool MP4File::CreateMetadataAtom(const char* name)
 
     if (!pMetaAtom)
         return false;
-
-    // set typeCode where appropriate, otherwise default is implicit type
-    {
-        MP4DataAtom& data = *(MP4DataAtom*)pMetaAtom; // safe to cast: all ilst data atoms are MP4DataAtom
-        if( name[0] == '\xA9' )
-            data.typeCode.SetValue( itmf::BT_UTF8 );
-        else if( ATOMID( name ) == ATOMID( "aART" ))
-            data.typeCode.SetValue( itmf::BT_UTF8 );
-        else if( ATOMID( name ) == ATOMID( "cpil" ))
-            data.typeCode.SetValue( itmf::BT_INTEGER );
-        else if( ATOMID( name ) == ATOMID( "gnre" ))
-            data.typeCode.SetValue( itmf::BT_GENRES );
-        else if( ATOMID( name ) == ATOMID( "pgap" ))
-            data.typeCode.SetValue( itmf::BT_INTEGER );
-        else if( ATOMID( name ) == ATOMID( "rtng" ))
-            data.typeCode.SetValue( itmf::BT_INTEGER );
-        else if( ATOMID( name ) == ATOMID( "tool" ))
-            data.typeCode.SetValue( itmf::BT_INTEGER );
-        else if( ATOMID( name ) == ATOMID( "tmpo" ))
-            data.typeCode.SetValue( itmf::BT_INTEGER );
-    }
+    
+    MP4DataAtom& data = *(MP4DataAtom*)pMetaAtom; 
+    data.typeCode.SetValue( typeCode );
 
     MP4Atom *pHdlrAtom = m_pRootAtom->FindAtom("moov.udta.meta.hdlr");
     MP4StringProperty *pStringProperty = NULL;
@@ -202,7 +184,7 @@ bool MP4File::SetMetadataString (const char *atom, const char *value)
 
     if (!pMetaAtom)
     {
-        if (!CreateMetadataAtom(atom))
+        if (!CreateMetadataAtom(atom, itmf::BT_UTF8))
             return false;
 
         pMetaAtom = m_pRootAtom->FindAtom(atomstring);
@@ -268,7 +250,7 @@ bool MP4File::SetMetadataTrack(uint16_t track, uint16_t totalTracks)
 
     if (!pMetaAtom)
     {
-        if (!CreateMetadataAtom("trkn"))
+        if (!CreateMetadataAtom("trkn", itmf::BT_IMPLICIT))
             return false;
 
         pMetaAtom = m_pRootAtom->FindAtom(s);
@@ -324,7 +306,7 @@ bool MP4File::SetMetadataDisk(uint16_t disk, uint16_t totalDisks)
 
     if (!pMetaAtom)
     {
-        if (!CreateMetadataAtom("disk"))
+        if (!CreateMetadataAtom("disk", itmf::BT_IMPLICIT))
             return false;
 
         pMetaAtom = m_pRootAtom->FindAtom(s);
@@ -446,7 +428,7 @@ bool MP4File::SetMetadataGenre(const char* value)
         pMetaAtom = m_pRootAtom->FindAtom(s);
         if (!pMetaAtom)
         {
-            if (!CreateMetadataAtom("gnre"))
+            if (!CreateMetadataAtom("gnre", itmf::BT_GENRES))
                 return false;
 
             pMetaAtom = m_pRootAtom->FindAtom(s);
@@ -482,7 +464,7 @@ bool MP4File::SetMetadataGenre(const char* value)
 
         if (!pMetaAtom)
         {
-            if (!CreateMetadataAtom("\251gen"))
+            if (!CreateMetadataAtom("\251gen", itmf::BT_GENRES))
                 return false;
 
             pMetaAtom = m_pRootAtom->FindAtom(s2);
@@ -580,7 +562,7 @@ bool MP4File::SetMetadataUint8 (const char *atom, uint8_t value)
     pMetaAtom = m_pRootAtom->FindAtom(atompath);
 
     if (pMetaAtom == NULL) {
-        if (!CreateMetadataAtom(atom))
+        if (!CreateMetadataAtom(atom, itmf::BT_INTEGER))
             return false;
 
         pMetaAtom = m_pRootAtom->FindAtom(atompath);
@@ -631,7 +613,7 @@ bool MP4File::SetMetadataUint16(const char *atom, uint16_t value)
 
     if (!pMetaAtom)
     {
-        if (!CreateMetadataAtom(atom))
+        if (!CreateMetadataAtom(atom, itmf::BT_INTEGER))
             return false;
 
         pMetaAtom = m_pRootAtom->FindAtom(atompath);
@@ -686,7 +668,7 @@ bool MP4File::SetMetadataUint32(const char *atom, uint32_t value)
     pMetaAtom = m_pRootAtom->FindAtom(atompath);
 
     if (pMetaAtom == NULL) {
-        if (!CreateMetadataAtom(atom))
+        if (!CreateMetadataAtom(atom, itmf::BT_INTEGER))
             return false;
 
         pMetaAtom = m_pRootAtom->FindAtom(atompath);
@@ -743,7 +725,7 @@ bool MP4File::SetMetadataCoverArt(uint8_t *coverArt, uint32_t size)
 
     if (!pMetaAtom)
     {
-        if (!CreateMetadataAtom("covr"))
+        if (!CreateMetadataAtom("covr", itmf::BT_IMPLICIT))
             return false;
 
         pMetaAtom = m_pRootAtom->FindAtom(s);

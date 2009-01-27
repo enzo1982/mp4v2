@@ -714,7 +714,7 @@ public: /* equivalent to MP4 library API */
 
     /* iTunes metadata handling */
 protected:
-    bool CreateMetadataAtom(const char* name);
+    bool CreateMetadataAtom(const char* name, itmf::BasicType typeCode);
 public:
     // these are public to remove a lot of unnecessary routines
     bool DeleteMetadataAtom(const char* name, bool try_udta = false);

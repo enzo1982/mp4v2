@@ -84,7 +84,6 @@ extern "C" int main( int argc, char** argv )
         if ( mp4file != MP4_INVALID_FILE_HANDLE ) {
             const MP4Tags* tags = MP4TagsAlloc();
             MP4TagsFetch( tags, mp4file );
-            char *value;
             uint16_t numvalue, numvalue2;
             if ( tags->name ) {
                 fprintf( stdout, " Name: %s\n", tags->name );
@@ -145,10 +144,8 @@ extern "C" int main( int argc, char** argv )
             if ( tags->gapless ) {
                 fprintf( stdout, " Part of Gapless Album: %s\n", *tags->gapless ? "yes" : "no" );
             }
-            uint32_t artcount = MP4GetMetadataCoverArtCount( mp4file );
-            if ( artcount > 0 ) {
-                fprintf( stdout, " Cover Art pieces: %u\n",
-                         artcount );
+            if ( tags->artworkCount ) {
+                fprintf( stdout, " Cover Art pieces: %u\n", tags->artworkCount );
             }
             if ( tags->albumArtist ) {
                 fprintf( stdout, " Album Artist: %s\n", tags->albumArtist );

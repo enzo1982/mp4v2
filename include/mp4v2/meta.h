@@ -341,6 +341,10 @@ bool MP4GetMetadataCoverArt(
     uint32_t*     size,
     uint32_t      index DEFAULT(0) );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 uint32_t MP4GetMetadataCoverArtCount(
     MP4FileHandle hFile );
