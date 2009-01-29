@@ -562,7 +562,7 @@ void MP4BytesProperty::Dump(FILE* pFile, uint8_t indent,
             if( i )
                 oss << ' ';
             oss << hex << setw(2) << setfill('0') << right << static_cast<uint32_t>(value[i]);
-            text << (isprint( static_cast<char>(value[i]) ) ? static_cast<char>(value[i]) : '.');
+            text << (isprint( static_cast<int>(value[i]) ) ? static_cast<char>(value[i]) : '.');
         }
 
         oss << "  |" << text.str() << "|\n";
@@ -605,7 +605,7 @@ void MP4BytesProperty::Dump(FILE* pFile, uint8_t indent,
             oss << ' ';
 
         oss << ' ' << hex << setw(2) << setfill('0') << right << static_cast<uint32_t>(value[i]);
-        text << (isprint( static_cast<char>(value[i]) ) ? static_cast<char>(value[i]) : '.');
+        text << (isprint( static_cast<int>(value[i]) ) ? static_cast<char>(value[i]) : '.');
     }
 
     const string stext = text.str();
