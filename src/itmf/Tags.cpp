@@ -108,8 +108,10 @@ Tags::c_fetch( MP4Tags*& tags, MP4FileHandle hFile )
     fetchInteger( file, CODE_CONTENTRATING,  contentRating,  c.contentRating );
     fetchInteger( file, CODE_GAPLESS,        gapless,        c.gapless );
 
-    fetchString  ( file, CODE_ITUNESACCOUNT,  iTunesAccount,  c.iTunesAccount );
-    fetchInteger ( file, CODE_CNID,           cnID,           c.cnID );
+    fetchString  ( file, CODE_ITUNESACCOUNT,     iTunesAccount,     c.iTunesAccount );
+    fetchInteger ( file, CODE_ITUNESACCOUNTTYPE, iTunesAccountType, c.iTunesAccountType );
+    fetchInteger ( file, CODE_CNID,              cnID,              c.cnID );
+    fetchInteger ( file, CODE_ITUNESCOUNTRY,     iTunesCountry,     c.iTunesCountry );
 
     // fetch full list and overwrite our copy, otherwise clear
     {
@@ -500,50 +502,52 @@ Tags::updateArtworkShadow( MP4Tags*& tags )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const string Tags::CODE_NAME            = "\xa9" "nam";
-const string Tags::CODE_ARTIST          = "\xa9" "ART";
-const string Tags::CODE_ALBUMARTIST     = "aART";
-const string Tags::CODE_ALBUM           = "\xa9" "alb";
-const string Tags::CODE_GROUPING        = "\xa9" "grp";
-const string Tags::CODE_COMPOSER        = "\xa9" "wrt";
-const string Tags::CODE_COMMENTS        = "\xa9" "cmt";
-const string Tags::CODE_RELEASEDATE     = "\xa9" "day";
-const string Tags::CODE_BEATSPERMINUTE  = "tmpo";
-const string Tags::CODE_COMPILATION     = "cpil";
+const string Tags::CODE_NAME              = "\xa9" "nam";
+const string Tags::CODE_ARTIST            = "\xa9" "ART";
+const string Tags::CODE_ALBUMARTIST       = "aART";
+const string Tags::CODE_ALBUM             = "\xa9" "alb";
+const string Tags::CODE_GROUPING          = "\xa9" "grp";
+const string Tags::CODE_COMPOSER          = "\xa9" "wrt";
+const string Tags::CODE_COMMENTS          = "\xa9" "cmt";
+const string Tags::CODE_RELEASEDATE       = "\xa9" "day";
+const string Tags::CODE_BEATSPERMINUTE    = "tmpo";
+const string Tags::CODE_COMPILATION       = "cpil";
 
-const string Tags::CODE_TVSHOW          = "tvsh";
-const string Tags::CODE_TVNETWORK       = "tvnn";
-const string Tags::CODE_TVEPISODEID     = "tven";
-const string Tags::CODE_TVSEASON        = "tvsn";
-const string Tags::CODE_TVEPISODE       = "tves";
+const string Tags::CODE_TVSHOW            = "tvsh";
+const string Tags::CODE_TVNETWORK         = "tvnn";
+const string Tags::CODE_TVEPISODEID       = "tven";
+const string Tags::CODE_TVSEASON          = "tvsn";
+const string Tags::CODE_TVEPISODE         = "tves";
 
-const string Tags::CODE_DESCRIPTION     = "desc";
-const string Tags::CODE_LONGDESCRIPTION = "ldes";
-const string Tags::CODE_LYRICS          = "\xa9" "lyr";
+const string Tags::CODE_DESCRIPTION       = "desc";
+const string Tags::CODE_LONGDESCRIPTION   = "ldes";
+const string Tags::CODE_LYRICS            = "\xa9" "lyr";
 
-const string Tags::CODE_SORTNAME        = "sonm";
-const string Tags::CODE_SORTARTIST      = "soar";
-const string Tags::CODE_SORTALBUMARTIST = "soaa";
-const string Tags::CODE_SORTALBUM       = "soal";
-const string Tags::CODE_SORTCOMPOSER    = "soco";
-const string Tags::CODE_SORTTVSHOW      = "sosn";
+const string Tags::CODE_SORTNAME          = "sonm";
+const string Tags::CODE_SORTARTIST        = "soar";
+const string Tags::CODE_SORTALBUMARTIST   = "soaa";
+const string Tags::CODE_SORTALBUM         = "soal";
+const string Tags::CODE_SORTCOMPOSER      = "soco";
+const string Tags::CODE_SORTTVSHOW        = "sosn";
 
-const string Tags::CODE_COPYRIGHT       = "cprt";
-const string Tags::CODE_ENCODINGTOOL    = "\xa9" "too";
-const string Tags::CODE_ENCODEDBY       = "\xa9" "enc";
-const string Tags::CODE_PURCHASEDATE    = "purd";
+const string Tags::CODE_COPYRIGHT         = "cprt";
+const string Tags::CODE_ENCODINGTOOL      = "\xa9" "too";
+const string Tags::CODE_ENCODEDBY         = "\xa9" "enc";
+const string Tags::CODE_PURCHASEDATE      = "purd";
 
-const string Tags::CODE_CATEGORY        = "catg";
-const string Tags::CODE_KEYWORDS        = "keyw";
-const string Tags::CODE_PODCAST         = "pcst";
+const string Tags::CODE_CATEGORY          = "catg";
+const string Tags::CODE_KEYWORDS          = "keyw";
+const string Tags::CODE_PODCAST           = "pcst";
 
-const string Tags::CODE_HDVIDEO         = "hdvd";
-const string Tags::CODE_MEDIATYPE       = "stik";
-const string Tags::CODE_CONTENTRATING   = "rtng";
-const string Tags::CODE_GAPLESS         = "pgap";
+const string Tags::CODE_HDVIDEO           = "hdvd";
+const string Tags::CODE_MEDIATYPE         = "stik";
+const string Tags::CODE_CONTENTRATING     = "rtng";
+const string Tags::CODE_GAPLESS           = "pgap";
 
-const string Tags::CODE_ITUNESACCOUNT   = "apID";
-const string Tags::CODE_CNID            = "cnID";
+const string Tags::CODE_ITUNESACCOUNT     = "apID";
+const string Tags::CODE_ITUNESACCOUNTTYPE = "akID";
+const string Tags::CODE_CNID              = "cnID";
+const string Tags::CODE_ITUNESCOUNTRY     = "sfID";
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -221,6 +221,54 @@ MP4V2_EXPORT extern const EnumStikType enumStikType;
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/// enumerated 8-bit Account Type used by the iTunes Store.
+/// Note values are not formally defined in any specification.
+enum AccountType {
+    AT_ITUNES    = 0,
+    AT_AOL       = 1,
+
+    AT_UNDEFINED = 255
+};
+
+typedef Enum<AccountType,AT_UNDEFINED> EnumAccountType;
+MP4V2_EXPORT extern const EnumAccountType enumAccountType;
+
+///////////////////////////////////////////////////////////////////////////////
+
+/// enumerated 32-bit Country Code used by the iTunes Store.
+/// Note values are not formally defined in any specification.
+enum CountryCode {   
+    CC_USA   = 143441,
+    CC_FRA   = 143442,
+    CC_DEU   = 143443,
+    CC_GBR   = 143444,
+    CC_AUT   = 143445,
+    CC_BEL   = 143446,
+    CC_FIN   = 143447,
+    CC_GRC   = 143448,
+    CC_IRL   = 143449,
+    CC_ITA   = 143450,
+    CC_LUX   = 143451,
+    CC_NLD   = 143452,
+    CC_PRT   = 143453,
+    CC_ESP   = 143454,
+    CC_CAN   = 143455,
+    CC_SWE   = 143456,
+    CC_NOR   = 143457,
+    CC_DNK   = 143458,
+    CC_CHE   = 143459,
+    CC_AUS   = 143460,
+    CC_NZL   = 143461,
+    CC_JPN   = 143462,
+
+    CC_UNDEFINED = 0
+};
+
+typedef Enum<CountryCode,CC_UNDEFINED> EnumCountryCode;
+MP4V2_EXPORT extern const EnumCountryCode enumCountryCode;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /// compute BasicType by examining raw bytes header.
 MP4V2_EXPORT BasicType
 computeBasicType( const void* buffer, uint32_t size );

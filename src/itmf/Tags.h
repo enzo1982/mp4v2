@@ -74,7 +74,9 @@ public:
     static const string CODE_GAPLESS;
     
     static const string CODE_ITUNESACCOUNT;
+    static const string CODE_ITUNESACCOUNTTYPE;
     static const string CODE_CNID;
+    static const string CODE_ITUNESCOUNTRY;
 
 public:
     string    name;
@@ -123,7 +125,9 @@ public:
     uint8_t   gapless;
     
     string    iTunesAccount;
+    uint8_t   iTunesAccountType;
     uint32_t  cnID;
+    uint32_t  iTunesCountry;
 
 public:
     Tags();

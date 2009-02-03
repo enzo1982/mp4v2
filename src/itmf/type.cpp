@@ -213,6 +213,46 @@ const EnumStikType::Entry EnumStikType::data[] = {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+template <>
+const EnumAccountType::Entry EnumAccountType::data[] = {
+    { mp4v2::impl::itmf::AT_ITUNES,  "itunes",   "iTunes" },
+    { mp4v2::impl::itmf::AT_AOL,     "aol",      "AOL" },
+
+    { mp4v2::impl::itmf::AT_UNDEFINED } // must be last
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+template <>
+const EnumCountryCode::Entry EnumCountryCode::data[] = {
+    { mp4v2::impl::itmf::CC_USA,  "usa",   "United States" },
+    { mp4v2::impl::itmf::CC_USA,  "fra",   "France" },
+    { mp4v2::impl::itmf::CC_DEU,  "ger",   "Germany" },
+    { mp4v2::impl::itmf::CC_GBR,  "gbr",   "United Kingdom" },
+    { mp4v2::impl::itmf::CC_AUT,  "aut",   "Austria" },
+    { mp4v2::impl::itmf::CC_BEL,  "bel",   "Belgium" },
+    { mp4v2::impl::itmf::CC_FIN,  "fin",   "Finland" },
+    { mp4v2::impl::itmf::CC_GRC,  "grc",   "Greece" },
+    { mp4v2::impl::itmf::CC_IRL,  "irl",   "Ireland" },
+    { mp4v2::impl::itmf::CC_ITA,  "ita",   "Italy" },
+    { mp4v2::impl::itmf::CC_LUX,  "lux",   "Luxembourg" },
+    { mp4v2::impl::itmf::CC_NLD,  "nld",   "Netherlands" },
+    { mp4v2::impl::itmf::CC_PRT,  "prt",   "Portugal" },
+    { mp4v2::impl::itmf::CC_ESP,  "esp",   "Spain" },
+    { mp4v2::impl::itmf::CC_CAN,  "can",   "Canada" },
+    { mp4v2::impl::itmf::CC_SWE,  "swe",   "Sweden" },
+    { mp4v2::impl::itmf::CC_NOR,  "nor",   "Norway" },
+    { mp4v2::impl::itmf::CC_DNK,  "dnk",   "Denmark" },
+    { mp4v2::impl::itmf::CC_CHE,  "che",   "Switzerland" },
+    { mp4v2::impl::itmf::CC_AUS,  "aus",   "Australia" },
+    { mp4v2::impl::itmf::CC_NZL,  "nzl",   "New Zealand" },
+    { mp4v2::impl::itmf::CC_JPN,  "jpn",   "Japan" },
+
+    { mp4v2::impl::itmf::CC_UNDEFINED } // must be last
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 #if defined( _MSC_VER )
 namespace mp4v2 { namespace impl { namespace itmf {
 #endif
@@ -223,6 +263,8 @@ namespace mp4v2 { namespace impl { namespace itmf {
 const EnumBasicType enumBasicType;
 const EnumGenreType enumGenreType;
 const EnumStikType enumStikType;
+const EnumAccountType enumAccountType;
+const EnumCountryCode enumCountryCode;
 
 ///////////////////////////////////////////////////////////////////////////////
 

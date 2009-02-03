@@ -164,8 +164,7 @@ extern "C" int main( int argc, char** argv )
             }
             if ( tags->mediaType ) {
                 string s = itmf::enumStikType.toString( static_cast<itmf::StikType>( *tags->mediaType ), true );
-                fprintf( stdout, " Media Type: %s\n",
-                        s.c_str() );
+                fprintf( stdout, " Media Type: %s\n", s.c_str() );
             }
             if ( tags->tvShow ) {
                 fprintf( stdout, " TV Show: %s\n", tags->tvShow );
@@ -209,8 +208,18 @@ extern "C" int main( int argc, char** argv )
             if ( tags->iTunesAccount ) {
                 fprintf( stdout, " iTunes Account: %s\n", tags->iTunesAccount );
             }
+            if ( tags->iTunesAccountType ) {
+                string s = itmf::enumAccountType.toString( static_cast<itmf::AccountType>( *tags->iTunesAccountType ), true );
+                //fprintf( stdout, " iTunes Account Type: %u\n", *tags->iTunesAccountType );
+                fprintf( stdout, " iTunes Account Type: %s\n", s.c_str() );
+            }
             if ( tags->purchaseDate ) {
                 fprintf( stdout, " Purchase Date: %s\n", tags->purchaseDate );
+            }
+            if ( tags->iTunesCountry ) {
+                string s = itmf::enumCountryCode.toString( static_cast<itmf::CountryCode>( *tags->iTunesCountry ), true );
+                //fprintf( stdout, " iTunes Store Country Code: %u\n", *tags->iTunesCountry );
+                fprintf( stdout, " iTunes Store Country: %s\n", s.c_str() );
             }
             MP4TagsFree( tags );
             MP4Close( mp4file );

@@ -558,7 +558,10 @@ typedef struct MP4Tags_s
     const uint8_t*  gapless;
     
     const char*     iTunesAccount;
+    const uint8_t*  iTunesAccountType;
     const uint32_t* cnID;
+    const uint32_t* iTunesCountry;
+
 } MP4Tags;
 
 /** Allocate tags convenience structure for reading and settings tags.
