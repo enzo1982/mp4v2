@@ -40,6 +40,8 @@ public:
     static const string CODE_COMPOSER;
     static const string CODE_COMMENTS;
     static const string CODE_RELEASEDATE;
+    static const string CODE_TRACK;
+    static const string CODE_DISK;
     static const string CODE_TEMPO;
     static const string CODE_COMPILATION;
 
@@ -89,6 +91,8 @@ public:
     string    comments;
     string    genre;
     string    releaseDate;
+    MP4TagTrack track;
+    MP4TagDisk  disk;
     uint16_t  tempo;
     uint8_t   compilation;
 
@@ -154,6 +158,8 @@ private:
     void fetchInteger ( MP4File&, const string&, uint16_t&, const uint16_t*& );
     void fetchInteger ( MP4File&, const string&, uint32_t&, const uint32_t*& );
     void fetchGenre   ( MP4File&, string&, const char*& );
+    void fetchTrack   ( MP4File&, MP4TagTrack&, const MP4TagTrack*& );
+    void fetchDisk    ( MP4File&, MP4TagDisk&, const MP4TagDisk*& );
 
     bool fetchData ( MP4File&, const string&, uint8_t*&, uint32_t& );
 

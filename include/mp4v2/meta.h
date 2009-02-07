@@ -208,6 +208,10 @@ bool MP4SetMetadataTrack(
     uint16_t      track,
     uint16_t      totalTracks );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4GetMetadataTrack(
     MP4FileHandle hFile,
@@ -224,6 +228,10 @@ bool MP4SetMetadataDisk(
     uint16_t      disk,
     uint16_t      totalDisks );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4GetMetadataDisk(
     MP4FileHandle hFile,
@@ -474,6 +482,18 @@ typedef struct MP4TagArtwork_s
     MP4TagArtworkType type; /**< data type */
 } MP4TagArtwork;
 
+typedef struct MP4TagTrack_s
+{
+    uint16_t index;
+    uint16_t total;
+} MP4TagTrack;
+
+typedef struct MP4TagDisk_s
+{
+    uint16_t index;
+    uint16_t total;
+} MP4TagDisk;
+
 /** Tags <b>convenience</b> structure.
  *
  *  This structure is used in the tags convenience API which allows for
@@ -502,6 +522,8 @@ typedef struct MP4Tags_s
     const char*     comments;
     const char*     genre;
     const char*     releaseDate;
+    const MP4TagTrack*   track;
+    const MP4TagDisk*    disk;
     const uint16_t* tempo;
     const uint8_t*  compilation;
 
@@ -599,6 +621,7 @@ MP4V2_EXPORT void MP4TagsSetComposer        ( const MP4Tags*, const char* );
 MP4V2_EXPORT void MP4TagsSetComments        ( const MP4Tags*, const char* );
 MP4V2_EXPORT void MP4TagsSetGenre           ( const MP4Tags*, const char* );
 MP4V2_EXPORT void MP4TagsSetReleaseDate     ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetDisk            ( const MP4Tags*, const uint16_t*, const uint16_t* );
 MP4V2_EXPORT void MP4TagsSetTempo           ( const MP4Tags*, const uint16_t* );
 MP4V2_EXPORT void MP4TagsSetCompliation     ( const MP4Tags*, const uint8_t* ); /* TODO: Needs testing */
 

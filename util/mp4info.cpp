@@ -88,7 +88,6 @@ extern "C" int main( int argc, char** argv )
         if ( mp4file != MP4_INVALID_FILE_HANDLE ) {
             const MP4Tags* tags = MP4TagsAlloc();
             MP4TagsFetch( tags, mp4file );
-            uint16_t numvalue, numvalue2;
             if ( tags->name ) {
                 fprintf( stdout, " Name: %s\n", tags->name );
             }
@@ -122,13 +121,11 @@ extern "C" int main( int argc, char** argv )
             if ( tags->sortAlbum ) {
                 fprintf( stdout, " Sort Album: %s\n", tags->sortAlbum );
             }
-            if ( MP4GetMetadataTrack( mp4file, &numvalue, &numvalue2 ) ) {
-                fprintf( stdout, " Track: %u of %u\n", numvalue,
-                         numvalue2 );
+            if ( tags->track ) {
+                fprintf( stdout, " Track: %u of %u\n", tags->track->index, tags->track->total );
             }
-            if ( MP4GetMetadataDisk( mp4file, &numvalue, &numvalue2 ) ) {
-                fprintf( stdout, " Disk: %u of %u\n", numvalue,
-                         numvalue2 );
+            if ( tags->disk ) {
+                fprintf( stdout, " Disk: %u of %u\n", tags->disk->index, tags->disk->total );
             }
             if ( tags->genre ) {
                 fprintf( stdout, " Genre: %s\n", tags->genre );

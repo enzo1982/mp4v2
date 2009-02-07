@@ -22,8 +22,8 @@ using namespace mp4v2::util;
 
 /* One-letter options -- if you want to rearrange these, change them
    here, immediately below in OPT_STRING, and in the help text. */
-#define OPT_HELP         'h'
-#define OPT_VERSION      'v'
+#define OPT_HELP         'help'
+#define OPT_VERSION      'vers'
 #define OPT_ALBUM        'A'
 #define OPT_ARTIST       'a'
 #define OPT_TEMPO        'b'
@@ -51,7 +51,7 @@ using namespace mp4v2::util;
 #define OPT_REMOVE       'r'
 #define OPT_ALBUM_ARTIST 'R'
 
-#define OPT_STRING  "hvA:a:b:c:C:d:D:e:E:g:G:H:i:I:l:L:m:M:P:s:t:T:w:y:r:R:"
+#define OPT_STRING  "A:a:b:c:C:d:D:e:E:g:G:H:i:I:l:L:m:M:P:s:t:T:w:y:r:R:"
 
 #define ELEMENT_OF(x,i) x[int(i)]
 
@@ -59,8 +59,8 @@ static const char* const help_text =
     "OPTION... FILE...\n"
     "Adds or modifies iTunes-compatible tags on MP4 files.\n"
     "\n"
-    "  -h, -help            Display this help text and exit\n"
-    "  -v, -version         Display version information and exit\n"
+    "      -help            Display this help text and exit\n"
+    "      -version         Display version information and exit\n"
     "  -A, -album       STR  Set the album title\n"
     "  -a, -artist      STR  Set the artist information\n"
     "  -b, -tempo       NUM  Set the tempo (beats per minute)\n"

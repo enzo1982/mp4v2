@@ -75,6 +75,8 @@ Tags::c_fetch( MP4Tags*& tags, MP4FileHandle hFile )
     fetchString(  file, CODE_COMMENTS,          comments,          c.comments );
     fetchGenre(   file,                         genre,             c.genre );
     fetchString(  file, CODE_RELEASEDATE,       releaseDate,       c.releaseDate );
+    fetchTrack(   file,                         track,             c.track);
+    fetchDisk(    file,                         disk,              c.disk);
     fetchInteger( file, CODE_TEMPO,             tempo,             c.tempo );
     fetchInteger( file, CODE_COMPILATION,       compilation,       c.compilation );
 
@@ -355,6 +357,56 @@ Tags::fetchGenre( MP4File& file, string& cpp, const char*& c )
 ///////////////////////////////////////////////////////////////////////////////
 
 void
+Tags::fetchTrack( MP4File& file, MP4TagTrack& cpp, const MP4TagTrack*& c )
+{    
+    cpp.index = 0;
+    cpp.total = 0;
+    c = NULL;
+    
+    uint16_t index, total;
+    try {
+        file.GetMetadataTrack( &index, &total );
+    }
+    catch( MP4Error* e ) {
+        delete e;
+    }
+    cpp.index = index;
+    cpp.total = total;
+    
+    if (( index !=0 ) || ( total != 0 ))
+        c = &cpp;
+     else
+        c = NULL;
+ }
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+Tags::fetchDisk( MP4File& file, MP4TagDisk& cpp, const MP4TagDisk*& c )
+{    
+    cpp.index = 0;
+    cpp.total = 0;
+    c = NULL;
+    
+    uint16_t index, total;
+    try {
+        file.GetMetadataDisk( &index, &total );
+    }
+    catch( MP4Error* e ) {
+        delete e;
+    }
+    cpp.index = index;
+    cpp.total = total;
+    
+    if (( index !=0 ) || ( total != 0 ))
+        c = &cpp;
+     else
+        c = NULL;
+ }
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
 Tags::fetchInteger( MP4File& file, const string& code, uint8_t& cpp, const uint8_t*& c )
 {
     cpp = 0;
@@ -551,6 +603,8 @@ const string Tags::CODE_GROUPING          = "\xa9" "grp";
 const string Tags::CODE_COMPOSER          = "\xa9" "wrt";
 const string Tags::CODE_COMMENTS          = "\xa9" "cmt";
 const string Tags::CODE_RELEASEDATE       = "\xa9" "day";
+const string Tags::CODE_TRACK             = "trkn";
+const string Tags::CODE_DISK              = "disk";
 const string Tags::CODE_TEMPO             = "tmpo";
 const string Tags::CODE_COMPILATION       = "cpil";
 
