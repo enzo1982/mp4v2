@@ -26,6 +26,7 @@
  *      Alix Marchandise-Franquet  alix@cisco.com
  *      Ximpo Group Ltd.           mp4v2@ximpo.com
  *      Bill May                   wmay@cisco.com
+ *      Rouven Wessling            mp4v2@rouvenwessling.de
  */
 
 /*
@@ -1216,11 +1217,61 @@ MP4TagsSetReleaseDate( const MP4Tags* m, const char* value )
 ///////////////////////////////////////////////////////////////////////////////
 
 void
+MP4TagsSetTempo( const MP4Tags* m, const uint16_t* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setInteger( value, cpp.tempo, c.tempo );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4TagsSetCompliation( const MP4Tags* m, const uint8_t* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setInteger( value, cpp.compilation, c.compilation );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4TagsSetTVEpisode( const MP4Tags* m, const uint32_t* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setInteger( value, cpp.tvEpisode, c.tvEpisode );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
 MP4TagsSetDescription( const MP4Tags* m, const char* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
     MP4Tags& c = *const_cast<MP4Tags*>(m);
     cpp.c_setString( value, cpp.description, c.description );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4TagsSetLongDescription( const MP4Tags* m, const char* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setString( value, cpp.longDescription, c.longDescription );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4TagsSetLyrics( const MP4Tags* m, const char* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setString( value, cpp.lyrics, c.lyrics );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1251,6 +1302,46 @@ MP4TagsSetEncodedBy( const MP4Tags* m, const char* value )
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
     MP4Tags& c = *const_cast<MP4Tags*>(m);
     cpp.c_setString( value, cpp.encodedBy, c.encodedBy );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4TagsSetHDVideo( const MP4Tags* m, const uint8_t* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setInteger( value, cpp.hdVideo, c.hdVideo );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4TagsSetMediaType( const MP4Tags* m, const uint8_t* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setInteger( value, cpp.mediaType, c.mediaType );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4TagsSetGapless( const MP4Tags* m, const uint8_t* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setInteger( value, cpp.gapless, c.gapless );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4TagsSetCNID( const MP4Tags* m, const uint32_t* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setInteger( value, cpp.cnID, c.cnID );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

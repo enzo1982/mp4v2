@@ -13,6 +13,7 @@ This document lists significant contributors to @value{PROJECT.name}. If any con
 Edward Groenendaal          egroenen@@cisco.com
 Jonathon Rubin              jb.rubin@@gmail.com
 Kona Blend                  kona8lend@@gmail.com
+Rouven Wessling             mp4v2@@rouvenwessling.de
 @end example
 
 @heading Authors from original MPEG4IP/libmp4v2

@@ -18,6 +18,7 @@
 //
 //  Contributors:
 //      Kona Blend, kona8lend@@gmail.com
+//      Rouven Wessling, mp4v2@rouvenwessling.de
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -253,6 +254,17 @@ const EnumCountryCode::Entry EnumCountryCode::data[] = {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+template <>
+const EnumContentRating::Entry EnumContentRating::data[] = {
+    { mp4v2::impl::itmf::CR_NONE,      "none",       "None" },
+    { mp4v2::impl::itmf::CR_CLEAN,     "clean",      "Clean" },
+    { mp4v2::impl::itmf::CR_EXPLICIT,  "explicit",   "Explicit" },
+
+    { mp4v2::impl::itmf::CR_UNDEFINED } // must be last
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 #if defined( _MSC_VER )
 namespace mp4v2 { namespace impl { namespace itmf {
 #endif
@@ -265,6 +277,7 @@ const EnumGenreType enumGenreType;
 const EnumStikType enumStikType;
 const EnumAccountType enumAccountType;
 const EnumCountryCode enumCountryCode;
+const EnumContentRating enumContentRating;
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -26,7 +26,7 @@ using namespace mp4v2::util;
 #define OPT_VERSION      'v'
 #define OPT_ALBUM        'A'
 #define OPT_ARTIST       'a'
-#define OPT_BPM          'b'
+#define OPT_TEMPO        'b'
 #define OPT_COMMENT      'c'
 #define OPT_COPYRIGHT    'C'
 #define OPT_DISK         'd'
@@ -38,6 +38,8 @@ using namespace mp4v2::util;
 #define OPT_HD           'H'
 #define OPT_MEDIA_TYPE   'i'
 #define OPT_CNID         'I'
+#define OPT_LONGDESC     'l'
+#define OPT_LYRICS       'L'
 #define OPT_DESCRIPTION  'm'
 #define OPT_TVEPISODE    'M'
 #define OPT_PICTURE      'P'
@@ -49,7 +51,7 @@ using namespace mp4v2::util;
 #define OPT_REMOVE       'r'
 #define OPT_ALBUM_ARTIST 'R'
 
-#define OPT_STRING  "hvA:a:b:c:C:d:D:e:E:g:G:H:i:I:m:M:P:s:t:T:w:y:r:R:"
+#define OPT_STRING  "hvA:a:b:c:C:d:D:e:E:g:G:H:i:I:l:L:m:M:P:s:t:T:w:y:r:R:"
 
 #define ELEMENT_OF(x,i) x[int(i)]
 
@@ -72,7 +74,9 @@ static const char* const help_text =
     "  -G, -grouping    STR  Set the grouping name\n"
     "  -H, -hdvideo     NUM  Set the HD flag (1\\0)\n"
     "  -i, -type        STR  Set the Media Type(tvshow, movie, music, ...)\n"
-    "  -I, -cnid        NUM  Set cnID\n"
+    "  -I, -cnid        NUM  Set the cnID\n"
+    "  -l, -longdesc    NUM  Set the short description\n"
+    "  -L, -lyrics      NUM  Set the lyrics\n"
     "  -m, -description STR  Set the short description\n"
     "  -M, -episode     NUM  Set the episode number\n"
     "  -P, -picture     PTH  Set the picture as a .png\n"
@@ -81,7 +85,7 @@ static const char* const help_text =
     "  -T, -tracks      NUM  Set the number of tracks\n"
     "  -w, -writer      STR  Set the composer information\n"
     "  -y, -year        NUM  Set the release date\n"
-    "  -R, -albumartist STR Set the album artist\n"
+    "  -R, -albumartist STR  Set the album artist\n"
     "  -r, -remove      STR  Remove tags by code (e.g. \"-r cs\"\n"
     "                        removes the comment and song tags)";
 
@@ -104,11 +108,13 @@ extern "C" int
         { "hdvideo",     prog::Option::REQUIRED_ARG, 0, OPT_HD           },
         { "type",        prog::Option::REQUIRED_ARG, 0, OPT_MEDIA_TYPE   },
         { "cnid",        prog::Option::REQUIRED_ARG, 0, OPT_CNID         },
+        { "longdesc",    prog::Option::REQUIRED_ARG, 0, OPT_LONGDESC     },
+        { "lyrics",      prog::Option::REQUIRED_ARG, 0, OPT_LYRICS       },
         { "description", prog::Option::REQUIRED_ARG, 0, OPT_DESCRIPTION  },
         { "episode",     prog::Option::REQUIRED_ARG, 0, OPT_TVEPISODE    },
         { "picture",     prog::Option::REQUIRED_ARG, 0, OPT_PICTURE      },
         { "song",        prog::Option::REQUIRED_ARG, 0, OPT_NAME         },
-        { "tempo",       prog::Option::REQUIRED_ARG, 0, OPT_BPM          },
+        { "tempo",       prog::Option::REQUIRED_ARG, 0, OPT_TEMPO        },
         { "track",       prog::Option::REQUIRED_ARG, 0, OPT_TRACK        },
         { "tracks",      prog::Option::REQUIRED_ARG, 0, OPT_TRACKS       },
         { "writer",      prog::Option::REQUIRED_ARG, 0, OPT_COMPOSER     },
@@ -156,7 +162,7 @@ extern "C" int
             case OPT_HD:
             case OPT_CNID:
             case OPT_TVEPISODE:
-            case OPT_BPM:
+            case OPT_TEMPO:
                 r = sscanf( prog::optarg, "%d", &nums[c] );
                 if ( r < 1 ) {
                     fprintf( stderr, "%s: option requires numeric argument -- %c\n",
@@ -243,19 +249,25 @@ extern "C" int
                         MP4TagsSetGrouping( mdata, NULL );
                         break;
                     case OPT_HD:
-                        MP4DeleteMetadataHDVideo( h );
+                        MP4TagsSetHDVideo( mdata, NULL );
                         break;
                     case OPT_CNID:
-                        MP4DeleteMetadataCNID( h );
+                        MP4TagsSetCNID( mdata, NULL );
+                        break;
+                    case OPT_LONGDESC:
+                        MP4TagsSetLongDescription( mdata, NULL );
+                        break;
+                    case OPT_LYRICS:
+                        MP4TagsSetLyrics( mdata, NULL );
                         break;
                     case OPT_MEDIA_TYPE:
-                        MP4DeleteMetadataMediaType( h );
+                        MP4TagsSetMediaType( mdata, NULL );
                         break;
                     case OPT_DESCRIPTION:
-                        MP4TagsSetDescription( mdata , NULL );
+                        MP4TagsSetDescription( mdata, NULL );
                         break;
                     case OPT_TVEPISODE:
-                        MP4DeleteMetadataTVEpisode( h );
+                        MP4TagsSetTVEpisode( mdata, NULL );
                         break;
                     case OPT_NAME:
                         MP4TagsSetName( mdata, NULL );
@@ -266,8 +278,8 @@ extern "C" int
                     case OPT_RELEASEDATE:
                         MP4TagsSetReleaseDate( mdata, NULL );
                         break;
-                    case OPT_BPM:
-                        MP4DeleteMetadataTempo( h );
+                    case OPT_TEMPO:
+                        MP4TagsSetTempo( mdata, NULL );
                         break;
                     case OPT_TRACK:
                         MP4DeleteMetadataTrack( h );
@@ -335,23 +347,38 @@ extern "C" int
                         MP4TagsSetGrouping( mdata, tags[i] );
                         break;
                     case OPT_HD:
-                        MP4SetMetadataHDVideo( h, nums[i] );
+                    {
+                        uint8_t value = static_cast<uint8_t>( nums[i] );
+                        MP4TagsSetHDVideo( mdata, &value );
                         break;
+                    }
                     case OPT_CNID:
-                        MP4SetMetadataCNID( h, nums[i] );
+                    {
+                        uint32_t value = static_cast<uint32_t>( nums[i] );
+                        MP4TagsSetCNID( mdata, &value );
+                        break;
+                    }
+                    case OPT_LONGDESC:
+                        MP4TagsSetLongDescription( mdata, tags[i] );
+                        break;
+                    case OPT_LYRICS:
+                        MP4TagsSetLyrics( mdata, tags[i] );
                         break;
                     case OPT_MEDIA_TYPE:
                     {
-                        itmf::StikType st = itmf::enumStikType.toType( tags[i] );
-                        MP4SetMetadataMediaType( h, st );
+                        uint8_t st = static_cast<uint8_t>( itmf::enumStikType.toType( tags[i] ) ) ;
+                        MP4TagsSetMediaType( mdata, &st );
                         break;
                     }
                     case OPT_DESCRIPTION:
                         MP4TagsSetDescription( mdata, tags[i] );
                         break;
                     case OPT_TVEPISODE:
-                        MP4SetMetadataTVEpisode( h, nums[i] );
+                    {
+                        uint32_t value = static_cast<uint32_t>( nums[i] );
+                        MP4TagsSetTVEpisode( mdata, &value );
                         break;
+                    }
                     case OPT_NAME:
                         MP4TagsSetName( mdata, tags[i] );
                         break;
@@ -361,9 +388,12 @@ extern "C" int
                     case OPT_RELEASEDATE:
                         MP4TagsSetReleaseDate( mdata, tags[i] );
                         break;
-                    case OPT_BPM:
-                        MP4SetMetadataTempo( h, nums[i] );
+                    case OPT_TEMPO:
+                    {
+                        uint16_t value = static_cast<uint16_t>( nums[i] );
+                        MP4TagsSetTempo( mdata, &value );
                         break;
+                    }
                     case OPT_ALBUM_ARTIST:
                         MP4TagsSetAlbumArtist( mdata, tags[i] );
                         break;

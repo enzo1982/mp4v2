@@ -15,8 +15,12 @@
  * Portions created by Cisco Systems Inc. are
  * Copyright (C) Cisco Systems Inc. 2001-2002.  All Rights Reserved.
  *
+ * Portions created by Rouven Wessling are
+ * Copyright (C) 2008-2009. All Rights Reserved.
+ *
  * Contributor(s):
  *      Dave Mackie     dmackie@cisco.com
+ *      Rouven Wessling mp4v2@rouvenwessling.de
  */
 
 #include "util/impl.h"
@@ -132,8 +136,8 @@ extern "C" int main( int argc, char** argv )
             if ( tags->grouping ) {
                 fprintf( stdout, " Grouping: %s\n", tags->grouping );
             }
-            if ( tags->beatsPerMinute ) {
-                fprintf( stdout, " BPM: %u\n", *tags->beatsPerMinute );
+            if ( tags->tempo ) {
+                fprintf( stdout, " BPM: %u\n", *tags->tempo );
             }
             if ( tags->comments ) {
                 fprintf( stdout, " Comments: %s\n", tags->comments );
@@ -157,7 +161,8 @@ extern "C" int main( int argc, char** argv )
                 fprintf( stdout, " Copyright: %s\n", tags->copyright );
             }
             if ( tags->contentRating ) {
-                fprintf( stdout, " Explicit Content: %s\n", tags->contentRating ? "yes" : "no" );
+                string s = itmf::enumContentRating.toString( static_cast<itmf::ContentRating>( *tags->contentRating ), true );
+                fprintf( stdout, " Content Rating: %s\n", s.c_str() );
             }
             if ( tags->hdVideo ) {
                 fprintf( stdout, " HD Video: %s\n", *tags->hdVideo ? "yes" : "no");
@@ -185,7 +190,7 @@ extern "C" int main( int argc, char** argv )
                 fprintf( stdout, " Long Description: %s\n", tags->longDescription );
             }
             if ( tags->lyrics ) {
-                fprintf( stdout, " Lyrics: \n%s\n", tags->lyrics );
+                fprintf( stdout, " Lyrics: \n %s\n", tags->lyrics );
             }
             if ( tags->tvEpisode ) {
                 fprintf( stdout, " TV Episode: %u\n", *tags->tvEpisode );
@@ -210,7 +215,6 @@ extern "C" int main( int argc, char** argv )
             }
             if ( tags->iTunesAccountType ) {
                 string s = itmf::enumAccountType.toString( static_cast<itmf::AccountType>( *tags->iTunesAccountType ), true );
-                //fprintf( stdout, " iTunes Account Type: %u\n", *tags->iTunesAccountType );
                 fprintf( stdout, " iTunes Account Type: %s\n", s.c_str() );
             }
             if ( tags->purchaseDate ) {
@@ -218,7 +222,6 @@ extern "C" int main( int argc, char** argv )
             }
             if ( tags->iTunesCountry ) {
                 string s = itmf::enumCountryCode.toString( static_cast<itmf::CountryCode>( *tags->iTunesCountry ), true );
-                //fprintf( stdout, " iTunes Store Country Code: %u\n", *tags->iTunesCountry );
                 fprintf( stdout, " iTunes Store Country: %s\n", s.c_str() );
             }
             MP4TagsFree( tags );

@@ -18,6 +18,7 @@
 //
 //  Contributors:
 //      Kona Blend, kona8lend@@gmail.com
+//      Rouven Wessling, mp4v2@rouvenwessling.de
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -213,7 +214,7 @@ enum StikType {
     STIK_TV_SHOW     = 10,
     STIK_BOOKLET     = 11,
 
-    STIK_UNDEFINED = 255
+    STIK_UNDEFINED   = 255
 };
 
 typedef Enum<StikType,STIK_UNDEFINED> EnumStikType;
@@ -269,6 +270,20 @@ MP4V2_EXPORT extern const EnumCountryCode enumCountryCode;
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/// enumerated 8-bit Content Rating used by iTunes.
+/// Note values are not formally defined in any specification.
+enum ContentRating {   
+    CR_NONE      = 0,
+    CR_CLEAN     = 2,
+    CR_EXPLICIT  = 4,
+
+    CR_UNDEFINED = 255
+};
+
+typedef Enum<ContentRating,CR_UNDEFINED> EnumContentRating;
+MP4V2_EXPORT extern const EnumContentRating enumContentRating;
+
+///////////////////////////////////////////////////////////////////////////////
 /// compute BasicType by examining raw bytes header.
 MP4V2_EXPORT BasicType
 computeBasicType( const void* buffer, uint32_t size );

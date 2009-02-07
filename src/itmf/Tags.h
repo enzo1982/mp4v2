@@ -18,6 +18,7 @@
 //
 //  Contributors:
 //      Kona Blend, kona8lend@gmail.com
+//      Rouven Wessling, mp4v2@rouvenwessling.de
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -39,9 +40,9 @@ public:
     static const string CODE_COMPOSER;
     static const string CODE_COMMENTS;
     static const string CODE_RELEASEDATE;
-    static const string CODE_BEATSPERMINUTE;
+    static const string CODE_TEMPO;
     static const string CODE_COMPILATION;
-        
+
     static const string CODE_TVSHOW;
     static const string CODE_TVNETWORK;
     static const string CODE_TVEPISODEID;
@@ -51,28 +52,28 @@ public:
     static const string CODE_DESCRIPTION;
     static const string CODE_LONGDESCRIPTION;
     static const string CODE_LYRICS;
-    
+
     static const string CODE_SORTNAME;
     static const string CODE_SORTARTIST;
     static const string CODE_SORTALBUMARTIST;
     static const string CODE_SORTALBUM;
     static const string CODE_SORTCOMPOSER;
     static const string CODE_SORTTVSHOW;
-       
+
     static const string CODE_COPYRIGHT;
     static const string CODE_ENCODINGTOOL;   
     static const string CODE_ENCODEDBY;
     static const string CODE_PURCHASEDATE;
 
-    static const string CODE_CATEGORY;
-    static const string CODE_KEYWORDS;
     static const string CODE_PODCAST;
-    
+    static const string CODE_KEYWORDS;
+    static const string CODE_CATEGORY;
+
     static const string CODE_HDVIDEO;
     static const string CODE_MEDIATYPE;
     static const string CODE_CONTENTRATING;
     static const string CODE_GAPLESS;
-    
+
     static const string CODE_ITUNESACCOUNT;
     static const string CODE_ITUNESACCOUNTTYPE;
     static const string CODE_CNID;
@@ -88,19 +89,19 @@ public:
     string    comments;
     string    genre;
     string    releaseDate;
-    uint16_t  beatsPerMinute;
+    uint16_t  tempo;
     uint8_t   compilation;
-    
+
     string    tvShow;
-    string    tvNetwork;
     string    tvEpisodeID;
     uint32_t  tvSeason;
     uint32_t  tvEpisode;
+    string    tvNetwork;
 
     string    description;
     string    longDescription;
     string    lyrics;
-    
+
     string    sortName;
     string    sortArtist;
     string    sortAlbumArtist;
@@ -114,16 +115,16 @@ public:
     string    encodingTool;  
     string    encodedBy;
     string    purchaseDate;
-    
-    string    category;
-    string    keywords;
+
     uint8_t   podcast;
+    string    keywords;
+    string    category;
 
     uint8_t   hdVideo;
     uint8_t   mediaType;
     uint8_t   contentRating;
     uint8_t   gapless;
-    
+
     string    iTunesAccount;
     uint8_t   iTunesAccountType;
     uint32_t  cnID;
@@ -143,21 +144,23 @@ public:
     void c_removeArtwork ( MP4Tags*&, uint32_t );
 
     void c_setString  ( const char*, string&, const char*& );
-    void c_setInteger ( const uint8_t*, uint8_t&, const uint8_t*& );
+    void c_setInteger ( const uint8_t*,  uint8_t&,  const uint8_t*& );
+    void c_setInteger ( const uint16_t*, uint16_t&, const uint16_t*& );
     void c_setInteger ( const uint32_t*, uint32_t&, const uint32_t*& );
 
 private:
     void fetchString  ( MP4File&, const string&, string&, const char*& );
-    void fetchInteger ( MP4File&, const string&, uint8_t&, const uint8_t*& );
+    void fetchInteger ( MP4File&, const string&, uint8_t&,  const uint8_t*& );
     void fetchInteger ( MP4File&, const string&, uint16_t&, const uint16_t*& );
     void fetchInteger ( MP4File&, const string&, uint32_t&, const uint32_t*& );
     void fetchGenre   ( MP4File&, string&, const char*& );
 
     bool fetchData ( MP4File&, const string&, uint8_t*&, uint32_t& );
 
-    void storeGenre  ( MP4File&, const string&, const char* );
+    void storeGenre   ( MP4File&, const string&, const char* );
     void storeString  ( MP4File&, const string&, const string&, const char* );
-    void storeInteger ( MP4File&, const string&, uint8_t, const uint8_t* );
+    void storeInteger ( MP4File&, const string&, uint8_t,  const uint8_t* );
+    void storeInteger ( MP4File&, const string&, uint16_t, const uint16_t* );
     void storeInteger ( MP4File&, const string&, uint32_t, const uint32_t* );
 
     void updateArtworkShadow( MP4Tags*& );

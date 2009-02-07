@@ -286,54 +286,98 @@ MP4V2_EXPORT
 bool MP4DeleteMetadataGrouping(
     MP4FileHandle hFile );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4SetMetadataTempo(
     MP4FileHandle hFile,
     uint16_t      tempo );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4GetMetadataTempo(
     MP4FileHandle hFile,
     uint16_t*     tempo );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4DeleteMetadataTempo(
     MP4FileHandle hFile );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4SetMetadataCompilation(
     MP4FileHandle hFile,
     uint8_t       cpl );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4GetMetadataCompilation(
     MP4FileHandle hFile,
     uint8_t*      cpl );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4DeleteMetadataCompilation(
     MP4FileHandle hFile );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4SetMetadataPartOfGaplessAlbum(
     MP4FileHandle hFile,
     uint8_t       pgap );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4GetMetadataPartOfGaplessAlbum(
     MP4FileHandle hFile,
     uint8_t*      pgap );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4DeleteMetadataPartOfGaplessAlbum(
     MP4FileHandle hFile );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4SetMetadataCoverArt(
     MP4FileHandle hFile,
     uint8_t*      coverArt,
     uint32_t      size );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4GetMetadataCoverArt(
     MP4FileHandle hFile,
@@ -349,6 +393,10 @@ MP4V2_EXPORT
 uint32_t MP4GetMetadataCoverArtCount(
     MP4FileHandle hFile );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
+MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4DeleteMetadataCoverArt(
     MP4FileHandle hFile );
@@ -377,72 +425,6 @@ bool MP4GetMetadataAlbumArtist(
 MP4V2_DEPRECATED
 MP4V2_EXPORT
 bool MP4DeleteMetadataAlbumArtist(
-    MP4FileHandle hFile );
-
-MP4V2_EXPORT
-bool MP4SetMetadataHDVideo(
-    MP4FileHandle hFile,
-    uint8_t       value );
-
-MP4V2_EXPORT
-bool MP4GetMetadataHDVideo(
-    MP4FileHandle hFile,
-    uint8_t*      value );
-
-MP4V2_EXPORT
-bool MP4DeleteMetadataHDVideo(
-    MP4FileHandle hFile );
-  
-MP4V2_EXPORT
-bool MP4SetMetadataTVEpisode(
-    MP4FileHandle hFile,
-    uint32_t       value );
-
-MP4V2_EXPORT
-bool MP4GetMetadataTVEpisode(
-    MP4FileHandle hFile,
-    uint32_t*      value );
-
-MP4V2_EXPORT
-bool MP4DeleteMetadataTVEpisode(
-    MP4FileHandle hFile );
-
-MP4V2_EXPORT
-bool MP4GetMetadataTVSeason(
-    MP4FileHandle hFile,
-    uint32_t*      value );
-    
-MP4V2_EXPORT
-bool MP4GetMetadataKeywords(
-    MP4FileHandle hFile,
-    char**        value );
-
-MP4V2_EXPORT
-bool MP4SetMetadataCNID(
-    MP4FileHandle hFile,
-    uint32_t       value );
-
-MP4V2_EXPORT
-bool MP4DeleteMetadataCNID(
-    MP4FileHandle hFile );
-
-MP4V2_EXPORT
-bool MP4GetMetadataCNID(
-    MP4FileHandle hFile,
-    uint32_t*      value );
-
-MP4V2_EXPORT
-bool MP4SetMetadataMediaType(
-    MP4FileHandle hFile,
-    uint8_t       value );
-
-MP4V2_EXPORT
-bool MP4GetMetadataMediaType(
-    MP4FileHandle hFile,
-    uint8_t*      value );
-
-MP4V2_EXPORT
-bool MP4DeleteMetadataMediaType(
     MP4FileHandle hFile );
 
 MP4V2_EXPORT
@@ -520,22 +502,22 @@ typedef struct MP4Tags_s
     const char*     comments;
     const char*     genre;
     const char*     releaseDate;
-    const uint16_t* beatsPerMinute;
+    const uint16_t* tempo;
     const uint8_t*  compilation;
-    
+
     const char*     tvShow;
     const char*     tvNetwork;
     const char*     tvEpisodeID;
     const uint32_t* tvSeason;
     const uint32_t* tvEpisode;
-    
+
     const char*     description;
     const char*     longDescription;
     const char*     lyrics;
-    
+
     const char*     sortName;
     const char*     sortArtist;
-    const char*     sortAlbumArtist; 
+    const char*     sortAlbumArtist;
     const char*     sortAlbum;
     const char*     sortComposer;
     const char*     sortTVShow;
@@ -547,16 +529,16 @@ typedef struct MP4Tags_s
     const char*     encodingTool;
     const char*     encodedBy;
     const char*     purchaseDate;
- 
-    const char*     keywords;  /* TODO: Needs testing */
-    const char*     category;
+
     const uint8_t*  podcast;
-    
+    const char*     keywords;  /* TODO: Needs testing */
+    const char*     category;    
+
     const uint8_t*  hdVideo;
     const uint8_t*  mediaType;
     const uint8_t*  contentRating;
     const uint8_t*  gapless;
-    
+
     const char*     iTunesAccount;
     const uint8_t*  iTunesAccountType;
     const uint32_t* cnID;
@@ -608,25 +590,37 @@ void MP4TagsStore( const MP4Tags* tags, MP4FileHandle hFile );
 MP4V2_EXPORT
 void MP4TagsFree( const MP4Tags* tags );
 
-MP4V2_EXPORT void MP4TagsSetName        ( const MP4Tags*, const char* );
-MP4V2_EXPORT void MP4TagsSetArtist      ( const MP4Tags*, const char* );
-MP4V2_EXPORT void MP4TagsSetAlbumArtist ( const MP4Tags*, const char* );
-MP4V2_EXPORT void MP4TagsSetAlbum       ( const MP4Tags*, const char* );
-MP4V2_EXPORT void MP4TagsSetGrouping    ( const MP4Tags*, const char* );
-MP4V2_EXPORT void MP4TagsSetComposer    ( const MP4Tags*, const char* );
-MP4V2_EXPORT void MP4TagsSetComments    ( const MP4Tags*, const char* );
-MP4V2_EXPORT void MP4TagsSetGenre       ( const MP4Tags*, const char* );
-MP4V2_EXPORT void MP4TagsSetReleaseDate ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetName            ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetArtist          ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetAlbumArtist     ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetAlbum           ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetGrouping        ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetComposer        ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetComments        ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetGenre           ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetReleaseDate     ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetTempo           ( const MP4Tags*, const uint16_t* );
+MP4V2_EXPORT void MP4TagsSetCompliation     ( const MP4Tags*, const uint8_t* ); /* TODO: Needs testing */
 
-MP4V2_EXPORT void MP4TagsSetDescription( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetTVEpisode       ( const MP4Tags*, const uint32_t* );
 
-MP4V2_EXPORT void MP4TagsSetCopyright    ( const MP4Tags*, const char* );
-MP4V2_EXPORT void MP4TagsSetEncodingTool ( const MP4Tags*, const char* );
-MP4V2_EXPORT void MP4TagsSetEncodedBy    ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetDescription     ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetLongDescription ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetLyrics          ( const MP4Tags*, const char* );
 
-MP4V2_EXPORT void MP4TagsAddArtwork    ( const MP4Tags*, MP4TagArtwork* );
-MP4V2_EXPORT void MP4TagsSetArtwork    ( const MP4Tags*, uint32_t, MP4TagArtwork* );
-MP4V2_EXPORT void MP4TagsRemoveArtwork ( const MP4Tags*, uint32_t );
+MP4V2_EXPORT void MP4TagsAddArtwork         ( const MP4Tags*, MP4TagArtwork* );
+MP4V2_EXPORT void MP4TagsSetArtwork         ( const MP4Tags*, uint32_t, MP4TagArtwork* );
+MP4V2_EXPORT void MP4TagsRemoveArtwork      ( const MP4Tags*, uint32_t );
+
+MP4V2_EXPORT void MP4TagsSetCopyright       ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetEncodingTool    ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetEncodedBy       ( const MP4Tags*, const char* );
+
+MP4V2_EXPORT void MP4TagsSetHDVideo         ( const MP4Tags*, const uint8_t* );
+MP4V2_EXPORT void MP4TagsSetMediaType       ( const MP4Tags*, const uint8_t* );
+MP4V2_EXPORT void MP4TagsSetGapless         ( const MP4Tags*, const uint8_t* ); /* TODO: Needs testing */
+
+MP4V2_EXPORT void MP4TagsSetCNID            ( const MP4Tags*, const uint32_t* );
 
 /** @} ***********************************************************************/
 

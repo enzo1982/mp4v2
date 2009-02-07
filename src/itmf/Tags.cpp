@@ -18,6 +18,7 @@
 //
 //  Contributors:
 //      Kona Blend, kona8lend@@gmail.com
+//      Rouven Wessling, mp4v2@rouvenwessling.de
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -65,53 +66,53 @@ Tags::c_fetch( MP4Tags*& tags, MP4FileHandle hFile )
     MP4Tags& c = *tags;
     MP4File& file = *static_cast<MP4File*>(hFile);
 
-    fetchString( file, CODE_NAME,         name,         c.name );
-    fetchString( file, CODE_ARTIST,       artist,       c.artist );
-    fetchString( file, CODE_ALBUMARTIST,  albumArtist,  c.albumArtist );
-    fetchString( file, CODE_ALBUM,        album,        c.album );
-    fetchString( file, CODE_GROUPING,     grouping,     c.grouping );
-    fetchString( file, CODE_COMPOSER,     composer,     c.composer );
-    fetchString( file, CODE_COMMENTS,     comments,     c.comments );
-    fetchGenre( file, genre, c.genre );
-    fetchString  ( file, CODE_RELEASEDATE,     releaseDate,     c.releaseDate );
-    fetchInteger ( file, CODE_BEATSPERMINUTE,  beatsPerMinute,  c.beatsPerMinute );
-    fetchInteger ( file, CODE_COMPILATION,     compilation,     c.compilation );
+    fetchString(  file, CODE_NAME,              name,              c.name );
+    fetchString(  file, CODE_ARTIST,            artist,            c.artist );
+    fetchString(  file, CODE_ALBUMARTIST,       albumArtist,       c.albumArtist );
+    fetchString(  file, CODE_ALBUM,             album,             c.album );
+    fetchString(  file, CODE_GROUPING,          grouping,          c.grouping );
+    fetchString(  file, CODE_COMPOSER,          composer,          c.composer );
+    fetchString(  file, CODE_COMMENTS,          comments,          c.comments );
+    fetchGenre(   file,                         genre,             c.genre );
+    fetchString(  file, CODE_RELEASEDATE,       releaseDate,       c.releaseDate );
+    fetchInteger( file, CODE_TEMPO,             tempo,             c.tempo );
+    fetchInteger( file, CODE_COMPILATION,       compilation,       c.compilation );
 
-    fetchString  ( file, CODE_TVSHOW,       tvShow,       c.tvShow );
-    fetchString  ( file, CODE_TVNETWORK,    tvNetwork,    c.tvNetwork );
-    fetchString  ( file, CODE_TVEPISODEID,  tvEpisodeID,  c.tvEpisodeID );
-    fetchInteger ( file, CODE_TVSEASON,     tvSeason,     c.tvSeason );
-    fetchInteger ( file, CODE_TVEPISODE,    tvEpisode,    c.tvEpisode );
+    fetchString(  file, CODE_TVSHOW,            tvShow,            c.tvShow );
+    fetchString(  file, CODE_TVNETWORK,         tvNetwork,         c.tvNetwork );
+    fetchString(  file, CODE_TVEPISODEID,       tvEpisodeID,       c.tvEpisodeID );
+    fetchInteger( file, CODE_TVSEASON,          tvSeason,          c.tvSeason );
+    fetchInteger( file, CODE_TVEPISODE,         tvEpisode,         c.tvEpisode );
 
-    fetchString( file, CODE_SORTNAME,         sortName,         c.sortName );
-    fetchString( file, CODE_SORTARTIST,       sortArtist,       c.sortArtist );
-    fetchString( file, CODE_SORTALBUMARTIST,  sortAlbumArtist,  c.sortAlbumArtist );
-    fetchString( file, CODE_SORTALBUM,        sortAlbum,        c.sortAlbum );
-    fetchString( file, CODE_SORTCOMPOSER,     sortComposer,     c.sortComposer );
-    fetchString( file, CODE_SORTTVSHOW,       sortTVShow,       c.sortTVShow );
+    fetchString(  file, CODE_SORTNAME,          sortName,          c.sortName );
+    fetchString(  file, CODE_SORTARTIST,        sortArtist,        c.sortArtist );
+    fetchString(  file, CODE_SORTALBUMARTIST,   sortAlbumArtist,   c.sortAlbumArtist );
+    fetchString(  file, CODE_SORTALBUM,         sortAlbum,         c.sortAlbum );
+    fetchString(  file, CODE_SORTCOMPOSER,      sortComposer,      c.sortComposer );
+    fetchString(  file, CODE_SORTTVSHOW,        sortTVShow,        c.sortTVShow );
 
-    fetchString( file, CODE_DESCRIPTION,      description,      c.description );
-    fetchString( file, CODE_LONGDESCRIPTION,  longDescription,  c.longDescription );
-    fetchString( file, CODE_LYRICS,           lyrics,           c.lyrics );
+    fetchString(  file, CODE_DESCRIPTION,       description,       c.description );
+    fetchString(  file, CODE_LONGDESCRIPTION,   longDescription,   c.longDescription );
+    fetchString(  file, CODE_LYRICS,            lyrics,            c.lyrics );
 
-    fetchString( file, CODE_COPYRIGHT,     copyright,     c.copyright );
-    fetchString( file, CODE_ENCODINGTOOL,  encodingTool,  c.encodingTool ); 
-    fetchString( file, CODE_ENCODEDBY,     encodedBy,     c.encodedBy );
-    fetchString( file, CODE_PURCHASEDATE,  purchaseDate,  c.purchaseDate );
+    fetchString(  file, CODE_COPYRIGHT,         copyright,         c.copyright );
+    fetchString(  file, CODE_ENCODINGTOOL,      encodingTool,      c.encodingTool ); 
+    fetchString(  file, CODE_ENCODEDBY,         encodedBy,         c.encodedBy );
+    fetchString(  file, CODE_PURCHASEDATE,      purchaseDate,      c.purchaseDate );
 
-    fetchString  ( file, CODE_CATEGORY,  category,  c.category );
-    fetchString  ( file, CODE_KEYWORDS,  keywords,  c.keywords );
-    fetchInteger ( file, CODE_PODCAST,   podcast,   c.podcast );
-    
-    fetchInteger( file, CODE_HDVIDEO,        hdVideo,        c.hdVideo );
-    fetchInteger( file, CODE_MEDIATYPE,      mediaType,      c.mediaType );
-    fetchInteger( file, CODE_CONTENTRATING,  contentRating,  c.contentRating );
-    fetchInteger( file, CODE_GAPLESS,        gapless,        c.gapless );
+    fetchInteger( file, CODE_PODCAST,           podcast,           c.podcast );
+    fetchString(  file, CODE_KEYWORDS,          keywords,          c.keywords );
+    fetchString(  file, CODE_CATEGORY,          category,          c.category );
 
-    fetchString  ( file, CODE_ITUNESACCOUNT,     iTunesAccount,     c.iTunesAccount );
-    fetchInteger ( file, CODE_ITUNESACCOUNTTYPE, iTunesAccountType, c.iTunesAccountType );
-    fetchInteger ( file, CODE_CNID,              cnID,              c.cnID );
-    fetchInteger ( file, CODE_ITUNESCOUNTRY,     iTunesCountry,     c.iTunesCountry );
+    fetchInteger( file, CODE_HDVIDEO,           hdVideo,           c.hdVideo );
+    fetchInteger( file, CODE_MEDIATYPE,         mediaType,         c.mediaType );
+    fetchInteger( file, CODE_CONTENTRATING,     contentRating,     c.contentRating );
+    fetchInteger( file, CODE_GAPLESS,           gapless,           c.gapless );
+
+    fetchString(  file, CODE_ITUNESACCOUNT,     iTunesAccount,     c.iTunesAccount );
+    fetchInteger( file, CODE_ITUNESACCOUNTTYPE, iTunesAccountType, c.iTunesAccountType );
+    fetchInteger( file, CODE_CNID,              cnID,              c.cnID );
+    fetchInteger( file, CODE_ITUNESCOUNTRY,     iTunesCountry,     c.iTunesCountry );
 
     // fetch full list and overwrite our copy, otherwise clear
     {
@@ -209,6 +210,21 @@ Tags::c_setInteger( const uint8_t* value, uint8_t& cpp, const uint8_t*& c )
 ///////////////////////////////////////////////////////////////////////////////
 
 void
+Tags::c_setInteger( const uint16_t* value, uint16_t& cpp, const uint16_t*& c )
+{
+    if( !value ) {
+        cpp = 0;
+        c = NULL;
+    }
+    else {
+        cpp = *value;
+        c = &cpp;
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
 Tags::c_setInteger( const uint32_t* value, uint32_t& cpp, const uint32_t*& c )
 {
     if( !value ) {
@@ -244,21 +260,34 @@ Tags::c_store( MP4Tags*& tags, MP4FileHandle hFile )
     MP4Tags& c = *tags;
     MP4File& file = *static_cast<MP4File*>(hFile);
    
-    storeString( file, CODE_NAME,         name,         c.name );
-    storeString( file, CODE_ARTIST,       artist,       c.artist );
-    storeString( file, CODE_ALBUMARTIST,  albumArtist,  c.albumArtist );
-    storeString( file, CODE_ALBUM,        album,        c.album );
-    storeString( file, CODE_GROUPING,     grouping,     c.grouping );
-    storeString( file, CODE_COMPOSER,     composer,     c.composer );
-    storeString( file, CODE_COMMENTS,     comments,     c.comments );
-    storeGenre( file, genre, c.genre );
-    storeString( file, CODE_RELEASEDATE,  releaseDate,  c.releaseDate );
+    storeString(  file, CODE_NAME,              name,              c.name );
+    storeString(  file, CODE_ARTIST,            artist,            c.artist );
+    storeString(  file, CODE_ALBUMARTIST,       albumArtist,       c.albumArtist );
+    storeString(  file, CODE_ALBUM,             album,             c.album );
+    storeString(  file, CODE_GROUPING,          grouping,          c.grouping );
+    storeString(  file, CODE_COMPOSER,          composer,          c.composer );
+    storeString(  file, CODE_COMMENTS,          comments,          c.comments );
+    storeGenre(   file,                         genre,             c.genre );
+    storeString(  file, CODE_RELEASEDATE,       releaseDate,       c.releaseDate );
+    storeInteger( file, CODE_TEMPO,             tempo,             c.tempo );
+    storeInteger( file, CODE_COMPILATION,       compilation,       c.compilation );
     
-    storeString( file, CODE_DESCRIPTION, description, c.description );
+    storeInteger( file, CODE_TVEPISODE,         tvEpisode,         c.tvEpisode );
+    
+    storeString(  file, CODE_DESCRIPTION,       description,       c.description );
+    storeString(  file, CODE_LONGDESCRIPTION,   longDescription,   c.longDescription );
+    storeString(  file, CODE_LYRICS,            lyrics,            c.lyrics );
 
-    storeString( file, CODE_COPYRIGHT,     copyright,     c.copyright );
-    storeString( file, CODE_ENCODINGTOOL,  encodingTool,  c.encodingTool );
-    storeString( file, CODE_ENCODEDBY,     encodedBy,     c.encodedBy );
+    storeString(  file, CODE_COPYRIGHT,         copyright,         c.copyright );
+    storeString(  file, CODE_ENCODINGTOOL,      encodingTool,      c.encodingTool );
+    storeString(  file, CODE_ENCODEDBY,         encodedBy,         c.encodedBy );
+
+    storeInteger( file, CODE_HDVIDEO,           hdVideo,           c.hdVideo );
+    storeInteger( file, CODE_MEDIATYPE,         mediaType,         c.mediaType );
+    storeInteger( file, CODE_GAPLESS,           gapless,           c.gapless );
+    
+    storeInteger( file, CODE_CNID,              cnID,              c.cnID );
+
 
     // destroy all cover-art then add each
     {
@@ -430,6 +459,18 @@ Tags::storeInteger( MP4File& file, const string& code, uint8_t cpp, const uint8_
 ///////////////////////////////////////////////////////////////////////////////
 
 void
+Tags::storeInteger( MP4File& file, const string& code, uint16_t cpp, const uint16_t* c )
+{
+    if( c )
+        file.SetMetadataUint16( code.c_str(), cpp );
+    else
+        file.DeleteMetadataAtom( code.c_str() );
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
 Tags::storeInteger( MP4File& file, const string& code, uint32_t cpp, const uint32_t* c )
 {
     if( c )
@@ -510,7 +551,7 @@ const string Tags::CODE_GROUPING          = "\xa9" "grp";
 const string Tags::CODE_COMPOSER          = "\xa9" "wrt";
 const string Tags::CODE_COMMENTS          = "\xa9" "cmt";
 const string Tags::CODE_RELEASEDATE       = "\xa9" "day";
-const string Tags::CODE_BEATSPERMINUTE    = "tmpo";
+const string Tags::CODE_TEMPO             = "tmpo";
 const string Tags::CODE_COMPILATION       = "cpil";
 
 const string Tags::CODE_TVSHOW            = "tvsh";
@@ -535,9 +576,9 @@ const string Tags::CODE_ENCODINGTOOL      = "\xa9" "too";
 const string Tags::CODE_ENCODEDBY         = "\xa9" "enc";
 const string Tags::CODE_PURCHASEDATE      = "purd";
 
-const string Tags::CODE_CATEGORY          = "catg";
-const string Tags::CODE_KEYWORDS          = "keyw";
 const string Tags::CODE_PODCAST           = "pcst";
+const string Tags::CODE_KEYWORDS          = "keyw";
+const string Tags::CODE_CATEGORY          = "catg";
 
 const string Tags::CODE_HDVIDEO           = "hdvd";
 const string Tags::CODE_MEDIATYPE         = "stik";
