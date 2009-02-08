@@ -627,6 +627,26 @@
 				>
 			</File>
 			<Filter
+				Name="bmff"
+				>
+				<File
+					RelativePath="..\..\src\bmff\bmff.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\bmff\impl.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\bmff\type.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\bmff\type.h"
+					>
+				</File>
+			</Filter>
+			<Filter
 				Name="itmf"
 				>
 				<File
@@ -646,11 +666,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\itmf\Metadata.cpp"
+					RelativePath="..\..\src\itmf\Tags.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\itmf\Metadata.h"
+					RelativePath="..\..\src\itmf\Tags.h"
 					>
 				</File>
 				<File
