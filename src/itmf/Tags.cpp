@@ -274,8 +274,12 @@ Tags::c_store( MP4Tags*& tags, MP4FileHandle hFile )
     storeInteger( file, CODE_TEMPO,             tempo,             c.tempo );
     storeInteger( file, CODE_COMPILATION,       compilation,       c.compilation );
     
+    storeString(  file, CODE_TVSHOW,            tvShow,            c.tvShow );
+    storeString(  file, CODE_TVNETWORK,         tvNetwork,         c.tvNetwork );
+    storeString(  file, CODE_TVEPISODEID,       tvEpisodeID,       c.tvEpisodeID );
+    storeInteger( file, CODE_TVSEASON,          tvSeason,          c.tvSeason );
     storeInteger( file, CODE_TVEPISODE,         tvEpisode,         c.tvEpisode );
-    
+
     storeString(  file, CODE_DESCRIPTION,       description,       c.description );
     storeString(  file, CODE_LONGDESCRIPTION,   longDescription,   c.longDescription );
     storeString(  file, CODE_LYRICS,            lyrics,            c.lyrics );
@@ -287,7 +291,7 @@ Tags::c_store( MP4Tags*& tags, MP4FileHandle hFile )
     storeInteger( file, CODE_HDVIDEO,           hdVideo,           c.hdVideo );
     storeInteger( file, CODE_MEDIATYPE,         mediaType,         c.mediaType );
     storeInteger( file, CODE_GAPLESS,           gapless,           c.gapless );
-    
+
     storeInteger( file, CODE_CNID,              cnID,              c.cnID );
 
 

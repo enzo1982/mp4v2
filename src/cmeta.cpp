@@ -1040,11 +1040,51 @@ MP4TagsSetCompliation( const MP4Tags* m, const uint8_t* value )
 ///////////////////////////////////////////////////////////////////////////////
 
 void
+MP4TagsSetTVShow( const MP4Tags* m, const char* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setString( value, cpp.tvShow, c.tvShow );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4TagsSetTVNetwork( const MP4Tags* m, const char* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setString( value, cpp.tvNetwork, c.tvNetwork );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4TagsSetTVEpisodeID( const MP4Tags* m, const char* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setString( value, cpp.tvEpisodeID, c.tvEpisodeID );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
 MP4TagsSetTVEpisode( const MP4Tags* m, const uint32_t* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
     MP4Tags& c = *const_cast<MP4Tags*>(m);
     cpp.c_setInteger( value, cpp.tvEpisode, c.tvEpisode );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4TagsSetTVSeason( const MP4Tags* m, const uint32_t* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setInteger( value, cpp.tvSeason, c.tvSeason );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -625,6 +625,10 @@ MP4V2_EXPORT void MP4TagsSetDisk            ( const MP4Tags*, const uint16_t*, c
 MP4V2_EXPORT void MP4TagsSetTempo           ( const MP4Tags*, const uint16_t* );
 MP4V2_EXPORT void MP4TagsSetCompliation     ( const MP4Tags*, const uint8_t* ); /* TODO: Needs testing */
 
+MP4V2_EXPORT void MP4TagsSetTVShow          ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetTVNetwork       ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetTVEpisodeID     ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetTVSeason        ( const MP4Tags*, const uint32_t* );
 MP4V2_EXPORT void MP4TagsSetTVEpisode       ( const MP4Tags*, const uint32_t* );
 
 MP4V2_EXPORT void MP4TagsSetDescription     ( const MP4Tags*, const char* );

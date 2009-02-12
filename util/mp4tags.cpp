@@ -42,8 +42,12 @@ using namespace mp4v2::util;
 #define OPT_LYRICS       'L'
 #define OPT_DESCRIPTION  'm'
 #define OPT_TVEPISODE    'M'
+#define OPT_TVSEASON     'n'
+#define OPT_TVNETWORK    'N'
+#define OPT_TVEPISODEID  'o'
 #define OPT_PICTURE      'P'
 #define OPT_NAME         's'
+#define OPT_TVSHOW       'S'
 #define OPT_TRACK        't'
 #define OPT_TRACKS       'T'
 #define OPT_COMPOSER     'w'
@@ -51,7 +55,7 @@ using namespace mp4v2::util;
 #define OPT_REMOVE       'r'
 #define OPT_ALBUM_ARTIST 'R'
 
-#define OPT_STRING  "A:a:b:c:C:d:D:e:E:g:G:H:i:I:l:L:m:M:P:s:t:T:w:y:r:R:"
+#define OPT_STRING  "A:a:b:c:C:d:D:e:E:g:G:H:i:I:l:L:m:M:n:N:o:P:s:S:t:T:w:y:r:R:"
 
 #define ELEMENT_OF(x,i) x[int(i)]
 
@@ -79,8 +83,12 @@ static const char* const help_text =
     "  -L, -lyrics      NUM  Set the lyrics\n"
     "  -m, -description STR  Set the short description\n"
     "  -M, -episode     NUM  Set the episode number\n"
+    "  -n, -season      NUM  Set the season number\n"
+    "  -N, -network     STR  Set the TV network\n"
+    "  -o, -episodeid   STR  Set the TV episode ID\n"
     "  -P, -picture     PTH  Set the picture as a .png\n"
     "  -s, -song        STR  Set the song title\n"
+    "  -S  -show        STR  Set the TV show\n"
     "  -t, -track       NUM  Set the track number\n"
     "  -T, -tracks      NUM  Set the number of tracks\n"
     "  -w, -writer      STR  Set the composer information\n"
@@ -112,8 +120,12 @@ extern "C" int
         { "lyrics",      prog::Option::REQUIRED_ARG, 0, OPT_LYRICS       },
         { "description", prog::Option::REQUIRED_ARG, 0, OPT_DESCRIPTION  },
         { "episode",     prog::Option::REQUIRED_ARG, 0, OPT_TVEPISODE    },
+        { "season",      prog::Option::REQUIRED_ARG, 0, OPT_TVSEASON     },
+        { "network",     prog::Option::REQUIRED_ARG, 0, OPT_TVNETWORK    },
+        { "episodeid",   prog::Option::REQUIRED_ARG, 0, OPT_TVEPISODEID  },
         { "picture",     prog::Option::REQUIRED_ARG, 0, OPT_PICTURE      },
         { "song",        prog::Option::REQUIRED_ARG, 0, OPT_NAME         },
+        { "show",        prog::Option::REQUIRED_ARG, 0, OPT_TVSHOW       },
         { "tempo",       prog::Option::REQUIRED_ARG, 0, OPT_TEMPO        },
         { "track",       prog::Option::REQUIRED_ARG, 0, OPT_TRACK        },
         { "tracks",      prog::Option::REQUIRED_ARG, 0, OPT_TRACKS       },
@@ -162,6 +174,7 @@ extern "C" int
             case OPT_HD:
             case OPT_CNID:
             case OPT_TVEPISODE:
+            case OPT_TVSEASON:
             case OPT_TEMPO:
                 r = sscanf( prog::optarg, "%d", &nums[c] );
                 if ( r < 1 ) {
@@ -269,8 +282,20 @@ extern "C" int
                     case OPT_TVEPISODE:
                         MP4TagsSetTVEpisode( mdata, NULL );
                         break;
+                    case OPT_TVSEASON:
+                        MP4TagsSetTVSeason( mdata, NULL );
+                        break;
+                    case OPT_TVNETWORK:
+                        MP4TagsSetTVNetwork( mdata, NULL );
+                        break;
+                    case OPT_TVEPISODEID:
+                        MP4TagsSetTVEpisodeID( mdata, NULL );
+                        break;
                     case OPT_NAME:
                         MP4TagsSetName( mdata, NULL );
+                        break;
+                    case OPT_TVSHOW:
+                        MP4TagsSetTVShow( mdata, NULL );
                         break;
                     case OPT_COMPOSER:
                         MP4TagsSetComposer( mdata, NULL );
@@ -379,8 +404,23 @@ extern "C" int
                         MP4TagsSetTVEpisode( mdata, &value );
                         break;
                     }
+                    case OPT_TVSEASON:
+                    {
+                        uint32_t value = static_cast<uint32_t>( nums[i] );
+                        MP4TagsSetTVSeason( mdata, &value );
+                        break;
+                    }
+                    case OPT_TVNETWORK:
+                        MP4TagsSetTVNetwork( mdata, tags[i] );
+                        break;
+                    case OPT_TVEPISODEID:
+                        MP4TagsSetTVEpisodeID( mdata, tags[i] );
+                        break;
                     case OPT_NAME:
                         MP4TagsSetName( mdata, tags[i] );
+                        break;
+                    case OPT_TVSHOW:
+                        MP4TagsSetTVShow( mdata, tags[i] );
                         break;
                     case OPT_COMPOSER:
                         MP4TagsSetComposer( mdata, tags[i] );
