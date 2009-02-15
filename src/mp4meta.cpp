@@ -398,18 +398,6 @@ void GenreToString(char** GenreStr, const int genre)
     return;
 }
 
-int StringToGenre(const char* GenreStr)
-{
-    unsigned int i;
-
-    for (i = 0; i < sizeof(ID3v1GenreList)/sizeof(*ID3v1GenreList); i++)
-    {
-        if (strcasecmp(GenreStr, ID3v1GenreList[i]) == 0)
-            return i+1;
-    }
-    return 0;
-}
-
 bool MP4File::SetMetadataGenre(const char* value)
 {
     uint16_t genreIndex = 0;
@@ -417,7 +405,7 @@ bool MP4File::SetMetadataGenre(const char* value)
     MP4BytesProperty *pMetadataProperty = NULL;
     MP4Atom *pMetaAtom = NULL;
 
-    genreIndex = StringToGenre(value);
+    genreIndex = static_cast<uint16_t>( itmf::enumGenreType.toType(value) );
 
     const char *s = "moov.udta.meta.ilst.gnre.data";
     const char *sroot = "moov.udta.meta.ilst.gnre";
