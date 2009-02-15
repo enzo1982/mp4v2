@@ -46,12 +46,25 @@ private:
         LC_CHPT_ANY = _LC_MAX,
         LC_CHPT_QT,
         LC_CHPT_NERO,
+        LC_CHPT_COMMON,
         LC_CHP_LIST,
         LC_CHP_CONVERT,
         LC_CHP_EVERY,
         LC_CHP_EXPORT,
         LC_CHP_IMPORT,
         LC_CHP_REMOVE
+    };
+
+    enum ChapterFormat {
+        CHPT_FMT_NATIVE,
+        CHPT_FMT_COMMON
+    };
+
+    enum FormatState {
+        FMT_STATE_INITIAL,
+        FMT_STATE_TIME_LINE,
+        FMT_STATE_TITLE_LINE,
+        FMT_STATE_FINISH
     };
 
 public:
@@ -83,6 +96,7 @@ private:
     MP4Duration convertFrameToMillis( MP4Duration, uint32_t );
 
     MP4ChapterType _ChapterType;
+    ChapterFormat  _ChapterFormat;
     uint32_t       _ChaptersEvery;
     string         _ChapterFile;
 };
@@ -99,6 +113,7 @@ ChapterUtility::ChapterUtility( int argc, char** argv )
     , _parmGroup     ( "ACTION PARAMETERS" )
     , _action        ( NULL )
     , _ChapterType   ( MP4ChapterTypeAny )
+    , _ChapterFormat ( CHPT_FMT_NATIVE )
     , _ChaptersEvery ( 0 )
 {
     // add standard options which make sense for this utility
@@ -114,9 +129,10 @@ ChapterUtility::ChapterUtility( int argc, char** argv )
     _group.add( STD_VERSION );
     _group.add( STD_VERSIONX );
 
-    _parmGroup.add( 'A', false, "chapter-any",  false, LC_CHPT_ANY,  "act on any chapter type (default)" );
-    _parmGroup.add( 'Q', false, "chapter-qt",   false, LC_CHPT_QT,   "act on QuickTime chapters" );
-    _parmGroup.add( 'N', false, "chapter-nero", false, LC_CHPT_NERO, "act on Nero chapters" );
+    _parmGroup.add( 'A', false, "chapter-any",   false, LC_CHPT_ANY,    "act on any chapter type (default)" );
+    _parmGroup.add( 'Q', false, "chapter-qt",    false, LC_CHPT_QT,     "act on QuickTime chapters" );
+    _parmGroup.add( 'N', false, "chapter-nero",  false, LC_CHPT_NERO,   "act on Nero chapters" );
+    _parmGroup.add( 'C', false, "format-common", false, LC_CHPT_COMMON, "export chapters in common format" );
     _groups.push_back( &_parmGroup );
 
     _actionGroup.add( 'l', false, "list",    false, LC_CHP_LIST,    "list available chapters" );
@@ -380,13 +396,28 @@ ChapterUtility::actionExport( JobContext& job )
 #endif
     io::StdioFile::Size nout;
     bool failure = SUCCESS;
+    int width = 2;
+    if( CHPT_FMT_COMMON == _ChapterFormat && (chapterCount / 100) >= 1 )
+    {
+        width = 3;
+    }
     Timecode duration( 0, CHAPTERTIMESCALE );
     duration.setFormat( Timecode::DECIMAL );
     for( uint32_t i = 0; i < chapterCount; ++i )
     {
         // print the infos
         ostringstream oss;
-        oss << duration.svalue << ' ' << chapters[i].title << LINEND;
+        switch( _ChapterFormat )
+        {
+            case CHPT_FMT_COMMON:
+                oss << "CHAPTER" << setw( width ) << setfill( '0' ) << i+1 <<     '=' << duration.svalue << LINEND
+                    << "CHAPTER" << setw( width ) << setfill( '0' ) << i+1 << "NAME=" << chapters[i].title << LINEND;
+                break;
+            case CHPT_FMT_NATIVE:
+            default:
+                oss << duration.svalue << ' ' << chapters[i].title << LINEND;
+        }
+
         string str = oss.str();
         if( out.write( str.c_str(), str.size(), nout ) )
         {
@@ -617,6 +648,11 @@ ChapterUtility::utility_option( int code, bool& handled )
         case 'N':
         case LC_CHPT_NERO:
             _ChapterType = MP4ChapterTypeNero;
+            break;
+
+        case 'C':
+        case LC_CHPT_COMMON:
+            _ChapterFormat = CHPT_FMT_COMMON;
             break;
 
         case 'l':
@@ -883,24 +919,26 @@ ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& c
     // check for a BOM
     char bom[5] = {0};
     int bomLen = 0;
-    unsigned char* uPos = reinterpret_cast<unsigned char*>( pos );
-    if( *uPos == 0xEF && *(uPos+1) == 0xBB && *(uPos+2) == 0xBF )
+    const unsigned char* uPos = reinterpret_cast<unsigned char*>( pos );
+    if( 0xEF == *uPos && 0xBB == *(uPos+1) && 0xBF == *(uPos+2) )
     {
         // UTF-8 (we do not need the BOM)
         pos += 3;
     }
-    else if(   ( *uPos = 0xFE && *(uPos+1) == 0xFF )   // UTF-16 big endian
-            || ( *uPos = 0xFF && *(uPos+1) == 0xFE ) ) // UTF-16 little endian
+    else if(   ( 0xFE == *uPos && 0xFF == *(uPos+1) )   // UTF-16 big endian
+            || ( 0xFF == *uPos && 0xFE == *(uPos+1) ) ) // UTF-16 little endian
     {
+        // store the BOM to prepend the title strings
         bom[0] = *pos++;
         bom[1] = *pos++;
         bomLen = 2;
         return herrf( "chapter file '%s' has UTF-16 encoding which is not supported (only UTF-8 is allowed)\n",
                       filename.c_str() );
     }
-    else if(   ( *uPos = 0x0 && *(uPos+1) == 0x0 && *(uPos+2) == 0xFE && *(uPos+3) == 0xFF )   // UTF-32 big endian
-            || ( *uPos = 0xFF && *(uPos+1) == 0xFE && *(uPos+2) == 0x0 && *(uPos+3) == 0x0 ) ) // UTF-32 little endian
+    else if(   ( 0x0 == *uPos && 0x0 == *(uPos+1) && 0xFE == *(uPos+2) && 0xFF == *(uPos+3) )   // UTF-32 big endian
+            || ( 0xFF == *uPos && *(uPos+1) == 0xFE && *(uPos+2) == 0x0 && 0x0 == *(uPos+3) ) ) // UTF-32 little endian
     {
+        // store the BOM to prepend the title strings
         bom[0] = *pos++;
         bom[1] = *pos++;
         bom[2] = *pos++;
@@ -912,49 +950,137 @@ ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& c
 
     // parse the lines
     bool failure = false;
-    while (pos < inBuf + fileSize)
+    uint32_t currentChapter = 0;
+    FormatState formatState = FMT_STATE_INITIAL;
+    char* titleStart = 0;
+    uint32_t titleLen = 0;
+    char* timeStart = 0;
+    while( pos < inBuf + fileSize )
     {
-        if (*pos == 0 || *pos == ' ' || *pos == '\t')
+        if( 0 == *pos || ' ' == *pos || '\t' == *pos )
         {
             // uninteresting chars
             pos++;
             continue;
         }
-        else if (*pos == '#')
+        else if( '#' == *pos )
         {
             // comment line
-            pos += strlen(pos);
+            pos += strlen( pos );
             continue;
         }
-        else if (isdigit(*pos))
+        else if( isdigit( *pos ) )
         {
-            MP4Chapter_t chap;
+            // mp4chaps native format: hh:mm:ss.sss <title>
 
-            char* timeStart = pos;
+            timeStart = pos;
 
             // read the title if there is one
-            char* titleStart = strchr(timeStart, ' ');
-            if (titleStart == NULL)
+            titleStart = strchr( timeStart, ' ' );
+            if( NULL == titleStart )
             {
-                titleStart = strchr(timeStart, '\t');
+                titleStart = strchr( timeStart, '\t' );
             }
 
-            if (titleStart != NULL)
+            if( NULL != titleStart )
             {
                 *titleStart = 0;
                 pos = ++titleStart;
 
-                while (*titleStart == ' ' || *titleStart == '\t')
+                while( ' ' == *titleStart || '\t' == *titleStart )
                 {
                     titleStart++;
                 }
 
-                int titleLen = min( (uint32_t)strlen(titleStart), (uint32_t)MP4V2_CHAPTER_TITLE_MAX );
-                strncpy(chap.title, titleStart, titleLen);
-                chap.title[titleLen] = 0;
+                titleLen = strlen( titleStart );
+
+                // advance to the end of the line
+                pos = titleStart + 1 + titleLen;
+            }
+            else
+            {
+                // advance to the end of the line
+                pos += strlen( pos );
             }
 
-            // read the start time
+            formatState = FMT_STATE_FINISH;
+        }
+        else if( 0 == strnicmp( pos, "CHAPTER", 7 ) )
+        {
+            // common format: CHAPTERxx=hh:mm:ss.sss\nCHAPTERxxNAME=<title>
+
+            char* equalsPos = strchr( pos+7, '=' );
+            if( NULL == equalsPos )
+            {
+                herrf( "Unable to parse line \"%s\"\n", pos );
+                failure = true;
+                break;
+            }
+
+            *equalsPos = 0;
+            strlwr( pos );
+
+            if( NULL != strstr( pos, "name" ) )
+            {
+                // mark the chapter title
+                uint32_t chNr = 0;
+                sscanf( pos, "chapter%dname", &chNr );
+                if( chNr != currentChapter )
+                {
+                    // different chapter number => different chapter definition pair
+                    if( FMT_STATE_INITIAL != formatState )
+                    {
+                        herrf( "Chapter lines are not consecutive before line \"%s\"\n", pos );
+                        failure = true;
+                        break;
+                    }
+
+                    currentChapter = chNr;
+                }
+                formatState = FMT_STATE_TIME_LINE == formatState ? FMT_STATE_FINISH
+                                                                 : FMT_STATE_TITLE_LINE;
+
+                titleStart = equalsPos + 1;
+                titleLen = strlen( titleStart );
+
+                // advance to the end of the line
+                pos = titleStart + titleLen;
+            }
+            else
+            {
+                // mark the chapter start time
+                uint32_t chNr = 0;
+                sscanf( pos, "chapter%d", &chNr );
+                if( chNr != currentChapter )
+                {
+                    // different chapter number => different chapter definition pair
+                    if( FMT_STATE_INITIAL != formatState )
+                    {
+                        herrf( "Chapter lines are not consecutive at line \"%s\"\n", pos );
+                        failure = true;
+                        break;
+                    }
+
+                    currentChapter = chNr;
+                }
+                formatState = FMT_STATE_TITLE_LINE == formatState ? FMT_STATE_FINISH 
+                                                                  : FMT_STATE_TIME_LINE;
+
+                timeStart = equalsPos + 1;
+
+                // advance to the end of the line
+                pos = timeStart + strlen( timeStart );
+            }
+        }
+
+        if( FMT_STATE_FINISH == formatState )
+        {
+            // now we have title and start time
+            MP4Chapter_t chap;
+
+            strncpy( chap.title, titleStart, min( titleLen, (uint32_t)MP4V2_CHAPTER_TITLE_MAX ) );
+            chap.title[titleLen] = 0;
+
             Timecode tc( 0, CHAPTERTIMESCALE );
             string tm( timeStart );
             if( tc.parse( tm ) )
@@ -966,10 +1092,14 @@ ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& c
             chap.duration = tc.duration;
             format = tc.format;
 
+            // ad the chapter to the list
             chapters.push_back( chap );
-        }
 
-        pos += strlen(pos);
+            // re-initialize
+            formatState = FMT_STATE_INITIAL;
+            titleStart = timeStart = NULL;
+            titleLen = 0;
+        }
     }
     free( inBuf );
     if( failure )
