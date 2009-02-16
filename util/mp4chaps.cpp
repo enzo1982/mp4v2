@@ -1005,7 +1005,11 @@ ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& c
 
             formatState = FMT_STATE_FINISH;
         }
+#if defined( _MSC_VER )
+        else if( 0 == strnicmp( pos, "CHAPTER", 7 ) )
+#else
         else if( 0 == strncasecmp( pos, "CHAPTER", 7 ) )
+#endif
         {
             // common format: CHAPTERxx=hh:mm:ss.sss\nCHAPTERxxNAME=<title>
 
@@ -1018,10 +1022,12 @@ ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& c
             }
 
             *equalsPos = 0;
-            
-            string cpp = pos;
-            std::transform( cpp.begin(), cpp.end(), cpp.begin(), ::tolower );
-            strcpy (pos, cpp.c_str());
+
+            char* tlwr = pos;
+            while( equalsPos != tlwr )
+            {
+                *tlwr++ = tolower( *tlwr );
+            }
 
             if( NULL != strstr( pos, "name" ) )
             {
