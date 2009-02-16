@@ -638,11 +638,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\bmff\type.cpp"
+					RelativePath="..\..\src\bmff\typebmff.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\bmff\type.h"
+					RelativePath="..\..\src\bmff\typebmff.h"
 					>
 				</File>
 			</Filter>

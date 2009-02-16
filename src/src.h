@@ -18,7 +18,7 @@ namespace mp4v2 { namespace impl {
 #include "enum.h"
 #include "exception.h"
 
-#include "bmff/type.h"
+#include "bmff/typebmff.h"
 #include "itmf/type.h"
 
 #include "util.h"

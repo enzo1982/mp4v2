@@ -111,8 +111,8 @@ libmp4v2_la_SOURCES = \
 libmp4v2_la_SOURCES += \
     src/bmff/bmff.h    \
     src/bmff/impl.h    \
-    src/bmff/type.cpp  \
-    src/bmff/type.h
+    src/bmff/typebmff.cpp  \
+    src/bmff/typebmff.h
 
 libmp4v2_la_SOURCES += \
     src/itmf/CoverArtBox.cpp  \
