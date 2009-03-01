@@ -879,6 +879,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\libutil\TrackModifier.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\libutil\TrackModifier.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\libutil\util.h"
 				>
 			</File>
