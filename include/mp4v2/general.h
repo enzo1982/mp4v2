@@ -93,6 +93,7 @@ typedef uint32_t (*encryptFunc_t)( uint32_t, uint32_t, uint8_t*, uint32_t*, uint
 #define MP4_HINT_TRACK_TYPE     "hint"  /**< Constant: hint track. */
 #define MP4_CNTL_TRACK_TYPE     "cntl"  /**< Constant: control track. */
 #define MP4_TEXT_TRACK_TYPE     "text"  /**< Constant: text track. */
+#define MP4_SUBTITLE_TRACK_TYPE "sbtl"  /**< Constant: subtitle track. */
 /*
  * This second set of track types should be created
  * via MP4AddSystemsTrack(type)

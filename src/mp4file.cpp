@@ -2226,7 +2226,7 @@ MP4TrackId MP4File::AddSubtitleTrack(MP4TrackId refTrackId)
     MP4StringProperty* pHandlerTypeProperty;
     FindStringProperty(MakeTrackName(trackId, "mdia.hdlr.handlerType"),
                        (MP4Property**)&pHandlerTypeProperty);
-    pHandlerTypeProperty->SetValue("sbtl");
+    pHandlerTypeProperty->SetValue(MP4_SUBTITLE_TRACK_TYPE);
 
     // Hardcoded crap... add the ftab atom and add one font entry
     MP4Atom* pFtabAtom = AddChildAtom(MakeTrackName(trackId, "mdia.minf.stbl.stsd.tx3g"), "ftab");
