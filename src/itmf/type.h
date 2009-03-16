@@ -213,6 +213,7 @@ enum StikType {
     STIK_SHORT_FILM  = 9,
     STIK_TV_SHOW     = 10,
     STIK_BOOKLET     = 11,
+    STIK_RINGTONE    = 14,
 
     STIK_UNDEFINED   = 255
 };

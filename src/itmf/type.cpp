@@ -208,6 +208,7 @@ const EnumStikType::Entry EnumStikType::data[] = {
     { mp4v2::impl::itmf::STIK_SHORT_FILM,   "shortfilm",   "Short Film" },
     { mp4v2::impl::itmf::STIK_TV_SHOW,      "tvshow",      "TV Show" },
     { mp4v2::impl::itmf::STIK_BOOKLET,      "booklet",     "Booklet" },
+    { mp4v2::impl::itmf::STIK_RINGTONE,     "ringtone",    "Ringtone" },
 
     { mp4v2::impl::itmf::STIK_UNDEFINED } // must be last
 };

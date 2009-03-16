@@ -221,6 +221,12 @@ extern "C" int main( int argc, char** argv )
                 string s = itmf::enumCountryCode.toString( static_cast<itmf::CountryCode>( *tags->iTunesCountry ), true );
                 fprintf( stdout, " iTunes Store Country: %s\n", s.c_str() );
             }
+            if ( tags->atID ) {
+                fprintf( stdout, " atID: %u\n", *tags->atID );
+            }
+            if ( tags->geID ) {
+                fprintf( stdout, " geID: %u\n", *tags->geID );
+            }
             MP4TagsFree( tags );
             MP4Close( mp4file );
         }

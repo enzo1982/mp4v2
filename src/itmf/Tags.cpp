@@ -113,8 +113,10 @@ Tags::c_fetch( MP4Tags*& tags, MP4FileHandle hFile )
 
     fetchString(  file, CODE_ITUNESACCOUNT,     iTunesAccount,     c.iTunesAccount );
     fetchInteger( file, CODE_ITUNESACCOUNTTYPE, iTunesAccountType, c.iTunesAccountType );
-    fetchInteger( file, CODE_CNID,              cnID,              c.cnID );
     fetchInteger( file, CODE_ITUNESCOUNTRY,     iTunesCountry,     c.iTunesCountry );
+    fetchInteger( file, CODE_CNID,              cnID,              c.cnID );
+    fetchInteger( file, CODE_ATID,              atID,              c.atID );
+    fetchInteger( file, CODE_GEID,              geID,              c.geID );
 
     // fetch full list and overwrite our copy, otherwise clear
     {
@@ -279,6 +281,13 @@ Tags::c_store( MP4Tags*& tags, MP4FileHandle hFile )
     storeString(  file, CODE_TVEPISODEID,       tvEpisodeID,       c.tvEpisodeID );
     storeInteger( file, CODE_TVSEASON,          tvSeason,          c.tvSeason );
     storeInteger( file, CODE_TVEPISODE,         tvEpisode,         c.tvEpisode );
+    
+    storeString(  file, CODE_SORTNAME,          sortName,          c.sortName );
+    storeString(  file, CODE_SORTARTIST,        sortArtist,        c.sortArtist );
+    storeString(  file, CODE_SORTALBUMARTIST,   sortAlbumArtist,   c.sortAlbumArtist );
+    storeString(  file, CODE_SORTALBUM,         sortAlbum,         c.sortAlbum );
+    storeString(  file, CODE_SORTCOMPOSER,      sortComposer,      c.sortComposer );
+    storeString(  file, CODE_SORTTVSHOW,        sortTVShow,        c.sortTVShow );
 
     storeString(  file, CODE_DESCRIPTION,       description,       c.description );
     storeString(  file, CODE_LONGDESCRIPTION,   longDescription,   c.longDescription );
@@ -293,7 +302,6 @@ Tags::c_store( MP4Tags*& tags, MP4FileHandle hFile )
     storeInteger( file, CODE_GAPLESS,           gapless,           c.gapless );
 
     storeInteger( file, CODE_CNID,              cnID,              c.cnID );
-
 
     // destroy all cover-art then add each
     {
@@ -645,8 +653,10 @@ const string Tags::CODE_GAPLESS           = "pgap";
 
 const string Tags::CODE_ITUNESACCOUNT     = "apID";
 const string Tags::CODE_ITUNESACCOUNTTYPE = "akID";
-const string Tags::CODE_CNID              = "cnID";
 const string Tags::CODE_ITUNESCOUNTRY     = "sfID";
+const string Tags::CODE_CNID              = "cnID";
+const string Tags::CODE_ATID              = "atID";
+const string Tags::CODE_GEID              = "geID";
 
 ///////////////////////////////////////////////////////////////////////////////
 

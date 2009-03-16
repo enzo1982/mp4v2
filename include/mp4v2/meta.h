@@ -563,8 +563,11 @@ typedef struct MP4Tags_s
 
     const char*     iTunesAccount;
     const uint8_t*  iTunesAccountType;
-    const uint32_t* cnID;
     const uint32_t* iTunesCountry;
+    const uint32_t* cnID;
+    const uint32_t* atID;
+    const uint32_t* geID;
+    
 
 } MP4Tags;
 
@@ -621,15 +624,21 @@ MP4V2_EXPORT void MP4TagsSetComposer        ( const MP4Tags*, const char* );
 MP4V2_EXPORT void MP4TagsSetComments        ( const MP4Tags*, const char* );
 MP4V2_EXPORT void MP4TagsSetGenre           ( const MP4Tags*, const char* );
 MP4V2_EXPORT void MP4TagsSetReleaseDate     ( const MP4Tags*, const char* );
-MP4V2_EXPORT void MP4TagsSetDisk            ( const MP4Tags*, const uint16_t*, const uint16_t* );
 MP4V2_EXPORT void MP4TagsSetTempo           ( const MP4Tags*, const uint16_t* );
-MP4V2_EXPORT void MP4TagsSetCompliation     ( const MP4Tags*, const uint8_t* ); /* TODO: Needs testing */
+MP4V2_EXPORT void MP4TagsSetCompilation     ( const MP4Tags*, const uint8_t* ); /* TODO: Needs testing */
 
 MP4V2_EXPORT void MP4TagsSetTVShow          ( const MP4Tags*, const char* );
 MP4V2_EXPORT void MP4TagsSetTVNetwork       ( const MP4Tags*, const char* );
 MP4V2_EXPORT void MP4TagsSetTVEpisodeID     ( const MP4Tags*, const char* );
 MP4V2_EXPORT void MP4TagsSetTVSeason        ( const MP4Tags*, const uint32_t* );
 MP4V2_EXPORT void MP4TagsSetTVEpisode       ( const MP4Tags*, const uint32_t* );
+
+MP4V2_EXPORT void MP4TagsSetSortName        ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetSortArtist      ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetSortAlbumArtist ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetSortAlbum       ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetSortComposer    ( const MP4Tags*, const char* );
+MP4V2_EXPORT void MP4TagsSetSortTVShow      ( const MP4Tags*, const char* );
 
 MP4V2_EXPORT void MP4TagsSetDescription     ( const MP4Tags*, const char* );
 MP4V2_EXPORT void MP4TagsSetLongDescription ( const MP4Tags*, const char* );
