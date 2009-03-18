@@ -3171,6 +3171,63 @@ bool MP4File::SetTrackLanguage( MP4TrackId trackId, const char* code )
     return true;
 }
 
+    
+bool MP4File::GetTrackName( MP4TrackId trackId, char** name )
+{
+    unsigned char *val = NULL;
+    uint32_t valSize = 0;
+    MP4Atom *pMetaAtom;
+
+    pMetaAtom = m_pRootAtom->FindAtom(MakeTrackName(trackId,"udta.name"));
+
+    if (pMetaAtom)
+    {
+        GetBytesProperty(MakeTrackName(trackId,"udta.name.value"), (uint8_t**)&val, &valSize);
+    }
+    if (valSize > 0)
+    {
+        *name = (char*)malloc((valSize+1)*sizeof(char));
+        if (*name == NULL) {
+            free(val);
+            return false;
+        }
+        memcpy(*name, val, valSize*sizeof(unsigned char));
+        free(val);
+        (*name)[valSize] = '\0';
+        return true;
+    }
+
+    return false;
+}
+
+bool MP4File::SetTrackName( MP4TrackId trackId, const char* name )
+{
+    ProtectWriteOperation( "SetTrackName" );
+    char atomstring[40];
+    MP4Atom *pMetaAtom;
+    MP4BytesProperty *pMetadataProperty = NULL;
+    snprintf(atomstring, 40, "%s", MakeTrackName(trackId,"udta.name"));
+
+    pMetaAtom = m_pRootAtom->FindAtom(atomstring);
+
+    if (!pMetaAtom)
+    {
+        if (!AddDescendantAtoms(MakeTrackName(trackId, NULL), "udta.name"))
+            return false;
+        
+        pMetaAtom = m_pRootAtom->FindAtom(atomstring);
+        if (pMetaAtom == NULL) return false;
+    }
+
+    ASSERT(pMetaAtom->FindProperty("name.value",
+                                   (MP4Property**)&pMetadataProperty));
+    ASSERT(pMetadataProperty);
+
+    pMetadataProperty->SetValue((uint8_t*)name, strlen(name));
+
+    return true;
+}
+
 // file level convenience functions
 
 MP4Duration MP4File::GetDuration()

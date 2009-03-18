@@ -152,6 +152,8 @@ public: /* equivalent to MP4 library API */
 
     bool GetTrackLanguage( MP4TrackId, char* );
     bool SetTrackLanguage( MP4TrackId, const char* );
+    bool GetTrackName( MP4TrackId trackId, char** name );
+    bool SetTrackName( MP4TrackId trackId, const char* name);
 
     /* sample operations */
 

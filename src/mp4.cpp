@@ -3832,4 +3832,46 @@ bool MP4SetTrackLanguage(
 
 ///////////////////////////////////////////////////////////////////////////////
 
+bool MP4GetTrackName(
+    MP4FileHandle hFile,
+    MP4TrackId    trackId,
+    char**        name )
+{
+    if( !MP4_IS_VALID_FILE_HANDLE( hFile ))
+        return false;
+
+    try {
+        return ((MP4File*)hFile)->GetTrackName( trackId, name );
+    }
+    catch( MP4Error* e ) {
+        PRINT_ERROR( e );
+        delete e;
+    }
+
+    return false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool MP4SetTrackName(
+    MP4FileHandle hFile,
+    MP4TrackId    trackId,
+    const char*   code )
+{
+    if( !MP4_IS_VALID_FILE_HANDLE( hFile ))
+        return false;
+
+    try {
+        return ((MP4File*)hFile)->SetTrackName( trackId, code );
+    }
+    catch( MP4Error* e ) {
+        PRINT_ERROR( e );
+        delete e;
+    }
+
+    return false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 } // extern "C"
