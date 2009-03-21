@@ -34,7 +34,7 @@ MP4Ac3Atom::MP4Ac3Atom()
     AddReserved("reserved1", 6); /* 0 */
 
     AddProperty( /* 1 */
-        new MP4Integer16Property("data-reference-index"));
+        new MP4Integer16Property("dataReferenceIndex"));
 
     AddReserved("reserved2", 8); /* 2 */
 
