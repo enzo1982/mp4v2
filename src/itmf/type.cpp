@@ -201,11 +201,11 @@ const EnumGenreType::Entry EnumGenreType::data[] = {
 
 template <>
 const EnumStikType::Entry EnumStikType::data[] = {
-    { mp4v2::impl::itmf::STIK_MOVIE,        "movie",       "Movie" },
+    { mp4v2::impl::itmf::STIK_OLD_MOVIE,    "oldmovie",    "Movie" },
     { mp4v2::impl::itmf::STIK_NORMAL,       "normal",      "Normal" },
     { mp4v2::impl::itmf::STIK_AUDIOBOOK,    "audiobook",   "Audio Book" },
     { mp4v2::impl::itmf::STIK_MUSIC_VIDEO,  "musicvideo",  "Music Video" },
-    { mp4v2::impl::itmf::STIK_SHORT_FILM,   "shortfilm",   "Short Film" },
+    { mp4v2::impl::itmf::STIK_MOVIE,        "movie",       "Movie" },
     { mp4v2::impl::itmf::STIK_TV_SHOW,      "tvshow",      "TV Show" },
     { mp4v2::impl::itmf::STIK_BOOKLET,      "booklet",     "Booklet" },
     { mp4v2::impl::itmf::STIK_RINGTONE,     "ringtone",    "Ringtone" },

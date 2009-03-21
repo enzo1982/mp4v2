@@ -1230,6 +1230,16 @@ MP4TagsSetMediaType( const MP4Tags* m, const uint8_t* value )
 ///////////////////////////////////////////////////////////////////////////////
 
 void
+MP4TagsSetContentRating( const MP4Tags* m, const uint8_t* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setInteger( value, cpp.contentRating, c.contentRating );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
 MP4TagsSetGapless( const MP4Tags* m, const uint8_t* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);

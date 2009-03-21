@@ -299,6 +299,7 @@ Tags::c_store( MP4Tags*& tags, MP4FileHandle hFile )
 
     storeInteger( file, CODE_HDVIDEO,           hdVideo,           c.hdVideo );
     storeInteger( file, CODE_MEDIATYPE,         mediaType,         c.mediaType );
+    storeInteger( file, CODE_CONTENTRATING,     contentRating,     c.contentRating );
     storeInteger( file, CODE_GAPLESS,           gapless,           c.gapless );
 
     storeInteger( file, CODE_CNID,              cnID,              c.cnID );

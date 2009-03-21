@@ -206,11 +206,11 @@ MP4V2_EXPORT extern const EnumGenreType enumGenreType;
 /// enumerated 8-bit Video Type used by iTunes.
 /// Note values are not formally defined in any specification.
 enum StikType {
-    STIK_MOVIE       = 0,
+    STIK_OLD_MOVIE   = 0,
     STIK_NORMAL      = 1,
     STIK_AUDIOBOOK   = 2,
     STIK_MUSIC_VIDEO = 6,
-    STIK_SHORT_FILM  = 9,
+    STIK_MOVIE       = 9,
     STIK_TV_SHOW     = 10,
     STIK_BOOKLET     = 11,
     STIK_RINGTONE    = 14,
