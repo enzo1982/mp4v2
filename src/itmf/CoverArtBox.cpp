@@ -50,8 +50,7 @@ CoverArtBox::Item::Item( const Item& rhs )
 
 CoverArtBox::Item::~Item()
 {
-    if( autofree && buffer )
-        free( buffer );
+    reset();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -64,7 +63,7 @@ CoverArtBox::Item::operator=( const Item& rhs )
     autofree = rhs.autofree;
 
     if( rhs.autofree ) {
-        buffer = new uint8_t[rhs.size];
+        buffer = (uint8_t*)MP4Malloc(rhs.size);
         memcpy( buffer, rhs.buffer, rhs.size );
     }
     else {
@@ -80,7 +79,7 @@ void
 CoverArtBox::Item::reset()
 {
     if( autofree && buffer )
-        free( buffer );
+        MP4Free( buffer );
 
     type     = BT_UNDEFINED;
     buffer   = NULL;

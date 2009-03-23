@@ -137,7 +137,7 @@ Tags::c_free( MP4Tags*& tags )
 {
     MP4Tags* c = const_cast<MP4Tags*>(tags);
 
-    //delete[] c->artwork;
+    delete[] c->artwork;
     delete c;
 
     tags = NULL;
