@@ -1210,6 +1210,16 @@ MP4TagsSetEncodedBy( const MP4Tags* m, const char* value )
 ///////////////////////////////////////////////////////////////////////////////
 
 void
+MP4TagsSetPurchaseDate( const MP4Tags* m, const char* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setString( value, cpp.purchaseDate, c.purchaseDate );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
 MP4TagsSetHDVideo( const MP4Tags* m, const uint8_t* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);

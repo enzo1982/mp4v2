@@ -116,6 +116,7 @@ Tags::c_fetch( MP4Tags*& tags, MP4FileHandle hFile )
     fetchInteger( file, CODE_ITUNESCOUNTRY,     iTunesCountry,     c.iTunesCountry );
     fetchInteger( file, CODE_CNID,              cnID,              c.cnID );
     fetchInteger( file, CODE_ATID,              atID,              c.atID );
+    fetchInteger( file, CODE_PLID,              plID,              c.plID );
     fetchInteger( file, CODE_GEID,              geID,              c.geID );
 
     // fetch full list and overwrite our copy, otherwise clear
@@ -296,6 +297,7 @@ Tags::c_store( MP4Tags*& tags, MP4FileHandle hFile )
     storeString(  file, CODE_COPYRIGHT,         copyright,         c.copyright );
     storeString(  file, CODE_ENCODINGTOOL,      encodingTool,      c.encodingTool );
     storeString(  file, CODE_ENCODEDBY,         encodedBy,         c.encodedBy );
+    storeString(  file, CODE_PURCHASEDATE,      purchaseDate,      c.purchaseDate );
 
     storeInteger( file, CODE_HDVIDEO,           hdVideo,           c.hdVideo );
     storeInteger( file, CODE_MEDIATYPE,         mediaType,         c.mediaType );
@@ -483,6 +485,33 @@ Tags::fetchInteger( MP4File& file, const string& code, uint32_t& cpp, const uint
 ///////////////////////////////////////////////////////////////////////////////
 
 void
+Tags::fetchInteger( MP4File& file, const string& code, uint64_t& cpp, const uint64_t*& c )
+{
+    cpp = 0;
+    c = NULL;
+
+    uint8_t* buffer; 
+    uint32_t size;
+    if( fetchData( file, code, buffer, size ))
+        return;
+
+    cpp = (uint64_t(buffer[0]) << 56)
+        | (uint64_t(buffer[1]) << 48)
+        | (uint64_t(buffer[2]) << 40)
+        | (uint64_t(buffer[3]) << 32)
+        | (uint64_t(buffer[4]) << 24)
+        | (uint64_t(buffer[5]) << 16)
+        | (uint64_t(buffer[6]) <<  8)
+        | (uint64_t(buffer[7])      );
+
+    c = &cpp;
+
+    MP4Free( buffer );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
 Tags::fetchString( MP4File& file, const string& code, string& cpp, const char*& c )
 {
     cpp.clear();
@@ -657,6 +686,7 @@ const string Tags::CODE_ITUNESACCOUNTTYPE = "akID";
 const string Tags::CODE_ITUNESCOUNTRY     = "sfID";
 const string Tags::CODE_CNID              = "cnID";
 const string Tags::CODE_ATID              = "atID";
+const string Tags::CODE_PLID              = "plID";
 const string Tags::CODE_GEID              = "geID";
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -81,6 +81,7 @@ public:
     static const string CODE_ITUNESCOUNTRY;
     static const string CODE_CNID;
     static const string CODE_ATID;
+    static const string CODE_PLID;
     static const string CODE_GEID;
 
 public:
@@ -136,6 +137,7 @@ public:
     uint32_t  iTunesCountry;
     uint32_t  cnID;
     uint32_t  atID;
+    uint64_t  plID;
     uint32_t  geID;
 
 public:
@@ -161,6 +163,7 @@ private:
     void fetchInteger ( MP4File&, const string&, uint8_t&,  const uint8_t*& );
     void fetchInteger ( MP4File&, const string&, uint16_t&, const uint16_t*& );
     void fetchInteger ( MP4File&, const string&, uint32_t&, const uint32_t*& );
+    void fetchInteger ( MP4File&, const string&, uint64_t&, const uint64_t*& );
     void fetchGenre   ( MP4File&, string&, const char*& );
     void fetchTrack   ( MP4File&, MP4TagTrack&, const MP4TagTrack*& );
     void fetchDisk    ( MP4File&, MP4TagDisk&, const MP4TagDisk*& );
