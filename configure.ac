@@ -232,7 +232,7 @@ if test "$enable_gch" = "yes"; then
 elif test "$enable_gch" != "no"; then
     if test "$GXX" = "yes"; then
         case ${host_os} in
-            cygwin*|darwin*|freebsd*|linux*|solaris*)
+            cygwin*|darwin*|freebsd*|linux*|mingw*|solaris*)
                 X_GCH=1
                 ;;
         esac

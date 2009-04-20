@@ -139,6 +139,7 @@ EXTRA_DIST += \
 dist-hook: $(DOC.texi2txt.out) $(DOC.man.out)
 	rm -fr $(distdir)/doc
 	$(mkdir_p) $(distdir)/doc
+	$(INSTALL_DATA) $(DOC.in/)GNUmakefile.mk $(distdir)/doc/.
 	$(INSTALL_DATA) $(DOC.texi2txt.out) $(distdir)/doc/.
 	$(mkdir_p) $(distdir)/doc/man/man1
 	$(INSTALL_DATA) $(DOC.man.out) $(distdir)/doc/man/man1
