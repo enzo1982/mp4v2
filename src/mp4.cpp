@@ -3874,4 +3874,48 @@ bool MP4SetTrackName(
 
 ///////////////////////////////////////////////////////////////////////////////
 
+bool MP4GetTrackDurationPerChunk(
+    MP4FileHandle hFile,
+    MP4TrackId    trackId, 
+    MP4Duration*  duration )
+{
+    if( !MP4_IS_VALID_FILE_HANDLE( hFile ))
+        return false;
+
+    try {
+        *duration = ((MP4File*)hFile)->GetTrackDurationPerChunk( trackId );
+        return true;
+    }
+    catch( MP4Error* e ) {
+        PRINT_ERROR( e );
+        delete e;
+    }
+
+    return false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool MP4SetTrackDurationPerChunk(
+    MP4FileHandle hFile,
+    MP4TrackId    trackId,
+    MP4Duration   duration )
+{
+    if( !MP4_IS_VALID_FILE_HANDLE( hFile ))
+        return false;
+
+    try {
+        ((MP4File*)hFile)->SetTrackDurationPerChunk( trackId, duration );
+        return true;
+    }
+    catch( MP4Error* e ) {
+        PRINT_ERROR( e );
+        delete e;
+    }
+
+    return false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 } // extern "C"

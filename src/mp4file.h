@@ -201,6 +201,9 @@ public: /* equivalent to MP4 library API */
         MP4SampleId sampleId,
         MP4Duration renderingOffset);
 
+    MP4Duration GetTrackDurationPerChunk( MP4TrackId );
+    void        SetTrackDurationPerChunk( MP4TrackId, MP4Duration );
+
     /* track level convenience functions */
 
     MP4TrackId AddSystemsTrack(const char* type);

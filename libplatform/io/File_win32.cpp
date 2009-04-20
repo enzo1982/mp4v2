@@ -8,7 +8,8 @@ namespace mp4v2 { namespace platform { namespace io {
 bool
 StdioFile::getPosition( Size& pos_ )
 {
-    pos_ = _ftelli64( _handle );
+    fflush( _handle ); // must flush because we're using _fileno routines
+    pos_ = _telli64( _fileno( _handle ));
     return pos_ == -1;
 }
 
@@ -17,6 +18,7 @@ StdioFile::getPosition( Size& pos_ )
 bool
 StdioFile::getSize( Size& size_ )
 {
+    fflush( _handle ); // must flush because we're using _fileno routines
     LARGE_INTEGER n;
     if( !GetFileSizeEx( (HANDLE)_get_osfhandle( _fileno( _handle )), &n ))
         return true;
@@ -29,7 +31,8 @@ StdioFile::getSize( Size& size_ )
 bool
 StdioFile::setPosition( Size pos_ )
 {
-    return _fseeki64( _handle, pos_, SEEK_SET ) != 0;
+    fflush( _handle ); // must flush because we're using _fileno routines
+    return _lseeki64( _fileno( _handle ), pos_, SEEK_SET ) == -1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

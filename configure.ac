@@ -103,11 +103,11 @@ case ${host} in
         X_CXX_ARCH="$X_CXX_ARCH -mwin32"
     fi
     ;;
-*-*-mingw32)
+*-*-mingw*)
     # do not support shared
     enable_shared=no
     X_PLATFORM=win32
-    X_MINGW_LIBS="$X_MINGW_LIBS -lmsvcr80"
+    X_MINGW_LIBS="$X_MINGW_LIBS"
     X_CXX_W="$X_CXX_W -Wno-format"
     if test "$enable_mingw_threads" = "yes"; then
         X_CXX_ARCH="$X_CXX_ARCH -mthreads"
@@ -197,7 +197,7 @@ if test "$enable_fvisibility" != "no" -a "$GXX" = "yes"; then
     case ${host} in
         *-*-cygwin)
             ;;
-        *-*-mingw32)
+        *-*-mingw*)
             ;;
         *)
             AC_LANG(C++)

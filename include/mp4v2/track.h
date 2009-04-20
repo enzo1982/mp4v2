@@ -360,6 +360,38 @@ uint16_t MP4FindTrackIndex(
     MP4FileHandle hFile,
     MP4TrackId    trackId );
 
+/** Get maximum duration of chunk.
+ *
+ *  MP4GetTrackDurationPerChunk gets the maximum duration for each chunk.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param trackId id of track for operation.
+ *  @param duration out value of duration in track timescale units.
+ *
+ *  return <b>true</b> on success, <b>false</b> on failure.
+ */
+MP4V2_EXPORT
+bool MP4GetTrackDurationPerChunk(
+    MP4FileHandle hFile,
+    MP4TrackId    trackId,
+    MP4Duration*  duration );
+
+/** Set maximum duration of chunk.
+ *
+ *  MP4SetTrackDurationPerChunk sets the maximum duration for each chunk.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param trackId id of track for operation.
+ *  @param duration in timescale units.
+ *
+ *  return <b>true</b> on success, <b>false</b> on failure.
+ */
+MP4V2_EXPORT
+bool MP4SetTrackDurationPerChunk(
+    MP4FileHandle hFile,
+    MP4TrackId    trackId,
+    MP4Duration   duration );
+
 /** @} ***********************************************************************/
 
 #endif /* MP4V2_TRACK_H */

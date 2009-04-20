@@ -4170,6 +4170,16 @@ void MP4File::SetDisableWriteProtection( bool disable )
     m_disableWriteProtection = disable;
 }
 
+MP4Duration MP4File::GetTrackDurationPerChunk( MP4TrackId trackId )
+{
+    return m_pTracks[FindTrackIndex(trackId)]->GetDurationPerChunk();
+}
+
+void MP4File::SetTrackDurationPerChunk( MP4TrackId trackId, MP4Duration duration )
+{
+    m_pTracks[FindTrackIndex(trackId)]->SetDurationPerChunk( duration );
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 }} // namespace mp4v2::impl

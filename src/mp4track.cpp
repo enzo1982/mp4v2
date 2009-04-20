@@ -1813,6 +1813,16 @@ void MP4Track::CalculateBytesPerSample ()
     }
 }
 
+MP4Duration MP4Track::GetDurationPerChunk()
+{
+    return m_durationPerChunk;
+}
+
+void MP4Track::SetDurationPerChunk( MP4Duration duration )
+{
+    m_durationPerChunk = duration;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 }} // namespace mp4v2::impl

@@ -148,6 +148,9 @@ public:
     void RewriteChunk(MP4ChunkId chunkId,
                       uint8_t* pChunk, uint32_t chunkSize);
 
+    MP4Duration GetDurationPerChunk();
+    void        SetDurationPerChunk( MP4Duration );
+
 protected:
     bool        InitEditListProperties();
 
