@@ -140,9 +140,13 @@ dist-hook: $(DOC.texi2txt.out) $(DOC.man.out)
 	rm -fr $(distdir)/doc
 	$(mkdir_p) $(distdir)/doc
 	$(INSTALL_DATA) $(DOC.in/)GNUmakefile.mk $(distdir)/doc/.
+ifneq (,$(DOC.texi2txt.out))
 	$(INSTALL_DATA) $(DOC.texi2txt.out) $(distdir)/doc/.
+endif
+ifneq (,$(DOC.man.out))
 	$(mkdir_p) $(distdir)/doc/man/man1
 	$(INSTALL_DATA) $(DOC.man.out) $(distdir)/doc/man/man1
+endif
 
 distclean-local: docclean
 
