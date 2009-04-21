@@ -45,4 +45,9 @@ Added support for GCC precompiled-headers on various *nix platforms to speed up 
 @item
 Enhanced @command{mp4track} to facilitate modification of @{ enabled, inmovie, inpreview, altgroup, volume, width, height, language, hdlrname, udtaname @} properties.
 
+@item
+Added new public-API: MP4GetTrackDurationPerChunk()
+
+@item
+Added new public-API: MP4SetTrackDurationPerChunk() to override default per-track chunk duration.
 @end enumerate
