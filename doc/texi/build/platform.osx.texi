@@ -3,10 +3,10 @@ Building on @value{OS.osx} is well supported as it is used by maintainers of thi
 
 @itemize @bullet
 @item Mac Intel hardware
-@item Mac OS X 10.5.5
+@item Mac OS X 10.5.6
 @item Xcode-3.1.2
-@item gcc 4.0.1 (Apple Inc. build 5490)
-@item gcc 4.2.1 (Apple Inc. build 5566)
+@item gcc 4.0.1 (Apple Inc. build 5493)
+@item gcc 4.2.1 (Apple Inc. build 5570)
 @end itemize
 
 @include build/platform.common.bundled.texi

@@ -102,7 +102,7 @@ MP4NameAtom::Read()
 {
     // calculate size of the metadata from the atom size
     value.SetFixedLength( m_size - 4 );
-    MP4Atom::Read();
+    MP4FullAtom::Read();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

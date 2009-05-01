@@ -40,6 +40,7 @@ class MP4File;
 class MP4Atom;
 class MP4Property;
 class MP4IntegerProperty;
+class MP4Integer8Property;
 class MP4Integer16Property;
 class MP4Integer32Property;
 class MP4Integer64Property;
@@ -84,6 +85,13 @@ public:
         MP4Duration duration = 0,
         MP4Duration renderingOffset = 0,
         bool isSyncSample = true);
+
+    void WriteH264Sample(
+        const uint8_t*   pBytes,
+        uint32_t         numBytes,
+        MP4Duration      duration,
+        MP4Duration      renderingOffset,
+        MP4H264FrameType frameType );
 
     virtual void FinishWrite();
 
@@ -185,6 +193,9 @@ protected:
     void WriteChunkBuffer();
 
     void CalculateBytesPerSample();
+
+    void FinishSdtp();
+
 protected:
     MP4File*    m_pFile;
     MP4Atom*    m_pTrakAtom;        // moov.trak[]
@@ -262,6 +273,8 @@ protected:
     MP4IntegerProperty*   m_pElstDurationProperty;      // 32 or 64 bits
     MP4Integer16Property* m_pElstRateProperty;
     MP4Integer16Property* m_pElstReservedProperty;
+
+    string m_sdtpLog; // records frame types for H264 samples
 };
 
 MP4ARRAY_DECL(MP4Track, MP4Track*);

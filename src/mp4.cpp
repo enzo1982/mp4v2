@@ -2547,15 +2547,15 @@ extern "C" {
     }
 
     bool MP4WriteSample(
-        MP4FileHandle hFile,
-        MP4TrackId trackId,
+        MP4FileHandle  hFile,
+        MP4TrackId     trackId,
         const uint8_t* pBytes,
-        uint32_t numBytes,
-        MP4Duration duration,
-        MP4Duration renderingOffset,
-        bool isSyncSample)
+        uint32_t       numBytes,
+        MP4Duration    duration,
+        MP4Duration    renderingOffset,
+        bool           isSyncSample )
     {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        if( MP4_IS_VALID_FILE_HANDLE( hFile )) {
             try {
                 ((MP4File*)hFile)->WriteSample(
                     trackId,
@@ -2563,11 +2563,39 @@ extern "C" {
                     numBytes,
                     duration,
                     renderingOffset,
-                    isSyncSample);
+                    isSyncSample );
                 return true;
             }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
+            catch( MP4Error* e ) {
+                PRINT_ERROR( e );
+                delete e;
+            }
+        }
+        return false;
+    }
+
+    bool MP4WriteH264Sample(
+        MP4FileHandle    hFile,
+        MP4TrackId       trackId,
+        const uint8_t*   pBytes,
+        uint32_t         numBytes,
+        MP4Duration      duration,
+        MP4Duration      renderingOffset,
+        MP4H264FrameType frameType )
+    {
+        if( MP4_IS_VALID_FILE_HANDLE( hFile )) {
+            try {
+                ((MP4File*)hFile)->WriteH264Sample(
+                    trackId,
+                    pBytes,
+                    numBytes,
+                    duration,
+                    renderingOffset,
+                    frameType );
+                return true;
+            }
+            catch( MP4Error* e ) {
+                PRINT_ERROR( e );
                 delete e;
             }
         }

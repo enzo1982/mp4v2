@@ -962,6 +962,8 @@ MP4Atom::factory( MP4Atom* parent, const char* type )
                 return new MP4AmrAtom( type );
             if( ATOMID(type) == ATOMID("sawb") )
                 return new MP4AmrAtom( type );
+            if( ATOMID(type) == ATOMID("sdtp") )
+                return new MP4SdtpAtom();
             if( ATOMID(type) == ATOMID("stbl") )
                 return new MP4StblAtom();
             if( ATOMID(type) == ATOMID("stsd") )

@@ -790,10 +790,8 @@ MP4Atom* MP4File::AddDescendantAtoms(
 bool MP4File::FindProperty(const char* name,
                            MP4Property** ppProperty, uint32_t* pIndex)
 {
-    if (pIndex) {
-        *pIndex = 0;    // set the default answer for index
-    }
-
+    if( pIndex )
+        *pIndex = 0; // set the default answer for index
     return m_pRootAtom->FindProperty(name, ppProperty, pIndex);
 }
 
@@ -1882,14 +1880,6 @@ MP4TrackId MP4File::AddH264VideoTrack(
     SetTrackIntegerProperty(trackId,
                             "mdia.minf.stbl.stsd.avc1.height", height);
 
-    //FIXME - check this
-    // shouldn't need this
-#if 0
-    AddChildAtom(MakeTrackName(trackId,
-                               "mdia.minf.stbl.stsd.avc1"),
-                 "avcC");
-#endif
-
     SetTrackIntegerProperty(trackId,
                             "mdia.minf.stbl.stsd.avc1.avcC.AVCProfileIndication",
                             AVCProfileIndication);
@@ -1902,7 +1892,6 @@ MP4TrackId MP4File::AddH264VideoTrack(
     SetTrackIntegerProperty(trackId,
                             "mdia.minf.stbl.stsd.avc1.avcC.lengthSizeMinusOne",
                             sampleLenFieldSizeMinusOne);
-
 
     return trackId;
 }
@@ -3038,16 +3027,30 @@ void MP4File::ReadSample(MP4TrackId trackId, MP4SampleId sampleId,
                pStartTime, pDuration, pRenderingOffset, pIsSyncSample);
 }
 
-void MP4File::WriteSample(MP4TrackId trackId,
-                          const uint8_t* pBytes, uint32_t numBytes,
-                          MP4Duration duration, MP4Duration renderingOffset, bool isSyncSample)
+void MP4File::WriteSample(
+    MP4TrackId     trackId,
+    const uint8_t* pBytes,
+    uint32_t       numBytes,
+    MP4Duration    duration,
+    MP4Duration    renderingOffset,
+    bool           isSyncSample )
 {
-    ProtectWriteOperation("MP4WriteSample");
+    ProtectWriteOperation( "MP4WriteSample" );
+    m_pTracks[FindTrackIndex(trackId)]->WriteSample( pBytes, numBytes, duration, renderingOffset, isSyncSample );
+    m_pModificationProperty->SetValue( MP4GetAbsTimestamp() );
+}
 
-    m_pTracks[FindTrackIndex(trackId)]->
-    WriteSample(pBytes, numBytes, duration, renderingOffset, isSyncSample);
-
-    m_pModificationProperty->SetValue(MP4GetAbsTimestamp());
+void MP4File::WriteH264Sample(
+    MP4TrackId       trackId,
+    const uint8_t*   pBytes, 
+    uint32_t         numBytes,
+    MP4Duration      duration,
+    MP4Duration      renderingOffset,
+    MP4H264FrameType frameType )
+{
+    ProtectWriteOperation( "MP4WriteH264Sample" );
+    m_pTracks[FindTrackIndex(trackId)]->WriteH264Sample( pBytes, numBytes, duration, renderingOffset, frameType );
+    m_pModificationProperty->SetValue( MP4GetAbsTimestamp() );
 }
 
 void MP4File::SetSampleRenderingOffset(MP4TrackId trackId,

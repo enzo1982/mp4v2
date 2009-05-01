@@ -367,6 +367,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\atom_sdtp.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\atom_smi.cpp"
 				>
 			</File>

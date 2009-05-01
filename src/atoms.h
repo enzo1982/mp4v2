@@ -34,6 +34,16 @@ namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/// ISO base media full-atom.
+class MP4FullAtom : public MP4Atom
+{
+public:
+    MP4FullAtom( const char* type );
+
+    MP4Integer8Property&  version;
+    MP4Integer24Property& flags;
+};
+
 // declare all the atom subclasses
 // i.e. spare us atom_xxxx.h for all the atoms
 //
@@ -301,6 +311,29 @@ public:
     void Write();
 };
 
+// sdtp - Independent and Disposable Samples Atom.
+class MP4SdtpAtom : public MP4FullAtom {
+public:
+    // bit combinations 0x03, 0x30, 0xc0 are reserved
+    enum {
+        HAS_REDUNDANT_CODING          = 0x01,
+        HAS_NO_REDUNDANT_CODING       = 0x02,
+        HAS_DEPENDENTS                = 0x04,
+        HAS_NO_DEPENDENTS             = 0x08, // sample is disposable
+        IS_DEPENDENT                  = 0x10, // eg. P-frame or B-frame
+        IS_INDEPENDENT                = 0x20, // eg. I-frame
+        EARLIER_DISPLAY_TIMES_ALLOWED = 0x40, // for subsequent samples in GOP
+        _RESERVED                     = 0x80,
+    };
+
+    MP4SdtpAtom();
+    void Read();
+
+    // raw bytes; one byte for each sample.
+    // number of bytes == stsz.sampleCount.
+    MP4BytesProperty& data;
+};
+
 class MP4SmiAtom : public MP4Atom {
 public:
     MP4SmiAtom(void);
@@ -464,16 +497,6 @@ public:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-
-/// ISO base media full-atom.
-class MP4FullAtom : public MP4Atom
-{
-public:
-    MP4FullAtom( const char* type );
-
-    MP4Integer8Property&  version;
-    MP4Integer24Property& flags;
-};
 
 /// iTMF item-atom.
 class MP4ItemAtom : public MP4Atom

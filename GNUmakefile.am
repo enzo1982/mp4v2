@@ -42,6 +42,7 @@ libmp4v2_la_SOURCES = \
     src/atom_rtp.cpp                     \
     src/atom_s263.cpp                    \
     src/atom_sdp.cpp                     \
+    src/atom_sdtp.cpp                    \
     src/atom_smi.cpp                     \
     src/atom_sound.cpp                   \
     src/atom_standard.cpp                \

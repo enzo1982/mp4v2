@@ -39,6 +39,7 @@ MP4StblAtom::MP4StblAtom()
     ExpectChildAtom("stss", Optional, OnlyOne);
     ExpectChildAtom("stsh", Optional, OnlyOne);
     ExpectChildAtom("stdp", Optional, OnlyOne);
+    ExpectChildAtom("sdtp", Optional, OnlyOne);
 }
 
 void MP4StblAtom::Generate()
