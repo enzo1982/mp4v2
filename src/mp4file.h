@@ -196,13 +196,14 @@ public: /* equivalent to MP4 library API */
         MP4Duration    renderingOffset = 0,
         bool           isSyncSample = true );
 
-    void WriteH264Sample(
-        MP4TrackId       trackId,
-        const uint8_t*   pBytes,
-        uint32_t         numBytes,
-        MP4Duration      duration,
-        MP4Duration      renderingOffset,
-        MP4H264FrameType frameType );
+    void WriteSampleDependency(
+        MP4TrackId     trackId,
+        const uint8_t* pBytes,
+        uint32_t       numBytes,
+        MP4Duration    duration,
+        MP4Duration    renderingOffset,
+        bool           isSyncSample,
+        uint32_t       dependencyFlags );
 
     void SetSampleRenderingOffset(
         MP4TrackId trackId,

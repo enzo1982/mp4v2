@@ -3036,20 +3036,23 @@ void MP4File::WriteSample(
     bool           isSyncSample )
 {
     ProtectWriteOperation( "MP4WriteSample" );
-    m_pTracks[FindTrackIndex(trackId)]->WriteSample( pBytes, numBytes, duration, renderingOffset, isSyncSample );
+    m_pTracks[FindTrackIndex(trackId)]->WriteSample(
+        pBytes, numBytes, duration, renderingOffset, isSyncSample );
     m_pModificationProperty->SetValue( MP4GetAbsTimestamp() );
 }
 
-void MP4File::WriteH264Sample(
-    MP4TrackId       trackId,
-    const uint8_t*   pBytes, 
-    uint32_t         numBytes,
-    MP4Duration      duration,
-    MP4Duration      renderingOffset,
-    MP4H264FrameType frameType )
+void MP4File::WriteSampleDependency(
+    MP4TrackId     trackId,
+    const uint8_t* pBytes, 
+    uint32_t       numBytes,
+    MP4Duration    duration,
+    MP4Duration    renderingOffset,
+    bool           isSyncSample,
+    uint32_t       dependencyFlags )
 {
     ProtectWriteOperation( "MP4WriteH264Sample" );
-    m_pTracks[FindTrackIndex(trackId)]->WriteH264Sample( pBytes, numBytes, duration, renderingOffset, frameType );
+    m_pTracks[FindTrackIndex(trackId)]->WriteSampleDependency(
+        pBytes, numBytes, duration, renderingOffset, isSyncSample, dependencyFlags );
     m_pModificationProperty->SetValue( MP4GetAbsTimestamp() );
 }
 

@@ -2574,24 +2574,26 @@ extern "C" {
         return false;
     }
 
-    bool MP4WriteH264Sample(
-        MP4FileHandle    hFile,
-        MP4TrackId       trackId,
-        const uint8_t*   pBytes,
-        uint32_t         numBytes,
-        MP4Duration      duration,
-        MP4Duration      renderingOffset,
-        MP4H264FrameType frameType )
+    bool MP4WriteSampleDependency(
+        MP4FileHandle  hFile,
+        MP4TrackId     trackId,
+        const uint8_t* pBytes,
+        uint32_t       numBytes,
+        MP4Duration    duration,
+        MP4Duration    renderingOffset,
+        bool           isSyncSample,
+        uint32_t       dependencyFlags )
     {
         if( MP4_IS_VALID_FILE_HANDLE( hFile )) {
             try {
-                ((MP4File*)hFile)->WriteH264Sample(
+                ((MP4File*)hFile)->WriteSampleDependency(
                     trackId,
                     pBytes,
                     numBytes,
                     duration,
                     renderingOffset,
-                    frameType );
+                    isSyncSample,
+                    dependencyFlags );
                 return true;
             }
             catch( MP4Error* e ) {

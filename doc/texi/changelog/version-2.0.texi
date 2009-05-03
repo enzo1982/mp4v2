@@ -52,5 +52,5 @@ Added new public-API: MP4GetTrackDurationPerChunk().
 Added new public-API: MP4SetTrackDurationPerChunk() to override default per-track chunk duration.
 
 @item
-Added new public-API: MP4WriteH264Sample().
+Added new public-API: MP4WriteSampleDependency().
 @end enumerate

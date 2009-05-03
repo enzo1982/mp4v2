@@ -380,10 +380,10 @@ void MP4Track::ReadSampleFragment(
 
 void MP4Track::WriteSample(
     const uint8_t* pBytes,
-    uint32_t numBytes,
-    MP4Duration duration,
-    MP4Duration renderingOffset,
-    bool isSyncSample)
+    uint32_t       numBytes,
+    MP4Duration    duration,
+    MP4Duration    renderingOffset,
+    bool           isSyncSample )
 {
     uint8_t curMode = 0;
 
@@ -452,15 +452,16 @@ void MP4Track::WriteSample(
     m_writeSampleId++;
 }
 
-void MP4Track::WriteH264Sample(
-    const uint8_t*   pBytes,
-    uint32_t         numBytes,
-    MP4Duration      duration,
-    MP4Duration      renderingOffset,
-    MP4H264FrameType frameType )
+void MP4Track::WriteSampleDependency(
+    const uint8_t* pBytes,
+    uint32_t       numBytes,
+    MP4Duration    duration,
+    MP4Duration    renderingOffset,
+    bool           isSyncSample,
+    uint32_t       dependencyFlags )
 {
-    m_sdtpLog.push_back( frameType ); // record frame types for processing at finish
-    WriteSample( pBytes, numBytes, duration, renderingOffset, frameType == MP4_H264_FRAME_IDR );
+    m_sdtpLog.push_back( dependencyFlags ); // record dependency flags for processing at finish
+    WriteSample( pBytes, numBytes, duration, renderingOffset, isSyncSample );
 }
 
 void MP4Track::WriteChunkBuffer()
@@ -536,122 +537,17 @@ void MP4Track::FinishWrite()
 //
 // Testing (subjective) showed a marked improvement with QuickTime
 // player on Mac OS X when scrubbing. Best results were obtained
-// from encodings using bframes=3. It's expected sdtp may help other
-// QT-based players.
-//
-// This implementation does basic next-sample look-ahead to set more bits
-// for each sample; testing is inconclusive if this is really necesary
-// but it does not hurt. It is possible future versions of QT may benefit.
-// If this proves too cause issues, we can revert to a simpler impl
-// which omits (decode-time) look-ahead.
+// from encodings using low number of bframes. It's expected sdtp may help
+// other QT-based players.
 //
 void MP4Track::FinishSdtp()
 {
-    // empty indicates suitable samples were not written with full frame-typing
+    // bail if log is empty -- indicates dependency information was not written
     if( m_sdtpLog.empty() )
         return;
 
-    MP4SdtpAtom* sdtp = (MP4SdtpAtom*)AddAtom( "trak.mdia.minf.stbl", "sdtp" );
-
-    // log is a raw byte array; each byte represents 1 sample
-    // data is a raw byte array; each byte represents 1 sample
-    // samples are in decode-order
-    // data is written out to sdtp atom
-    string::size_type nsamples = m_sdtpLog.size();
-    string data( nsamples, 0 ); // initialize data to 0
-
-    for( string::size_type i = 0; i < nsamples; i++) {
-        // active sample out
-        char& samp = data[i];
-
-        // peek at next sample; if end we behave as if it's an undefined frame type
-        // which is not perfectly accurate but last sample is not terribly important
-        const char nextsamp = ((i+1) < nsamples) ? data[i+1] : MP4_H264_FRAME_UNDEFINED;
-
-        switch( m_sdtpLog[i] ) {
-            case MP4_H264_FRAME_IDR:
-                samp |= MP4SdtpAtom::IS_INDEPENDENT;
-                switch( nextsamp ) {
-                    case MP4_H264_FRAME_IDR:
-                    case MP4_H264_FRAME_I:
-                        break;
-                    case MP4_H264_FRAME_P:
-                    case MP4_H264_FRAME_BREF:
-                    case MP4_H264_FRAME_B:
-                    default:
-                        samp |= MP4SdtpAtom::HAS_DEPENDENTS;
-                        break;
-                }
-                break;
-
-            case MP4_H264_FRAME_I:
-                samp |= MP4SdtpAtom::IS_INDEPENDENT;
-                switch( nextsamp ) {
-                    case MP4_H264_FRAME_IDR:
-                    case MP4_H264_FRAME_I:
-                        break;
-                    case MP4_H264_FRAME_P:
-                    case MP4_H264_FRAME_BREF:
-                    case MP4_H264_FRAME_B:
-                    default:
-                        samp |= MP4SdtpAtom::HAS_DEPENDENTS;
-                        break;
-                }
-                break;
-
-            case MP4_H264_FRAME_P:
-                samp |= MP4SdtpAtom::IS_DEPENDENT;
-                switch( nextsamp ) {
-                    case MP4_H264_FRAME_IDR:
-                    case MP4_H264_FRAME_I:
-                        samp |= MP4SdtpAtom::HAS_NO_DEPENDENTS;
-                        break;
-                    case MP4_H264_FRAME_P:
-                        samp |= MP4SdtpAtom::HAS_NO_DEPENDENTS;
-                        samp |= MP4SdtpAtom::EARLIER_DISPLAY_TIMES_ALLOWED;
-                        break;
-                    case MP4_H264_FRAME_BREF:
-                    case MP4_H264_FRAME_B:
-                    default:
-                        samp |= MP4SdtpAtom::HAS_DEPENDENTS;
-                        samp |= MP4SdtpAtom::EARLIER_DISPLAY_TIMES_ALLOWED;
-                        break;
-                }
-                break;
-
-            case MP4_H264_FRAME_BREF:
-                samp |= MP4SdtpAtom::IS_DEPENDENT;
-                samp |= MP4SdtpAtom::HAS_DEPENDENTS;
-                break;
-
-            case MP4_H264_FRAME_B:
-                samp |= MP4SdtpAtom::IS_DEPENDENT;
-                samp |= MP4SdtpAtom::HAS_NO_DEPENDENTS;
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    sdtp->data.SetValue( (const uint8_t*)data.data(), data.size() );
-
-#if 0 // TODO-KB: cleanup after sdtp dust settles
-    cout << "PATTERN:" << endl;
-    for( string::size_type i = 0; i < nsamples; i++ ) {
-        switch( m_sdtpLog[i] ) {
-            case MP4_H264_FRAME_IDR:  cout << 'S'; break;
-            case MP4_H264_FRAME_I:    cout << 'I'; break;
-            case MP4_H264_FRAME_P:    cout << 'p'; break;
-            case MP4_H264_FRAME_BREF: cout << 'B'; break;
-            case MP4_H264_FRAME_B:    cout << 'b'; break;
-            default:
-                cout << '.';
-                break;
-        }
-    }
-    cout << endl;
-#endif
+    MP4SdtpAtom& sdtp = *(MP4SdtpAtom*)AddAtom( "trak.mdia.minf.stbl", "sdtp" );
+    sdtp.data.SetValue( (const uint8_t*)m_sdtpLog.data(), m_sdtpLog.size() );
 }
 
 bool MP4Track::IsChunkFull(MP4SampleId sampleId)

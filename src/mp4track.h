@@ -86,12 +86,13 @@ public:
         MP4Duration renderingOffset = 0,
         bool isSyncSample = true);
 
-    void WriteH264Sample(
-        const uint8_t*   pBytes,
-        uint32_t         numBytes,
-        MP4Duration      duration,
-        MP4Duration      renderingOffset,
-        MP4H264FrameType frameType );
+    void WriteSampleDependency(
+        const uint8_t* pBytes,
+        uint32_t       numBytes,
+        MP4Duration    duration,
+        MP4Duration    renderingOffset,
+        bool           isSyncSample,
+        uint32_t       dependencyFlags );
 
     virtual void FinishWrite();
 
