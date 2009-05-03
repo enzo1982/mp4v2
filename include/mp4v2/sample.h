@@ -256,6 +256,7 @@ bool MP4WriteSample(
  *      video. Caveat: The offset should be in the track timescale.
  *  @param isSyncSample the sync/random access flag for this sample.
  *  @param dependencyFlags bitmask specifying sample dependency characteristics.
+ *      See #MP4SampleDependencyType for bit constants.
  *
  *  @return <b>true</b> on success, <b>false</b> on failure.
  *
