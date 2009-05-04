@@ -395,6 +395,7 @@ protected:
 class MP4Tx3gAtom : public MP4Atom {
 public:
     MP4Tx3gAtom();
+    void Generate();
 };
 
 class MP4FtabAtom : public MP4Atom {

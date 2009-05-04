@@ -2180,22 +2180,19 @@ MP4TrackId MP4File::AddTextTrack(MP4TrackId refTrackId)
     return trackId;
 }
 
-MP4TrackId MP4File::AddSubtitleTrack(MP4TrackId refTrackId)
+MP4TrackId MP4File::AddSubtitleTrack(uint32_t timescale,
+                                     uint16_t width,
+                                     uint16_t height)
 {
-    // validate reference track id
-    FindTrackIndex(refTrackId);
-
     MP4TrackId trackId =
-        AddTrack(MP4_TEXT_TRACK_TYPE, GetTrackTimeScale(refTrackId));
+        AddTrack(MP4_SUBTITLE_TRACK_TYPE, timescale);
 
     InsertChildAtom(MakeTrackName(trackId, "mdia.minf"), "nmhd", 0);
 
     AddChildAtom(MakeTrackName(trackId, "mdia.minf.stbl.stsd"), "tx3g");
 
-    MP4StringProperty* pHandlerTypeProperty;
-    FindStringProperty(MakeTrackName(trackId, "mdia.hdlr.handlerType"),
-                       (MP4Property**)&pHandlerTypeProperty);
-    pHandlerTypeProperty->SetValue(MP4_SUBTITLE_TRACK_TYPE);
+    SetTrackFloatProperty(trackId, "tkhd.width", width);
+    SetTrackFloatProperty(trackId, "tkhd.height", height);
 
     // Hardcoded crap... add the ftab atom and add one font entry
     MP4Atom* pFtabAtom = AddChildAtom(MakeTrackName(trackId, "mdia.minf.stbl.stsd.tx3g"), "ftab");
@@ -2208,16 +2205,15 @@ MP4TrackId MP4File::AddSubtitleTrack(MP4TrackId refTrackId)
     MP4StringProperty* pName = (MP4StringProperty*)((MP4TableProperty*)pFtabAtom->GetProperty(1))->GetProperty(1);
     pName->AddValue("Arial");
 
+    SetTrackIntegerProperty(trackId, "mdia.minf.stbl.stsd.tx3g.fontID", 1);
+
     // stsd is a unique beast in that it has a count of the number
-    // of child atoms that needs to be incremented after we add the text atom
+    // of child atoms that needs to be incremented after we add the tx3g atom
     MP4Integer32Property* pStsdCountProperty;
     FindIntegerProperty(
         MakeTrackName(trackId, "mdia.minf.stbl.stsd.entryCount"),
         (MP4Property**)&pStsdCountProperty);
     pStsdCountProperty->IncrementValue();
-
-    /* add the magic "text" atom to the generic media header */
-//  AddChildAtom(MakeTrackName(trackId, "mdia.minf.gmhd"), "text");
 
     return trackId;
 }

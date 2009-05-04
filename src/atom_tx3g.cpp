@@ -59,6 +59,14 @@ MP4Tx3gAtom::MP4Tx3gAtom()
     ExpectChildAtom("ftab", Optional, Many);
 }
 
+void MP4Tx3gAtom::Generate()
+{
+    // generate children
+    MP4Atom::Generate();
+
+    ((MP4Integer16Property*)m_pProperties[2])->SetValue(1);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 }

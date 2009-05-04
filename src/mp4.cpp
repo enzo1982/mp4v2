@@ -1159,12 +1159,14 @@ extern "C" {
         return MP4_INVALID_TRACK_ID;
     }
 
-    MP4TrackId MP4AddSubtitleTrack(
-        MP4FileHandle hFile, MP4TrackId refTrackId)
+    MP4TrackId MP4AddSubtitleTrack(MP4FileHandle hFile,
+                                   uint32_t timescale,
+                                   uint16_t width,
+                                   uint16_t height)
     {
         if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
             try {
-                return ((MP4File*)hFile)->AddSubtitleTrack(refTrackId);
+                return ((MP4File*)hFile)->AddSubtitleTrack(timescale, width, height);
             }
             catch (MP4Error* e) {
                 PRINT_ERROR(e);

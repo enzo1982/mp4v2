@@ -355,7 +355,9 @@ public: /* equivalent to MP4 library API */
         MP4TrackId refTrackId,
         uint32_t   timescale = 0 );
 
-    MP4TrackId AddSubtitleTrack(MP4TrackId refTrackId);
+    MP4TrackId AddSubtitleTrack(uint32_t timescale,
+                                uint16_t width,
+                                uint16_t height);
 
     MP4TrackId AddPixelAspectRatio(MP4TrackId trackId, uint32_t hSpacing, uint32_t vSpacing);
     MP4TrackId AddColr(MP4TrackId trackId, uint16_t pri, uint16_t tran, uint16_t mat);
