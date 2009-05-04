@@ -1252,52 +1252,32 @@ MP4TrackId MP4File::AddSceneTrack()
     return trackId;
 }
 
-// NULL terminated list of brands which require the IODS atom
-const char* brandsWithIods[] = {
-    "mp42",
-    "isom",
-    NULL
-};
-
 bool MP4File::ShallHaveIods()
 {
-    uint32_t compatibleBrandsCount;
-    MP4StringProperty *pMajorBrandProperty;
+    // NULL terminated list of brands which require the IODS atom
+    const char* brandsWithIods[] = {
+        "mp42",
+        "isom",
+        NULL
+    };
 
-    MP4Atom* ftypAtom = m_pRootAtom->FindAtom("ftyp");
-    if (ftypAtom == NULL) return false;
+    MP4FtypAtom* ftyp = (MP4FtypAtom*)m_pRootAtom->FindAtom( "ftyp" );
+    if( !ftyp )
+        return false;
 
-    // Check the major brand
-    (void)ftypAtom->FindProperty(
-        "ftyp.majorBrand",
-        (MP4Property**)&pMajorBrandProperty);
-    ASSERT(pMajorBrandProperty);
-    for (uint32_t j = 0 ; brandsWithIods[j] != NULL ; j++) {
-        if (!strcasecmp( ((MP4StringProperty*)pMajorBrandProperty)->GetValue(),
-                         brandsWithIods[j]))
+    // check major brand
+    const char* brand = ftyp->majorBrand.GetValue();
+    for( uint32_t i = 0; brandsWithIods[i] != NULL; i++ ) {
+        if( !strcasecmp( brandsWithIods[i], brand ))
             return true;
     }
 
-    // Check the compatible brands
-    MP4Integer32Property* pCompatibleBrandsCountProperty;
-    (void)ftypAtom->FindProperty(
-        "ftyp.compatibleBrandsCount",
-        (MP4Property**)&pCompatibleBrandsCountProperty);
-    ASSERT(pCompatibleBrandsCountProperty);
-
-    compatibleBrandsCount  = pCompatibleBrandsCountProperty->GetValue();
-
-    MP4TableProperty* pCompatibleBrandsProperty;
-    (void)ftypAtom->FindProperty(
-        "ftyp.compatibleBrands",
-        (MP4Property**)&pCompatibleBrandsProperty);
-
-    MP4StringProperty* pBrandProperty = (MP4StringProperty*)pCompatibleBrandsProperty->GetProperty(0);
-    ASSERT(pBrandProperty);
-
-    for (uint32_t i = 0 ; i < compatibleBrandsCount ; i++) {
-        for (uint32_t j = 0 ; brandsWithIods[j] != NULL ; j++) {
-            if (!strcasecmp(pBrandProperty->GetValue(i), brandsWithIods[j]))
+    // check compatible brands
+    uint32_t max = ftyp->compatibleBrands.GetCount();
+    for( uint32_t i = 0; i < max; i++ ) {
+        brand = ftyp->compatibleBrands.GetValue( i );
+        for( uint32_t j = 0; brandsWithIods[j] != NULL ; j++) {
+            if( !strcasecmp( brandsWithIods[j], brand ))
                 return true;
         }
     }
@@ -3065,6 +3045,28 @@ void MP4File::SetSampleRenderingOffset(MP4TrackId trackId,
     SetSampleRenderingOffset(sampleId, renderingOffset);
 
     m_pModificationProperty->SetValue(MP4GetAbsTimestamp());
+}
+
+void MP4File::MakeFtypAtom(
+    char*    majorBrand,
+    uint32_t minorVersion,
+    char**   compatibleBrands,
+    uint32_t compatibleBrandsCount)
+{
+    MP4FtypAtom* ftyp = (MP4FtypAtom*)m_pRootAtom->FindAtom( "ftyp" );
+    if (ftyp == NULL)
+        ftyp = (MP4FtypAtom*)InsertChildAtom( m_pRootAtom, "ftyp", 0 );
+
+    // bail if majorbrand is not specified; defaults suffice.
+    if (majorBrand == NULL)
+        return;
+
+    ftyp->majorBrand.SetValue( majorBrand );
+    ftyp->minorVersion.SetValue( minorVersion );
+
+    ftyp->compatibleBrands.SetCount( compatibleBrandsCount );
+    for( uint32_t i = 0; i < compatibleBrandsCount; i++ )
+        ftyp->compatibleBrands.SetValue( compatibleBrands[i] );
 }
 
 char* MP4File::MakeTrackName(MP4TrackId trackId, const char* name)

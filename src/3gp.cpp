@@ -27,8 +27,7 @@
 
 #include "src/impl.h"
 
-namespace mp4v2 {
-namespace impl {
+namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -65,74 +64,6 @@ void MP4File::Make3GPCompliant(const char* fileName,  char* majorBrand, uint32_t
 
 }
 
-void MP4File::MakeFtypAtom(char* majorBrand, uint32_t minorVersion, char** supportedBrands, uint32_t supportedBrandsCount)
-{
-    bool rewriteNeeded = false;
-    uint32_t currentSupportedBrandsCount;
-    uint32_t i;
-
-
-    MP4Atom* ftypAtom = m_pRootAtom->FindAtom("ftyp");
-    if (ftypAtom == NULL) {
-        ftypAtom = InsertChildAtom(m_pRootAtom, "ftyp", 0);
-    }
-    if (majorBrand == NULL)
-        return;
-    MP4StringProperty* pMajorBrandProperty;
-    if (!ftypAtom->FindProperty(
-                "ftyp.majorBrand",
-                (MP4Property**)&pMajorBrandProperty))
-        return;
-
-    pMajorBrandProperty->SetValue(majorBrand);
-
-
-    MP4Integer32Property* pMinorVersionProperty;
-    if (!ftypAtom->FindProperty(
-                "ftype.minorVersion",
-                (MP4Property**)&pMinorVersionProperty))
-        return;
-
-    pMinorVersionProperty->SetValue(minorVersion);
-
-    MP4Integer32Property* pCompatibleBrandsCountProperty;
-    if (!ftypAtom->FindProperty(
-                "ftyp.compatibleBrandsCount",
-                (MP4Property**)&pCompatibleBrandsCountProperty)) return;
-
-    currentSupportedBrandsCount = pCompatibleBrandsCountProperty->GetValue();
-
-    MP4TableProperty* pCompatibleBrandsProperty;
-    if (!ftypAtom->FindProperty(
-                "ftyp.compatibleBrands",
-                (MP4Property**)&pCompatibleBrandsProperty)) return;
-
-    MP4StringProperty* pBrandProperty = (MP4StringProperty*)
-                                        pCompatibleBrandsProperty->GetProperty(0);
-    ASSERT(pBrandProperty);
-
-    for (i = 0 ; i < ((currentSupportedBrandsCount > supportedBrandsCount) ? supportedBrandsCount : currentSupportedBrandsCount) ; i++) {
-        pBrandProperty->SetValue(supportedBrands[i], i);
-
-    }
-
-    if (i < supportedBrandsCount) {
-        for ( ; i < supportedBrandsCount ; i++) {
-            pBrandProperty->AddValue(supportedBrands[i]);
-        }
-    }
-
-    if (currentSupportedBrandsCount != supportedBrandsCount) {
-        rewriteNeeded = true;
-        pBrandProperty->SetCount(supportedBrandsCount);
-        pCompatibleBrandsCountProperty->SetReadOnly(false);
-        pCompatibleBrandsCountProperty->SetValue(supportedBrandsCount);
-        pCompatibleBrandsCountProperty->SetReadOnly(true);
-    }
-
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 
-}
-} // namespace mp4v2::impl
+}} // namespace mp4v2::impl

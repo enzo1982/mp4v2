@@ -34,6 +34,9 @@ namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class MP4FtypAtom;
+class MP4FreeAtom;
+
 /// ISO base media full-atom.
 class MP4FullAtom : public MP4Atom
 {
@@ -51,7 +54,8 @@ public:
 // Some atoms have a few special needs
 // A small minority of atoms need lots of special handling
 
-class MP4RootAtom : public MP4Atom {
+class MP4RootAtom : public MP4Atom
+{
 public:
     MP4RootAtom();
     void BeginWrite(bool use64 = false);
@@ -64,6 +68,12 @@ public:
 protected:
     uint32_t GetLastMdatIndex();
     void WriteAtomType(const char* type, bool onlyOne);
+
+private:
+    MP4FtypAtom* m_rewrite_ftyp;
+    uint64_t     m_rewrite_ftypPosition;
+    MP4FreeAtom* m_rewrite_free;
+    uint64_t     m_rewrite_freePosition;
 };
 
 /***********************************************************************
@@ -225,6 +235,10 @@ public:
     MP4FtypAtom();
     void Generate();
     void Read();
+
+    MP4StringProperty&    majorBrand;
+    MP4Integer32Property& minorVersion;
+    MP4StringProperty&    compatibleBrands;
 };
 
 class MP4GminAtom : public MP4Atom {

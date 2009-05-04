@@ -548,6 +548,22 @@ void MP4Track::FinishSdtp()
 
     MP4SdtpAtom& sdtp = *(MP4SdtpAtom*)AddAtom( "trak.mdia.minf.stbl", "sdtp" );
     sdtp.data.SetValue( (const uint8_t*)m_sdtpLog.data(), m_sdtpLog.size() );
+
+    // add avc1 compatibility indicator if not present
+    MP4FtypAtom* ftyp = (MP4FtypAtom*)m_pFile->FindAtom( "ftyp" );
+    if( ftyp ) {
+        bool found = false;
+        const uint32_t max = ftyp->compatibleBrands.GetCount();
+        for( uint32_t i = 0; i < max; i++ ) {
+            if( !strcmp( ftyp->compatibleBrands.GetValue( i ), "avc1" )) {
+                found = true;
+                break;
+            }
+        }
+
+        if( !found )
+            ftyp->compatibleBrands.AddValue( "avc1" );
+    }
 }
 
 bool MP4Track::IsChunkFull(MP4SampleId sampleId)
@@ -1856,4 +1872,3 @@ void MP4Track::SetDurationPerChunk( MP4Duration duration )
 ///////////////////////////////////////////////////////////////////////////////
 
 }} // namespace mp4v2::impl
-

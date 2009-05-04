@@ -21,61 +21,42 @@
 
 #include "src/impl.h"
 
-namespace mp4v2 {
-namespace impl {
+namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
 MP4FtypAtom::MP4FtypAtom()
-        : MP4Atom("ftyp")
+    : MP4Atom( "ftyp" )
+    , majorBrand       ( *new MP4StringProperty( "majorBrand" ))
+    , minorVersion     ( *new MP4Integer32Property( "minorVersion" ))
+    , compatibleBrands ( *new MP4StringProperty( "compatibleBrands", false, false, true ))
 {
-    MP4StringProperty* pProp = new MP4StringProperty("majorBrand");
-    pProp->SetFixedLength(4);
-    AddProperty(pProp); /* 0 */
+    majorBrand.SetFixedLength( 4 );
+    compatibleBrands.SetFixedLength( 4 );
 
-    AddProperty( /* 1 */
-        new MP4Integer32Property("minorVersion"));
-
-    MP4Integer32Property* pCount =
-        new MP4Integer32Property("compatibleBrandsCount");
-    pCount->SetImplicit();
-    AddProperty(pCount); /* 2 */
-
-    MP4TableProperty* pTable =
-        new MP4TableProperty("compatibleBrands", pCount);
-    AddProperty(pTable); /* 3 */
-
-    pProp = new MP4StringProperty("brand");
-    pProp->SetFixedLength(4);
-    pTable->AddProperty(pProp);
+    AddProperty( &majorBrand );
+    AddProperty( &minorVersion );
+    AddProperty( &compatibleBrands );
 }
 
 void MP4FtypAtom::Generate()
 {
     MP4Atom::Generate();
 
-    ((MP4StringProperty*)m_pProperties[0])->SetValue("mp42");
+    majorBrand.SetValue( "mp42" );
+    minorVersion.SetValue( 0 );
 
-    MP4StringProperty* pBrandProperty = (MP4StringProperty*)
-                                        ((MP4TableProperty*)m_pProperties[3])->GetProperty(0);
-    ASSERT(pBrandProperty);
-    pBrandProperty->AddValue("mp42");
-    pBrandProperty->AddValue("isom");
-    ((MP4Integer32Property*)m_pProperties[2])->IncrementValue();
-    ((MP4Integer32Property*)m_pProperties[2])->IncrementValue();
+    compatibleBrands.SetCount( 2 );
+    compatibleBrands.SetValue( "mp42", 0 );
+    compatibleBrands.SetValue( "isom", 1 );
 }
 
 void MP4FtypAtom::Read()
 {
-    // table entry count computed from atom size
-    ((MP4Integer32Property*)m_pProperties[2])->SetReadOnly(false);
-    ((MP4Integer32Property*)m_pProperties[2])->SetValue((m_size - 8) / 4);
-    ((MP4Integer32Property*)m_pProperties[2])->SetReadOnly(true);
-
+    compatibleBrands.SetCount( (m_size - 8) / 4 ); // brands array fills rest of atom
     MP4Atom::Read();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-}
-} // namespace mp4v2::impl
+}} // namespace mp4v2::impl

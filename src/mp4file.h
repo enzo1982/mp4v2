@@ -526,11 +526,13 @@ public: /* equivalent to MP4 library API */
     void SetHintTrackSdp(MP4TrackId hintTrackId, const char* sdpString);
     void AppendHintTrackSdp(MP4TrackId hintTrackId, const char* sdpString);
 
+    void MakeFtypAtom(
+        char*    majorBrand,
+        uint32_t minorVersion,
+        char**   compatibleBrands,
+        uint32_t compatibleBrandsCount );
+
     // 3GPP specific functions
-    void MakeFtypAtom(char* majorBrand,
-                      uint32_t minorVersion,
-                      char** supportedBrands,
-                      uint32_t supportedBrandsCount);
     void Make3GPCompliant(const char* fileName,
                           char* majorBrand,
                           uint32_t minorVersion,
