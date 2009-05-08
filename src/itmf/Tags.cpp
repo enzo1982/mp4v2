@@ -54,7 +54,7 @@ void
 Tags::c_alloc( MP4Tags*& tags )
 {
     tags = new MP4Tags();
-    memset( tags, 0, sizeof(Tags) ); // safe: pure C-struct
+    memset( tags, 0, sizeof(MP4Tags) ); // safe: pure C-struct
     tags->__handle = this;
 }
 
