@@ -29,6 +29,7 @@ File::File( std::string name_, Mode mode_, FileProvider* provider_ )
 
 File::~File()
 {
+    close();
     delete &_provider;
 }
 
@@ -149,6 +150,7 @@ StandardFileProvider::open( std::string name, Mode mode )
 
         case MODE_UNDEFINED:
         default:
+            om |= ios::in;
             break;
     }
 
@@ -201,7 +203,7 @@ CustomFileProvider::CustomFileProvider( const MP4FileProvider& provider )
 bool
 CustomFileProvider::open( std::string name, Mode mode )
 {
-    MP4FileMode fm = FILEMODE_UNDEFINED;
+    MP4FileMode fm;
     switch( mode ) {
         case MODE_READ:   fm = FILEMODE_READ;   break;
         case MODE_MODIFY: fm = FILEMODE_MODIFY; break;
@@ -209,6 +211,7 @@ CustomFileProvider::open( std::string name, Mode mode )
 
         case MODE_UNDEFINED:
         default:
+            fm = FILEMODE_UNDEFINED;
             break;
     }
 

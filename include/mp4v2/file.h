@@ -44,7 +44,18 @@ typedef enum MP4FileMode_e
     FILEMODE_CREATE,    /**< file will be created/truncated for read/write */
 } MP4FileMode;
 
-/** Structure of functions implementing custom file provider. */
+/** Structure of functions implementing custom file provider.
+ *
+ *  Except for <b>open</b>, al the functions must return a true value
+ *  to indicate failure or false on success. The open function must return
+ *  a pointer or handle which represents the open file, otherwise NULL.
+ *
+ *  maxChunkSize is a hint suggesting what the max size of data should be read
+ *  as in underlying read/write operations. A value of 0 indicates there is no hint.
+ *
+ *  Example usage:
+ *  @include example/provider/provider.c
+ */
 typedef struct MP4FileProvider_s
 {
     void* ( *open  )( const char* name, MP4FileMode mode );
