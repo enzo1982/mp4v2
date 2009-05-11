@@ -754,6 +754,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\libplatform\io\File_win32.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\libplatform\io\FileSystem.cpp"
 					>
 				</File>
