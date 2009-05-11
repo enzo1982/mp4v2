@@ -8,6 +8,9 @@ namespace mp4v2 { namespace platform { namespace io {
 class MP4V2_EXPORT FileProvider
 {
 public:
+    static FileProvider& standard();
+
+public:
     //! file operation mode flags
     enum Mode {
         MODE_UNDEFINED, //!< undefined
@@ -168,25 +171,6 @@ public:
 public:
     void setName( const std::string& name );
     void setMode( Mode mode );
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-class StandardFileProvider : public FileProvider
-{
-public:
-    StandardFileProvider();
-
-    bool open( std::string name, Mode mode );
-    bool seek( Size pos );
-    bool read( void* buffer, Size size, Size& nin, Size maxChunkSize );
-    bool write( const void* buffer, Size size, Size& nout, Size maxChunkSize );
-    bool close();
-
-private:
-    bool         _seekg;
-    bool         _seekp;
-    std::fstream _fstream;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

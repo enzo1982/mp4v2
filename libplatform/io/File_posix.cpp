@@ -4,6 +4,25 @@ namespace mp4v2 { namespace platform { namespace io {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class StandardFileProvider : public FileProvider
+{
+public:
+    StandardFileProvider();
+
+    bool open( std::string name, Mode mode );
+    bool seek( Size pos );
+    bool read( void* buffer, Size size, Size& nin, Size maxChunkSize );
+    bool write( const void* buffer, Size size, Size& nout, Size maxChunkSize );
+    bool close();
+
+private:
+    bool         _seekg;
+    bool         _seekp;
+    std::fstream _fstream;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 StandardFileProvider::StandardFileProvider()
     : _seekg ( false )
     , _seekp ( false )
@@ -15,7 +34,9 @@ StandardFileProvider::open( std::string name, Mode mode )
 {
     ios::openmode om = ios::binary;
     switch( mode ) {
+        case MODE_UNDEFINED:
         case MODE_READ:
+        default:
             om |= ios::in;
             _seekg = true;
             _seekp = false;
@@ -31,13 +52,6 @@ StandardFileProvider::open( std::string name, Mode mode )
             om |= ios::in | ios::out | ios::trunc;
             _seekg = true;
             _seekp = true;
-            break;
-
-        case MODE_UNDEFINED:
-        default:
-            om |= ios::in;
-            _seekg = true;
-            _seekp = false;
             break;
     }
 
@@ -80,6 +94,14 @@ StandardFileProvider::close()
 {
     _fstream.close();
     return _fstream.fail();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+FileProvider&
+FileProvider::standard()
+{
+    return *new StandardFileProvider();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

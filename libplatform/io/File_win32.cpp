@@ -4,82 +4,102 @@ namespace mp4v2 { namespace platform { namespace io {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class StandardFileProvider : public FileProvider
+{
+public:
+    StandardFileProvider();
+
+    bool open( std::string name, Mode mode );
+    bool seek( Size pos );
+    bool read( void* buffer, Size size, Size& nin, Size maxChunkSize );
+    bool write( const void* buffer, Size size, Size& nout, Size maxChunkSize );
+    bool close();
+
+private:
+    HANDLE _handle;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 StandardFileProvider::StandardFileProvider()
-    : _seekg ( false )
-    , _seekp ( false )
+    : _handle( INVALID_HANDLE_VALUE )
 {
 }
 
 bool
 StandardFileProvider::open( std::string name, Mode mode )
 {
-    ios::openmode om = ios::binary;
+    DWORD access = 0;
+    DWORD share  = 0;
+    DWORD crdisp = 0;
+    DWORD flags  = FILE_ATTRIBUTE_NORMAL;
+
     switch( mode ) {
+        case MODE_UNDEFINED:
         case MODE_READ:
-            om |= ios::in;
-            _seekg = true;
-            _seekp = false;
+        default:
+            access |= GENERIC_READ;
+            share  |= FILE_SHARE_READ;
+            crdisp |= OPEN_EXISTING;
             break;
 
         case MODE_MODIFY:
-            om |= ios::in | ios::out;
-            _seekg = true;
-            _seekp = true;
+            access |= GENERIC_READ | GENERIC_WRITE;
+            share  |= FILE_SHARE_READ;
+            crdisp |= OPEN_EXISTING;
             break;
 
         case MODE_CREATE:
-            om |= ios::in | ios::out | ios::trunc;
-            _seekg = true;
-            _seekp = true;
-            break;
-
-        case MODE_UNDEFINED:
-        default:
-            om |= ios::in;
-            _seekg = true;
-            _seekp = false;
+            access |= GENERIC_READ | GENERIC_WRITE;
+            share  |= FILE_SHARE_READ;
+            crdisp |= CREATE_ALWAYS;
             break;
     }
 
-    _fstream.open( name.c_str(), om );
-    return _fstream.fail();
+    _handle = CreateFileA( name.c_str(), access, share, NULL, crdisp, flags, NULL );
+    return _handle == INVALID_HANDLE_VALUE;
 }
 
 bool
 StandardFileProvider::seek( Size pos )
 {
-    if( _seekg )
-        _fstream.seekg( pos, ios::beg );
-    if( _seekp )
-        _fstream.seekp( pos, ios::beg );
-    return _fstream.fail();
+    LARGE_INTEGER n;
+    n.QuadPart = pos;
+    return SetFilePointerEx( _handle, n, NULL, FILE_BEGIN ) == 0;
 }
 
 bool
 StandardFileProvider::read( void* buffer, Size size, Size& nin, Size maxChunkSize )
 {
-    _fstream.read( (char*)buffer, size );
-    if( _fstream.fail() )
+    DWORD nread = 0;
+    if( ReadFile( _handle, buffer, (DWORD)size, &nread, NULL ) == 0 )
         return true;
-    nin = _fstream.gcount();
+    nin = nread;
     return false;
 }
 
 bool
 StandardFileProvider::write( const void* buffer, Size size, Size& nout, Size maxChunkSize )
 {
-    _fstream.write( (const char*)buffer, size );
-    if( _fstream.fail() )
+    DWORD nwrote = 0;
+    if( WriteFile( _handle, buffer, (DWORD)size, &nwrote, NULL ) == 0 )
         return true;
-    nout = size;
+    nout = nwrote;
     return false;
 }
 
 bool
 StandardFileProvider::close()
 {
-    _fstream.close();
-    return _fstream.fail();
+    return CloseHandle( _handle ) == 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+FileProvider&
+FileProvider::standard()
+{
+    return *new StandardFileProvider();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
