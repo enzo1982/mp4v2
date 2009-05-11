@@ -131,6 +131,12 @@ File::close()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+StandardFileProvider::StandardFileProvider()
+    : _seekg ( false )
+    , _seekp ( false )
+{
+}
+
 bool
 StandardFileProvider::open( std::string name, Mode mode )
 {
@@ -138,19 +144,27 @@ StandardFileProvider::open( std::string name, Mode mode )
     switch( mode ) {
         case MODE_READ:
             om |= ios::in;
+            _seekg = true;
+            _seekp = false;
             break;
 
         case MODE_MODIFY:
             om |= ios::in | ios::out;
+            _seekg = true;
+            _seekp = true;
             break;
 
         case MODE_CREATE:
             om |= ios::in | ios::out | ios::trunc;
+            _seekg = true;
+            _seekp = true;
             break;
 
         case MODE_UNDEFINED:
         default:
             om |= ios::in;
+            _seekg = true;
+            _seekp = false;
             break;
     }
 
@@ -161,7 +175,10 @@ StandardFileProvider::open( std::string name, Mode mode )
 bool
 StandardFileProvider::seek( Size pos )
 {
-    _fstream.seekg( pos, ios::beg );
+    if( _seekg )
+        _fstream.seekg( pos, ios::beg );
+    if( _seekp )
+        _fstream.seekp( pos, ios::beg );
     return _fstream.fail();
 }
 

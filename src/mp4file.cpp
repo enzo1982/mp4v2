@@ -465,24 +465,28 @@ void MP4File::BeginWrite()
 void MP4File::FinishWrite()
 {
     // for all tracks, flush chunking buffers
-    for (uint32_t i = 0; i < m_pTracks.Size(); i++) {
-        ASSERT(m_pTracks[i]);
+    for( uint32_t i = 0; i < m_pTracks.Size(); i++ ) {
+        ASSERT( m_pTracks[i] );
         m_pTracks[i]->FinishWrite();
     }
+
     // ask root atom to write
     m_pRootAtom->FinishWrite();
 
-    const uint64_t size = GetSize();
+    const uint64_t cursize = GetSize();
     // check if file shrunk, e.g. we deleted a track
-    if (size < m_fileOriginalSize) {
+    if( cursize < m_fileOriginalSize ) {
         // just use a free atom to mark unused space
         // MP4Optimize() should be used to clean up this space
-        MP4Atom* pFreeAtom = MP4Atom::CreateAtom(NULL, "free");
-        ASSERT(pFreeAtom);
-        pFreeAtom->SetFile(this);
-        int64_t size = m_fileOriginalSize - (size + 8);
-        if (size < 0) size = 0;
-        pFreeAtom->SetSize(size);
+        MP4Atom* pFreeAtom = MP4Atom::CreateAtom( NULL, "free" );
+        ASSERT( pFreeAtom );
+        pFreeAtom->SetFile( this );
+
+        int64_t newsize = (int64_t)m_fileOriginalSize - ((int64_t)cursize + 8);
+        if( newsize < 0 )
+            newsize = 0;
+        pFreeAtom->SetSize( newsize );
+
         pFreeAtom->Write();
         delete pFreeAtom;
     }

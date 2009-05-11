@@ -5,7 +5,7 @@ namespace mp4v2 { namespace platform { namespace io {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class FileProvider
+MP4V2_EXPORT class FileProvider
 {
 public:
     //! file operation mode flags
@@ -44,7 +44,7 @@ protected:
 ///
 ///////////////////////////////////////////////////////////////////////////////
 
-class File : public FileProvider
+MP4V2_EXPORT class File : public FileProvider
 {
 public:
     ///////////////////////////////////////////////////////////////////////////
@@ -175,6 +175,8 @@ public:
 class StandardFileProvider : public FileProvider
 {
 public:
+    StandardFileProvider();
+
     bool open( std::string name, Mode mode );
     bool seek( Size pos );
     bool read( void* buffer, Size size, Size& nin, Size maxChunkSize );
@@ -182,6 +184,8 @@ public:
     bool close();
 
 private:
+    bool         _seekg;
+    bool         _seekp;
     std::fstream _fstream;
 };
 
