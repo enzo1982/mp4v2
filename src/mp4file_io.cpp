@@ -28,114 +28,84 @@ namespace impl {
 
 // MP4File low level IO support
 
-uint64_t MP4File::GetPosition(FILE* pFile)
+uint64_t MP4File::GetPosition( File* file )
 {
-    if( m_memoryBuffer == NULL ) {
-        if( pFile == NULL ) {
-            ASSERT( m_pFile );
-            uint64_t fpos;
-            if( m_virtual_IO->GetPosition( m_pFile, &fpos ) != 0 ) {
-                throw new MP4Error( "getting position via Virtual I/O", "MP4GetPosition" );
-            }
-            return fpos;
-        }
-        else {
-            // TODO-KB: test io::StdioFile
-            int64_t pos;
-            if( io::StdioFile::getPosition( pFile, pos ))
-                throw new MP4Error( sys::getLastError(), "MP4GetPosition" );
-            return pos;
-        }
-    }
-    else {
+    if( m_memoryBuffer )
         return m_memoryBufferPosition;
-    }
+
+    if( !file )
+        file = m_file;
+
+    ASSERT( file );
+    return file->position;
 }
 
-void MP4File::SetPosition(uint64_t pos, FILE* pFile)
+void MP4File::SetPosition( uint64_t pos, File* file )
 {
-    if (m_memoryBuffer == NULL) {
-        if (pFile == NULL) {
-            ASSERT(m_pFile);
-            if (m_virtual_IO->SetPosition(m_pFile, pos) != 0) {
-                throw new MP4Error("setting position via Virtual I/O", "MP4SetPosition");
-            }
-        } else {
-            // TODO-KB: test io::StdioFile
-            if( io::StdioFile::setPosition( pFile, pos ))
-                throw new MP4Error(sys::getLastError(), "MP4SetPosition");
-        }
-    } else {
-        if (pos >= m_memoryBufferSize) {
-            //          abort();
-            throw new MP4Error("position out of range", "MP4SetPosition");
-        }
+    if( m_memoryBuffer ) {
+        if( pos >= m_memoryBufferSize )
+            throw new MP4Error( "position out of range", "MP4SetPosition" );
         m_memoryBufferPosition = pos;
-    }
-}
-
-uint64_t MP4File::GetSize()
-{
-    if (m_mode == 'w') {
-        // we're always positioned at the end of file in write mode
-        // except for short intervals in ReadSample and FinishWrite routines
-        // so we rely on the faster approach of GetPosition()
-        // instead of flushing to disk, and then stat'ing the file
-        m_fileSize = GetPosition();
-    } // else read mode, fileSize was determined at Open()
-
-    return m_fileSize;
-}
-
-void MP4File::ReadBytes(uint8_t* pBytes, uint32_t numBytes, FILE* pFile)
-{
-    // handle degenerate cases
-    if (numBytes == 0) {
         return;
     }
 
-    ASSERT(pBytes);
-    WARNING(m_numReadBits > 0);
+    if( !file )
+        file = m_file;
 
-    if (m_memoryBuffer == NULL) {
-        if (pFile == NULL) {
-            ASSERT(m_pFile);
-            if (m_virtual_IO->Read(m_pFile, pBytes, numBytes) != numBytes) {
-                throw new MP4Error("not enough bytes, reached end-of-file",     "MP4ReadBytes");
-            }
-        }   else {
-            if (fread(pBytes, 1, numBytes, pFile) != numBytes) {
-                if (feof(pFile)) {
-                    throw new MP4Error(
-                        "not enough bytes, reached end-of-file",
-                        "MP4ReadBytes");
-                } else {
-                    throw new MP4Error(errno, "MP4ReadBytes");
-                }
-            }
-        }
-    } else {
-        if (m_memoryBufferPosition + numBytes > m_memoryBufferSize) {
-            throw new MP4Error(
-                "not enough bytes, reached end-of-memory",
-                "MP4ReadBytes");
-        }
-        memcpy(pBytes, &m_memoryBuffer[m_memoryBufferPosition], numBytes);
-        m_memoryBufferPosition += numBytes;
+    ASSERT( file );
+    if( file->seek( pos ))
+        throw new MP4Error( sys::getLastError(), "MP4SetPosition" );
+}
+
+uint64_t MP4File::GetSize( File* file )
+{
+    if( m_memoryBuffer )
+        return m_memoryBufferSize;
+
+    if( !file )
+        file = m_file;
+
+    ASSERT( file );
+    return file->size;
+}
+
+void MP4File::ReadBytes( uint8_t* buf, uint32_t bufsiz, File* file )
+{
+    if( bufsiz == 0 )
+        return;
+
+    ASSERT( buf );
+    WARNING( m_numReadBits > 0 );
+
+    if( m_memoryBuffer ) {
+        if( m_memoryBufferPosition + bufsiz > m_memoryBufferSize )
+            throw new MP4Error( "not enough bytes, reached end-of-memory", "MP4ReadBytes" );
+        memcpy( buf, &m_memoryBuffer[m_memoryBufferPosition], bufsiz );
+        m_memoryBufferPosition += bufsiz;
+        return;
     }
-    return;
+
+    if( !file )
+        file = m_file;
+
+    ASSERT( file );
+    File::Size nin;
+    if( file->read( buf, bufsiz, nin ))
+        throw new MP4Error( sys::getLastError(), "MP4ReadBytes" );
+    if( nin != bufsiz )
+        throw new MP4Error( "not enough bytes, reached end-of-file", "MP4ReadBytes" );
 }
 
-void MP4File::PeekBytes(uint8_t* pBytes, uint32_t numBytes, FILE* pFile)
+void MP4File::PeekBytes( uint8_t* buf, uint32_t bufsiz, File* file )
 {
-    uint64_t pos = GetPosition(pFile);
-    ReadBytes(pBytes, numBytes, pFile);
-    SetPosition(pos, pFile);
+    const uint64_t pos = GetPosition( file );
+    ReadBytes( buf, bufsiz, file );
+    SetPosition( pos, file );
 }
 
-void MP4File::EnableMemoryBuffer(uint8_t* pBytes, uint64_t numBytes)
+void MP4File::EnableMemoryBuffer( uint8_t* pBytes, uint64_t numBytes )
 {
-    ASSERT(m_memoryBuffer == NULL);
+    ASSERT( !m_memoryBuffer );
 
     if (pBytes) {
         m_memoryBuffer = pBytes;
@@ -151,7 +121,7 @@ void MP4File::EnableMemoryBuffer(uint8_t* pBytes, uint64_t numBytes)
     m_memoryBufferPosition = 0;
 }
 
-void MP4File::DisableMemoryBuffer(uint8_t** ppBytes, uint64_t* pNumBytes)
+void MP4File::DisableMemoryBuffer( uint8_t** ppBytes, uint64_t* pNumBytes )
 {
     ASSERT(m_memoryBuffer != NULL);
 
@@ -167,35 +137,32 @@ void MP4File::DisableMemoryBuffer(uint8_t** ppBytes, uint64_t* pNumBytes)
     m_memoryBufferPosition = 0;
 }
 
-void MP4File::WriteBytes(uint8_t* pBytes, uint32_t numBytes, FILE* pFile)
+void MP4File::WriteBytes( uint8_t* buf, uint32_t bufsiz, File* file )
 {
-    ASSERT(m_numWriteBits == 0 || m_numWriteBits >= 8);
+    ASSERT( m_numWriteBits == 0 || m_numWriteBits >= 8 );
 
-    if (pBytes == NULL || numBytes == 0) {
+    if( !buf || bufsiz == 0 )
+        return;
+
+    if( m_memoryBuffer ) {
+        if( m_memoryBufferPosition + bufsiz > m_memoryBufferSize ) {
+            m_memoryBufferSize = 2 * (m_memoryBufferSize + bufsiz);
+            m_memoryBuffer = (uint8_t*)MP4Realloc( m_memoryBuffer, m_memoryBufferSize );
+        }
+        memcpy( &m_memoryBuffer[m_memoryBufferPosition], buf, bufsiz );
+        m_memoryBufferPosition += bufsiz;
         return;
     }
 
-    if (m_memoryBuffer == NULL) {
-        if (pFile == NULL) {
-            ASSERT(m_pFile);
-            if (m_virtual_IO->Write(m_pFile, pBytes, numBytes) != numBytes) {
-                throw new MP4Error("error writing bytes via virtual I/O", "MP4WriteBytes");
-            }
-        } else {
-            uint32_t rc = fwrite(pBytes, 1, numBytes, pFile);
-            if (rc != numBytes) {
-                throw new MP4Error(errno, "MP4WriteBytes");
-            }
-        }
-    } else {
-        if (m_memoryBufferPosition + numBytes > m_memoryBufferSize) {
-            m_memoryBufferSize = 2 * (m_memoryBufferSize + numBytes);
-            m_memoryBuffer = (uint8_t*)
-                             MP4Realloc(m_memoryBuffer, m_memoryBufferSize);
-        }
-        memcpy(&m_memoryBuffer[m_memoryBufferPosition], pBytes, numBytes);
-        m_memoryBufferPosition += numBytes;
-    }
+    if( !file )
+        file = m_file;
+
+    ASSERT( file );
+    File::Size nout;
+    if( file->write( buf, bufsiz, nout ))
+        throw new MP4Error( sys::getLastError(), "MP4WriteBytes" );
+    if( nout != bufsiz )
+        throw new MP4Error( "not all bytes written", "MP4WriteBytes" );
 }
 
 uint64_t MP4File::ReadUInt(uint8_t size)

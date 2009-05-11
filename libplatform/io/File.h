@@ -4,24 +4,86 @@
 namespace mp4v2 { namespace platform { namespace io {
 
 ///////////////////////////////////////////////////////////////////////////////
-///
-/// Base file interface.
-///
-/// File abstracts basic file functionality that may apply to many types of
-/// files. All files are assumed to be 64-bit files unless built on a 32-bit
-/// platform which does not support 64-bit file offsets. The interface uses a
-/// signed 64-bit value which can help with filesize math, thus limiting
-/// actual file size to 63-bits, roughly 9.22 million TB.
-///
-///////////////////////////////////////////////////////////////////////////////
-class MP4V2_EXPORT File
+
+class FileProvider
 {
 public:
+    //! file operation mode flags
+    enum Mode {
+        MODE_UNDEFINED, //!< undefined
+        MODE_READ,      //!< file may be read
+        MODE_MODIFY,    //!< file may be read/written
+        MODE_CREATE,    //!< file will be created/truncated for read/write
+    };
+
     //! type used to represent all file sizes and offsets
     typedef int64_t Size;
 
 public:
-    virtual ~File();
+    virtual ~FileProvider() { }
+
+    virtual bool open( std::string name, Mode mode ) = 0;
+    virtual bool seek( Size pos ) = 0;
+    virtual bool read( void* buffer, Size size, Size& nin, Size maxChunkSize ) = 0;
+    virtual bool write( const void* buffer, Size size, Size& nout, Size maxChunkSize ) = 0;
+    virtual bool close() = 0;
+
+protected:
+    FileProvider() { }
+};
+
+///////////////////////////////////////////////////////////////////////////////
+///
+/// File implementation.
+///
+/// File objects model real filesystem files in a 1:1 releationship and always
+/// treated as binary; there are no translations of text content performed.
+///
+/// The interface represents all sizes with a signed 64-bit value, thus
+/// the limit to this interface is 63-bits of size, roughly 9.22 million TB.
+///
+///////////////////////////////////////////////////////////////////////////////
+
+class File : public FileProvider
+{
+public:
+    ///////////////////////////////////////////////////////////////////////////
+    //!
+    //! Constructor.
+    //!
+    //! A new file object is constructed but not opened.
+    //!
+    //! @param name filename of file object, or empty-string.
+    //! @param mode bitmask specifying mode flags.
+    //!     See #Mode for bit constants.
+    //! @param provider a fileprovider instance. If NULL a standard file
+    //!     provider will be used otherwise the supplied provider must be
+    //!     new-allocated and will be delete'd via ~File().
+    //!
+    ///////////////////////////////////////////////////////////////////////////
+
+    explicit File( std::string name = "", Mode mode = MODE_UNDEFINED, FileProvider* = NULL );
+
+    ///////////////////////////////////////////////////////////////////////////
+    //!
+    //! Destructor.
+    //!
+    //! File object is destroyed. If the file is opened it is closed prior
+    //! to destruction.
+    //!
+    ///////////////////////////////////////////////////////////////////////////
+
+    ~File();
+
+    ///////////////////////////////////////////////////////////////////////////
+    //!
+    //! Open file.
+    //!
+    //! @param name filename of file object, or empty-string to use #name.
+    //!
+    ///////////////////////////////////////////////////////////////////////////
+
+    bool open( std::string name = "", Mode mode = MODE_UNDEFINED );
 
     ///////////////////////////////////////////////////////////////////////////
     //!
@@ -33,40 +95,20 @@ public:
     //! @return true on failure, false on success.
     //!
     ///////////////////////////////////////////////////////////////////////////
-    virtual bool close() = 0;
 
-    ///////////////////////////////////////////////////////////////////////////
-    //!
-    //! Get current file position in bytes.
-    //!
-    //! @param pos output indicating file position.
-    //!
-    //! @return true on failure, false on success.
-    //!
-    ///////////////////////////////////////////////////////////////////////////
-    virtual bool getPosition( Size& pos ) = 0;
-
-    ///////////////////////////////////////////////////////////////////////////
-    //!
-    //! Get current file size in bytes.
-    //!
-    //! @param size output indicating file size.
-    //!
-    //! @return true on failure, false on success.
-    //!
-    ///////////////////////////////////////////////////////////////////////////
-    virtual bool getSize( Size& size ) = 0;
+    bool close();
 
     ///////////////////////////////////////////////////////////////////////////
     //!
     //! Set current file position in bytes.
     //!
-    //! @param pos new position in file.
+    //! @param pos new file position in bytes.
     //!
     //! @return true on failure, false on success.
     //!
     ///////////////////////////////////////////////////////////////////////////
-    virtual bool setPosition( Size pos ) = 0;
+
+    bool seek( Size pos );
 
     ///////////////////////////////////////////////////////////////////////////
     //!
@@ -85,7 +127,8 @@ public:
     //! @return true on failure, false on success.
     //!
     ///////////////////////////////////////////////////////////////////////////
-    virtual bool read( void* buffer, Size size, Size& nin, Size maxChunkSize = 0 ) = 0;
+
+    bool read( void* buffer, Size size, Size& nin, Size maxChunkSize = 0 );
 
     ///////////////////////////////////////////////////////////////////////////
     //!
@@ -104,164 +147,60 @@ public:
     //! @return true on failure, false on success.
     //!
     ///////////////////////////////////////////////////////////////////////////
-    virtual bool write( const void* buffer, Size size, Size& nout, Size maxChunkSize = 0 ) = 0;
 
-protected:
-    ///////////////////////////////////////////////////////////////////////////
-    //!
-    //! Constructor.
-    //!
-    //! @param name filename of file object, or empty-string.
-    //! @param owner true if object is considered owner of file resources
-    //!     and responsible for closing them on destruction.
-    //!
-    ///////////////////////////////////////////////////////////////////////////
-    File( std::string name, bool owner );
-
-protected:
-    //! file pathname or empty-string if not applicable
-    std::string _name;
-
-    //! indicates object owns file and will close it upon destruction
-    const bool _owner;
+    bool write( const void* buffer, Size size, Size& nout, Size maxChunkSize = 0 );
 
 private:
-    File(); // disabled
+    std::string   _name;
+    bool          _isOpen;
+    Mode          _mode;
+    Size          _size;
+    Size          _position;
+    FileProvider& _provider;
 
 public:
-    //! read-only: file pathname or empty-string if not applicable
-    const std::string& name;
+    const std::string& name;      //!< read-only: file pathname or empty-string if not applicable
+    const bool&        isOpen;    //!< read-only: true if file is open
+    const Mode&        mode;      //!< read-only: file mode
+    const Size&        size;      //!< read-only: file size
+    const Size&        position;  //!< read-only: file position
+
+public:
+    void setName( const std::string& name );
+    void setMode( Mode mode );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-//!
-//! Standard file interface.
-//! 
-//! StdioFile implements standard buffered file functionality.
-//! 
-//! @ingroup platform_io
-//! 
-///////////////////////////////////////////////////////////////////////////////
-class MP4V2_EXPORT StdioFile : public File
+
+class StandardFileProvider : public FileProvider
 {
 public:
-    //! type used to represent underlying operating system file handle
-    typedef std::FILE* Handle;
-
-public:
-    ///////////////////////////////////////////////////////////////////////////
-    //!
-    //! Constructor.
-    //!
-    //! @param name filename of file object, or empty-string.
-    //! @param owner true if object is considered owner of file resources
-    //!     and responsible for closing them on destruction.
-    //!
-    ///////////////////////////////////////////////////////////////////////////
-    explicit StdioFile ( std::string name = "", bool owner = true );
-
-    ///////////////////////////////////////////////////////////////////////////
-    //!
-    //! Constructor.
-    //!
-    //! @param handle operating system file-handle of file object.
-    //! @param owner true if object is considered owner of file resources
-    //!     and responsible for closing them on destruction.
-    //!
-    ///////////////////////////////////////////////////////////////////////////
-    explicit StdioFile ( Handle handle, bool owner = false );
-
-    ~StdioFile();
-
-    ///////////////////////////////////////////////////////////////////////////
-    //!
-    //! Open file.
-    //!
-    //! @param mode string beginning with one of the following sequences:
-    //!     @arg "r"
-    //!         Open file for reading.
-    //!         The stream is positioned at the beginning of the file.
-    //!     @arg "r+"
-    //!         Open file for reading and writing.
-    //!         The stream is positioned at the beginning of the file.
-    //!     @arg "w"
-    //!         Truncate file to zero length or create file for writing.
-    //!         The stream is positioned at the beginning of the file.
-    //!     @arg "w+"
-    //!         Open file for reading and writing.
-    //!         The file is created if it does not exist, otherwise it is truncated.
-    //!         The stream is positioned at the beginning of the file.
-    //!     @arg "a"
-    //!         Open file for writing.
-    //!         The file is created if it does not exist.
-    //!         The stream is positioned at the end of the file.
-    //!         Subsequent writes to the file will always end up at the then current end of file.
-    //!     @arg "a+"
-    //!         Open file for reading and writing.
-    //!         The file is created if it does not exist.
-    //!         The stream is positioned at the end of the file.
-    //!         Subsequent writes to the file will always end up at the then current end of file.
-    //! @param name filename to open. If empty-string filename is taken from
-    //!     object state.
-    //!
-    //! @return true on failure, false on success.
-    //!
-    ///////////////////////////////////////////////////////////////////////////
-    bool open( std::string mode, std::string name = "" );
-
-public: // virtual implementation
+    bool open( std::string name, Mode mode );
+    bool seek( Size pos );
+    bool read( void* buffer, Size size, Size& nin, Size maxChunkSize );
+    bool write( const void* buffer, Size size, Size& nout, Size maxChunkSize );
     bool close();
 
-    bool getPosition ( Size& );
-    bool getSize     ( Size& );
-    bool setPosition ( Size );
+private:
+    std::fstream _fstream;
+};
 
-    bool read  ( void*, Size, Size&, Size = 0 );
-    bool write ( const void*, Size, Size&, Size = 0 );
+///////////////////////////////////////////////////////////////////////////////
+
+class CustomFileProvider : public FileProvider
+{
+public:
+    CustomFileProvider( const MP4FileProvider& );
+
+    bool open( std::string name, Mode mode );
+    bool seek( Size pos );
+    bool read( void* buffer, Size size, Size& nin, Size maxChunkSize );
+    bool write( const void* buffer, Size size, Size& nout, Size maxChunkSize );
+    bool close();
 
 private:
-    Handle _handle;
-
-public:
-    //! read-only: handle to underlying operating system file
-    const Handle& handle;
-
-public:
-    ///////////////////////////////////////////////////////////////////////////
-    //!
-    //! Get current file position in bytes.
-    //!
-    //! @param handle operating system file-handle.
-    //! @param pos output indicating file position.
-    //!
-    //! @return true on failure, false on success.
-    //!
-    ///////////////////////////////////////////////////////////////////////////
-    static bool getPosition( Handle handle, Size& pos );
-
-    ///////////////////////////////////////////////////////////////////////////
-    //!
-    //! Get current file size in bytes.
-    //!
-    //! @param handle operating system file-handle.
-    //! @param size output indicating file size.
-    //!
-    //! @return true on failure, false on success.
-    //!
-    ///////////////////////////////////////////////////////////////////////////
-    static bool getSize( Handle handle, Size& size );
-
-    ///////////////////////////////////////////////////////////////////////////
-    //!
-    //! Set current file position in bytes.
-    //!
-    //! @param handle operating system file-handle.
-    //! @param pos new position in file.
-    //!
-    //! @return true on failure, false on success.
-    //!
-    ///////////////////////////////////////////////////////////////////////////
-    static bool setPosition( Handle handle, Size pos );
+    MP4FileProvider _call;
+    void*           _handle;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

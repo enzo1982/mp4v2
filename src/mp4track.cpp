@@ -273,12 +273,9 @@ void MP4Track::ReadSample(
         WriteChunkBuffer();
     }
 
-    FILE* pFile = GetSampleFile(sampleId);
-
-    if (pFile == (FILE*)-1) {
-        throw new MP4Error("sample is located in an inaccessible file",
-                           "MP4Track::ReadSample");
-    }
+    File* fin = GetSampleFile( sampleId );
+    if( fin == (File*)-1 )
+        throw new MP4Error( "sample is located in an inaccessible file", "MP4Track::ReadSample" );
 
     uint64_t fileOffset = GetSampleFileOffset(sampleId);
 
@@ -299,10 +296,10 @@ void MP4Track::ReadSample(
         bufferMalloc = true;
     }
 
-    uint64_t oldPos = m_pFile->GetPosition(pFile); // only used in mode == 'w'
+    uint64_t oldPos = m_pFile->GetPosition( fin ); // only used in mode == 'w'
     try {
-        m_pFile->SetPosition(fileOffset, pFile);
-        m_pFile->ReadBytes(*ppBytes, *pNumBytes, pFile);
+        m_pFile->SetPosition( fileOffset, fin );
+        m_pFile->ReadBytes( *ppBytes, *pNumBytes, fin );
 
         if (pStartTime || pDuration) {
             GetSampleTimes(sampleId, pStartTime, pDuration);
@@ -329,20 +326,19 @@ void MP4Track::ReadSample(
     }
 
     catch (MP4Error* e) {
-        if (bufferMalloc) {
-            // let's not leak memory
-            MP4Free(*ppBytes);
+        if( bufferMalloc ) {
+            MP4Free( *ppBytes );
             *ppBytes = NULL;
         }
-        if (m_pFile->GetMode() == 'w') {
-            m_pFile->SetPosition(oldPos, pFile);
-        }
+
+        if( m_pFile->IsWriteMode() )
+            m_pFile->SetPosition( oldPos, fin );
+
         throw e;
     }
 
-    if (m_pFile->GetMode() == 'w') {
-        m_pFile->SetPosition(oldPos, pFile);
-    }
+    if( m_pFile->IsWriteMode() )
+        m_pFile->SetPosition( oldPos, fin );
 }
 
 void MP4Track::ReadSampleFragment(
@@ -844,90 +840,78 @@ uint32_t MP4Track::GetSampleStscIndex(MP4SampleId sampleId)
     return stscIndex;
 }
 
-FILE* MP4Track::GetSampleFile(MP4SampleId sampleId)
+File* MP4Track::GetSampleFile( MP4SampleId sampleId )
 {
-    uint32_t stscIndex =
-        GetSampleStscIndex(sampleId);
-
-    uint32_t stsdIndex =
-        m_pStscSampleDescrIndexProperty->GetValue(stscIndex);
+    uint32_t stscIndex = GetSampleStscIndex( sampleId );
+    uint32_t stsdIndex = m_pStscSampleDescrIndexProperty->GetValue( stscIndex );
 
     // check if the answer will be the same as last time
-    if (m_lastStsdIndex && stsdIndex == m_lastStsdIndex) {
+    if( m_lastStsdIndex && stsdIndex == m_lastStsdIndex )
         return m_lastSampleFile;
-    }
 
-    MP4Atom* pStsdAtom =
-        m_pTrakAtom->FindAtom("trak.mdia.minf.stbl.stsd");
-    ASSERT(pStsdAtom);
+    MP4Atom* pStsdAtom = m_pTrakAtom->FindAtom( "trak.mdia.minf.stbl.stsd" );
+    ASSERT( pStsdAtom );
 
-    MP4Atom* pStsdEntryAtom =
-        pStsdAtom->GetChildAtom(stsdIndex - 1);
-    ASSERT(pStsdEntryAtom);
+    MP4Atom* pStsdEntryAtom = pStsdAtom->GetChildAtom( stsdIndex - 1 );
+    ASSERT( pStsdEntryAtom );
 
     MP4Integer16Property* pDrefIndexProperty = NULL;
-    if (!pStsdEntryAtom->FindProperty(
-                "*.dataReferenceIndex",
-                (MP4Property**)&pDrefIndexProperty) ||
-
-            pDrefIndexProperty == NULL) {
-        throw new MP4Error("invalid stsd entry", "GetSampleFile");
+    if( !pStsdEntryAtom->FindProperty( "*.dataReferenceIndex", (MP4Property**)&pDrefIndexProperty ) ||
+        pDrefIndexProperty == NULL )
+    {
+        throw new MP4Error( "invalid stsd entry", "GetSampleFile" );
     }
 
-    uint32_t drefIndex =
-        pDrefIndexProperty->GetValue();
+    uint32_t drefIndex = pDrefIndexProperty->GetValue();
 
-    MP4Atom* pDrefAtom =
-        m_pTrakAtom->FindAtom("trak.mdia.minf.dinf.dref");
+    MP4Atom* pDrefAtom = m_pTrakAtom->FindAtom( "trak.mdia.minf.dinf.dref" );
     ASSERT(pDrefAtom);
 
-    MP4Atom* pUrlAtom =
-        pDrefAtom->GetChildAtom(drefIndex - 1);
-    ASSERT(pUrlAtom);
+    MP4Atom* pUrlAtom = pDrefAtom->GetChildAtom( drefIndex - 1 );
+    ASSERT( pUrlAtom );
 
-    FILE* pFile;
+    File* file;
 
-    if (pUrlAtom->GetFlags() & 1) {
-        pFile = NULL;   // self-contained
-    } else {
+    if( pUrlAtom->GetFlags() & 1 ) {
+        file = NULL; // self-contained
+    }
+    else {
         MP4StringProperty* pLocationProperty = NULL;
-        ASSERT(pUrlAtom->FindProperty(
-                   "*.location",
-                   (MP4Property**)&pLocationProperty));
-        ASSERT(pLocationProperty);
+        ASSERT( pUrlAtom->FindProperty( "*.location", (MP4Property**)&pLocationProperty) );
+        ASSERT( pLocationProperty );
 
         const char* url = pLocationProperty->GetValue();
 
-        VERBOSE_READ_SAMPLE(m_pFile->GetVerbosity(),
-                            printf("dref url = %s\n", url));
+        VERBOSE_READ_SAMPLE( m_pFile->GetVerbosity(), printf( "dref url = %s\n", url) );
 
-        pFile = (FILE*)-1;
+        file = (File*)-1;
 
         // attempt to open url if it's a file url
         // currently this is the only thing we understand
-        if (!strncmp(url, "file:", 5)) {
+        if( !strncmp( url, "file:", 5 )) {
             const char* fileName = url + 5;
-            if (!strncmp(fileName, "//", 2)) {
-                fileName = strchr(fileName + 2, '/');
-            }
-            if (fileName) {
-                pFile = fopen(fileName, "rb");
-                if (!pFile) {
-                    pFile = (FILE*)-1;
+
+            if( !strncmp(fileName, "//", 2 ))
+                fileName = strchr( fileName + 2, '/' );
+
+            if( fileName ) {
+                file = new File( fileName, File::MODE_READ );
+                if( !file->open() ) {
+                    delete file;
+                    file = (File*)-1;
                 }
             }
         }
     }
 
-    if (m_lastSampleFile) {
-        fclose(m_lastSampleFile);
-    }
+    if( m_lastSampleFile )
+        m_lastSampleFile->close();
 
     // cache the answer
     m_lastStsdIndex = stsdIndex;
-    m_lastSampleFile = pFile;
+    m_lastSampleFile = file;
 
-    return pFile;
+    return file;
 }
 
 uint64_t MP4Track::GetSampleFileOffset(MP4SampleId sampleId)
@@ -1551,23 +1535,21 @@ void MP4Track::ReadChunk(MP4ChunkId chunkId,
 
     uint64_t oldPos = m_pFile->GetPosition(); // only used in mode == 'w'
     try {
-        m_pFile->SetPosition(chunkOffset);
-        m_pFile->ReadBytes(*ppChunk, *pChunkSize);
+        m_pFile->SetPosition( chunkOffset );
+        m_pFile->ReadBytes( *ppChunk, *pChunkSize );
     }
-    catch (MP4Error* e) {
-        // let's not leak memory
-        MP4Free(*ppChunk);
+    catch( MP4Error* e ) {
+        MP4Free( *ppChunk );
         *ppChunk = NULL;
 
-        if (m_pFile->GetMode() == 'w') {
-            m_pFile->SetPosition(oldPos);
-        }
+        if( m_pFile->IsWriteMode() )
+            m_pFile->SetPosition( oldPos );
+
         throw e;
     }
 
-    if (m_pFile->GetMode() == 'w') {
-        m_pFile->SetPosition(oldPos);
-    }
+    if( m_pFile->IsWriteMode() )
+        m_pFile->SetPosition( oldPos );
 }
 
 void MP4Track::RewriteChunk(MP4ChunkId chunkId,

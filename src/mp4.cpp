@@ -47,41 +47,39 @@ extern "C" {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-    /* file operations */
-    MP4FileHandle MP4ReadEx (const char* fileName,
-                             void *user,
-                             struct Virtual_IO *virtual_IO,
-                             uint32_t verbosity)
-    {
-        MP4File* pFile = NULL;
-        try {
-            pFile = new MP4File(verbosity);
-
-            pFile->ReadEx(fileName, user, virtual_IO);
-            return (MP4FileHandle)pFile;
-        } catch (MP4Error* e) {
-            VERBOSE_ERROR(verbosity, e->Print());
-            delete e;
-            delete pFile;
-            return MP4_INVALID_FILE_HANDLE;
-        }
+MP4FileHandle MP4Read( const char* fileName, uint32_t verbosity )
+{
+    MP4File* pFile = NULL;
+    try {
+        pFile = new MP4File( verbosity );
+        pFile->Read( fileName, NULL );
+        return (MP4FileHandle)pFile;
     }
-
-    MP4FileHandle MP4Read(const char* fileName, uint32_t verbosity)
-    {
-        MP4File* pFile = NULL;
-        try {
-            pFile = new MP4File(verbosity);
-            pFile->Read(fileName);
-            return (MP4FileHandle)pFile;
-        }
-        catch (MP4Error* e) {
-            VERBOSE_ERROR(verbosity, e->Print());
-            delete e;
-            delete pFile;
-            return MP4_INVALID_FILE_HANDLE;
-        }
+    catch ( MP4Error* e ) {
+        VERBOSE_ERROR( verbosity, e->Print() );
+        delete e;
+        delete pFile;
+        return MP4_INVALID_FILE_HANDLE;
     }
+}
+
+MP4FileHandle MP4ReadProvider( const char* fileName, uint32_t verbosity, const MP4FileProvider* fileProvider )
+{
+    MP4File* pFile = NULL;
+    try {
+        pFile = new MP4File( verbosity );
+        pFile->Read( fileName, fileProvider );
+        return (MP4FileHandle)pFile;
+    }
+    catch ( MP4Error* e ) {
+        VERBOSE_ERROR( verbosity, e->Print() );
+        delete e;
+        delete pFile;
+        return MP4_INVALID_FILE_HANDLE;
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
 
     MP4FileHandle MP4Create (const char* fileName,
                              uint32_t verbosity,

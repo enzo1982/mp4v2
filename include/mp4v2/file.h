@@ -35,6 +35,25 @@
   */
 #define MP4_CREATE_EXTENSIBLE_FORMAT 0x04
 
+/** Enumeration of file modes for custom file provider. */
+typedef enum MP4FileMode_e
+{
+    FILEMODE_UNDEFINED, /**< undefined */
+    FILEMODE_READ,      /**< file may be read */
+    FILEMODE_MODIFY,    /**< file may be read/written */
+    FILEMODE_CREATE,    /**< file will be created/truncated for read/write */
+} MP4FileMode;
+
+/** Structure of functions implementing custom file provider. */
+typedef struct MP4FileProvider_s
+{
+    void* ( *open  )( const char* name, MP4FileMode mode );
+    int   ( *seek  )( void* handle, int64_t pos );
+    int   ( *read  )( void* handle, void* buffer, int64_t size, int64_t* nin, int64_t maxChunkSize );
+    int   ( *write )( void* handle, const void* buffer, int64_t size, int64_t* nout, int64_t maxChunkSize );
+    int   ( *close )( void* handle );
+} MP4FileProvider;
+
 /** Get verbosity level for diagnostic information.
  *
  *  @param hFile handle of file for operation.
@@ -344,16 +363,20 @@ MP4FileHandle MP4Read(
     const char* fileName,
     uint32_t    verbosity DEFAULT(0) );
 
-/** Read an existing mp4 file with extended options.
+/** Read an existing mp4 file.
  *
- *  MP4ReadEx is an extended version of MP4Read() which is used when
- *  custom I/O routines are to be used with an open file.
+ *  MP4ReadProvider is the first call that should be used when you want to just
+ *  read an existing mp4 file. It is equivalent to opening a file for
+ *  reading, but in addition the mp4 file is parsed and the control
+ *  information is loaded into memory. Note that actual track samples are not
+ *  read into memory until MP4ReadSample() is called.
  *
  *  @param fileName pathname of the file to be read.
- *  @param user undocumented.
- *  @param virtual_IO undocumented.
  *  @param verbosity bitmask of diagnostic details the library
  *      should print to stdout during its functioning.
+ *  @param fileProvider custom implementation of file I/O operations.
+ *      All functions in structure must be implemented.
+ *      The structure is immediately copied internally.
  *
  *  @return On success a handle of the file for use in subsequent calls to
  *      the library.
@@ -362,11 +385,10 @@ MP4FileHandle MP4Read(
  *  @see MP4SetVerbosity() for <b>verbosity</b> values.
  */
 MP4V2_EXPORT
-MP4FileHandle MP4ReadEx(
-    const char*   fileName,
-    void*         user,
-    Virtual_IO_t* virtual_IO,
-    uint32_t      verbosity DEFAULT(0) );
+MP4FileHandle MP4ReadProvider(
+    const char*            fileName,
+    uint32_t               verbosity DEFAULT(0),
+    const MP4FileProvider* fileProvider DEFAULT(NULL) );
 
 /** @} ***********************************************************************/
 

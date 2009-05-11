@@ -92,7 +92,7 @@ private:
     MP4TrackId  getReferencingTrack( MP4FileHandle, bool& );
     string      getChapterTypeName( MP4ChapterType ) const;
     bool        parseChapterFile( const string, vector<MP4Chapter_t>&, Timecode::Format& );
-    bool        readChapterFile( const string, char**, io::StdioFile::Size& );
+    bool        readChapterFile( const string, char**, File::Size& );
     MP4Duration convertFrameToMillis( MP4Duration, uint32_t );
 
     MP4ChapterType _ChapterType;
@@ -357,7 +357,7 @@ ChapterUtility::actionExport( JobContext& job )
     string outName = job.file;
     if( _ChapterFile.empty() )
     {
-        io::FileSystem::pathnameStripExtension( outName );
+        FileSystem::pathnameStripExtension( outName );
         outName.append( ".chapters.txt" );
     }
     else
@@ -379,7 +379,7 @@ ChapterUtility::actionExport( JobContext& job )
     }
 
     // open the file
-    io::StdioFile out( outName );
+    File out( outName, File::MODE_CREATE );
     if( openFileForWriting( out ) )
     {
         // free up the memory
@@ -394,7 +394,7 @@ ChapterUtility::actionExport( JobContext& job )
 #else
     static const char* LINEND = "\n";
 #endif
-    io::StdioFile::Size nout;
+    File::Size nout;
     bool failure = SUCCESS;
     int width = 2;
     if( CHPT_FMT_COMMON == _ChapterFormat && (chapterCount / 100) >= 1 )
@@ -459,7 +459,7 @@ ChapterUtility::actionImport( JobContext& job )
     string inName = job.file;
     if( _ChapterFile.empty() )
     {
-        io::FileSystem::pathnameStripExtension( inName );
+        FileSystem::pathnameStripExtension( inName );
         inName.append( ".chapters.txt" );
     }
     else
@@ -836,21 +836,18 @@ ChapterUtility::getChapterTypeName( MP4ChapterType chapterType) const
  *  @return true if there was an error, false otherwise
  */
 bool
-ChapterUtility::readChapterFile( const string filename, char** buffer, io::StdioFile::Size &fileSize )
+ChapterUtility::readChapterFile( const string filename, char** buffer, File::Size& fileSize )
 {
-    const string inMode = "rb";
-
     // open the file
-    io::StdioFile in( filename );
-    io::StdioFile::Size nin;
-    if( in.open( inMode ) )
-    {
+    File in( filename, File::MODE_READ );
+    File::Size nin;
+    if( in.open() ) {
         return herrf( "opening chapter file '%s' failed: %s\n", filename.c_str(), sys::getLastErrorStr() );
     }
 
     // get the file size
-    fileSize = 0;
-    if( in.getSize(fileSize) || 0 >= fileSize )
+    fileSize = in.size;
+    if( 0 >= fileSize )
     {
         in.close();
         return herrf( "getting size of chapter file '%s' failed: %s\n", filename.c_str(), sys::getLastErrorStr() );
@@ -888,7 +885,7 @@ ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& c
 {
     // get the content
     char * inBuf;
-    io::StdioFile::Size fileSize;
+    File::Size fileSize;
     if( readChapterFile( filename, &inBuf, fileSize ) )
     {
         return FAILURE;

@@ -193,10 +193,8 @@ extern "C" int main( int argc, char** argv )
 void ExtractTrack( MP4FileHandle mp4File, MP4TrackId trackId,
                    bool sampleMode, MP4SampleId sampleId, char* dstFileName )
 {
-    // TODO-KB: test io::StdioFile
-    const string outMode = "wb";
     char outName[MP4V2_PATH_MAX];
-    io::StdioFile out;
+    File out;
 
     if( !sampleMode ) {
         if( !dstFileName )
@@ -204,7 +202,7 @@ void ExtractTrack( MP4FileHandle mp4File, MP4TrackId trackId,
         else
             snprintf( outName, sizeof( outName ), "%s", dstFileName );
 
-        if( out.open( outMode, outName )) {
+        if( out.open( outName, File::MODE_CREATE )) {
             fprintf( stderr, "%s: can't open %s: %s\n", ProgName, outName, sys::getLastErrorStr() );
             return;
         }
@@ -233,13 +231,13 @@ void ExtractTrack( MP4FileHandle mp4File, MP4TrackId trackId,
         if ( sampleMode ) {
             snprintf( outName, sizeof( outName ), "%s.t%u.s%u", Mp4FileName, trackId, sampleId );
 
-            if( out.open( outMode, outName )) {
+            if( out.open( outName, File::MODE_CREATE )) {
                 fprintf( stderr, "%s: can't open %s: %s\n", ProgName, outName, sys::getLastErrorStr() );
                 break;
             }
         }
 
-        io::StdioFile::Size nout;
+        File::Size nout;
         if( out.write( pSample, sampleSize, nout )) {
             fprintf( stderr, "%s: write to %s failed: %s\n", ProgName, outName, sys::getLastErrorStr() );
             break;

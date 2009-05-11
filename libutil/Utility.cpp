@@ -593,16 +593,13 @@ Utility::process_impl()
 ///////////////////////////////////////////////////////////////////////////////
 
 bool
-Utility::openFileForWriting( io::StdioFile& file )
+Utility::openFileForWriting( io::File& file )
 {
-    static const char* const mode = "wb";
-
     // simple case is file does not exist
     if( !io::FileSystem::exists( file.name )) {
-        if( !file.open( mode ))
-            return SUCCESS;
-
-        return herrf( "unable to open %s for write: %s\n", file.name.c_str(), sys::getLastErrorStr() );
+        if( file.open() )
+            return herrf( "unable to open %s for write: %s\n", file.name.c_str(), sys::getLastErrorStr() );
+        return SUCCESS;
     }
 
     // fail if overwrite is not enabled
@@ -614,7 +611,7 @@ Utility::openFileForWriting( io::StdioFile& file )
         return herrf( "cannot overwrite non-file: %s\n", file.name.c_str() );
 
     // first attemp to re-open/truncate so as to keep any file perms
-    if( !file.open( mode ))
+    if( !file.open() )
         return SUCCESS;
 
     // fail if force is not enabled
@@ -622,7 +619,7 @@ Utility::openFileForWriting( io::StdioFile& file )
         return herrf( "unable to overwrite file: %s\n", file.name.c_str() );
 
     // first attempt to open, truncating file
-    if( !file.open( mode ))
+    if( !file.open() )
         return SUCCESS;
 
     // nuke file
@@ -630,7 +627,7 @@ Utility::openFileForWriting( io::StdioFile& file )
         return herrf( "unable to remove %s: %s\n", file.name.c_str(), sys::getLastErrorStr() );
 
     // final effort
-    if( !file.open( mode ))
+    if( !file.open() )
         return SUCCESS;
 
     return herrf( "unable to open %s for write: %s\n", file.name.c_str(), sys::getLastErrorStr() );

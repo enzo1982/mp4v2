@@ -225,7 +225,7 @@ extern "C" int main( int argc, char** argv )
                 fprintf( stdout, " atID: %u\n", *tags->atID );
             }
             if ( tags->plID ) {
-                fprintf( stdout, " plID: %u\n", *tags->plID );
+                fprintf( stdout, " plID: %llu\n", *tags->plID );
             }
             if ( tags->geID ) {
                 fprintf( stdout, " geID: %u\n", *tags->geID );

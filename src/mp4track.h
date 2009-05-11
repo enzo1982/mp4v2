@@ -46,7 +46,8 @@ class MP4Integer32Property;
 class MP4Integer64Property;
 class MP4StringProperty;
 
-class MP4Track {
+class MP4Track
+{
 public:
     MP4Track(MP4File* pFile, MP4Atom* pTrakAtom);
 
@@ -163,7 +164,7 @@ public:
 protected:
     bool        InitEditListProperties();
 
-    FILE*       GetSampleFile(MP4SampleId sampleId);
+    File*       GetSampleFile( MP4SampleId sampleId );
     uint64_t    GetSampleFileOffset(MP4SampleId sampleId);
     uint32_t    GetSampleStscIndex(MP4SampleId sampleId);
     uint32_t    GetChunkStscIndex(MP4ChunkId chunkId);
@@ -203,8 +204,8 @@ protected:
     MP4TrackId  m_trackId;          // moov.trak[].tkhd.trackId
     MP4StringProperty* m_pTypeProperty; // moov.trak[].mdia.hdlr.handlerType
 
-    uint32_t    m_lastStsdIndex;
-    FILE*       m_lastSampleFile;
+    uint32_t m_lastStsdIndex;
+    File*    m_lastSampleFile;
 
     // for efficient construction of hint track packets
     MP4SampleId m_cachedReadSampleId;

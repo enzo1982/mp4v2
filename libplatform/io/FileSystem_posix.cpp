@@ -37,6 +37,19 @@ FileSystem::isFile( string path_ )
 ///////////////////////////////////////////////////////////////////////////////
 
 bool
+FileSystem::getFileSize( string path_, File::Size& size_ )
+{
+    size_ = 0;
+    struct stat buf;
+    if( stat( path_.c_str(), &buf ))
+        return true;
+    size_ = buf.st_size;
+    return false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
 FileSystem::rename( string from, string to )
 {
     return ::rename( from.c_str(), to.c_str() ) != 0;

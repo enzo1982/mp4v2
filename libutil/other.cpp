@@ -135,7 +135,7 @@ MP4ReadCopy( const string& fileName, uint32_t verbosity )
     try {
             file = new MP4File( verbosity );
             file->SetDisableWriteProtection( true );
-            file->Read( fileName.c_str() );
+            file->Read( fileName.c_str(), NULL );
             return static_cast<MP4FileHandle>(file);
     }
     catch( MP4Error* e) {

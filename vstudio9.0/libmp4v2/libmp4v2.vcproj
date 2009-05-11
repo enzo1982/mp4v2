@@ -622,14 +622,6 @@
 				RelativePath="..\..\src\util.h"
 				>
 			</File>
-			<File
-				RelativePath="..\..\src\virtual_io.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\virtual_io.h"
-				>
-			</File>
 			<Filter
 				Name="bmff"
 				>
@@ -759,10 +751,6 @@
 				</File>
 				<File
 					RelativePath="..\..\libplatform\io\File.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libplatform\io\File_win32.cpp"
 					>
 				</File>
 				<File

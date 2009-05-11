@@ -1,31 +1,34 @@
-/*
- * The contents of this file are subject to the Mozilla Public
- * License Version 1.1 (the "License"); you may not use this file
- * except in compliance with the License. You may obtain a copy of
- * the License at http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS
- * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
- * implied. See the License for the specific language governing
- * rights and limitations under the License.
- *
- * The Original Code is MPEG4IP.
- *
- * The Initial Developer of the Original Code is Cisco Systems Inc.
- * Portions created by Cisco Systems Inc. are
- * Copyright (C) Cisco Systems Inc. 2001 - 2005.  All Rights Reserved.
- *
- * 3GPP features implementation is based on 3GPP's TS26.234-v5.60,
- * and was contributed by Ximpo Group Ltd.
- *
- * Portions created by Ximpo Group Ltd. are
- * Copyright (C) Ximpo Group Ltd. 2003, 2004.  All Rights Reserved.
- *
- * Contributor(s):
- *      Dave Mackie         dmackie@cisco.com
- *      Alix Marchandise-Franquet   alix@cisco.com
- *              Ximpo Group Ltd.                mp4v2@ximpo.com
- */
+///////////////////////////////////////////////////////////////////////////////
+//
+//  The contents of this file are subject to the Mozilla Public License
+//  Version 1.1 (the "License"); you may not use this file except in
+//  compliance with the License. You may obtain a copy of the License at
+//  http://www.mozilla.org/MPL/
+//
+//  Software distributed under the License is distributed on an "AS IS"
+//  basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//  License for the specific language governing rights and limitations
+//  under the License.
+//
+//  The Original Code is MPEG4IP.
+//
+//  The Initial Developer of the Original Code is Cisco Systems Inc.
+//  Portions created by Cisco Systems Inc. are
+//  Copyright (C) Cisco Systems Inc. 2001 - 2005.  All Rights Reserved.
+//
+//  3GPP features implementation is based on 3GPP's TS26.234-v5.60,
+//  and was contributed by Ximpo Group Ltd.
+//
+//  Portions created by Ximpo Group Ltd. are
+//  Copyright (C) Ximpo Group Ltd. 2003, 2004.  All Rights Reserved.
+//
+//  Contributors:
+//      Dave Mackie, dmackie@cisco.com
+//      Alix Marchandise-Franquet, alix@cisco.com
+//      Ximpo Group Ltd., mp4v2@ximpo.com
+//      Kona Blend, kona8lend@@gmail.com
+//
+///////////////////////////////////////////////////////////////////////////////
 
 #ifndef MP4V2_IMPL_MP4FILE_H
 #define MP4V2_IMPL_MP4FILE_H
@@ -34,7 +37,6 @@ namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// forward declarations
 class MP4Atom;
 class MP4Property;
 class MP4Float32Property;
@@ -43,24 +45,30 @@ class MP4BytesProperty;
 class MP4Descriptor;
 class MP4DescriptorProperty;
 
-class MP4File {
-public: /* equivalent to MP4 library API */
-    MP4File(uint32_t verbosity = 0);
+class MP4File
+{
+public:
+    MP4File( uint32_t verbosity = 0 );
     ~MP4File();
 
-    /* file operations */
-    void Read(const char* fileName);
-    void ReadEx(const char *fileName, void *user, Virtual_IO *virtual_IO); //benski>
-    void Create(const char* fileName, uint32_t flags,
-                int add_ftyp = 1, int add_iods = 1,
-                char* majorBrand = NULL,
-                uint32_t minorVersion = 0, char** supportedBrands = NULL,
-                uint32_t supportedBrandsCount = 0);
-    bool Modify(const char* fileName);
-    void Optimize(const char* orgFileName,
-                  const char* newFileName = NULL);
-    void Dump(FILE* pDumpFile = NULL, bool dumpImplicits = false);
+    ///////////////////////////////////////////////////////////////////////////
+    // file ops
+    ///////////////////////////////////////////////////////////////////////////
+
+    void Create( const char* fileName,
+                 uint32_t    flags,
+                 int         add_ftyp = 1,
+                 int         add_iods = 1,
+                 char*       majorBrand = NULL,
+                 uint32_t    minorVersion = 0,
+                 char**      supportedBrands = NULL,
+                 uint32_t    supportedBrandsCount = 0 );
+
+    void Read( const char* name, const MP4FileProvider* provider );
+    bool Modify( const char* fileName );
+    void Optimize( const char* srcFileName, const char* dstFileName = NULL );
     bool CopyClose( const string& copyFileName );
+    void Dump( FILE* fout = NULL, bool dumpImplicits = false );
     void Close();
 
     /* library property per file */
@@ -784,13 +792,13 @@ public:
 
     /* "protected" interface to be used only by friends in library */
 
-    uint64_t GetPosition(FILE* pFile = NULL);
-    void SetPosition(uint64_t pos, FILE* pFile = NULL);
+    uint64_t GetPosition( File* file = NULL );
+    void SetPosition( uint64_t pos, File* file = NULL );
+    uint64_t GetSize( File* file = NULL );
 
-    uint64_t GetSize();
+    void ReadBytes( uint8_t* buf, uint32_t bufsiz, File* file = NULL );
+    void PeekBytes( uint8_t* buf, uint32_t bufsiz, File* file = NULL );
 
-    void ReadBytes(
-        uint8_t* pBytes, uint32_t numBytes, FILE* pFile = NULL);
     uint64_t ReadUInt(uint8_t size);
     uint8_t ReadUInt8();
     uint16_t ReadUInt16();
@@ -807,10 +815,8 @@ public:
     void FlushReadBits();
     uint32_t ReadMpegLength();
 
-    void PeekBytes(
-        uint8_t* pBytes, uint32_t numBytes, FILE* pFile = NULL);
 
-    void WriteBytes(uint8_t* pBytes, uint32_t numBytes, FILE* pFile = NULL);
+    void WriteBytes( uint8_t* buf, uint32_t bufsiz, File* file = NULL );
     void WriteUInt8(uint8_t value);
     void WriteUInt16(uint16_t value);
     void WriteUInt24(uint32_t value);
@@ -834,9 +840,7 @@ public:
     void DisableMemoryBuffer(
         uint8_t** ppBytes = NULL, uint64_t* pNumBytes = NULL);
 
-    char GetMode() {
-        return m_mode;
-    }
+    bool IsWriteMode();
 
     MP4Track* GetTrack(MP4TrackId trackId);
 
@@ -873,17 +877,15 @@ public:
     void SetDisableWriteProtection( bool );
 
 protected:
-    void Open(const char* fmode);
+    void Open( const char* name, File::Mode mode, const MP4FileProvider* provider );
     void ReadFromFile();
     void GenerateTracks();
     void BeginWrite();
     void FinishWrite();
     void CacheProperties();
-    void RewriteMdat(void* pReadFile, void* pWriteFile,
-                     Virtual_IO *readIO, Virtual_IO *writeIO);
+    void RewriteMdat( File& src, File& dst );
     bool ShallHaveIods();
 
-    const char* TempFileName();
     void Rename(const char* existingFileName, const char* newFileName);
 
     void ProtectWriteOperation(const char* where);
@@ -978,20 +980,17 @@ protected:
         uint64_t* pNumBytes);
 
 protected:
-    char*           m_fileName;
-    void*           m_pFile;
-    Virtual_IO*     m_virtual_IO;
-    uint64_t        m_orgFileSize;
-    uint64_t        m_fileSize;
-    MP4Atom*        m_pRootAtom;
+    File*    m_file;
+    uint64_t m_fileOriginalSize;
+    uint32_t m_verbosity;
+    uint32_t m_createFlags;
+
+    MP4Atom*          m_pRootAtom;
     MP4Integer32Array m_trakIds;
-    MP4TrackArray   m_pTracks;
-    MP4TrackId      m_odTrackId;
-    uint32_t        m_verbosity;
-    char            m_mode;
-    bool            m_disableWriteProtection;
-    uint32_t        m_createFlags;
-    bool            m_useIsma;
+    MP4TrackArray     m_pTracks;
+    MP4TrackId        m_odTrackId;
+    bool              m_disableWriteProtection;
+    bool              m_useIsma;
 
     // cached properties
     MP4IntegerProperty*     m_pModificationProperty;

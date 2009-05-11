@@ -53,4 +53,7 @@ Added new public-API: MP4SetTrackDurationPerChunk() to override default per-trac
 
 @item
 Added new public-API: MP4WriteSampleDependency().
+
+@item
+Replaced (undocumented) public-API: MP4CreateEx() with MP4CreateProvider().
 @end enumerate

@@ -137,7 +137,7 @@ protected:
     bool job   ( string ); //!< process next argument
 
     //! open file in consideration of overwrite/force options
-    bool openFileForWriting( io::StdioFile& );
+    bool openFileForWriting( io::File& );
 
     bool dryrunAbort();
 

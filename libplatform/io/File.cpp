@@ -10,10 +10,18 @@ namespace {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-File::File( std::string name_, bool owner_ )
-    : _name  ( name_ )
-    , _owner ( owner_ )
-    , name   ( _name )
+File::File( std::string name_, Mode mode_, FileProvider* provider_ )
+    : _name     ( name_ )
+    , _isOpen   ( false )
+    , _mode     ( mode_ )
+    , _size     ( 0 )
+    , _position ( 0 )
+    , _provider ( provider_ ? *provider_ : *new StandardFileProvider() )
+    , name      ( _name )
+    , isOpen    ( _isOpen )
+    , mode      ( _mode )
+    , size      ( _size )
+    , position  ( _position )
 {
 }
 
@@ -21,136 +29,215 @@ File::File( std::string name_, bool owner_ )
 
 File::~File()
 {
+    delete &_provider;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-StdioFile::StdioFile( std::string name_, bool owner_ )
-    : File    ( name_, owner_ )
-    , _handle ( 0 )
-    , handle  ( _handle )
+void
+File::setMode( Mode mode_ )
 {
+    _mode = mode_;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
-StdioFile::StdioFile( Handle handle_, bool owner_ )
-    : File    ( "", owner_ )
-    , _handle ( handle_ )
-    , handle  ( _handle )
+void
+File::setName( const std::string& name_ )
 {
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-StdioFile::~StdioFile()
-{
-    close();
+    _name = name_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 bool
-StdioFile::close()
+File::open( std::string name_, Mode mode_ )
 {
-    if( !_handle )
-        return false;
+    if( _isOpen )
+        return true;
 
-    if( !_owner ) {
-        _handle = 0;
-        return false;
-    }
-
-    bool result = std::fclose( _handle ) != 0;
-    _handle = 0;
-    return result;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool
-StdioFile::getPosition( Handle handle_, Size& pos_ )
-{
-    return StdioFile( handle_ ).getPosition( pos_ );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool
-StdioFile::getSize( Handle handle_, Size& size_ )
-{
-    return StdioFile( handle_ ).getSize( size_ );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool
-StdioFile::open( string mode_, string name_ )
-{
     if( !name_.empty() )
-        _name = name_;
+        setName( name_ );
+    if( mode_ != MODE_UNDEFINED )
+        setMode( mode_ );
 
-    close();
-    _handle = std::fopen( _name.c_str(), mode_.c_str() );
-    return _handle == 0;
+    if( _provider.open( _name, _mode ))
+        return true;
+
+    FileSystem::getFileSize( _name, _size );
+
+    _isOpen = true;
+    return false;
 }
 
-///////////////////////////////////////////////////////////////////////////////
+bool
+File::seek( Size pos )
+{
+    if( !_isOpen )
+        return true;
+
+    if( _provider.seek( pos ))
+        return true;
+    _position = pos;
+    return false;
+}
 
 bool
-StdioFile::read( void* buffer_, Size size_, Size& nin_, Size maxChunkSize_ )
+File::read( void* buffer, Size size, Size& nin, Size maxChunkSize )
 {
-    nin_ = 0;
+    nin = 0;
 
-    if( !maxChunkSize_ )
-        maxChunkSize_ = __maxChunkSize;
+    if( !_isOpen )
+        return true;
 
-    char* const pmax = (char*)buffer_ + size_;
-    for ( char* p = (char*)buffer_; p < pmax; p += maxChunkSize_ ) {
-        ptrdiff_t psize = pmax - p;
-        if( psize > maxChunkSize_ )
-            psize = maxChunkSize_;
+    if( _provider.read( buffer, size, nin, maxChunkSize ))
+        return true;
 
-        if( std::fread( p, psize, 1, _handle ) != 1)
-            return true;
+    _position += nin;
+    if( _position > _size )
+        _size = _position;
 
-        nin_ += psize;
-    }
+    return false;
+}
 
+bool
+File::write( const void* buffer, Size size, Size& nout, Size maxChunkSize )
+{
+    nout = 0;
+
+    if( !_isOpen )
+        return true;
+
+    if( _provider.write( buffer, size, nout, maxChunkSize ))
+        return true;
+
+    _position += nout;
+    if( _position > _size )
+        _size = _position;
+
+    return false;
+}
+
+bool
+File::close()
+{
+    if( !_isOpen )
+        return false;
+    if( _provider.close() )
+        return true;
+
+    _isOpen = false;
     return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 bool
-StdioFile::setPosition( Handle handle_, Size pos_ )
+StandardFileProvider::open( std::string name, Mode mode )
 {
-    return StdioFile( handle_ ).setPosition( pos_ );
+    ios::openmode om = ios::binary;
+    switch( mode ) {
+        case MODE_READ:
+            om |= ios::in;
+            break;
+
+        case MODE_MODIFY:
+            om |= ios::in | ios::out;
+            break;
+
+        case MODE_CREATE:
+            om |= ios::in | ios::out | ios::trunc;
+            break;
+
+        case MODE_UNDEFINED:
+        default:
+            break;
+    }
+
+    _fstream.open( name.c_str(), om );
+    return _fstream.fail();
+}
+
+bool
+StandardFileProvider::seek( Size pos )
+{
+    _fstream.seekg( pos, ios::beg );
+    return _fstream.fail();
+}
+
+bool
+StandardFileProvider::read( void* buffer, Size size, Size& nin, Size maxChunkSize )
+{
+    _fstream.read( (char*)buffer, size );
+    if( _fstream.fail() )
+        return true;
+    nin = _fstream.gcount();
+    return false;
+}
+
+bool
+StandardFileProvider::write( const void* buffer, Size size, Size& nout, Size maxChunkSize )
+{
+    _fstream.write( (const char*)buffer, size );
+    if( _fstream.fail() )
+        return true;
+    nout = size;
+    return false;
+}
+
+bool
+StandardFileProvider::close()
+{
+    _fstream.close();
+    return _fstream.fail();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool
-StdioFile::write( const void* buffer_, Size size_, Size& nout_, Size maxChunkSize_ )
+CustomFileProvider::CustomFileProvider( const MP4FileProvider& provider )
+    : _handle( NULL )
 {
-    nout_ = 0;
+    memcpy( &_call, &provider, sizeof(MP4FileProvider) );
+}
 
-    if( !maxChunkSize_ )
-        maxChunkSize_ = __maxChunkSize;
+bool
+CustomFileProvider::open( std::string name, Mode mode )
+{
+    MP4FileMode fm = FILEMODE_UNDEFINED;
+    switch( mode ) {
+        case MODE_READ:   fm = FILEMODE_READ;   break;
+        case MODE_MODIFY: fm = FILEMODE_MODIFY; break;
+        case MODE_CREATE: fm = FILEMODE_CREATE; break;
 
-    char* const pmax = (char*)buffer_ + size_;
-    for ( char* p = (char*)buffer_; p < pmax; p += maxChunkSize_ ) {
-        ptrdiff_t psize = pmax - p;
-        if( psize > maxChunkSize_ )
-            psize = maxChunkSize_;
-
-        if( std::fwrite( p, psize, 1, _handle ) != 1)
-            return true;
-
-        nout_ += psize;
+        case MODE_UNDEFINED:
+        default:
+            break;
     }
 
-    return false;
+    _handle = _call.open( name.c_str(), fm );
+    return _handle == NULL;
+}
+
+bool
+CustomFileProvider::seek( Size pos )
+{
+    return _call.seek( _handle, pos );
+}
+
+bool
+CustomFileProvider::read( void* buffer, Size size, Size& nin, Size maxChunkSize )
+{
+    return _call.read( _handle, buffer, size, &nin, maxChunkSize );
+}
+
+bool
+CustomFileProvider::write( const void* buffer, Size size, Size& nout, Size maxChunkSize )
+{
+    return _call.write( _handle, buffer, size, &nout, maxChunkSize );
+}
+
+bool
+CustomFileProvider::close()
+{
+    return _call.close( _handle );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

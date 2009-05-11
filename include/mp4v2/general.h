@@ -16,25 +16,6 @@ typedef uint64_t    MP4Timestamp;
 typedef uint64_t    MP4Duration;
 typedef uint32_t    MP4EditId;
 
-typedef uint64_t (*VIRTUALIO_GETFILELENGTH)(void *user); // return file length in bytes
-typedef int (*VIRTUALIO_SETPOSITION)(void *user, uint64_t position); // return 0 on success
-typedef int (*VIRTUALIO_GETPOSITION)(void *user, uint64_t *position); // fill position, return 0 on success
-typedef size_t (*VIRTUALIO_READ)(void *user, void *buffer, size_t size); // return number of bytes actually read
-typedef size_t (*VIRTUALIO_WRITE)(void *user, void *buffer, size_t size); // return number of bytes actually written
-typedef int (*VIRTUALIO_ENDOFFILE)(void *user); // return 1 if file hit EOF
-typedef int (*VIRTUALIO_CLOSE)(void *user); // return 0 on success
-
-typedef struct Virtual_IO
-{
-    VIRTUALIO_GETFILELENGTH GetFileLength;
-    VIRTUALIO_SETPOSITION SetPosition;
-    VIRTUALIO_GETPOSITION GetPosition;
-    VIRTUALIO_READ Read;
-    VIRTUALIO_WRITE Write;
-    VIRTUALIO_ENDOFFILE EndOfFile;
-    VIRTUALIO_CLOSE Close;
-} Virtual_IO_t;
-
 /*****************************************************************************/
 
 typedef void (*error_msg_func_t)(

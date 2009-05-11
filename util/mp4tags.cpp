@@ -439,21 +439,18 @@ extern "C" int
                         break;
                     case OPT_PICTURE:
                     {
-                        // TODO-KB: test io::StdioFile
-                        io::StdioFile out( tags[i] );
-                        if( !out.open( "rb" )) {
-                            io::StdioFile::Size artSize;
-                            out.getSize( artSize );
-
+                        File in( tags[i], File::MODE_READ );
+                        if( !in.open() ) {
+                            File::Size artSize = in.size;
                             uint8_t* art = (uint8_t*)malloc( (size_t)artSize );
 
-                            io::StdioFile::Size nin;
-                            if( out.read( art, artSize, nin ) && nin == artSize ) {
+                            File::Size nin;
+                            if( in.read( art, artSize, nin ) && nin == artSize ) {
                                 MP4SetMetadataCoverArt( h, art, artSize );
                             }
 
                             free( art );
-                            out.close();
+                            in.close();
                         }
                         else {
                             fprintf( stderr, "Art file %s not found\n", tags[i] );
