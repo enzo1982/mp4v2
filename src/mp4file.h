@@ -874,8 +874,6 @@ public:
         MP4Atom* pAncestorAtom,
         const char* childName);
 
-    void SetDisableWriteProtection( bool );
-
 protected:
     void Open( const char* name, File::Mode mode, const MP4FileProvider* provider );
     void ReadFromFile();
@@ -989,7 +987,6 @@ protected:
     MP4Integer32Array m_trakIds;
     MP4TrackArray     m_pTracks;
     MP4TrackId        m_odTrackId;
-    bool              m_disableWriteProtection;
     bool              m_useIsma;
 
     // cached properties

@@ -624,11 +624,27 @@ void MP4BytesProperty::Dump(FILE* pFile, uint8_t indent,
         return;
     }
 
+    uint32_t adjsize;
+    bool supressed;
+
+    if( size < 128 ||
+        !m_pParentAtom ||
+        !m_pParentAtom->GetFile() ||
+        (m_pParentAtom->GetFile()->GetVerbosity() & MP4_DETAILS_TABLE) )
+    {
+        adjsize = size;
+        supressed = false;
+    }
+    else {
+        adjsize = 128;
+        supressed = true;
+    }
+
     ostringstream oss;
     ostringstream text;
 
     string s;
-    for( uint32_t i = 0; i < size; i++ ) {
+    for( uint32_t i = 0; i < adjsize; i++ ) {
         if( i % 16 == 0 ) {
             // not safe to use format because bytes may contain format specifies
             s = oss.str();
@@ -670,6 +686,11 @@ void MP4BytesProperty::Dump(FILE* pFile, uint8_t indent,
     }
 
     oss << "\n";
+
+    if( supressed ) {
+        oss << setw(indent) << setfill(' ') << ""
+            << "<remaining bytes supressed>\n";
+    }
 
     // not safe to use format because bytes may contain format specifies
     s = oss.str();

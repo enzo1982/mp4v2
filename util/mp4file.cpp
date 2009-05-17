@@ -90,7 +90,7 @@ FileUtility::FileUtility( int argc, char** argv )
 bool
 FileUtility::actionDump( JobContext& job )
 {
-    job.fileHandle = MP4ReadCopy( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
 
@@ -122,7 +122,7 @@ FileUtility::actionList( JobContext& job )
         report << setfill('-') << setw(70) << "" << setfill(' ') << '\n';
     }
 
-    job.fileHandle = MP4ReadCopy( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
 

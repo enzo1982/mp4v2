@@ -43,7 +43,6 @@ MP4File::MP4File( uint32_t verbosity )
     m_pRootAtom = NULL;
     m_odTrackId = MP4_INVALID_TRACK_ID;
 
-    m_disableWriteProtection = false;
     m_useIsma = false;
 
     m_pModificationProperty = NULL;
@@ -473,22 +472,24 @@ void MP4File::FinishWrite()
     // ask root atom to write
     m_pRootAtom->FinishWrite();
 
-    const uint64_t cursize = GetSize();
-    // check if file shrunk, e.g. we deleted a track
-    if( cursize < m_fileOriginalSize ) {
-        // just use a free atom to mark unused space
-        // MP4Optimize() should be used to clean up this space
-        MP4Atom* pFreeAtom = MP4Atom::CreateAtom( NULL, "free" );
-        ASSERT( pFreeAtom );
-        pFreeAtom->SetFile( this );
+    // finished all writes, if position < size then file has shrunk and
+    // we mark remaining bytes as free atom; otherwise trailing garbage remains.
+    if( GetPosition() < GetSize() ) {
+        MP4RootAtom* root = (MP4RootAtom*)FindAtom( "" );
+        ASSERT( root );
 
-        int64_t newsize = (int64_t)m_fileOriginalSize - ((int64_t)cursize + 8);
-        if( newsize < 0 )
-            newsize = 0;
-        pFreeAtom->SetSize( newsize );
+        // compute size of free atom; always has 8 bytes of overhead
+        uint64_t size = GetSize() - GetPosition();
+        if( size < 8 )
+            size = 0;
+        else
+            size -= 8;
 
-        pFreeAtom->Write();
-        delete pFreeAtom;
+        MP4FreeAtom* freeAtom = (MP4FreeAtom*)MP4Atom::CreateAtom( NULL, "free" );
+        ASSERT( freeAtom );
+        freeAtom->SetSize( size );
+        root->AddChildAtom( freeAtom );
+        freeAtom->Write();
     }
 }
 
@@ -520,71 +521,6 @@ void MP4File::Close()
     m_file = NULL;
 }
 
-// Implementation notes (author KB).
-//
-// this is useful when doing file modfication and not caring about
-// re-write performance. it greatly simplies things to mimic behavior
-// of Optimize() for all writes, and then caller may rename file
-// to overwrite original. the key difference is in sequencing,
-// optimize permits one to read/copy/overwrite in a single operation.
-// however this function is useful for a workflow such as:
-//
-//      1. caller opens file with MP4Read().
-//      2. caller modifies atom tree.
-//      3. caller invokes CopyClose() which writes atoms out
-//         to a new file (optimized) and closes both original
-//         file from step #1 and new file.
-//      4. caller optionally renames origfile -> newfile if desired
-//
-// This method was made to resolve an indeterminate issue with MP4Modify()
-// which corrupted files after atoms (such as COLR and PASP) were added or
-// removed from the hierarchy. Upon closing the file, it became invalid
-// and could no longer be parsed; part of MOOV tree was corrupted.
-// Several possibilities exist, and the existence of this function rules
-// none of them out. Is MP4Modify() really the issue? Or is the author's
-// method of atom addition/removal at fault?
-//
-// If this is issue is revisited, the original troublesome workflow
-// used by the author was:
-//
-//      1. caller opens file with MP4Modify().
-//      2. caller modifies atom tree.
-//      3. caller invokes MP4Close().
-//      4. caller optionally invokes MP4Optimize().
-//
-bool MP4File::CopyClose( const string& copyFileName )
-{
-#if 0 // TODO-KB
-    const string oldFileName = m_fileName;
-    MP4Free( m_fileName );
-    m_fileName = MP4Stralloc( copyFileName.c_str() );
-
-    void* pReadFile = m_pFile;
-    Virtual_IO* pReadIO = m_virtual_IO;
-    m_pFile = NULL;
-    m_mode = 'w';
-
-    Open("wb");
-
-    SetIntegerProperty( "moov.mvhd.modificationTime", MP4GetAbsTimestamp() );
-
-    // writing meta info in the optimal order
-    ((MP4RootAtom*)m_pRootAtom)->BeginOptimalWrite();
-
-    // write data in optimal order
-    RewriteMdat( pReadFile, m_pFile, pReadIO, m_virtual_IO );
-
-    // finish writing
-    ((MP4RootAtom*)m_pRootAtom)->FinishOptimalWrite();
-
-    // cleanup
-    m_virtual_IO->Close( m_pFile );
-    m_pFile = NULL;
-    pReadIO->Close( pReadFile );
-#endif
-    return true;
-}
-
 void MP4File::Rename(const char* oldFileName, const char* newFileName)
 {
     if( FileSystem::rename( oldFileName, newFileName ))
@@ -593,9 +529,6 @@ void MP4File::Rename(const char* oldFileName, const char* newFileName)
 
 void MP4File::ProtectWriteOperation(const char* where)
 {
-    if( m_disableWriteProtection )
-        return;
-
     if( !IsWriteMode() )
         throw new MP4Error( "operation not permitted in read mode", where );
 }
@@ -4089,11 +4022,6 @@ MP4SampleId MP4File::GetSampleIdFromEditTime(
 {
     return m_pTracks[FindTrackIndex(trackId)]->GetSampleIdFromEditTime(
                when, pStartTime, pDuration);
-}
-
-void MP4File::SetDisableWriteProtection( bool disable )
-{
-    m_disableWriteProtection = disable;
 }
 
 MP4Duration MP4File::GetTrackDurationPerChunk( MP4TrackId trackId )

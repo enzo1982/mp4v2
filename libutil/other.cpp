@@ -103,49 +103,4 @@ fileFetchSummaryInfo( MP4FileHandle file, FileSummaryInfo& info )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool
-MP4CopyClose( MP4FileHandle hFile, const string& tmpFileName )
-{
-    if( !MP4_IS_VALID_FILE_HANDLE( hFile ))
-        return false;
-
-    bool success = false;
-    MP4File& f = *(MP4File*)hFile;
-    try {
-        success = f.CopyClose( tmpFileName.c_str() );
-    }
-    catch( MP4Error* e ) {
-        e->Print( stdout );
-        delete e;
-    }
-
-    if( !success )
-        return false;
-
-    delete &f;
-    return true;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-MP4FileHandle
-MP4ReadCopy( const string& fileName, uint32_t verbosity )
-{
-    MP4File* file = NULL;
-    try {
-            file = new MP4File( verbosity );
-            file->SetDisableWriteProtection( true );
-            file->Read( fileName.c_str(), NULL );
-            return static_cast<MP4FileHandle>(file);
-    }
-    catch( MP4Error* e) {
-        e->Print( stdout );
-        delete e;
-        delete file;
-        return MP4_INVALID_FILE_HANDLE;
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 }} // namespace mp4v2::util

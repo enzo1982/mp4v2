@@ -143,14 +143,13 @@ ArtUtility::actionAdd( JobContext& job )
     if( dryrunAbort() )
         return SUCCESS;
 
-    job.fileHandle = MP4ReadCopy( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Modify( job.file.c_str(), _debugVerbosity );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
     if( CoverArtBox::add( job.fileHandle, item ))
         return herrf( "unable to add covr-box\n" );
 
-    job.fileWasModified = true;
     return SUCCESS;
 }
 
@@ -159,7 +158,7 @@ ArtUtility::actionAdd( JobContext& job )
 bool
 ArtUtility::actionExtract( JobContext& job )
 {
-    job.fileHandle = MP4ReadCopy( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
 
@@ -213,7 +212,7 @@ ArtUtility::actionList( JobContext& job )
         report << setfill('-') << setw(70) << "" << setfill(' ') << '\n';
     }
 
-    job.fileHandle = MP4ReadCopy( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
 
@@ -250,7 +249,7 @@ ArtUtility::actionList( JobContext& job )
 bool
 ArtUtility::actionRemove( JobContext& job )
 {
-    job.fileHandle = MP4ReadCopy( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Modify( job.file.c_str(), _debugVerbosity );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
@@ -265,7 +264,6 @@ ArtUtility::actionRemove( JobContext& job )
     if( CoverArtBox::remove( job.fileHandle, _artFilter ))
         return herrf( "remove failed\n" );
 
-    job.fileWasModified = true;
     return SUCCESS;
 }
 
@@ -301,14 +299,13 @@ ArtUtility::actionReplace( JobContext& job )
     if( dryrunAbort() )
         return SUCCESS;
 
-    job.fileHandle = MP4ReadCopy( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Modify( job.file.c_str(), _debugVerbosity );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
     if( CoverArtBox::set( job.fileHandle, item, _artFilter ))
         return herrf( "unable to add covr-box: %s\n", job.file.c_str() );
 
-    job.fileWasModified = true;
     return SUCCESS;
 }
 

@@ -308,28 +308,14 @@ Utility::job( string arg )
 
     // close file handle flagged with job
     if( job.fileHandle != MP4_INVALID_FILE_HANDLE ) {
-        if( result == SUCCESS && job.fileWasModified ) {
-            string tfile = job.file;
-            tfile += ".tmp";
+        verbose2f( "closing %s\n", job.file.c_str() );
+        MP4Close( job.fileHandle );
 
-            verbose2f( "writing %s\n", tfile.c_str() );
-            if( !MP4CopyClose( job.fileHandle, tfile.c_str() ))
-                hwarnf( "write failed: %s\n", job.file.c_str() );
-
-            verbose2f( "renaming %s -> %s\n", tfile.c_str(), job.file.c_str() );
-            if( io::FileSystem::rename( tfile, job.file ))
-                hwarnf( "rename failed: %s -> %s\n", tfile.c_str(), job.file.c_str() );
-        }
-        else {
-            verbose2f( "closing %s\n", job.file.c_str() );
-            MP4Close( job.fileHandle );
-
-            // invoke optimize if flagged
-            if( _optimize && job.optimizeApplicable ) {
-                verbose1f( "optimizing %s\n", job.file.c_str() );
-                if( !MP4Optimize( job.file.c_str(), NULL ))
-                    hwarnf( "optimize failed: %s\n", job.file.c_str() );    
-            }
+        // invoke optimize if flagged
+        if( _optimize && job.optimizeApplicable ) {
+            verbose1f( "optimizing %s\n", job.file.c_str() );
+            if( !MP4Optimize( job.file.c_str(), NULL ))
+                hwarnf( "optimize failed: %s\n", job.file.c_str() );
         }
     }
 
@@ -769,7 +755,6 @@ Utility::Option::Option(
 Utility::JobContext::JobContext( string file_ )
     : file               ( file_ )
     , fileHandle         ( MP4_INVALID_FILE_HANDLE )
-    , fileWasModified    ( false )
     , optimizeApplicable ( false )
 {
 }
