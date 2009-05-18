@@ -341,7 +341,7 @@ genericGetItemsByCode( MP4File& file, const char* code )
 ///////////////////////////////////////////////////////////////////////////////
 
 MP4ItmfItemList*
-genericItemsByMeaning( MP4File& file, const char* meaning, const char* name )
+genericGetItemsByMeaning( MP4File& file, const char* meaning, const char* name )
 {
     MP4Atom* ilst = file.FindAtom( "moov.udta.meta.ilst" );
     if( !ilst )
