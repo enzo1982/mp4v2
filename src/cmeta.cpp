@@ -48,795 +48,794 @@ extern "C" {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/* iTunes meta data handling */
-    bool MP4GetMetadataByIndex(MP4FileHandle hFile, uint32_t index,
-                               char** ppName,
-                               uint8_t** ppValue, uint32_t* pValueSize)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->GetMetadataByIndex(
-                           index, ppName, ppValue, pValueSize);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4GetMetadataByIndex(MP4FileHandle hFile, uint32_t index,
+                           char** ppName,
+                           uint8_t** ppValue, uint32_t* pValueSize)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->GetMetadataByIndex(
+                       index, ppName, ppValue, pValueSize);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4MetadataDelete(MP4FileHandle hFile)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->MetadataDelete();
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4MetadataDelete(MP4FileHandle hFile)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->MetadataDelete();
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4SetMetadataName(MP4FileHandle hFile,
-                            const char* value)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->SetMetadataString("\251nam", value);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4SetMetadataName(MP4FileHandle hFile,
+                        const char* value)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->SetMetadataString("\251nam", value);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4GetMetadataName(MP4FileHandle hFile,
-                            char** value)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->GetMetadataString("\251nam", value);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4GetMetadataName(MP4FileHandle hFile,
+                        char** value)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->GetMetadataString("\251nam", value);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4DeleteMetadataName(MP4FileHandle hFile)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->DeleteMetadataAtom("\251nam");
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4DeleteMetadataName(MP4FileHandle hFile)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->DeleteMetadataAtom("\251nam");
         }
-        return false;
-    }
-    
-    bool MP4SetMetadataWriter(MP4FileHandle hFile,
-                              const char* value)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->SetMetadataString("\251wrt", value);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
         }
-        return false;
     }
-    
-    bool MP4GetMetadataWriter(MP4FileHandle hFile,
-                              char** value)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->GetMetadataString("\251wrt", value);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
-        }
-        return false;
-    }
-    
-    bool MP4DeleteMetadataWriter(MP4FileHandle hFile)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->DeleteMetadataAtom("\251wrt");
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
-        }
-        return false;
-    }
-    
-    bool MP4SetMetadataAlbum(MP4FileHandle hFile,
-                             const char* value)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->SetMetadataString("\251alb", value);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
-        }
-        return false;
-    }
+    return false;
+}
 
-    bool MP4GetMetadataAlbum(MP4FileHandle hFile,
-                             char** value)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->GetMetadataString("\251alb", value);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4SetMetadataWriter(MP4FileHandle hFile,
+                          const char* value)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->SetMetadataString("\251wrt", value);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4DeleteMetadataAlbum(MP4FileHandle hFile)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->DeleteMetadataAtom("\251alb");
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4GetMetadataWriter(MP4FileHandle hFile,
+                          char** value)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->GetMetadataString("\251wrt", value);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4SetMetadataArtist(MP4FileHandle hFile,
-                              const char* value)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->SetMetadataString("\251ART", value);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4DeleteMetadataWriter(MP4FileHandle hFile)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->DeleteMetadataAtom("\251wrt");
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4GetMetadataArtist(MP4FileHandle hFile,
-                              char** value)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->GetMetadataString("\251ART", value);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4SetMetadataAlbum(MP4FileHandle hFile,
+                         const char* value)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->SetMetadataString("\251alb", value);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4DeleteMetadataArtist(MP4FileHandle hFile)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->DeleteMetadataAtom("\251ART");
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4GetMetadataAlbum(MP4FileHandle hFile,
+                         char** value)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->GetMetadataString("\251alb", value);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4SetMetadataTool(MP4FileHandle hFile,
-                            const char* value)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->SetMetadataString("\251too", value);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4DeleteMetadataAlbum(MP4FileHandle hFile)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->DeleteMetadataAtom("\251alb");
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4GetMetadataTool(MP4FileHandle hFile,
-                            char** value)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->GetMetadataString("\251too", value);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4SetMetadataArtist(MP4FileHandle hFile,
+                          const char* value)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->SetMetadataString("\251ART", value);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4DeleteMetadataTool(MP4FileHandle hFile)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->DeleteMetadataAtom("\251too");
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4GetMetadataArtist(MP4FileHandle hFile,
+                          char** value)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->GetMetadataString("\251ART", value);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4SetMetadataComment(MP4FileHandle hFile,
-                               const char* value)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->SetMetadataString("\251cmt", value);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4DeleteMetadataArtist(MP4FileHandle hFile)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->DeleteMetadataAtom("\251ART");
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4GetMetadataComment(MP4FileHandle hFile,
-                               char** value)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->GetMetadataString("\251cmt", value);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4SetMetadataTool(MP4FileHandle hFile,
+                        const char* value)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->SetMetadataString("\251too", value);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4DeleteMetadataComment(MP4FileHandle hFile)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->DeleteMetadataAtom("\251cmt");
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4GetMetadataTool(MP4FileHandle hFile,
+                        char** value)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->GetMetadataString("\251too", value);
         }
-        return false;
-    }
-    
-    bool MP4SetMetadataYear(MP4FileHandle hFile,
-                            const char* value)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->SetMetadataString("\251day", value);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
         }
-        return false;
     }
-    
-    bool MP4GetMetadataYear(MP4FileHandle hFile,
-                            char** value)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->GetMetadataString("\251day", value);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
-        }
-        return false;
-    }
-    
-    bool MP4DeleteMetadataYear(MP4FileHandle hFile)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->DeleteMetadataAtom("\251day");
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
-        }
-        return false;
-    }
+    return false;
+}
 
-    bool MP4SetMetadataTrack(MP4FileHandle hFile,
-                             uint16_t track, uint16_t totalTracks)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->SetMetadataTrack(track, totalTracks);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4DeleteMetadataTool(MP4FileHandle hFile)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->DeleteMetadataAtom("\251too");
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4GetMetadataTrack(MP4FileHandle hFile,
-                             uint16_t* track, uint16_t* totalTracks)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->GetMetadataTrack(track, totalTracks);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4SetMetadataComment(MP4FileHandle hFile,
+                           const char* value)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->SetMetadataString("\251cmt", value);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4DeleteMetadataTrack(MP4FileHandle hFile)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->DeleteMetadataAtom("trkn");
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4GetMetadataComment(MP4FileHandle hFile,
+                           char** value)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->GetMetadataString("\251cmt", value);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4SetMetadataDisk(MP4FileHandle hFile,
-                            uint16_t disk, uint16_t totalDisks)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->SetMetadataDisk(disk, totalDisks);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4DeleteMetadataComment(MP4FileHandle hFile)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->DeleteMetadataAtom("\251cmt");
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4GetMetadataDisk(MP4FileHandle hFile,
-                            uint16_t* disk, uint16_t* totalDisks)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->GetMetadataDisk(disk, totalDisks);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4SetMetadataYear(MP4FileHandle hFile,
+                        const char* value)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->SetMetadataString("\251day", value);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4DeleteMetadataDisk(MP4FileHandle hFile)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->DeleteMetadataAtom("disk");
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4GetMetadataYear(MP4FileHandle hFile,
+                        char** value)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->GetMetadataString("\251day", value);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4SetMetadataGenre(MP4FileHandle hFile, const char *genre)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->SetMetadataGenre(genre);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4DeleteMetadataYear(MP4FileHandle hFile)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->DeleteMetadataAtom("\251day");
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4GetMetadataGenre(MP4FileHandle hFile, char **genre)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->GetMetadataGenre(genre);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4SetMetadataTrack(MP4FileHandle hFile,
+                         uint16_t track, uint16_t totalTracks)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->SetMetadataTrack(track, totalTracks);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4DeleteMetadataGenre(MP4FileHandle hFile)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->DeleteMetadataGenre();
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4GetMetadataTrack(MP4FileHandle hFile,
+                         uint16_t* track, uint16_t* totalTracks)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->GetMetadataTrack(track, totalTracks);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4SetMetadataGrouping(MP4FileHandle hFile, const char *grouping)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->SetMetadataString("\251grp", grouping);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4DeleteMetadataTrack(MP4FileHandle hFile)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->DeleteMetadataAtom("trkn");
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4GetMetadataGrouping(MP4FileHandle hFile, char **grouping)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->GetMetadataString("\251grp", grouping);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4SetMetadataDisk(MP4FileHandle hFile,
+                        uint16_t disk, uint16_t totalDisks)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->SetMetadataDisk(disk, totalDisks);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4DeleteMetadataGrouping(MP4FileHandle hFile)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->DeleteMetadataAtom("\251grp");
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4GetMetadataDisk(MP4FileHandle hFile,
+                        uint16_t* disk, uint16_t* totalDisks)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->GetMetadataDisk(disk, totalDisks);
         }
-        return false;
-    }
-    
-    bool MP4SetMetadataTempo(MP4FileHandle hFile, uint16_t tempo)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->SetMetadataUint16("tmpo", tempo);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
         }
-        return false;
     }
-    
-    bool MP4GetMetadataTempo(MP4FileHandle hFile, uint16_t* tempo)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->GetMetadataUint16("tmpo", tempo);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
-        }
-        return false;
-    }
-    
-    bool MP4DeleteMetadataTempo(MP4FileHandle hFile)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->DeleteMetadataAtom("tmpo");
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
-        }
-        return false;
-    }
+    return false;
+}
 
-    bool MP4SetMetadataCompilation(MP4FileHandle hFile, uint8_t cpl)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->SetMetadataUint8("cpil", cpl & 0x1);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4DeleteMetadataDisk(MP4FileHandle hFile)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->DeleteMetadataAtom("disk");
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4GetMetadataCompilation(MP4FileHandle hFile, uint8_t* cpl)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->GetMetadataUint8("cpil", cpl);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4SetMetadataGenre(MP4FileHandle hFile, const char *genre)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->SetMetadataGenre(genre);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4DeleteMetadataCompilation(MP4FileHandle hFile)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->DeleteMetadataAtom("cpil");
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4GetMetadataGenre(MP4FileHandle hFile, char **genre)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->GetMetadataGenre(genre);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4SetMetadataPartOfGaplessAlbum (MP4FileHandle hFile,
-                                           uint8_t pgap)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->SetMetadataUint8("pgap", pgap & 0x1);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4DeleteMetadataGenre(MP4FileHandle hFile)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->DeleteMetadataGenre();
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4GetMetadataPartOfGaplessAlbum (MP4FileHandle hFile,
-                                           uint8_t* pgap)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->GetMetadataUint8("pgap", pgap);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4SetMetadataGrouping(MP4FileHandle hFile, const char *grouping)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->SetMetadataString("\251grp", grouping);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4DeleteMetadataPartOfGaplessAlbum (MP4FileHandle hFile)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->DeleteMetadataAtom("pgap");
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4GetMetadataGrouping(MP4FileHandle hFile, char **grouping)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->GetMetadataString("\251grp", grouping);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4SetMetadataCoverArt(MP4FileHandle hFile,
-                                uint8_t *coverArt, uint32_t size)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->SetMetadataCoverArt(coverArt, size);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4DeleteMetadataGrouping(MP4FileHandle hFile)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->DeleteMetadataAtom("\251grp");
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4GetMetadataCoverArt(MP4FileHandle hFile,
-                                uint8_t **coverArt, uint32_t* size,
-                                uint32_t index)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->GetMetadataCoverArt(coverArt, size, index);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4SetMetadataTempo(MP4FileHandle hFile, uint16_t tempo)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->SetMetadataUint16("tmpo", tempo);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    uint32_t MP4GetMetadataCoverArtCount(MP4FileHandle hFile)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->GetMetadataCoverArtCount();
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4GetMetadataTempo(MP4FileHandle hFile, uint16_t* tempo)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->GetMetadataUint16("tmpo", tempo);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4DeleteMetadataCoverArt(MP4FileHandle hFile)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->DeleteMetadataAtom("covr");
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4DeleteMetadataTempo(MP4FileHandle hFile)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->DeleteMetadataAtom("tmpo");
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4SetMetadataAlbumArtist (MP4FileHandle hFile,
-                                    const char* value)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->SetMetadataString("aART", value);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4SetMetadataCompilation(MP4FileHandle hFile, uint8_t cpl)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->SetMetadataUint8("cpil", cpl & 0x1);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4GetMetadataAlbumArtist (MP4FileHandle hFile,
-                                    char** value)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->GetMetadataString("aART", value);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4GetMetadataCompilation(MP4FileHandle hFile, uint8_t* cpl)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->GetMetadataUint8("cpil", cpl);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4DeleteMetadataAlbumArtist (MP4FileHandle hFile)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->DeleteMetadataAtom("aART");
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4DeleteMetadataCompilation(MP4FileHandle hFile)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->DeleteMetadataAtom("cpil");
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4SetMetadataFreeForm(MP4FileHandle hFile,
-                                const char *name,
-                                const uint8_t* pValue,
-                                uint32_t valueSize,
-                                const char *owner)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->SetMetadataFreeForm(name, pValue, valueSize, owner);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4SetMetadataPartOfGaplessAlbum (MP4FileHandle hFile,
+                                       uint8_t pgap)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->SetMetadataUint8("pgap", pgap & 0x1);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4GetMetadataFreeForm(MP4FileHandle hFile, const char *name,
-                                uint8_t** pValue, uint32_t* valueSize, const char *owner)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->GetMetadataFreeForm(name, pValue, valueSize, owner);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4GetMetadataPartOfGaplessAlbum (MP4FileHandle hFile,
+                                       uint8_t* pgap)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->GetMetadataUint8("pgap", pgap);
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
 
-    bool MP4DeleteMetadataFreeForm(MP4FileHandle hFile, const char *name, const char *owner)
-    {
-        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
-            try {
-                return ((MP4File*)hFile)->DeleteMetadataFreeForm(name, owner);
-            }
-            catch (MP4Error* e) {
-                PRINT_ERROR(e);
-                delete e;
-            }
+bool MP4DeleteMetadataPartOfGaplessAlbum (MP4FileHandle hFile)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->DeleteMetadataAtom("pgap");
         }
-        return false;
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
     }
+    return false;
+}
+
+bool MP4SetMetadataCoverArt(MP4FileHandle hFile,
+                            uint8_t *coverArt, uint32_t size)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->SetMetadataCoverArt(coverArt, size);
+        }
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
+    }
+    return false;
+}
+
+bool MP4GetMetadataCoverArt(MP4FileHandle hFile,
+                            uint8_t **coverArt, uint32_t* size,
+                            uint32_t index)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->GetMetadataCoverArt(coverArt, size, index);
+        }
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
+    }
+    return false;
+}
+
+uint32_t MP4GetMetadataCoverArtCount(MP4FileHandle hFile)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->GetMetadataCoverArtCount();
+        }
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
+    }
+    return false;
+}
+
+bool MP4DeleteMetadataCoverArt(MP4FileHandle hFile)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->DeleteMetadataAtom("covr");
+        }
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
+    }
+    return false;
+}
+
+bool MP4SetMetadataAlbumArtist (MP4FileHandle hFile,
+                                const char* value)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->SetMetadataString("aART", value);
+        }
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
+    }
+    return false;
+}
+
+bool MP4GetMetadataAlbumArtist (MP4FileHandle hFile,
+                                char** value)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->GetMetadataString("aART", value);
+        }
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
+    }
+    return false;
+}
+
+bool MP4DeleteMetadataAlbumArtist (MP4FileHandle hFile)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->DeleteMetadataAtom("aART");
+        }
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
+    }
+    return false;
+}
+
+bool MP4SetMetadataFreeForm(MP4FileHandle hFile,
+                            const char *name,
+                            const uint8_t* pValue,
+                            uint32_t valueSize,
+                            const char *owner)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->SetMetadataFreeForm(name, pValue, valueSize, owner);
+        }
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
+    }
+    return false;
+}
+
+bool MP4GetMetadataFreeForm(MP4FileHandle hFile, const char *name,
+                            uint8_t** pValue, uint32_t* valueSize, const char *owner)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->GetMetadataFreeForm(name, pValue, valueSize, owner);
+        }
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
+    }
+    return false;
+}
+
+bool MP4DeleteMetadataFreeForm(MP4FileHandle hFile, const char *name, const char *owner)
+{
+    if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+        try {
+            return ((MP4File*)hFile)->DeleteMetadataFreeForm(name, owner);
+        }
+        catch (MP4Error* e) {
+            PRINT_ERROR(e);
+            delete e;
+        }
+    }
+    return false;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -1268,4 +1267,143 @@ MP4TagsSetCNID( const MP4Tags* m, const uint32_t* value )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+MP4ItmfItem*
+MP4ItmfItemAlloc( const char* code, uint32_t numData )
+{
+    return itmf::genericItemAlloc( code, numData );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4ItmfItemFree( MP4ItmfItem* item )
+{
+    itmf::genericItemFree( item );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+MP4ItmfItemListFree( MP4ItmfItemList* list )
+{
+    itmf::genericItemListFree( list );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+MP4ItmfItemList*
+MP4ItmfGetItems( MP4FileHandle hFile )
+{
+    if( !MP4_IS_VALID_FILE_HANDLE( hFile ))
+        return NULL;
+
+    try {
+        return itmf::genericGetItems( *(MP4File*)hFile );
+    }
+    catch( MP4Error* e ) {
+        PRINT_ERROR( e );
+        delete e;
+    }
+
+    return NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+MP4ItmfItemList*
+MP4ItmfGetItemsByCode( MP4FileHandle hFile, const char* code )
+{
+    if( !MP4_IS_VALID_FILE_HANDLE( hFile ))
+        return NULL;
+
+    try {
+        return itmf::genericGetItemsByCode( *(MP4File*)hFile, code );
+    }   
+    catch( MP4Error* e ) {
+        PRINT_ERROR( e );
+        delete e;
+    }
+
+    return NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+MP4ItmfItemList*
+MP4ItmfGetItemsByMeaning( MP4FileHandle hFile, const char* meaning, const char* name )
+{
+    if( !MP4_IS_VALID_FILE_HANDLE( hFile ))
+        return NULL;
+
+    try {
+        return itmf::genericGetItemsByMeaning( *(MP4File*)hFile, meaning, name );
+    }
+    catch( MP4Error* e ) {
+        PRINT_ERROR( e );
+        delete e;
+    }
+
+    return NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+MP4ItmfAddItem( MP4FileHandle hFile, const MP4ItmfItem* item )
+{
+    if( !MP4_IS_VALID_FILE_HANDLE( hFile ))
+        return NULL;
+
+    try {
+        return itmf::genericAddItem( *(MP4File*)hFile, item );
+    }
+    catch( MP4Error* e ) {
+        PRINT_ERROR( e );
+        delete e;
+    }
+
+    return false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+MP4ItmfSetItem( MP4FileHandle hFile, const MP4ItmfItem* item )
+{
+    if( !MP4_IS_VALID_FILE_HANDLE( hFile ))
+        return NULL;
+
+    try {
+        return itmf::genericSetItem( *(MP4File*)hFile, item );
+    }
+    catch( MP4Error* e ) {
+        PRINT_ERROR( e );
+        delete e;
+    }
+
+    return false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+MP4ItmfRemoveItem( MP4FileHandle hFile, const MP4ItmfItem* item )
+{
+    if( !MP4_IS_VALID_FILE_HANDLE( hFile ))
+        return NULL;
+
+    try {
+        return itmf::genericRemoveItem( *(MP4File*)hFile, item );
+    }
+    catch( MP4Error* e ) {
+        PRINT_ERROR( e );
+        delete e;
+    }
+
+    return false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 } // extern "C"

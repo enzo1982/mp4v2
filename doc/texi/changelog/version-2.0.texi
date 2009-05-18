@@ -56,4 +56,7 @@ Added new public-API: MP4WriteSampleDependency().
 
 @item
 Replaced (undocumented) public-API: MP4CreateEx() with MP4CreateProvider().
+
+@item
+Added new public-API for iTMF Generic functionality.
 @end enumerate

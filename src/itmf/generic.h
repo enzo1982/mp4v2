@@ -17,29 +17,29 @@
 //  All Rights Reserved.
 //
 //  Contributors:
-//      Kona Blend, kona8lend@@gmail.com
+//      KonaBlend, kona8lend@gmail.com
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef MP4V2_IMPL_ITMF_ITMF_H
-#define MP4V2_IMPL_ITMF_ITMF_H
+#ifndef MP4V2_IMPL_ITMF_GENERIC_H
+#define MP4V2_IMPL_ITMF_GENERIC_H
 
-/// @namespace mp4v2::impl::itmf (private) iTunes Metadata Format.
-/// <b>WARNING: THIS IS A PRIVATE NAMESPACE. NOT FOR PUBLIC CONSUMPTION.</b>
-///
-/// This namespace implements some features that are specified by the
-/// iTunes Metadata Format Specification, revision 2008-04-16.
-///
 namespace mp4v2 { namespace impl { namespace itmf {
-    ;
-}}}
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "CoverArtBox.h"
-#include "Tags.h"
-#include "generic.h"
+MP4ItmfItem* genericItemAlloc( const char* code, uint32_t numData );
+void genericItemFree( MP4ItmfItem* item );
+void genericItemListFree( MP4ItmfItemList* list );
+MP4ItmfItemList* genericGetItems( MP4File& file );
+MP4ItmfItemList* genericGetItemsByCode( MP4File& file, const char* code );
+MP4ItmfItemList* genericGetItemsByMeaning( MP4File& file, const char* meaning, const char* name );
+bool genericAddItem( MP4File& file, const MP4ItmfItem* item );
+bool genericSetItem( MP4File& file, const MP4ItmfItem* item );
+bool genericRemoveItem( MP4File& file, const MP4ItmfItem* item );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#endif // MP4V2_IMPL_ITMF_ITMF_H
+}}} // namespace mp4v2::impl::itmf
+
+#endif // MP4V2_IMPL_ITMF_GENERIC_H

@@ -52,9 +52,6 @@ typedef enum MP4FileMode_e
  *
  *  maxChunkSize is a hint suggesting what the max size of data should be read
  *  as in underlying read/write operations. A value of 0 indicates there is no hint.
- *
- *  Example usage:
- *  @include example/provider/provider.c
  */
 typedef struct MP4FileProvider_s
 {

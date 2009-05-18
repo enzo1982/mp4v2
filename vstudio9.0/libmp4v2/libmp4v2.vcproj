@@ -316,6 +316,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\mp4v2\itmf_generic.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\mp4v2\itmf_tags.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\mp4v2\meta.h"
 				>
 			</File>
@@ -776,6 +784,14 @@
 				</File>
 				<File
 					RelativePath="..\..\src\itmf\CoverArtBox.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\itmf\generic.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\itmf\generic.h"
 					>
 				</File>
 				<File

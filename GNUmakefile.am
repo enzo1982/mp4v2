@@ -118,6 +118,8 @@ libmp4v2_la_SOURCES += \
     src/itmf/CoverArtBox.h    \
     src/itmf/Tags.cpp         \
     src/itmf/Tags.h           \
+    src/itmf/generic.cpp      \
+    src/itmf/generic.h        \
     src/itmf/impl.h           \
     src/itmf/itmf.h           \
     src/itmf/type.cpp         \
@@ -242,6 +244,8 @@ mp4v2inc_HEADERS = \
     include/mp4v2/file_prop.h                   \
     include/mp4v2/general.h                     \
     include/mp4v2/isma.h                        \
+    include/mp4v2/itmf_generic.h                \
+    include/mp4v2/itmf_tags.h                   \
     include/mp4v2/meta.h                        \
     include/mp4v2/mp4v2.h                       \
     include/mp4v2/platform.h                    \

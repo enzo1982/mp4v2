@@ -57,7 +57,7 @@ The MP4v2 library can be used by either C or C++ programs. The calling
 convention is C but for convenience if C++ is used default function arguments
 have been added where appropriate.
 
-@section examples Examples
-
-See @c util/ source code for programs that use this library.
+@example example/provider/provider.c
+@example example/itmf/generic.c
+@example example/itmf/tags.c
 */
