@@ -2,6 +2,9 @@
  * WARNING: this program will change/destroy certain tags in an mp4 file.
  */
 
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <mp4v2/mp4v2.h>
 
 int main( int argc, char** argv )
