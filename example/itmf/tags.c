@@ -30,6 +30,10 @@ int main( int argc, char** argv )
     if( tags->name )
         printf( "name: %s\n", tags->name );
 
+    /* show tag genre if present */
+    if( tags->genre )
+        printf( "genre: %s\n", tags->genre );
+
     /* show tag artist if present */
     if( tags->artist )
         printf( "artist: %s\n", tags->artist );
