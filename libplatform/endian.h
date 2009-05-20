@@ -4,24 +4,24 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #define MP4V2_BYTESWAP_16(x) \
-    mp4v2::platform::uint16_t( ((mp4v2::platform::uint16_t(x) & 0xff00) >> 8) \
-                             | ((mp4v2::platform::uint16_t(x) & 0x00ff) << 8) )
+    mp4v2::platform::uint16_t( ((mp4v2::platform::uint16_t(x) & 0xff00U) >> 8) \
+                             | ((mp4v2::platform::uint16_t(x) & 0x00ffU) << 8) )
                            
 #define MP4V2_BYTESWAP_32(x) \
-    mp4v2::platform::uint32_t( ((mp4v2::platform::uint32_t(x) & 0xff000000) >> 24) \
-                             | ((mp4v2::platform::uint32_t(x) & 0x00ff0000) >>  8) \
-                             | ((mp4v2::platform::uint32_t(x) & 0x0000ff00) <<  8) \
-                             | ((mp4v2::platform::uint32_t(x) & 0x000000ff) << 24) )
+    mp4v2::platform::uint32_t( ((mp4v2::platform::uint32_t(x) & 0xff000000U) >> 24) \
+                             | ((mp4v2::platform::uint32_t(x) & 0x00ff0000U) >>  8) \
+                             | ((mp4v2::platform::uint32_t(x) & 0x0000ff00U) <<  8) \
+                             | ((mp4v2::platform::uint32_t(x) & 0x000000ffU) << 24) )
 
 #define MP4V2_BYTESWAP_64(x) \
-    mp4v2::platform::uint64_t( ((mp4v2::platform::uint64_t(x) & 0xff00000000000000) >> 56) \
-                             | ((mp4v2::platform::uint64_t(x) & 0x00ff000000000000) >> 40) \
-                             | ((mp4v2::platform::uint64_t(x) & 0x0000ff0000000000) >> 24) \
-                             | ((mp4v2::platform::uint64_t(x) & 0x000000ff00000000) >>  8) \
-                             | ((mp4v2::platform::uint64_t(x) & 0x00000000ff000000) <<  8) \
-                             | ((mp4v2::platform::uint64_t(x) & 0x0000000000ff0000) << 24) \
-                             | ((mp4v2::platform::uint64_t(x) & 0x000000000000ff00) << 40) \
-                             | ((mp4v2::platform::uint64_t(x) & 0x00000000000000ff) << 56) )
+    mp4v2::platform::uint64_t( ((mp4v2::platform::uint64_t(x) & 0xff00000000000000ULL) >> 56) \
+                             | ((mp4v2::platform::uint64_t(x) & 0x00ff000000000000ULL) >> 40) \
+                             | ((mp4v2::platform::uint64_t(x) & 0x0000ff0000000000ULL) >> 24) \
+                             | ((mp4v2::platform::uint64_t(x) & 0x000000ff00000000ULL) >>  8) \
+                             | ((mp4v2::platform::uint64_t(x) & 0x00000000ff000000ULL) <<  8) \
+                             | ((mp4v2::platform::uint64_t(x) & 0x0000000000ff0000ULL) << 24) \
+                             | ((mp4v2::platform::uint64_t(x) & 0x000000000000ff00ULL) << 40) \
+                             | ((mp4v2::platform::uint64_t(x) & 0x00000000000000ffULL) << 56) )
                            
 ///////////////////////////////////////////////////////////////////////////////
 
