@@ -244,10 +244,10 @@ extern "C" int
                         MP4TagsSetCopyright( mdata, NULL );
                         break;
                     case OPT_DISK:
-                        MP4DeleteMetadataDisk( h );
+                        MP4TagsSetDisk( mdata, NULL );
                         break;
                     case OPT_DISKS:
-                        MP4DeleteMetadataDisk( h );
+                        MP4TagsSetDisk( mdata, NULL );
                         break;
                     case OPT_ENCODEDBY:
                         MP4TagsSetEncodedBy( mdata, NULL );
@@ -307,13 +307,14 @@ extern "C" int
                         MP4TagsSetTempo( mdata, NULL );
                         break;
                     case OPT_TRACK:
-                        MP4DeleteMetadataTrack( h );
+                        MP4TagsSetTrack( mdata, NULL );
                         break;
                     case OPT_TRACKS:
-                        MP4DeleteMetadataTrack( h );
+                        MP4TagsSetTrack( mdata, NULL );
                         break;
                     case OPT_PICTURE:
-                        MP4DeleteMetadataCoverArt( h );
+                        if( mdata->artworkCount )
+                            MP4TagsRemoveArtwork( mdata, 0 );
                         break;
                     case OPT_ALBUM_ARTIST:
                         MP4TagsSetAlbumArtist( mdata, NULL );
@@ -326,21 +327,41 @@ extern "C" int
            allow users to just specify -T 12 to indicate that all existing
            track numbers are out of 12.  This means we need to look up the
            current info if it is not being set. */
-        uint16_t n0, m0, n1, m1;
 
         if ( ELEMENT_OF(tags,OPT_TRACK) || ELEMENT_OF(tags,OPT_TRACKS) ) {
-            n0 = m0 = 0;
-            MP4GetMetadataTrack( h, &n0, &m0 );
-            n1 = ELEMENT_OF(tags,OPT_TRACK) ? ELEMENT_OF(nums,OPT_TRACK) : n0;
-            m1 = ELEMENT_OF(tags,OPT_TRACKS) ? ELEMENT_OF(nums,OPT_TRACKS) : m0;
-            MP4SetMetadataTrack( h, n1, m1 );
+            MP4TagTrack tt;
+            tt.index = 0;
+            tt.total = 0;
+
+            if( mdata->track ) {
+                tt.index = mdata->track->index;
+                tt.total = mdata->track->total;
+            }
+
+            if( ELEMENT_OF(tags,OPT_TRACK) )
+                tt.index = ELEMENT_OF(nums,OPT_TRACK);
+            if( ELEMENT_OF(tags,OPT_TRACKS) )
+                tt.total = ELEMENT_OF(nums,OPT_TRACKS);
+
+            MP4TagsSetTrack( mdata, &tt );
         }
-        if ( ELEMENT_OF(tags,OPT_DISK) || ELEMENT_OF(tags,OPT_DISKS) ) {
-            n0 = m0 = 0;
-            MP4GetMetadataDisk( h, &n0, &m0 );
-            n1 = ELEMENT_OF(tags,OPT_DISK) ? ELEMENT_OF(nums,OPT_DISK) : n0;
-            m1 = ELEMENT_OF(tags,OPT_DISKS) ? ELEMENT_OF(nums,OPT_DISKS) : m0;
-            MP4SetMetadataDisk( h, n1, m1 );
+
+        if ( ELEMENT_OF(tags,OPT_TRACK) || ELEMENT_OF(tags,OPT_TRACKS) ) {
+            MP4TagDisk td;
+            td.index = 0;
+            td.total = 0;
+
+            if( mdata->disk ) {
+                td.index = mdata->disk->index;
+                td.total = mdata->disk->total;
+            }
+
+            if( ELEMENT_OF(tags,OPT_DISK) )
+                td.index = ELEMENT_OF(nums,OPT_DISK);
+            if( ELEMENT_OF(tags,OPT_DISKS) )
+                td.total = ELEMENT_OF(nums,OPT_DISKS);
+
+            MP4TagsSetDisk( mdata, &td );
         }
 
         /* Set the other relevant attributes */
@@ -441,15 +462,19 @@ extern "C" int
                     {
                         File in( tags[i], File::MODE_READ );
                         if( !in.open() ) {
-                            File::Size artSize = in.size;
-                            uint8_t* art = (uint8_t*)malloc( (size_t)artSize );
+                            MP4TagArtwork art;
+                            art.size = (uint32_t)in.size;
+                            art.data = malloc( art.size );
+                            art.type = MP4_ART_UNDEFINED;
 
                             File::Size nin;
-                            if( in.read( art, artSize, nin ) && nin == artSize ) {
-                                MP4SetMetadataCoverArt( h, art, artSize );
+                            if( in.read( (void*)art.data, art.size, nin ) && nin == art.size ) {
+                                if( mdata->artworkCount )
+                                    MP4TagsRemoveArtwork( mdata, 0 );
+                                MP4TagsAddArtwork( mdata, &art );
                             }
 
-                            free( art );
+                            free( (void*)art.data );
                             in.close();
                         }
                         else {
