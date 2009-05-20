@@ -66,58 +66,76 @@ Tags::c_fetch( MP4Tags*& tags, MP4FileHandle hFile )
     MP4Tags& c = *tags;
     MP4File& file = *static_cast<MP4File*>(hFile);
 
-    fetchString(  file, CODE_NAME,              name,              c.name );
-    fetchString(  file, CODE_ARTIST,            artist,            c.artist );
-    fetchString(  file, CODE_ALBUMARTIST,       albumArtist,       c.albumArtist );
-    fetchString(  file, CODE_ALBUM,             album,             c.album );
-    fetchString(  file, CODE_GROUPING,          grouping,          c.grouping );
-    fetchString(  file, CODE_COMPOSER,          composer,          c.composer );
-    fetchString(  file, CODE_COMMENTS,          comments,          c.comments );
-    fetchGenre(   file,                         genre,             c.genre );
-    fetchString(  file, CODE_RELEASEDATE,       releaseDate,       c.releaseDate );
-    fetchTrack(   file,                         track,             c.track);
-    fetchDisk(    file,                         disk,              c.disk);
-    fetchInteger( file, CODE_TEMPO,             tempo,             c.tempo );
-    fetchInteger( file, CODE_COMPILATION,       compilation,       c.compilation );
+    MP4ItmfItemList* itemList = genericGetItems( file ); // alloc
 
-    fetchString(  file, CODE_TVSHOW,            tvShow,            c.tvShow );
-    fetchString(  file, CODE_TVNETWORK,         tvNetwork,         c.tvNetwork );
-    fetchString(  file, CODE_TVEPISODEID,       tvEpisodeID,       c.tvEpisodeID );
-    fetchInteger( file, CODE_TVSEASON,          tvSeason,          c.tvSeason );
-    fetchInteger( file, CODE_TVEPISODE,         tvEpisode,         c.tvEpisode );
+    /* create code -> item map.
+     * map will only be used for items which do not repeat; we do not care if
+     * cover-art is inserted multiple times.
+     */
+    CodeItemMap cim;
+    for( uint32_t i = 0; i < itemList->size; i++ ) {
+        MP4ItmfItem& item = itemList->elements[i];
+        cim.insert( CodeItemMap::value_type( item.code, &item ));
+    }
 
-    fetchString(  file, CODE_SORTNAME,          sortName,          c.sortName );
-    fetchString(  file, CODE_SORTARTIST,        sortArtist,        c.sortArtist );
-    fetchString(  file, CODE_SORTALBUMARTIST,   sortAlbumArtist,   c.sortAlbumArtist );
-    fetchString(  file, CODE_SORTALBUM,         sortAlbum,         c.sortAlbum );
-    fetchString(  file, CODE_SORTCOMPOSER,      sortComposer,      c.sortComposer );
-    fetchString(  file, CODE_SORTTVSHOW,        sortTVShow,        c.sortTVShow );
+    fetchString(  cim, CODE_NAME,              name,              c.name );
+    fetchString(  cim, CODE_ARTIST,            artist,            c.artist );
+    fetchString(  cim, CODE_ALBUMARTIST,       albumArtist,       c.albumArtist );
+    fetchString(  cim, CODE_ALBUM,             album,             c.album );
+    fetchString(  cim, CODE_GROUPING,          grouping,          c.grouping );
+    fetchString(  cim, CODE_COMPOSER,          composer,          c.composer );
+    fetchString(  cim, CODE_COMMENTS,          comments,          c.comments );
 
-    fetchString(  file, CODE_DESCRIPTION,       description,       c.description );
-    fetchString(  file, CODE_LONGDESCRIPTION,   longDescription,   c.longDescription );
-    fetchString(  file, CODE_LYRICS,            lyrics,            c.lyrics );
+    fetchString(  cim, CODE_GENRE,             genre,             c.genre );
+    fetchGenre(   cim,                         genreType,         c.genreType );
 
-    fetchString(  file, CODE_COPYRIGHT,         copyright,         c.copyright );
-    fetchString(  file, CODE_ENCODINGTOOL,      encodingTool,      c.encodingTool ); 
-    fetchString(  file, CODE_ENCODEDBY,         encodedBy,         c.encodedBy );
-    fetchString(  file, CODE_PURCHASEDATE,      purchaseDate,      c.purchaseDate );
+    fetchString(  cim, CODE_RELEASEDATE,       releaseDate,       c.releaseDate );
+    fetchTrack(   cim,                         track,             c.track );
+    fetchDisk(    cim,                         disk,              c.disk );
+    fetchInteger( cim, CODE_TEMPO,             tempo,             c.tempo );
+    fetchInteger( cim, CODE_COMPILATION,       compilation,       c.compilation );
 
-    fetchInteger( file, CODE_PODCAST,           podcast,           c.podcast );
-    fetchString(  file, CODE_KEYWORDS,          keywords,          c.keywords );
-    fetchString(  file, CODE_CATEGORY,          category,          c.category );
+    fetchString(  cim, CODE_TVSHOW,            tvShow,            c.tvShow );
+    fetchString(  cim, CODE_TVNETWORK,         tvNetwork,         c.tvNetwork );
+    fetchString(  cim, CODE_TVEPISODEID,       tvEpisodeID,       c.tvEpisodeID );
+    fetchInteger( cim, CODE_TVSEASON,          tvSeason,          c.tvSeason );
+    fetchInteger( cim, CODE_TVEPISODE,         tvEpisode,         c.tvEpisode );
 
-    fetchInteger( file, CODE_HDVIDEO,           hdVideo,           c.hdVideo );
-    fetchInteger( file, CODE_MEDIATYPE,         mediaType,         c.mediaType );
-    fetchInteger( file, CODE_CONTENTRATING,     contentRating,     c.contentRating );
-    fetchInteger( file, CODE_GAPLESS,           gapless,           c.gapless );
+    fetchString(  cim, CODE_SORTNAME,          sortName,          c.sortName );
+    fetchString(  cim, CODE_SORTARTIST,        sortArtist,        c.sortArtist );
+    fetchString(  cim, CODE_SORTALBUMARTIST,   sortAlbumArtist,   c.sortAlbumArtist );
+    fetchString(  cim, CODE_SORTALBUM,         sortAlbum,         c.sortAlbum );
+    fetchString(  cim, CODE_SORTCOMPOSER,      sortComposer,      c.sortComposer );
+    fetchString(  cim, CODE_SORTTVSHOW,        sortTVShow,        c.sortTVShow );
 
-    fetchString(  file, CODE_ITUNESACCOUNT,     iTunesAccount,     c.iTunesAccount );
-    fetchInteger( file, CODE_ITUNESACCOUNTTYPE, iTunesAccountType, c.iTunesAccountType );
-    fetchInteger( file, CODE_ITUNESCOUNTRY,     iTunesCountry,     c.iTunesCountry );
-    fetchInteger( file, CODE_CNID,              cnID,              c.cnID );
-    fetchInteger( file, CODE_ATID,              atID,              c.atID );
-    fetchInteger( file, CODE_PLID,              plID,              c.plID );
-    fetchInteger( file, CODE_GEID,              geID,              c.geID );
+    fetchString(  cim, CODE_DESCRIPTION,       description,       c.description );
+    fetchString(  cim, CODE_LONGDESCRIPTION,   longDescription,   c.longDescription );
+    fetchString(  cim, CODE_LYRICS,            lyrics,            c.lyrics );
+
+    fetchString(  cim, CODE_COPYRIGHT,         copyright,         c.copyright );
+    fetchString(  cim, CODE_ENCODINGTOOL,      encodingTool,      c.encodingTool ); 
+    fetchString(  cim, CODE_ENCODEDBY,         encodedBy,         c.encodedBy );
+    fetchString(  cim, CODE_PURCHASEDATE,      purchaseDate,      c.purchaseDate );
+
+    fetchInteger( cim, CODE_PODCAST,           podcast,           c.podcast );
+    fetchString(  cim, CODE_KEYWORDS,          keywords,          c.keywords );
+    fetchString(  cim, CODE_CATEGORY,          category,          c.category );
+
+    fetchInteger( cim, CODE_HDVIDEO,           hdVideo,           c.hdVideo );
+    fetchInteger( cim, CODE_MEDIATYPE,         mediaType,         c.mediaType );
+    fetchInteger( cim, CODE_CONTENTRATING,     contentRating,     c.contentRating );
+    fetchInteger( cim, CODE_GAPLESS,           gapless,           c.gapless );
+
+    fetchString(  cim, CODE_ITUNESACCOUNT,     iTunesAccount,     c.iTunesAccount );
+    fetchInteger( cim, CODE_ITUNESACCOUNTTYPE, iTunesAccountType, c.iTunesAccountType );
+    fetchInteger( cim, CODE_ITUNESCOUNTRY,     iTunesCountry,     c.iTunesCountry );
+
+    fetchInteger( cim, CODE_CNID,              cnID,              c.cnID );
+    fetchInteger( cim, CODE_ATID,              atID,              c.atID );
+    fetchInteger( cim, CODE_PLID,              plID,              c.plID );
+    fetchInteger( cim, CODE_GEID,              geID,              c.geID );
+
+    genericItemListFree( itemList ); // free
 
     // fetch full list and overwrite our copy, otherwise clear
     {
@@ -245,6 +263,21 @@ Tags::c_setInteger( const uint32_t* value, uint32_t& cpp, const uint32_t*& c )
 ///////////////////////////////////////////////////////////////////////////////
 
 void
+Tags::c_setInteger( const uint64_t* value, uint64_t& cpp, const uint64_t*& c )
+{
+    if( !value ) {
+        cpp = 0;
+        c = NULL;
+    }
+    else {
+        cpp = *value;
+        c = &cpp;
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
 Tags::c_setString( const char* value, string& cpp, const char*& c )
 {
     if( !value ) {
@@ -254,6 +287,40 @@ Tags::c_setString( const char* value, string& cpp, const char*& c )
     else {
         cpp = value;
         c = cpp.c_str();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+Tags::c_setTrack( const MP4TagTrack* value, MP4TagTrack& cpp, const MP4TagTrack*& c )
+{
+    if( !value ) {
+        cpp.index = 0;
+        cpp.total = 0;
+        c = NULL;
+    }
+    else {
+        cpp.index = value->index;
+        cpp.total = value->total;
+        c = &cpp;
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+Tags::c_setDisk( const MP4TagDisk* value, MP4TagDisk& cpp, const MP4TagDisk*& c )
+{
+    if( !value ) {
+        cpp.index = 0;
+        cpp.total = 0;
+        c = NULL;
+    }
+    else {
+        cpp.index = value->index;
+        cpp.total = value->total;
+        c = &cpp;
     }
 }
 
@@ -272,8 +339,13 @@ Tags::c_store( MP4Tags*& tags, MP4FileHandle hFile )
     storeString(  file, CODE_GROUPING,          grouping,          c.grouping );
     storeString(  file, CODE_COMPOSER,          composer,          c.composer );
     storeString(  file, CODE_COMMENTS,          comments,          c.comments );
-    storeGenre(   file,                         genre,             c.genre );
+
+    storeString(  file, CODE_GENRE,             genre,             c.genre );
+    storeGenre(   file,                         genreType,         c.genreType );
+
     storeString(  file, CODE_RELEASEDATE,       releaseDate,       c.releaseDate );
+    storeTrack(   file,                         track,             c.track );
+    storeDisk(    file,                         disk,              c.disk );
     storeInteger( file, CODE_TEMPO,             tempo,             c.tempo );
     storeInteger( file, CODE_COMPILATION,       compilation,       c.compilation );
     
@@ -304,7 +376,14 @@ Tags::c_store( MP4Tags*& tags, MP4FileHandle hFile )
     storeInteger( file, CODE_CONTENTRATING,     contentRating,     c.contentRating );
     storeInteger( file, CODE_GAPLESS,           gapless,           c.gapless );
 
+    storeString(  file, CODE_ITUNESACCOUNT,     iTunesAccount,     c.iTunesAccount );
+    storeInteger( file, CODE_ITUNESACCOUNTTYPE, iTunesAccountType, c.iTunesAccountType );
+    storeInteger( file, CODE_ITUNESCOUNTRY,     iTunesCountry,     c.iTunesCountry );
+
     storeInteger( file, CODE_CNID,              cnID,              c.cnID );
+    storeInteger( file, CODE_ATID,              atID,              c.atID );
+    storeInteger( file, CODE_PLID,              plID,              c.plID );
+    storeInteger( file, CODE_GEID,              geID,              c.geID );
 
     // destroy all cover-art then add each
     {
@@ -317,226 +396,266 @@ Tags::c_store( MP4Tags*& tags, MP4FileHandle hFile )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool
-Tags::fetchData( MP4File& file, const string& code, uint8_t*& buffer, uint32_t& size )
-{
-    buffer = NULL;
-    size = 0;
-
-    MP4Atom& root = *file.FindAtom( NULL );
-
-    ostringstream oss;
-    oss << "moov.udta.meta.ilst." << code << ".data.metadata";
-
-    MP4Property* prop;
-    if( !root.FindProperty( oss.str().c_str(), &prop ))
-        return true;
-
-    if( prop->GetType() != BytesProperty )
-        return true;
-
-    MP4BytesProperty& data = *static_cast<MP4BytesProperty*>(prop);
-    data.GetValue( &buffer, &size ); // our caller will free buffer
-
-    return false;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void
-Tags::fetchGenre( MP4File& file, string& cpp, const char*& c )
+Tags::fetchGenre( const CodeItemMap& cim, uint16_t& cpp, const uint16_t*& c )
 {
-    cpp.clear();
+    cpp = 0;
     c = NULL;
 
-    char* value = NULL;
-    try {
-        file.GetMetadataGenre( &value );
-    }
-    catch( MP4Error* e ) {
-        delete e;
-        CHECK_AND_FREE( value );
-    }
+    CodeItemMap::const_iterator f = cim.find( CODE_GENRETYPE );
+    if( f == cim.end() )
+        return;
 
-    if ( value != NULL ) { 
-       cpp = value;
-       c = cpp.c_str();    
-    } else {
-        cpp.clear();
-        c = NULL;
-    }
+    MP4ItmfData& data = f->second->dataList.elements[0];
 
-    CHECK_AND_FREE( value );
+    cpp = (uint16_t(data.value[0]) <<  8)
+        | (uint16_t(data.value[1])      );
+
+    c = &cpp;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void
-Tags::fetchTrack( MP4File& file, MP4TagTrack& cpp, const MP4TagTrack*& c )
+Tags::fetchDisk( const CodeItemMap& cim, MP4TagDisk& cpp, const MP4TagDisk*& c )
 {    
     cpp.index = 0;
     cpp.total = 0;
     c = NULL;
-    
-    uint16_t index, total;
-    try {
-        file.GetMetadataTrack( &index, &total );
-    }
-    catch( MP4Error* e ) {
-        delete e;
-    }
-    cpp.index = index;
-    cpp.total = total;
-    
-    if (( index !=0 ) || ( total != 0 ))
-        c = &cpp;
-     else
-        c = NULL;
- }
+
+    CodeItemMap::const_iterator f = cim.find( CODE_DISK );
+    if( f == cim.end() )
+        return;
+
+    MP4ItmfData& data = f->second->dataList.elements[0];
+
+    cpp.index = (uint16_t(data.value[2]) <<  8)
+              | (uint16_t(data.value[3])      );
+
+    cpp.total = (uint16_t(data.value[4]) <<  8)
+              | (uint16_t(data.value[5])      );
+
+    c = &cpp;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void
-Tags::fetchDisk( MP4File& file, MP4TagDisk& cpp, const MP4TagDisk*& c )
+Tags::fetchTrack( const CodeItemMap& cim, MP4TagTrack& cpp, const MP4TagTrack*& c )
 {    
     cpp.index = 0;
     cpp.total = 0;
     c = NULL;
-    
-    uint16_t index, total;
-    try {
-        file.GetMetadataDisk( &index, &total );
-    }
-    catch( MP4Error* e ) {
-        delete e;
-    }
-    cpp.index = index;
-    cpp.total = total;
-    
-    if (( index !=0 ) || ( total != 0 ))
-        c = &cpp;
-     else
-        c = NULL;
- }
 
-///////////////////////////////////////////////////////////////////////////////
-
-void
-Tags::fetchInteger( MP4File& file, const string& code, uint8_t& cpp, const uint8_t*& c )
-{
-    cpp = 0;
-    c = NULL;
-
-    uint8_t* buffer;
-    uint32_t size;
-    if( fetchData( file, code, buffer, size ))
+    CodeItemMap::const_iterator f = cim.find( CODE_TRACK );
+    if( f == cim.end() )
         return;
 
-    cpp = buffer[0];
-    c = &cpp;
+    MP4ItmfData& data = f->second->dataList.elements[0];
 
-    MP4Free( buffer );
+    cpp.index = (uint16_t(data.value[2]) <<  8)
+              | (uint16_t(data.value[3])      );
+
+    cpp.total = (uint16_t(data.value[4]) <<  8)
+              | (uint16_t(data.value[5])      );
+
+    c = &cpp;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void
-Tags::fetchInteger( MP4File& file, const string& code, uint16_t& cpp, const uint16_t*& c )
+Tags::fetchInteger( const CodeItemMap& cim, const string& code, uint8_t& cpp, const uint8_t*& c )
 {
     cpp = 0;
     c = NULL;
 
-    uint8_t* buffer; 
-    uint32_t size;
-    if( fetchData( file, code, buffer, size ))
+    CodeItemMap::const_iterator f = cim.find( code );
+    if( f == cim.end() )
         return;
 
-    cpp = (uint16_t(buffer[0]) <<  8)
-        | (uint16_t(buffer[1])      );
-
+    MP4ItmfData& data = f->second->dataList.elements[0];
+    cpp = data.value[0];
     c = &cpp;
-
-    MP4Free( buffer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void
-Tags::fetchInteger( MP4File& file, const string& code, uint32_t& cpp, const uint32_t*& c )
+Tags::fetchInteger( const CodeItemMap& cim, const string& code, uint16_t& cpp, const uint16_t*& c )
 {
     cpp = 0;
     c = NULL;
 
-    uint8_t* buffer; 
-    uint32_t size;
-    if( fetchData( file, code, buffer, size ))
+    CodeItemMap::const_iterator f = cim.find( code );
+    if( f == cim.end() )
         return;
 
-    cpp = (uint32_t(buffer[0]) << 24)
-        | (uint32_t(buffer[1]) << 16)
-        | (uint32_t(buffer[2]) <<  8)
-        | (uint32_t(buffer[3])      );
+    MP4ItmfData& data = f->second->dataList.elements[0];
+
+    cpp = (uint16_t(data.value[0]) <<  8)
+        | (uint16_t(data.value[1])      );
 
     c = &cpp;
-
-    MP4Free( buffer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void
-Tags::fetchInteger( MP4File& file, const string& code, uint64_t& cpp, const uint64_t*& c )
+Tags::fetchInteger( const CodeItemMap& cim, const string& code, uint32_t& cpp, const uint32_t*& c )
 {
     cpp = 0;
     c = NULL;
 
-    uint8_t* buffer; 
-    uint32_t size;
-    if( fetchData( file, code, buffer, size ))
+    CodeItemMap::const_iterator f = cim.find( code );
+    if( f == cim.end() )
         return;
 
-    cpp = (uint64_t(buffer[0]) << 56)
-        | (uint64_t(buffer[1]) << 48)
-        | (uint64_t(buffer[2]) << 40)
-        | (uint64_t(buffer[3]) << 32)
-        | (uint64_t(buffer[4]) << 24)
-        | (uint64_t(buffer[5]) << 16)
-        | (uint64_t(buffer[6]) <<  8)
-        | (uint64_t(buffer[7])      );
+    MP4ItmfData& data = f->second->dataList.elements[0];
+
+    cpp = (uint32_t(data.value[0]) << 24)
+        | (uint32_t(data.value[1]) << 16)
+        | (uint32_t(data.value[2]) <<  8)
+        | (uint32_t(data.value[3])      );
 
     c = &cpp;
-
-    MP4Free( buffer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void
-Tags::fetchString( MP4File& file, const string& code, string& cpp, const char*& c )
+Tags::fetchInteger( const CodeItemMap& cim, const string& code, uint64_t& cpp, const uint64_t*& c )
+{
+    cpp = 0;
+    c = NULL;
+
+    CodeItemMap::const_iterator f = cim.find( code );
+    if( f == cim.end() )
+        return;
+
+    MP4ItmfData& data = f->second->dataList.elements[0];
+
+    cpp = (uint64_t(data.value[0]) << 56)
+        | (uint64_t(data.value[1]) << 48)
+        | (uint64_t(data.value[2]) << 40)
+        | (uint64_t(data.value[3]) << 32)
+        | (uint64_t(data.value[4]) << 24)
+        | (uint64_t(data.value[5]) << 16)
+        | (uint64_t(data.value[6]) <<  8)
+        | (uint64_t(data.value[7])      );
+
+    c = &cpp;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+Tags::fetchString( const CodeItemMap& cim, const string& code, string& cpp, const char*& c )
 {
     cpp.clear();
     c = NULL;
 
-    uint8_t* buffer;
-    uint32_t size;
-    if( fetchData( file, code, buffer, size ))
+    CodeItemMap::const_iterator f = cim.find( code );
+    if( f == cim.end() )
         return;
 
-    cpp.append( reinterpret_cast<char*>(buffer), size );
+    MP4ItmfData& data = f->second->dataList.elements[0];
+    cpp.append( reinterpret_cast<char*>( data.value ), data.valueSize );
     c = cpp.c_str();
-
-    MP4Free( buffer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void
-Tags::storeGenre( MP4File& file, const string& cpp, const char* c )
+Tags::remove( MP4File& file, const string& code )
 {
-    if( c )
-        file.SetMetadataGenre( cpp.c_str() );
-    else
-        file.DeleteMetadataGenre();
+    MP4ItmfItemList* itemList = genericGetItemsByCode( file, code ); // alloc
+
+    if( itemList->size )
+        genericRemoveItem( file, &itemList->elements[0] );
+
+    genericItemListFree( itemList ); // free
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+Tags::store( MP4File& file, const string& code, MP4ItmfBasicType basicType, const void* buffer, uint32_t size )
+{
+    // remove existing item
+    remove( file, code );
+
+    // add item
+    MP4ItmfItem& item = *genericItemAlloc( code, 1 ); // alloc
+    MP4ItmfData& data = item.dataList.elements[0];
+
+    data.typeCode = MP4_ITMF_BT_UTF8;
+    data.valueSize = size;
+    data.value = (uint8_t*)malloc( data.valueSize );
+    memcpy( data.value, buffer, data.valueSize );
+
+    genericAddItem( file, &item );
+    genericItemFree( &item ); // free
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+Tags::storeGenre( MP4File& file, uint16_t cpp, const uint16_t* c )
+{
+    if( c ) {
+        uint8_t buf[2];
+
+        buf[0] = uint8_t((cpp & 0xff00) >> 8);
+        buf[1] = uint8_t((cpp & 0x00ff)     );
+
+        store( file, CODE_GENRETYPE, MP4_ITMF_BT_GENRES, buf, sizeof(buf) );
+    }
+    else {
+        remove( file, CODE_GENRETYPE );
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+Tags::storeDisk( MP4File& file, const MP4TagDisk& cpp, const MP4TagDisk* c )
+{
+    if( c ) {
+        uint8_t buf[6];
+        memset( buf, 0, sizeof(buf) );
+
+        buf[2] = uint8_t((cpp.index & 0xff00) >> 8);
+        buf[3] = uint8_t((cpp.index & 0x00ff)     );
+        buf[4] = uint8_t((cpp.total & 0xff00) >> 8);
+        buf[5] = uint8_t((cpp.total & 0x00ff)     );
+
+        store( file, CODE_DISK, MP4_ITMF_BT_IMPLICIT, buf, sizeof(buf) );
+    }
+    else {
+        remove( file, CODE_DISK );
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+Tags::storeTrack( MP4File& file, const MP4TagTrack& cpp, const MP4TagTrack* c )
+{
+    if( c ) {
+        uint8_t buf[7];
+        memset( buf, 0, sizeof(buf) );
+
+        buf[2] = uint8_t((cpp.index & 0xff00) >> 8);
+        buf[3] = uint8_t((cpp.index & 0x00ff)     );
+        buf[4] = uint8_t((cpp.total & 0xff00) >> 8);
+        buf[5] = uint8_t((cpp.total & 0x00ff)     );
+
+        store( file, CODE_TRACK, MP4_ITMF_BT_IMPLICIT, buf, sizeof(buf) );
+    }
+    else {
+        remove( file, CODE_TRACK );
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -545,9 +664,9 @@ void
 Tags::storeInteger( MP4File& file, const string& code, uint8_t cpp, const uint8_t* c )
 {
     if( c )
-        file.SetMetadataUint8( code.c_str(), cpp );
+        store( file, code, MP4_ITMF_BT_INTEGER, &cpp, sizeof(cpp) );
     else
-        file.DeleteMetadataAtom( code.c_str() );
+        remove( file, code );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -555,10 +674,17 @@ Tags::storeInteger( MP4File& file, const string& code, uint8_t cpp, const uint8_
 void
 Tags::storeInteger( MP4File& file, const string& code, uint16_t cpp, const uint16_t* c )
 {
-    if( c )
-        file.SetMetadataUint16( code.c_str(), cpp );
-    else
-        file.DeleteMetadataAtom( code.c_str() );
+    if( c ) {
+        uint8_t buf[2];
+
+        buf[0] = uint8_t((cpp & 0xff00) >> 8);
+        buf[1] = uint8_t((cpp & 0x00ff)     );
+
+        store( file, code, MP4_ITMF_BT_INTEGER, buf, sizeof(buf) );
+    }
+    else {
+        remove( file, code );
+    }
 }
 
 
@@ -567,10 +693,43 @@ Tags::storeInteger( MP4File& file, const string& code, uint16_t cpp, const uint1
 void
 Tags::storeInteger( MP4File& file, const string& code, uint32_t cpp, const uint32_t* c )
 {
-    if( c )
-        file.SetMetadataUint32( code.c_str(), cpp );
-    else
-        file.DeleteMetadataAtom( code.c_str() );
+    if( c ) {
+        uint8_t buf[4];
+
+        buf[0] = uint8_t((cpp & 0xff000000) >> 24 );
+        buf[1] = uint8_t((cpp & 0x00ff0000) >> 16 );
+        buf[2] = uint8_t((cpp & 0x0000ff00) >>  8 );
+        buf[3] = uint8_t((cpp & 0x000000ff)       );
+
+        store( file, code, MP4_ITMF_BT_INTEGER, buf, sizeof(buf) );
+    }
+    else {
+        remove( file, code );
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+Tags::storeInteger( MP4File& file, const string& code, uint64_t cpp, const uint64_t* c )
+{
+    if( c ) {
+        uint8_t buf[8];
+
+        buf[0] = uint8_t((cpp & 0xff00000000000000LL) >> 56 );
+        buf[1] = uint8_t((cpp & 0x00ff000000000000LL) >> 48 );
+        buf[2] = uint8_t((cpp & 0x0000ff0000000000LL) >> 40 );
+        buf[3] = uint8_t((cpp & 0x000000ff00000000LL) >> 32 );
+        buf[4] = uint8_t((cpp & 0x00000000ff000000LL) >> 24 );
+        buf[5] = uint8_t((cpp & 0x0000000000ff0000LL) >> 16 );
+        buf[6] = uint8_t((cpp & 0x000000000000ff00LL) >>  8 );
+        buf[7] = uint8_t((cpp & 0x00000000000000ffLL)       );
+
+        store( file, code, MP4_ITMF_BT_INTEGER, buf, sizeof(buf) );
+    }
+    else {
+        remove( file, code );
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -579,9 +738,9 @@ void
 Tags::storeString( MP4File& file, const string& code, const string& cpp, const char* c )
 {
     if( c )
-        file.SetMetadataString( code.c_str(), cpp.c_str() );
+        store( file, code, MP4_ITMF_BT_UTF8, cpp.c_str(), cpp.size() );
     else
-        file.DeleteMetadataAtom( code.c_str() );
+        remove( file, code );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -644,6 +803,8 @@ const string Tags::CODE_ALBUM             = "\xa9" "alb";
 const string Tags::CODE_GROUPING          = "\xa9" "grp";
 const string Tags::CODE_COMPOSER          = "\xa9" "wrt";
 const string Tags::CODE_COMMENTS          = "\xa9" "cmt";
+const string Tags::CODE_GENRE             = "\xa9" "gen";
+const string Tags::CODE_GENRETYPE         = "gnre";
 const string Tags::CODE_RELEASEDATE       = "\xa9" "day";
 const string Tags::CODE_TRACK             = "trkn";
 const string Tags::CODE_DISK              = "disk";

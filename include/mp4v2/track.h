@@ -394,6 +394,11 @@ bool MP4SetTrackDurationPerChunk(
     MP4TrackId    trackId,
     MP4Duration   duration );
 
+MP4V2_EXPORT
+void MP4AddIPodUUID(
+    MP4FileHandle hFile,
+    MP4TrackId    trackId );
+
 /** @} ***********************************************************************/
 
 #endif /* MP4V2_TRACK_H */

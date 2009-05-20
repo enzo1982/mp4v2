@@ -39,6 +39,8 @@ public:
     static const string CODE_GROUPING;
     static const string CODE_COMPOSER;
     static const string CODE_COMMENTS;
+    static const string CODE_GENRE;
+    static const string CODE_GENRETYPE;
     static const string CODE_RELEASEDATE;
     static const string CODE_TRACK;
     static const string CODE_DISK;
@@ -85,60 +87,61 @@ public:
     static const string CODE_GEID;
 
 public:
-    string    name;
-    string    artist;
-    string    albumArtist;
-    string    album;
-    string    grouping;
-    string    composer;
-    string    comments;
-    string    genre;
-    string    releaseDate;
+    string      name;
+    string      artist;
+    string      albumArtist;
+    string      album;
+    string      grouping;
+    string      composer;
+    string      comments;
+    string      genre;
+    uint16_t    genreType;
+    string      releaseDate;
     MP4TagTrack track;
     MP4TagDisk  disk;
-    uint16_t  tempo;
-    uint8_t   compilation;
+    uint16_t    tempo;
+    uint8_t     compilation;
 
-    string    tvShow;
-    string    tvEpisodeID;
-    uint32_t  tvSeason;
-    uint32_t  tvEpisode;
-    string    tvNetwork;
+    string   tvShow;
+    string   tvEpisodeID;
+    uint32_t tvSeason;
+    uint32_t tvEpisode;
+    string   tvNetwork;
 
-    string    description;
-    string    longDescription;
-    string    lyrics;
+    string description;
+    string longDescription;
+    string lyrics;
 
-    string    sortName;
-    string    sortArtist;
-    string    sortAlbumArtist;
-    string    sortAlbum;
-    string    sortComposer;
-    string    sortTVShow;
+    string sortName;
+    string sortArtist;
+    string sortAlbumArtist;
+    string sortAlbum;
+    string sortComposer;
+    string sortTVShow;
 
     CoverArtBox::ItemList artwork;
 
-    string    copyright;
-    string    encodingTool;  
-    string    encodedBy;
-    string    purchaseDate;
+    string copyright;
+    string encodingTool;  
+    string encodedBy;
+    string purchaseDate;
 
-    uint8_t   podcast;
-    string    keywords;
-    string    category;
+    uint8_t podcast;
+    string  keywords;
+    string  category;
 
-    uint8_t   hdVideo;
-    uint8_t   mediaType;
-    uint8_t   contentRating;
-    uint8_t   gapless;
+    uint8_t hdVideo;
+    uint8_t mediaType;
+    uint8_t contentRating;
+    uint8_t gapless;
 
-    string    iTunesAccount;
-    uint8_t   iTunesAccountType;
-    uint32_t  iTunesCountry;
-    uint32_t  cnID;
-    uint32_t  atID;
-    uint64_t  plID;
-    uint32_t  geID;
+    string   iTunesAccount;
+    uint8_t  iTunesAccountType;
+    uint32_t iTunesCountry;
+    uint32_t cnID;
+    uint32_t atID;
+    uint64_t plID;
+    uint32_t geID;
 
 public:
     Tags();
@@ -157,24 +160,37 @@ public:
     void c_setInteger ( const uint8_t*,  uint8_t&,  const uint8_t*& );
     void c_setInteger ( const uint16_t*, uint16_t&, const uint16_t*& );
     void c_setInteger ( const uint32_t*, uint32_t&, const uint32_t*& );
+    void c_setInteger ( const uint64_t*, uint64_t&, const uint64_t*& );
+
+    void c_setTrack ( const MP4TagTrack*, MP4TagTrack&, const MP4TagTrack*& );
+    void c_setDisk  ( const MP4TagDisk*, MP4TagDisk&, const MP4TagDisk*& );
 
 private:
-    void fetchString  ( MP4File&, const string&, string&, const char*& );
-    void fetchInteger ( MP4File&, const string&, uint8_t&,  const uint8_t*& );
-    void fetchInteger ( MP4File&, const string&, uint16_t&, const uint16_t*& );
-    void fetchInteger ( MP4File&, const string&, uint32_t&, const uint32_t*& );
-    void fetchInteger ( MP4File&, const string&, uint64_t&, const uint64_t*& );
-    void fetchGenre   ( MP4File&, string&, const char*& );
-    void fetchTrack   ( MP4File&, MP4TagTrack&, const MP4TagTrack*& );
-    void fetchDisk    ( MP4File&, MP4TagDisk&, const MP4TagDisk*& );
+    typedef map<string,MP4ItmfItem*> CodeItemMap;
 
-    bool fetchData ( MP4File&, const string&, uint8_t*&, uint32_t& );
+private:
+    void fetchString  ( const CodeItemMap&, const string&, string&, const char*& );
+    void fetchInteger ( const CodeItemMap&, const string&, uint8_t&,  const uint8_t*& );
+    void fetchInteger ( const CodeItemMap&, const string&, uint16_t&, const uint16_t*& );
+    void fetchInteger ( const CodeItemMap&, const string&, uint32_t&, const uint32_t*& );
+    void fetchInteger ( const CodeItemMap&, const string&, uint64_t&, const uint64_t*& );
 
-    void storeGenre   ( MP4File&, const string&, const char* );
+    void fetchGenre ( const CodeItemMap&, uint16_t&, const uint16_t*& );
+    void fetchTrack ( const CodeItemMap&, MP4TagTrack&, const MP4TagTrack*& );
+    void fetchDisk  ( const CodeItemMap&, MP4TagDisk&, const MP4TagDisk*& );
+
     void storeString  ( MP4File&, const string&, const string&, const char* );
     void storeInteger ( MP4File&, const string&, uint8_t,  const uint8_t* );
     void storeInteger ( MP4File&, const string&, uint16_t, const uint16_t* );
     void storeInteger ( MP4File&, const string&, uint32_t, const uint32_t* );
+    void storeInteger ( MP4File&, const string&, uint64_t, const uint64_t* );
+
+    void storeGenre ( MP4File&, uint16_t, const uint16_t* );
+    void storeTrack ( MP4File&, const MP4TagTrack&, const MP4TagTrack* );
+    void storeDisk  ( MP4File&, const MP4TagDisk&, const MP4TagDisk* );
+
+    void remove ( MP4File&, const string& );
+    void store  ( MP4File&, const string&, MP4ItmfBasicType, const void*, uint32_t );
 
     void updateArtworkShadow( MP4Tags*& );
 };

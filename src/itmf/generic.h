@@ -28,15 +28,36 @@ namespace mp4v2 { namespace impl { namespace itmf {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MP4ItmfItem* genericItemAlloc( const char* code, uint32_t numData );
-void genericItemFree( MP4ItmfItem* item );
-void genericItemListFree( MP4ItmfItemList* list );
-MP4ItmfItemList* genericGetItems( MP4File& file );
-MP4ItmfItemList* genericGetItemsByCode( MP4File& file, const char* code );
-MP4ItmfItemList* genericGetItemsByMeaning( MP4File& file, const char* meaning, const char* name );
-bool genericAddItem( MP4File& file, const MP4ItmfItem* item );
-bool genericSetItem( MP4File& file, const MP4ItmfItem* item );
-bool genericRemoveItem( MP4File& file, const MP4ItmfItem* item );
+MP4ItmfItem*
+genericItemAlloc( const string& code, uint32_t numData );
+
+void
+genericItemFree( MP4ItmfItem* item );
+
+void
+genericItemListFree( MP4ItmfItemList* list );
+
+///////////////////////////////////////////////////////////////////////////////
+
+MP4ItmfItemList*
+genericGetItems( MP4File& file );
+
+MP4ItmfItemList*
+genericGetItemsByCode( MP4File& file, const string& code );
+
+MP4ItmfItemList*
+genericGetItemsByMeaning( MP4File& file, const string& meaning, const string& name );
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool
+genericAddItem( MP4File& file, const MP4ItmfItem* item );
+
+bool
+genericSetItem( MP4File& file, const MP4ItmfItem* item );
+
+bool
+genericRemoveItem( MP4File& file, const MP4ItmfItem* item );
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -130,6 +130,8 @@ void
 __itemListResize( MP4ItmfItemList& list, uint32_t size )
 {
     __itemListClear( list );
+    if( !size )
+        return;
 
     list.elements = (MP4ItmfItem*)malloc( sizeof( MP4ItmfItem ) * size );
     list.size     = size;
@@ -246,11 +248,11 @@ __itemModelToAtom( const MP4ItmfItem& model, MP4ItemAtom& atom )
 ///////////////////////////////////////////////////////////////////////////////
 
 MP4ItmfItem*
-genericItemAlloc( const char* code, uint32_t numData )
+genericItemAlloc( const string& code, uint32_t numData )
 {
     MP4ItmfItem& item = *(MP4ItmfItem*)malloc( sizeof( MP4ItmfItem ));
     __itemInit( item );
-    item.code = strdup( code );
+    item.code = strdup( code.c_str() );
 
     // always create array size of 1
     __dataListResize( item.dataList, numData );
@@ -307,7 +309,7 @@ genericGetItems( MP4File& file )
 ///////////////////////////////////////////////////////////////////////////////
 
 MP4ItmfItemList*
-genericGetItemsByCode( MP4File& file, const char* code )
+genericGetItemsByCode( MP4File& file, const string& code )
 {
     MP4Atom* ilst = file.FindAtom( "moov.udta.meta.ilst" );
     if( !ilst )
@@ -317,7 +319,7 @@ genericGetItemsByCode( MP4File& file, const char* code )
     const uint32_t childCount = ilst->GetNumberOfChildAtoms();
     vector<uint32_t> indexList;
     for( uint32_t i = 0; i < childCount; i++ ) {
-        if( ATOMID( ilst->GetChildAtom( i )->GetType() ) != ATOMID( code ))
+        if( ATOMID( ilst->GetChildAtom( i )->GetType() ) != ATOMID( code.c_str() ))
             continue;
         indexList.push_back( i );
     }
@@ -341,7 +343,7 @@ genericGetItemsByCode( MP4File& file, const char* code )
 ///////////////////////////////////////////////////////////////////////////////
 
 MP4ItmfItemList*
-genericGetItemsByMeaning( MP4File& file, const char* meaning, const char* name )
+genericGetItemsByMeaning( MP4File& file, const string& meaning, const string& name )
 {
     MP4Atom* ilst = file.FindAtom( "moov.udta.meta.ilst" );
     if( !ilst )
@@ -359,15 +361,15 @@ genericGetItemsByMeaning( MP4File& file, const char* meaning, const char* name )
         MP4MeanAtom* meanAtom = (MP4MeanAtom*)atom.FindAtom( "----.mean" );
         if( !meanAtom )
             continue;
-        if( strcmp( meaning, meanAtom->value.GetValue() ))
+        if( meaning != meanAtom->value.GetValue() )
             continue;
 
-        if( name ) {
+        if( !name.empty() ) {
             // filter-out name mismatch
             MP4MeanAtom* nameAtom = (MP4MeanAtom*)atom.FindAtom( "----.name" );
             if( !nameAtom )
                 continue;
-            if( strcmp( name, nameAtom->value.GetValue() ))
+            if( name != nameAtom->value.GetValue() )
                 continue;
         }
 

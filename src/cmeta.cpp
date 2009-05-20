@@ -936,8 +936,6 @@ MP4TagsSetName( const MP4Tags* m, const char* value )
     cpp.c_setString( value, cpp.name, c.name );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
 void
 MP4TagsSetArtist( const MP4Tags* m, const char* value )
 {
@@ -945,8 +943,6 @@ MP4TagsSetArtist( const MP4Tags* m, const char* value )
     MP4Tags& c = *const_cast<MP4Tags*>(m);
     cpp.c_setString( value, cpp.artist, c.artist );
 }
-
-///////////////////////////////////////////////////////////////////////////////
 
 void
 MP4TagsSetAlbumArtist( const MP4Tags* m, const char* value )
@@ -956,8 +952,6 @@ MP4TagsSetAlbumArtist( const MP4Tags* m, const char* value )
     cpp.c_setString( value, cpp.albumArtist, c.albumArtist );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
 void
 MP4TagsSetAlbum( const MP4Tags* m, const char* value )
 {
@@ -965,8 +959,6 @@ MP4TagsSetAlbum( const MP4Tags* m, const char* value )
     MP4Tags& c = *const_cast<MP4Tags*>(m);
     cpp.c_setString( value, cpp.album, c.album );
 }
-
-///////////////////////////////////////////////////////////////////////////////
 
 void
 MP4TagsSetGrouping( const MP4Tags* m, const char* value )
@@ -976,8 +968,6 @@ MP4TagsSetGrouping( const MP4Tags* m, const char* value )
     cpp.c_setString( value, cpp.grouping, c.grouping );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
 void
 MP4TagsSetComposer( const MP4Tags* m, const char* value )
 {
@@ -985,8 +975,6 @@ MP4TagsSetComposer( const MP4Tags* m, const char* value )
     MP4Tags& c = *const_cast<MP4Tags*>(m);
     cpp.c_setString( value, cpp.composer, c.composer );
 }
-
-///////////////////////////////////////////////////////////////////////////////
 
 void
 MP4TagsSetComments( const MP4Tags* m, const char* value )
@@ -996,8 +984,6 @@ MP4TagsSetComments( const MP4Tags* m, const char* value )
     cpp.c_setString( value, cpp.comments, c.comments );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
 void
 MP4TagsSetGenre( const MP4Tags* m, const char* value )
 {
@@ -1006,7 +992,13 @@ MP4TagsSetGenre( const MP4Tags* m, const char* value )
     cpp.c_setString( value, cpp.genre, c.genre );
 }
 
-///////////////////////////////////////////////////////////////////////////////
+void
+MP4TagsSetGenreType( const MP4Tags* m, const uint16_t* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setInteger( value, cpp.genreType, c.genreType );
+}
 
 void
 MP4TagsSetReleaseDate( const MP4Tags* m, const char* value )
@@ -1016,7 +1008,21 @@ MP4TagsSetReleaseDate( const MP4Tags* m, const char* value )
     cpp.c_setString( value, cpp.releaseDate, c.releaseDate );
 }
 
-///////////////////////////////////////////////////////////////////////////////
+void
+MP4TagsSetTrack( const MP4Tags* m, const MP4TagTrack* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setTrack( value, cpp.track, c.track );
+}
+
+void
+MP4TagsSetDisk( const MP4Tags* m, const MP4TagDisk* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setDisk( value, cpp.disk, c.disk );
+}
 
 void
 MP4TagsSetTempo( const MP4Tags* m, const uint16_t* value )
@@ -1026,8 +1032,6 @@ MP4TagsSetTempo( const MP4Tags* m, const uint16_t* value )
     cpp.c_setInteger( value, cpp.tempo, c.tempo );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
 void
 MP4TagsSetCompilation( const MP4Tags* m, const uint8_t* value )
 {
@@ -1035,8 +1039,6 @@ MP4TagsSetCompilation( const MP4Tags* m, const uint8_t* value )
     MP4Tags& c = *const_cast<MP4Tags*>(m);
     cpp.c_setInteger( value, cpp.compilation, c.compilation );
 }
-
-///////////////////////////////////////////////////////////////////////////////
 
 void
 MP4TagsSetTVShow( const MP4Tags* m, const char* value )
@@ -1046,8 +1048,6 @@ MP4TagsSetTVShow( const MP4Tags* m, const char* value )
     cpp.c_setString( value, cpp.tvShow, c.tvShow );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
 void
 MP4TagsSetTVNetwork( const MP4Tags* m, const char* value )
 {
@@ -1055,8 +1055,6 @@ MP4TagsSetTVNetwork( const MP4Tags* m, const char* value )
     MP4Tags& c = *const_cast<MP4Tags*>(m);
     cpp.c_setString( value, cpp.tvNetwork, c.tvNetwork );
 }
-
-///////////////////////////////////////////////////////////////////////////////
 
 void
 MP4TagsSetTVEpisodeID( const MP4Tags* m, const char* value )
@@ -1066,8 +1064,6 @@ MP4TagsSetTVEpisodeID( const MP4Tags* m, const char* value )
     cpp.c_setString( value, cpp.tvEpisodeID, c.tvEpisodeID );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
 void
 MP4TagsSetTVSeason( const MP4Tags* m, const uint32_t* value )
 {
@@ -1075,8 +1071,6 @@ MP4TagsSetTVSeason( const MP4Tags* m, const uint32_t* value )
     MP4Tags& c = *const_cast<MP4Tags*>(m);
     cpp.c_setInteger( value, cpp.tvSeason, c.tvSeason );
 }
-
-///////////////////////////////////////////////////////////////////////////////
 
 void
 MP4TagsSetTVEpisode( const MP4Tags* m, const uint32_t* value )
@@ -1086,8 +1080,6 @@ MP4TagsSetTVEpisode( const MP4Tags* m, const uint32_t* value )
     cpp.c_setInteger( value, cpp.tvEpisode, c.tvEpisode );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
 void
 MP4TagsSetSortName( const MP4Tags* m, const char* value )
 {
@@ -1095,8 +1087,6 @@ MP4TagsSetSortName( const MP4Tags* m, const char* value )
     MP4Tags& c = *const_cast<MP4Tags*>(m);
     cpp.c_setString( value, cpp.sortName, c.sortName );
 }
-
-///////////////////////////////////////////////////////////////////////////////
 
 void
 MP4TagsSetSortArtist( const MP4Tags* m, const char* value )
@@ -1106,8 +1096,6 @@ MP4TagsSetSortArtist( const MP4Tags* m, const char* value )
     cpp.c_setString( value, cpp.sortArtist, c.sortArtist );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
 void
 MP4TagsSetSortAlbumArtist( const MP4Tags* m, const char* value )
 {
@@ -1115,8 +1103,6 @@ MP4TagsSetSortAlbumArtist( const MP4Tags* m, const char* value )
     MP4Tags& c = *const_cast<MP4Tags*>(m);
     cpp.c_setString( value, cpp.sortAlbumArtist, c.sortAlbumArtist );
 }
-
-///////////////////////////////////////////////////////////////////////////////
 
 void
 MP4TagsSetSortAlbum( const MP4Tags* m, const char* value )
@@ -1126,8 +1112,6 @@ MP4TagsSetSortAlbum( const MP4Tags* m, const char* value )
     cpp.c_setString( value, cpp.sortAlbum, c.sortAlbum );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
 void
 MP4TagsSetSortComposer( const MP4Tags* m, const char* value )
 {
@@ -1135,8 +1119,6 @@ MP4TagsSetSortComposer( const MP4Tags* m, const char* value )
     MP4Tags& c = *const_cast<MP4Tags*>(m);
     cpp.c_setString( value, cpp.sortComposer, c.sortComposer );
 }
-
-///////////////////////////////////////////////////////////////////////////////
 
 void
 MP4TagsSetSortTVShow( const MP4Tags* m, const char* value )
@@ -1146,8 +1128,6 @@ MP4TagsSetSortTVShow( const MP4Tags* m, const char* value )
     cpp.c_setString( value, cpp.sortTVShow, c.sortTVShow );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
 void
 MP4TagsSetDescription( const MP4Tags* m, const char* value )
 {
@@ -1155,8 +1135,6 @@ MP4TagsSetDescription( const MP4Tags* m, const char* value )
     MP4Tags& c = *const_cast<MP4Tags*>(m);
     cpp.c_setString( value, cpp.description, c.description );
 }
-
-///////////////////////////////////////////////////////////////////////////////
 
 void
 MP4TagsSetLongDescription( const MP4Tags* m, const char* value )
@@ -1166,8 +1144,6 @@ MP4TagsSetLongDescription( const MP4Tags* m, const char* value )
     cpp.c_setString( value, cpp.longDescription, c.longDescription );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
 void
 MP4TagsSetLyrics( const MP4Tags* m, const char* value )
 {
@@ -1175,8 +1151,6 @@ MP4TagsSetLyrics( const MP4Tags* m, const char* value )
     MP4Tags& c = *const_cast<MP4Tags*>(m);
     cpp.c_setString( value, cpp.lyrics, c.lyrics );
 }
-
-///////////////////////////////////////////////////////////////////////////////
 
 void
 MP4TagsSetCopyright( const MP4Tags* m, const char* value )
@@ -1186,8 +1160,6 @@ MP4TagsSetCopyright( const MP4Tags* m, const char* value )
     cpp.c_setString( value, cpp.copyright, c.copyright );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
 void
 MP4TagsSetEncodingTool( const MP4Tags* m, const char* value )
 {
@@ -1195,8 +1167,6 @@ MP4TagsSetEncodingTool( const MP4Tags* m, const char* value )
     MP4Tags& c = *const_cast<MP4Tags*>(m);
     cpp.c_setString( value, cpp.encodingTool, c.encodingTool );
 }
-
-///////////////////////////////////////////////////////////////////////////////
 
 void
 MP4TagsSetEncodedBy( const MP4Tags* m, const char* value )
@@ -1206,8 +1176,6 @@ MP4TagsSetEncodedBy( const MP4Tags* m, const char* value )
     cpp.c_setString( value, cpp.encodedBy, c.encodedBy );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
 void
 MP4TagsSetPurchaseDate( const MP4Tags* m, const char* value )
 {
@@ -1216,7 +1184,29 @@ MP4TagsSetPurchaseDate( const MP4Tags* m, const char* value )
     cpp.c_setString( value, cpp.purchaseDate, c.purchaseDate );
 }
 
-///////////////////////////////////////////////////////////////////////////////
+void
+MP4TagsSetPodcast( const MP4Tags* m, const uint8_t* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setInteger( value, cpp.podcast, c.podcast );
+}
+
+void
+MP4TagsSetKeywords( const MP4Tags* m, const char* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setString( value, cpp.keywords, c.keywords );
+}
+
+void
+MP4TagsSetCategory( const MP4Tags* m, const char* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setString( value, cpp.category, c.category );
+}
 
 void
 MP4TagsSetHDVideo( const MP4Tags* m, const uint8_t* value )
@@ -1226,8 +1216,6 @@ MP4TagsSetHDVideo( const MP4Tags* m, const uint8_t* value )
     cpp.c_setInteger( value, cpp.hdVideo, c.hdVideo );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
 void
 MP4TagsSetMediaType( const MP4Tags* m, const uint8_t* value )
 {
@@ -1235,8 +1223,6 @@ MP4TagsSetMediaType( const MP4Tags* m, const uint8_t* value )
     MP4Tags& c = *const_cast<MP4Tags*>(m);
     cpp.c_setInteger( value, cpp.mediaType, c.mediaType );
 }
-
-///////////////////////////////////////////////////////////////////////////////
 
 void
 MP4TagsSetContentRating( const MP4Tags* m, const uint8_t* value )
@@ -1246,8 +1232,6 @@ MP4TagsSetContentRating( const MP4Tags* m, const uint8_t* value )
     cpp.c_setInteger( value, cpp.contentRating, c.contentRating );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
 void
 MP4TagsSetGapless( const MP4Tags* m, const uint8_t* value )
 {
@@ -1256,7 +1240,29 @@ MP4TagsSetGapless( const MP4Tags* m, const uint8_t* value )
     cpp.c_setInteger( value, cpp.gapless, c.gapless );
 }
 
-///////////////////////////////////////////////////////////////////////////////
+void
+MP4TagsSetITunesAccount( const MP4Tags* m, const char* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setString( value, cpp.iTunesAccount, c.iTunesAccount );
+}
+
+void
+MP4TagsSetITunesAccountType( const MP4Tags* m, const uint8_t* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setInteger( value, cpp.iTunesAccountType, c.iTunesAccountType );
+}
+
+void
+MP4TagsSetITunesCountry( const MP4Tags* m, const uint32_t* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setInteger( value, cpp.iTunesCountry, c.iTunesCountry );
+}
 
 void
 MP4TagsSetCNID( const MP4Tags* m, const uint32_t* value )
@@ -1264,6 +1270,30 @@ MP4TagsSetCNID( const MP4Tags* m, const uint32_t* value )
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
     MP4Tags& c = *const_cast<MP4Tags*>(m);
     cpp.c_setInteger( value, cpp.cnID, c.cnID );
+}
+
+void
+MP4TagsSetATID( const MP4Tags* m, const uint32_t* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setInteger( value, cpp.atID, c.atID );
+}
+
+void
+MP4TagsSetPLID( const MP4Tags* m, const uint64_t* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setInteger( value, cpp.plID, c.plID );
+}
+
+void
+MP4TagsSetGEID( const MP4Tags* m, const uint32_t* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setInteger( value, cpp.geID, c.geID );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1337,7 +1367,7 @@ MP4ItmfGetItemsByMeaning( MP4FileHandle hFile, const char* meaning, const char* 
         return NULL;
 
     try {
-        return itmf::genericGetItemsByMeaning( *(MP4File*)hFile, meaning, name );
+        return itmf::genericGetItemsByMeaning( *(MP4File*)hFile, meaning, name ? name : "" );
     }
     catch( MP4Error* e ) {
         PRINT_ERROR( e );

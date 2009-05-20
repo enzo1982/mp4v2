@@ -8,10 +8,16 @@
  *
  *****************************************************************************/
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the iTMF generic API.
+  */
 MP4V2_EXPORT
 bool MP4MetadataDelete(
     MP4FileHandle hFile );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the iTMF generic API.
+  */
 MP4V2_EXPORT
 bool MP4GetMetadataByIndex(
     MP4FileHandle hFile,
@@ -202,6 +208,9 @@ MP4V2_EXPORT
 bool MP4DeleteMetadataAlbum(
     MP4FileHandle hFile );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
 MP4V2_EXPORT
 bool MP4SetMetadataTrack(
     MP4FileHandle hFile,
@@ -218,10 +227,16 @@ bool MP4GetMetadataTrack(
     uint16_t*     track,
     uint16_t*     totalTracks );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
 MP4V2_EXPORT
 bool MP4DeleteMetadataTrack(
     MP4FileHandle hFile );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
 MP4V2_EXPORT
 bool MP4SetMetadataDisk(
     MP4FileHandle hFile,
@@ -238,6 +253,9 @@ bool MP4GetMetadataDisk(
     uint16_t*     disk,
     uint16_t*     totalDisks );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the tags convenience API.
+  */
 MP4V2_EXPORT
 bool MP4DeleteMetadataDisk(
     MP4FileHandle hFile );
@@ -435,6 +453,9 @@ MP4V2_EXPORT
 bool MP4DeleteMetadataAlbumArtist(
     MP4FileHandle hFile );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the iTMF generic API.
+  */
 MP4V2_EXPORT
 bool MP4SetMetadataFreeForm(
     MP4FileHandle  hFile,
@@ -443,6 +464,9 @@ bool MP4SetMetadataFreeForm(
     uint32_t       valueSize,
     const char*    owner DEFAULT(NULL) );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the iTMF generic API.
+  */
 MP4V2_EXPORT
 bool MP4GetMetadataFreeForm(
     MP4FileHandle hFile,
@@ -451,16 +475,14 @@ bool MP4GetMetadataFreeForm(
     uint32_t*     valueSize,
     const char*   owner DEFAULT(NULL) );
 
+/** 
+  * @deprecated Deprecated, scheduled for removal. Please use the iTMF generic API.
+  */
 MP4V2_EXPORT
 bool MP4DeleteMetadataFreeForm(
     MP4FileHandle hFile,
     const char*   name,
     const char*   owner DEFAULT(NULL) );
-
-MP4V2_EXPORT
-void MP4AddIPodUUID(
-    MP4FileHandle hFile,
-    MP4TrackId    trackId );
 
 /** @} ***********************************************************************/
 
