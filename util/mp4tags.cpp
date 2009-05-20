@@ -22,8 +22,8 @@ using namespace mp4v2::util;
 
 /* One-letter options -- if you want to rearrange these, change them
    here, immediately below in OPT_STRING, and in the help text. */
-#define OPT_HELP         'help'
-#define OPT_VERSION      'vers'
+#define OPT_HELP         0x01ff
+#define OPT_VERSION      0x02ff
 #define OPT_ALBUM        'A'
 #define OPT_ARTIST       'a'
 #define OPT_TEMPO        'b'

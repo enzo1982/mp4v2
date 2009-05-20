@@ -100,7 +100,7 @@ Enum<T,UNDEFINED>::toType( const string& value ) const
 
     // partial match
     int matches = 0;
-    T matched;
+    T matched = static_cast<T>( 0 );
 
     const typename MapToType::const_iterator ie = _mapToType.end();
     for( typename MapToType::const_iterator it = _mapToType.begin(); it != ie; it++ ) {
