@@ -62,56 +62,56 @@ public:
 
     /// Fetch list of covr-box items from file.
     ///
-    /// @param file on which to operate.
+    /// @param hFile on which to operate.
     /// @param out vector of ArtItem objects.
     ///
     /// @return <b>true</b> on failure, <b>false</b> on success.
     ///
-    static bool list( MP4FileHandle file, ItemList& out );
+    static bool list( MP4FileHandle hFile, ItemList& out );
 
     /// Add covr-box item to file.
     /// Any necessary metadata atoms are first created.
     /// Additionally, if an empty data-atom exists it will be used,
     /// otherwise a new data-atom is added to <b>covr-atom</b>.
     ///
-    /// @param file on which to operate.
+    /// @param hFile on which to operate.
     /// @param item covr-box object to place in file.
     ///
     /// @return <b>true</b> on failure, <b>false</b> on success.
     ///
-    static bool add( MP4FileHandle file, const Item& item );
+    static bool add( MP4FileHandle hFile, const Item& item );
 
     /// Replace covr-box item in file.
     ///
-    /// @param file on which to operate.
+    /// @param hFile on which to operate.
     /// @param item covr-box object to place in file.
-    /// @param index 0-based index of covr-box to replace.
+    /// @param index 0-based index of image to replace.
     ///
     /// @return <b>true</b> on failure, <b>false</b> on success.
     ///
-    static bool set( MP4FileHandle file, const Item& item, uint32_t index );
+    static bool set( MP4FileHandle hFile, const Item& item, uint32_t index );
 
     /// Fetch covr-box item from file.
     ///
-    /// @param file on which to operate.
+    /// @param hFile on which to operate.
     /// @param item covr-box object populated with data.
     ///     The resulting object owns the malloc'd buffer and <b>item.autofree</b>
     ///     is set to true for convenient memory management.
-    /// @param index 0-based index of covr-box to fetch.
+    /// @param index 0-based index of image to fetch.
     ///
     /// @return <b>true</b> on failure, <b>false</b> on success.
     ///
-    static bool get( MP4FileHandle file, Item& item, uint32_t index );
+    static bool get( MP4FileHandle hFile, Item& item, uint32_t index );
 
     /// Remove covr-box item from file.
     ///
-    /// @param file on which to operate.
-    /// @param index 0-based index of covr-box to remove.
+    /// @param hFile on which to operate.
+    /// @param index 0-based index of image to remove.
     ///     Default value indicates wildcard behavior to remove all items.
     ///
     /// @return <b>true</b> on failure, <b>false</b> on success.
     ///
-    static bool remove( MP4FileHandle file, uint32_t index = numeric_limits<uint32_t>::max() );
+    static bool remove( MP4FileHandle hFile, uint32_t index = numeric_limits<uint32_t>::max() );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
