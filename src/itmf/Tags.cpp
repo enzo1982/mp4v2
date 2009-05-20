@@ -371,6 +371,10 @@ Tags::c_store( MP4Tags*& tags, MP4FileHandle hFile )
     storeString(  file, CODE_ENCODEDBY,         encodedBy,         c.encodedBy );
     storeString(  file, CODE_PURCHASEDATE,      purchaseDate,      c.purchaseDate );
 
+    storeInteger( file, CODE_PODCAST,           podcast,           c.podcast );
+    storeString(  file, CODE_KEYWORDS,          keywords,          c.keywords );
+    storeString(  file, CODE_CATEGORY,          category,          c.category );
+
     storeInteger( file, CODE_HDVIDEO,           hdVideo,           c.hdVideo );
     storeInteger( file, CODE_MEDIATYPE,         mediaType,         c.mediaType );
     storeInteger( file, CODE_CONTENTRATING,     contentRating,     c.contentRating );
