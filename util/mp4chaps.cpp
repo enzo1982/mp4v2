@@ -1023,7 +1023,8 @@ ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& c
             char* tlwr = pos;
             while( equalsPos != tlwr )
             {
-                *tlwr++ = tolower( *tlwr );
+                *tlwr = tolower( *tlwr );
+                tlwr++;
             }
 
             if( NULL != strstr( pos, "name" ) )
