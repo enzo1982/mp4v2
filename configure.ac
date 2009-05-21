@@ -190,6 +190,21 @@ AC_SUBST([PROJECT_build])
 ###############################################################################
 
 ###############################################################################
+# additional ldflags
+###############################################################################
+
+case ${host} in
+    *-*-darwin*)
+        X_libmp4v2_la_LDFLAGS='-Wl,-current_version,$(PROJECT_version_major).$(PROJECT_version_minor).$(PROJECT_version_point) -Wl,-compatibility_version,$(PROJECT_version_major).0.0'
+        ;;
+    *)
+        X_libmp4v2_la_LDFLAGS=
+        ;;
+esac
+
+AC_SUBST([X_libmp4v2_la_LDFLAGS])
+
+###############################################################################
 # check for --disable-fvisibility
 ###############################################################################
 

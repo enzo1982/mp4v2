@@ -3,7 +3,7 @@ Building on @value{OS.linux} is well supported as it is used by maintainers of t
 
 @itemize @bullet
 @item Intel 32-bit or 64-bit hardware
-@item Fedora 9, gcc 4.3.0
+@item Fedora 10, gcc 4.3.2
 @item gcc 3.4.0 or higher is reported to work
 @end itemize
 

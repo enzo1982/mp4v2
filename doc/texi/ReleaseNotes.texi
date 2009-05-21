@@ -16,8 +16,8 @@
 [TODO]
 
 @chapter Breaking Changes
-@section Removed deprecated metadata API from 1.9.0 .
-The following functions have been removed and replaced with iTMF Tags and/or iTMF Generic API. Detailed documentation can be found under API modules section.
+@section Removed deprecated metadata/free-form API.
+The following functions have been removed and replaced with iTMF Generic and Tags API. Detailed documentation can be found under API modules section.
 
 DeleteMetadataAtom(),
 DeleteMetadataFreeForm(),
@@ -41,13 +41,6 @@ SetMetadataString(),
 SetMetadataTrack(),
 SetMetadataUint16(),
 SetMetadataUint8().
-
-@section Command-line utilities
-The command-line utilities have been totally rewritten and enhanced. Help usage has been made more consistent. Invoke the appropriate utility in the following fashion for more details:
-
-@example
-@i{command} --help
-@end example
 
 @appendix Changelog
 @appendixsection Version 2.0

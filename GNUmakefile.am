@@ -6,6 +6,8 @@ check_PROGRAMS =
 
 ###############################################################################
 
+libmp4v2_la_LDFLAGS = -version-number $(PROJECT_version_major):$(PROJECT_version_minor):$(PROJECT_version_point) $(X_libmp4v2_la_LDFLAGS)
+
 libmp4v2_la_SOURCES = \
     src/3gp.cpp                          \
     src/atom_ac3.cpp                     \
