@@ -22,18 +22,8 @@
 
 /** Bit: enable 64-bit data-atoms. */
 #define MP4_CREATE_64BIT_DATA 0x01
-/** Bit: enable 64-bit time-atoms.
-  * @note Incompatible with QuickTime.
-  */
+/** Bit: enable 64-bit time-atoms. @note Incompatible with QuickTime. */
 #define MP4_CREATE_64BIT_TIME 0x02
-/** Bitmask: convenience for both data and time atoms.
-  * @deprecated scheduled for removal
-  */
-#define MP4_CREATE_64BIT (MP4_CREATE_64BIT_DATA | MP4_CREATE_64BIT_TIME)
-/** Not used.
-  * @deprecated scheduled for removal
-  */
-#define MP4_CREATE_EXTENSIBLE_FORMAT 0x04
 
 /** Enumeration of file modes for custom file provider. */
 typedef enum MP4FileMode_e
