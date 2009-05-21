@@ -324,10 +324,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\mp4v2\meta.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\include\mp4v2\mp4v2.h"
 				>
 			</File>
@@ -677,10 +673,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\mp4info.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\mp4meta.cpp"
 				>
 			</File>
 			<File

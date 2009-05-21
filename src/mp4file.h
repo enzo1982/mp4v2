@@ -738,58 +738,6 @@ public:
         MP4Timestamp* pStartTime = NULL,
         MP4Duration* pDuration = NULL);
 
-    /* iTunes metadata handling */
-protected:
-    bool CreateMetadataAtom(const char* name, itmf::BasicType typeCode);
-public:
-    // these are public to remove a lot of unnecessary routines
-    bool DeleteMetadataAtom(const char* name, bool try_udta = false);
-    bool GetMetadataString(const char *atom, char **value, bool try_udta = false);
-    bool SetMetadataString(const char *atom, const char *value);
-    bool MetadataDelete(void);
-
-    bool SetMetadataUint8(const char *atom, uint8_t value);
-    bool GetMetadataUint8(const char *atom, uint8_t* retvalue);
-
-    bool SetMetadataUint16(const char *atom, uint16_t value);
-    bool GetMetadataUint16(const char *atom, uint16_t* retvalue);
-
-    bool SetMetadataUint32(const char *atom, uint32_t value);
-	bool GetMetadataUint32(const char *atom, uint32_t* retvalue);
-	
-    /* set metadata */
-    bool SetMetadataTrack(uint16_t track, uint16_t totalTracks);
-    bool SetMetadataDisk(uint16_t disk, uint16_t totalDisks);
-    bool SetMetadataGenre(const char *value);
-    bool SetMetadataCoverArt(uint8_t *coverArt, uint32_t size);
-    bool SetMetadataFreeForm(const char *name,
-                             const uint8_t* pValue,
-                             uint32_t valueSize,
-                             const char *owner = NULL);
-
-    /* get metadata */
-    bool GetMetadataByIndex(uint32_t index,
-                            char** ppName, // free memory when done
-                            uint8_t** ppValue,  // free memory when done
-                            uint32_t* pValueSize);
-    bool GetMetadataTrack(uint16_t* track, uint16_t* totalTracks);
-    bool GetMetadataDisk(uint16_t* disk, uint16_t* totalDisks);
-    bool GetMetadataGenre(char **value);
-    
-    bool GetMetadataCoverArt(uint8_t **coverArt, uint32_t* size,
-                             uint32_t index = 0);
-    uint32_t GetMetadataCoverArtCount(void);
-    bool GetMetadataFreeForm(const char *name,
-                             uint8_t** pValue,
-                             uint32_t* valueSize,
-                             const char *owner = NULL);
-
-    /* delete metadata */
-    bool DeleteMetadataGenre();
-    bool DeleteMetadataFreeForm(const char *name, const char *owner = NULL);
-
-    /* end of MP4 API */
-
     /* "protected" interface to be used only by friends in library */
 
     uint64_t GetPosition( File* file = NULL );
