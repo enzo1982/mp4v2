@@ -13,19 +13,10 @@
 @contents
 
 @chapter What's New?
-Welcome! This is the inaugural release of @value{PROJECT.name}.
-
-This project's goal is to continue development of a C-library named @file{libmp4v2} which was once a part of the (now defunct) MPEG4IP project. That library, and some related command-line utilities were branched from MPEG4IP version 1.6.1 to seed this project, @value{PROJECT.name}.
+[TODO]
 
 @chapter Breaking Changes
-@section Top-level header file
-This release is @b{very} compatible with MPEG4IP API, however there are some differences. Dependents of this library @b{must} must include the top-level public header file as follows. @b{This is the only supported mechanism to include the library}. We do not support attempts to manually include any sub-header files; such files are private implementation details and their naming must not be relied upon.
-
-@example
-#include <mp4v2/mp4v2.h>
-@end example
-
-@section Metadata API
+@section Removed deprecated metadata API from 1.9.0 .
 The following functions have been removed and replaced with iTMF Tags and/or iTMF Generic API. Detailed documentation can be found under API modules section.
 
 DeleteMetadataAtom(),
