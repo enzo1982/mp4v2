@@ -593,7 +593,7 @@ Tags::store( MP4File& file, const string& code, MP4ItmfBasicType basicType, cons
     MP4ItmfItem& item = *genericItemAlloc( code, 1 ); // alloc
     MP4ItmfData& data = item.dataList.elements[0];
 
-    data.typeCode = MP4_ITMF_BT_UTF8;
+    data.typeCode = basicType;
     data.valueSize = size;
     data.value = (uint8_t*)malloc( data.valueSize );
     memcpy( data.value, buffer, data.valueSize );
