@@ -11,7 +11,7 @@ m4_define([PRJ_repo_root],m4_bregexp(SVNINFO,[^Repository Root: *\(.+\)],[\1]))
 m4_define([PRJ_repo_uuid],m4_bregexp(SVNINFO,[^Repository UUID: *\(.+\)],[\1]))
 m4_define([PRJ_repo_rev],m4_bregexp(SVNINFO,[^Last Changed Rev: *\(.+\)],[\1]))
 m4_define([PRJ_repo_date],m4_bregexp(SVNINFO,[^Last Changed Date: *\(.+\)],[\1]))
-m4_define([PRJ_repo_type],ifelse(m4_bregexp(PRJ_repo_url,[/releases/]),[-1],[developer],[release]))
+m4_define([PRJ_repo_type],ifelse(m4_bregexp(PRJ_repo_url,[/releases/]),[-1],[developer],[stable]))
 
 m4_define([PRJ_version_hex],m4_format([0x%04x%02x%02x],PRJ_version_major,PRJ_version_minor,PRJ_version_point))
 
