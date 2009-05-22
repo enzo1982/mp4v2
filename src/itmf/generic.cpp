@@ -398,8 +398,11 @@ bool
 genericAddItem( MP4File& file, const MP4ItmfItem* item )
 {
     MP4Atom* ilst = file.FindAtom( "moov.udta.meta.ilst" );
-    if( !ilst )
-        return false;
+    if( !ilst ) {
+        file.AddDescendantAtoms( "moov", "udta.meta.ilst" );
+        ilst = file.FindAtom( "moov.udta.meta.ilst" );
+        ASSERT( ilst );
+    }
 
     MP4ItemAtom& itemAtom = *(MP4ItemAtom*)MP4Atom::CreateAtom( ilst, item->code );
     ilst->AddChildAtom( &itemAtom );
