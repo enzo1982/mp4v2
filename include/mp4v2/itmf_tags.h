@@ -21,7 +21,7 @@ typedef enum MP4TagArtworkType_e
 /** Data object representing a single piece of artwork. */
 typedef struct MP4TagArtwork_s
 {
-    const void*       data; /**< raw picture data */
+    void*             data; /**< raw picture data */
     uint32_t          size; /**< data size in bytes */
     MP4TagArtworkType type; /**< data type */
 } MP4TagArtwork;
