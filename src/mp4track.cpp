@@ -234,6 +234,16 @@ MP4Track::MP4Track(MP4File* pFile, MP4Atom* pTrakAtom)
         throw new MP4Error("invalid track", "MP4Track::MP4Track");
     }
     CalculateBytesPerSample();
+
+    // update sdtp log from sdtp atom
+    MP4SdtpAtom* sdtp = (MP4SdtpAtom*)m_pTrakAtom->FindAtom( "trak.mdia.minf.stbl.sdtp" );
+    if( sdtp ) {
+        uint8_t* buffer;
+        uint32_t bufsize;
+        sdtp->data.GetValue( &buffer, &bufsize );
+        m_sdtpLog.assign( (char*)buffer, bufsize );
+        free( buffer );
+    }
 }
 
 MP4Track::~MP4Track()
@@ -556,8 +566,10 @@ void MP4Track::FinishSdtp()
     if( m_sdtpLog.empty() )
         return;
 
-    MP4SdtpAtom& sdtp = *(MP4SdtpAtom*)AddAtom( "trak.mdia.minf.stbl", "sdtp" );
-    sdtp.data.SetValue( (const uint8_t*)m_sdtpLog.data(), m_sdtpLog.size() );
+    MP4SdtpAtom* sdtp = (MP4SdtpAtom*)m_pTrakAtom->FindAtom( "trak.mdia.minf.stbl.sdtp" );
+    if( !sdtp )
+        sdtp = (MP4SdtpAtom*)AddAtom( "trak.mdia.minf.stbl", "sdtp" );
+    sdtp->data.SetValue( (const uint8_t*)m_sdtpLog.data(), m_sdtpLog.size() );
 
     // add avc1 compatibility indicator if not present
     MP4FtypAtom* ftyp = (MP4FtypAtom*)m_pFile->FindAtom( "ftyp" );
