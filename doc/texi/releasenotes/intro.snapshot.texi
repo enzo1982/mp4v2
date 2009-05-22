@@ -1,4 +1,0 @@
-@quotation Note
-This is a @b{snapshot} release which includes all the normal pieces of a stable release but is considered @b{experimental}. The purpose of a snapshot is to make available to the general public experimental features which require a larger testing audience. Said features may or may not make it into the stable release.
-@end quotation
-

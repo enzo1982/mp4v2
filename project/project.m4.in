@@ -13,6 +13,7 @@ define(<<__PROJECT_version_major>>,   <<@PROJECT_version_major@>>)dnl
 define(<<__PROJECT_version_minor>>,   <<@PROJECT_version_minor@>>)dnl
 define(<<__PROJECT_version_point>>,   <<@PROJECT_version_point@>>)dnl
 define(<<__PROJECT_repo_url>>,        <<@PROJECT_repo_url@>>)dnl
+define(<<__PROJECT_repo_branch>>,     <<@PROJECT_repo_branch@>>)dnl
 define(<<__PROJECT_repo_root>>,       <<@PROJECT_repo_root@>>)dnl
 define(<<__PROJECT_repo_uuid>>,       <<@PROJECT_repo_uuid@>>)dnl
 define(<<__PROJECT_repo_rev>>,        <<@PROJECT_repo_rev@>>)dnl

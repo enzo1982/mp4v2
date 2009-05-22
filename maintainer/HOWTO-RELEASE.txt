@@ -26,11 +26,12 @@ Thus, releases will produce dist bundles of this pattern:
 
 MAJOR-RELEASE. This kind of release has a major impact to the public
 interface and/or other aspects of the project. You must increment
-MAJOR and reset MINOR and reset POINT.
+MAJOR and reset MINOR and reset POINT. Typically used when API
+components are modified or removed.
 
 MINOR-RELEASE. This kind of release has some minor but significant
 changes to the public interface. You must increment MINOR and
-reset POINT.
+reset POINT. Typically used when API components are added.
 
 POINT-RELEASE. This kind of release is usually for bugfix/maintenance
 purposes and does not adversely effect the public interface. You
@@ -43,23 +44,6 @@ trunk might work towards a 1.0.0 release. When that project is
 deemed ready, trunk is branched to 1.0.0. Any final changes are
 then applied on the new branch, while trunk continues development,
 chasing it's next release, which might be 1.1.0.
-
-
-Official Snapshots
-==================
-
-Snapshots are a different beast. As they are never expected to be patched,
-there is no need to create a branch for them, except for maybe tracking
-purposes but that is overkill. It is desirable to provide some indicator
-of the version number a snapshot is chasing, which is essentially what trunk
-is: the main development branch chasing the next release. And we know
-that the POINT component is meaningless to trunk, so a snapshot uses a
-version tuple of pattern MAJOR.MINOR-YYYYMMDD and one never edits any
-version files for snapshots.
-
-Thus, snapshots will produce dist bundles of this pattern:
-
-    mp4v2-MAJOR.MINOR-YYYYMMDD.tar.bz2
 
 
 WORKFLOW - MINOR-RELEASE
@@ -147,21 +131,3 @@ to branch from 1.0.0 (not trunk!). Here is an example 1.0.1 point-release.
     make distcheck
     cp mp4v2-1.0.1.tar.bz2 ~/OUTGOING/.
     # FINISHED - CLOSED: https://mp4v2.googlecode.com/svn/releases/1.0.1
-
-
-WORKFLOW - SNAPSHOT-RELEASE
----------------------------
-
-Pay particular attention to setting the required environment variable
-for making a snapshot. You *must* do this prior to forcing autoreconf!
-
-    setenv SNAPSHOT 1 # sh syntax: export SNAPSHOT=1
-    cd /work/mp4v2/
-    svn co https://mp4v2.googlecode.com/svn/trunk/
-    cd trunk/
-    autoreconf -fiv
-    rm -fr build/
-    mkdir build/
-    cd build/
-    ../configure
-    make distcheck

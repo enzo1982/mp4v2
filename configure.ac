@@ -6,24 +6,21 @@ m4_include([project/project.m4sugar])
 
 m4_define([SVNINFO],m4_esyscmd([svn info 2>/dev/null]))
 
-m4_define([PRJ_repo_url],m4_bregexp(SVNINFO,[^URL: *\(.+\)],[\1]))
-m4_define([PRJ_repo_root],m4_bregexp(SVNINFO,[^Repository Root: *\(.+\)],[\1]))
-m4_define([PRJ_repo_uuid],m4_bregexp(SVNINFO,[^Repository UUID: *\(.+\)],[\1]))
-m4_define([PRJ_repo_rev],m4_bregexp(SVNINFO,[^Last Changed Rev: *\(.+\)],[\1]))
-m4_define([PRJ_repo_date],m4_bregexp(SVNINFO,[^Last Changed Date: *\(.+\)],[\1]))
-m4_define([PRJ_repo_type],ifelse(m4_bregexp(PRJ_repo_url,[/releases/]),[-1],[developer],[stable]))
+changequote(<<,>>)dnl
+    m4_define(<<PRJ_repo_url>>,m4_bregexp(SVNINFO,<<^URL: *\(.+\)>>,<<\1>>))
+    m4_define(<<PRJ_repo_branch>>,m4_bregexp(PRJ_repo_url,<<\([^/]+\)$>>,<<\1>>))
+    m4_define(<<PRJ_repo_root>>,m4_bregexp(SVNINFO,<<^Repository Root: *\(.+\)>>,<<\1>>))
+    m4_define(<<PRJ_repo_uuid>>,m4_bregexp(SVNINFO,<<^Repository UUID: *\(.+\)>>,<<\1>>))
+    m4_define(<<PRJ_repo_rev>>,m4_bregexp(SVNINFO,<<^Last Changed Rev: *\(.+\)>>,<<\1>>))
+    m4_define(<<PRJ_repo_date>>,m4_bregexp(SVNINFO,<<^Last Changed Date: *\(.+\)>>,<<\1>>))
+    m4_define(<<PRJ_repo_type>>,ifelse(m4_bregexp(PRJ_repo_url,<</releases/>>),<<-1>>,<<developer>>,<<stable>>))
+changequote([,])dnl
 
 m4_define([PRJ_version_hex],m4_format([0x%04x%02x%02x],PRJ_version_major,PRJ_version_minor,PRJ_version_point))
 
-m4_define([PRJ_snapshot],
-    m4_bregexp(m4_esyscmd([(test "$SNAPSHOT" = "1" && date +%Y%m%d) 2>/dev/null]),[\([0-9]+\)],[\1]))
-m4_define([PRJ_repo_type],ifelse(m4_len(PRJ_snapshot),8,[snapshot],PRJ_repo_type))
-
 m4_define([PRJ_version],ifelse(
-    PRJ_repo_type,[stable],m4_format([%d.%d.%d],PRJ_version_major,PRJ_version_minor,PRJ_version_point),
-    PRJ_repo_type,[snapshot],m4_format([%d.%d-%s],PRJ_version_major,PRJ_version_minor,PRJ_snapshot),
-    PRJ_repo_type,[developer],m4_format([%d.%d-r%d],PRJ_version_major,PRJ_version_minor,PRJ_repo_rev),
-    m4_format([%d.%d-r%d],PRJ_version_major,PRJ_version_minor,PRJ_repo_rev)))
+    PRJ_repo_type,[stable],m4_format([%s],PRJ_repo_branch),
+    m4_format([%s-r%d],PRJ_repo_branch,PRJ_repo_rev)))
 
 ###############################################################################
 # initialization
@@ -136,6 +133,7 @@ PROJECT_version_major="PRJ_version_major"
 PROJECT_version_minor="PRJ_version_minor"
 PROJECT_version_point="PRJ_version_point"
 PROJECT_repo_url="PRJ_repo_url"
+PROJECT_repo_branch="PRJ_repo_branch"
 PROJECT_repo_root="PRJ_repo_root"
 PROJECT_repo_uuid="PRJ_repo_uuid"
 PROJECT_repo_rev="PRJ_repo_rev"
@@ -148,6 +146,7 @@ test -z "$PROJECT_version_major" && PROJECT_version_major="0"
 test -z "$PROJECT_version_minor" && PROJECT_version_minor="0"
 test -z "$PROJECT_version_point" && PROJECT_version_point="0"
 test -z "$PROJECT_repo_url"      && PROJECT_repo_url="svn://nowhere.com/project/unknown"
+test -z "$PROJECT_repo_branch"   && PROJECT_repo_branch="unknown"
 test -z "$PROJECT_repo_root"     && PROJECT_repo_root="svn://nowhere.com/project"
 test -z "$PROJECT_repo_uuid"     && PROJECT_repo_uuid="00000000-0000-0000-0000-000000000000"
 test -z "$PROJECT_repo_rev"      && PROJECT_repo_rev="0"
@@ -170,6 +169,7 @@ AC_SUBST([PROJECT_version_major])
 AC_SUBST([PROJECT_version_minor])
 AC_SUBST([PROJECT_version_point])
 AC_SUBST([PROJECT_repo_url])
+AC_SUBST([PROJECT_repo_branch])
 AC_SUBST([PROJECT_repo_root])
 AC_SUBST([PROJECT_repo_uuid])
 AC_SUBST([PROJECT_repo_rev])
