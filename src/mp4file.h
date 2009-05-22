@@ -48,6 +48,25 @@ class MP4DescriptorProperty;
 class MP4File
 {
 public:
+    static void CopySample(
+        MP4File*    srcFile,
+        MP4TrackId  srcTrackId,
+        MP4SampleId srcSampleId,
+        MP4File*    dstFile,
+        MP4TrackId  dstTrackId,
+        MP4Duration dstSampleDuration );
+
+    static void EncAndCopySample(
+        MP4File*      srcFile,
+        MP4TrackId    srcTrackId,
+        MP4SampleId   srcSampleId,
+        encryptFunc_t encfcnp,
+        uint32_t      encfcnparam1,
+        MP4File*      dstFile,
+        MP4TrackId    dstTrackId,
+        MP4Duration   dstSampleDuration );
+
+public:
     MP4File( uint32_t verbosity = 0 );
     ~MP4File();
 
@@ -189,12 +208,14 @@ public:
         MP4TrackId trackId,
         MP4SampleId sampleId,
         // output parameters
-        uint8_t** ppBytes,
-        uint32_t* pNumBytes,
+        uint8_t**     ppBytes,
+        uint32_t*     pNumBytes,
         MP4Timestamp* pStartTime = NULL,
-        MP4Duration* pDuration = NULL,
-        MP4Duration* pRenderingOffset = NULL,
-        bool* pIsSyncSample = NULL);
+        MP4Duration*  pDuration = NULL,
+        MP4Duration*  pRenderingOffset = NULL,
+        bool*         pIsSyncSample = NULL,
+        bool*         hasDependencyFlags = NULL,
+        uint32_t*     dependencyFlags = NULL );
 
     void WriteSample(
         MP4TrackId     trackId,
@@ -214,9 +235,9 @@ public:
         uint32_t       dependencyFlags );
 
     void SetSampleRenderingOffset(
-        MP4TrackId trackId,
+        MP4TrackId  trackId,
         MP4SampleId sampleId,
-        MP4Duration renderingOffset);
+        MP4Duration renderingOffset );
 
     MP4Duration GetTrackDurationPerChunk( MP4TrackId );
     void        SetTrackDurationPerChunk( MP4TrackId, MP4Duration );

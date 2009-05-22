@@ -2620,7 +2620,6 @@ void MP4File::ChangeMovieTimeScale(uint32_t timescale)
     }
 }
 
-
 void MP4File::DeleteTrack(MP4TrackId trackId)
 {
     ProtectWriteOperation("MP4DeleteTrack");
@@ -2831,14 +2830,28 @@ bool MP4File::GetSampleSync(MP4TrackId trackId, MP4SampleId sampleId)
     return m_pTracks[FindTrackIndex(trackId)]->IsSyncSample(sampleId);
 }
 
-void MP4File::ReadSample(MP4TrackId trackId, MP4SampleId sampleId,
-                         uint8_t** ppBytes, uint32_t* pNumBytes,
-                         MP4Timestamp* pStartTime, MP4Duration* pDuration,
-                         MP4Duration* pRenderingOffset, bool* pIsSyncSample)
+void MP4File::ReadSample(
+    MP4TrackId    trackId,
+    MP4SampleId   sampleId,
+    uint8_t**     ppBytes,
+    uint32_t*     pNumBytes,
+    MP4Timestamp* pStartTime,
+    MP4Duration*  pDuration,
+    MP4Duration*  pRenderingOffset,
+    bool*         pIsSyncSample,
+    bool*         hasDependencyFlags,
+    uint32_t*     dependencyFlags )
 {
-    m_pTracks[FindTrackIndex(trackId)]->
-    ReadSample(sampleId, ppBytes, pNumBytes,
-               pStartTime, pDuration, pRenderingOffset, pIsSyncSample);
+    m_pTracks[FindTrackIndex(trackId)]->ReadSample(
+        sampleId,
+        ppBytes,
+        pNumBytes,
+        pStartTime,
+        pDuration,
+        pRenderingOffset,
+        pIsSyncSample,
+        hasDependencyFlags,
+        dependencyFlags );
 }
 
 void MP4File::WriteSample(
@@ -4032,6 +4045,147 @@ MP4Duration MP4File::GetTrackDurationPerChunk( MP4TrackId trackId )
 void MP4File::SetTrackDurationPerChunk( MP4TrackId trackId, MP4Duration duration )
 {
     m_pTracks[FindTrackIndex(trackId)]->SetDurationPerChunk( duration );
+}
+
+void MP4File::CopySample(
+    MP4File*    srcFile,
+    MP4TrackId  srcTrackId,
+    MP4SampleId srcSampleId,
+    MP4File*    dstFile,
+    MP4TrackId  dstTrackId,
+    MP4Duration dstSampleDuration )
+{
+    // Note: we leave it up to the caller to ensure that the
+    // source and destination tracks are compatible.
+    // i.e. copying audio samples into a video track
+    // is unlikely to do anything useful
+
+    uint8_t* pBytes = NULL;
+    uint32_t numBytes = 0;
+    MP4Duration sampleDuration;
+    MP4Duration renderingOffset;
+    bool isSyncSample;
+    bool hasDependencyFlags;
+    uint32_t dependencyFlags;
+
+    srcFile->ReadSample(
+         srcTrackId,
+         srcSampleId,
+         &pBytes,
+         &numBytes,
+         NULL,
+         &sampleDuration,
+         &renderingOffset,
+         &isSyncSample,
+         &hasDependencyFlags,
+         &dependencyFlags );
+
+    if( !dstFile )
+        dstFile = srcFile;
+
+    if( dstTrackId == MP4_INVALID_TRACK_ID )
+        dstTrackId = srcTrackId;
+
+    if( dstSampleDuration != MP4_INVALID_DURATION )
+        sampleDuration = dstSampleDuration;
+
+    if( hasDependencyFlags ) {
+        dstFile->WriteSampleDependency(
+            dstTrackId,
+            pBytes,
+            numBytes,
+            sampleDuration,
+            renderingOffset,
+            isSyncSample,
+            dependencyFlags );
+    }
+    else {
+        dstFile->WriteSample(
+            dstTrackId,
+            pBytes,
+            numBytes,
+            sampleDuration,
+            renderingOffset,
+            isSyncSample );
+    }
+
+    free( pBytes );
+}
+
+void MP4File::EncAndCopySample(
+    MP4File*      srcFile,
+    MP4TrackId    srcTrackId,
+    MP4SampleId   srcSampleId,
+    encryptFunc_t encfcnp,
+    uint32_t      encfcnparam1,
+    MP4File*      dstFile,
+    MP4TrackId    dstTrackId,
+    MP4Duration   dstSampleDuration )
+{
+    // Note: we leave it up to the caller to ensure that the
+    // source and destination tracks are compatible.
+    // i.e. copying audio samples into a video track
+    // is unlikely to do anything useful
+
+    uint8_t* pBytes = NULL;
+    uint32_t numBytes = 0;
+    uint8_t* encSampleData = NULL;
+    uint32_t encSampleLength = 0;
+    MP4Duration sampleDuration;
+    MP4Duration renderingOffset;
+    bool isSyncSample;
+    bool hasDependencyFlags;
+    uint32_t dependencyFlags;
+
+    srcFile->ReadSample(
+         srcTrackId,
+         srcSampleId,
+         &pBytes,
+         &numBytes,
+         NULL,
+         &sampleDuration,
+         &renderingOffset,
+         &isSyncSample,
+         &hasDependencyFlags,
+         &dependencyFlags );
+
+    if( !dstFile )
+        dstFile = srcFile;
+
+    if( dstTrackId == MP4_INVALID_TRACK_ID )
+        dstTrackId = srcTrackId;
+
+    if( dstSampleDuration != MP4_INVALID_DURATION )
+        sampleDuration = dstSampleDuration;
+
+    //if( ismacrypEncryptSampleAddHeader( ismaCryptSId, numBytes, pBytes, &encSampleLength, &encSampleData ) != 0)
+    if( encfcnp( encfcnparam1, numBytes, pBytes, &encSampleLength, &encSampleData ) != 0 )
+        fprintf( stderr, "Can't encrypt the sample and add its header %u\n", srcSampleId );
+
+    if( hasDependencyFlags ) {
+        dstFile->WriteSampleDependency(
+            dstTrackId,
+            pBytes,
+            numBytes,
+            sampleDuration,
+            renderingOffset,
+            isSyncSample,
+            dependencyFlags );
+    }
+    else {
+        dstFile->WriteSample(
+            dstTrackId,
+            encSampleData,
+            encSampleLength,
+            sampleDuration,
+            renderingOffset,
+            isSyncSample );
+    }
+
+    free( pBytes );
+
+    if( encSampleData != NULL )
+        free( encSampleData );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

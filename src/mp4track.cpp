@@ -254,17 +254,31 @@ void MP4Track::SetType(const char* type)
 }
 
 void MP4Track::ReadSample(
-    MP4SampleId sampleId,
-    uint8_t** ppBytes,
-    uint32_t* pNumBytes,
+    MP4SampleId   sampleId,
+    uint8_t**     ppBytes,
+    uint32_t*     pNumBytes,
     MP4Timestamp* pStartTime,
-    MP4Duration* pDuration,
-    MP4Duration* pRenderingOffset,
-    bool* pIsSyncSample)
+    MP4Duration*  pDuration,
+    MP4Duration*  pRenderingOffset,
+    bool*         pIsSyncSample,
+    bool*         hasDependencyFlags, 
+    uint32_t*     dependencyFlags )
 {
-    if (sampleId == MP4_INVALID_SAMPLE_ID) {
-        throw new MP4Error("sample id can't be zero",
-                           "MP4Track::ReadSample");
+    if( sampleId == MP4_INVALID_SAMPLE_ID )
+        throw new MP4Error( "sample id can't be zero", "MP4Track::ReadSample" );
+
+    if( hasDependencyFlags )
+        *hasDependencyFlags = !m_sdtpLog.empty();
+
+    if( dependencyFlags ) {
+        if( m_sdtpLog.empty() ) {
+            *dependencyFlags = 0;
+        }
+        else {
+            if( sampleId > m_sdtpLog.size() )
+                throw new MP4Error( "sample id > sdtp logsize", "MP4Track::ReadSample" );
+            *dependencyFlags = m_sdtpLog[sampleId-1]; // sampleId is 1-based
+        }
     }
 
     // handle unusual case of wanting to read a sample

@@ -2606,137 +2606,64 @@ MP4FileHandle MP4ReadProvider( const char* fileName, uint32_t verbosity, const M
 
     bool MP4CopySample(
         MP4FileHandle srcFile,
-        MP4TrackId srcTrackId,
-        MP4SampleId srcSampleId,
+        MP4TrackId    srcTrackId,
+        MP4SampleId   srcSampleId,
         MP4FileHandle dstFile,
-        MP4TrackId dstTrackId,
-        MP4Duration dstSampleDuration)
+        MP4TrackId    dstTrackId,
+        MP4Duration   dstSampleDuration )
     {
-        bool rc;
-        uint8_t* pBytes = NULL;
-        uint32_t numBytes = 0;
-        MP4Duration sampleDuration;
-        MP4Duration renderingOffset;
-        bool isSyncSample;
-
-        // Note: we leave it up to the caller to ensure that the
-        // source and destination tracks are compatible.
-        // i.e. copying audio samples into a video track
-        // is unlikely to do anything useful
-
-        rc = MP4ReadSample(
-                 srcFile,
-                 srcTrackId,
-                 srcSampleId,
-                 &pBytes,
-                 &numBytes,
-                 NULL,
-                 &sampleDuration,
-                 &renderingOffset,
-                 &isSyncSample);
-
-        if (!rc) {
+        if( !MP4_IS_VALID_FILE_HANDLE( srcFile ))
             return false;
+
+        try {
+            MP4File::CopySample(
+                (MP4File*)srcFile,
+                srcTrackId,
+                srcSampleId,
+                (MP4File*)dstFile,
+                dstTrackId,
+                dstSampleDuration );
+            return true;
+        }
+        catch( MP4Error* e ) {
+            ((MP4File*)srcFile)->GetVerbosity(), e->Print();
+            delete e;
         }
 
-        if (dstFile == MP4_INVALID_FILE_HANDLE) {
-            dstFile = srcFile;
-        }
-        if (dstTrackId == MP4_INVALID_TRACK_ID) {
-            dstTrackId = srcTrackId;
-        }
-        if (dstSampleDuration != MP4_INVALID_DURATION) {
-            sampleDuration = dstSampleDuration;
-        }
-
-        rc = MP4WriteSample(
-                 dstFile,
-                 dstTrackId,
-                 pBytes,
-                 numBytes,
-                 sampleDuration,
-                 renderingOffset,
-                 isSyncSample);
-
-        free(pBytes);
-
-        return rc;
+        return false;
     }
 
     bool MP4EncAndCopySample(
         MP4FileHandle srcFile,
-        MP4TrackId srcTrackId,
-        MP4SampleId srcSampleId,
+        MP4TrackId    srcTrackId,
+        MP4SampleId   srcSampleId,
         encryptFunc_t encfcnp,
-        uint32_t encfcnparam1,
+        uint32_t      encfcnparam1,
         MP4FileHandle dstFile,
-        MP4TrackId dstTrackId,
-        MP4Duration dstSampleDuration)
+        MP4TrackId    dstTrackId,
+        MP4Duration   dstSampleDuration)
     {
-        bool rc;
-        uint8_t* pBytes = NULL;
-        uint32_t numBytes = 0;
-        uint8_t* encSampleData = NULL;
-        uint32_t encSampleLength = 0;
-        MP4Duration sampleDuration;
-        MP4Duration renderingOffset;
-        bool isSyncSample;
-
-        // Note: we leave it up to the caller to ensure that the
-        // source and destination tracks are compatible.
-        // i.e. copying audio samples into a video track
-        // is unlikely to do anything useful
-
-        rc = MP4ReadSample(
-                 srcFile,
-                 srcTrackId,
-                 srcSampleId,
-                 &pBytes,
-                 &numBytes,
-                 NULL,
-                 &sampleDuration,
-                 &renderingOffset,
-                 &isSyncSample);
-
-        if (!rc) {
+        if( !MP4_IS_VALID_FILE_HANDLE( srcFile ))
             return false;
+
+        try {
+            MP4File::EncAndCopySample(
+                (MP4File*)srcFile,
+                srcTrackId,
+                srcSampleId,
+                encfcnp,
+                encfcnparam1,
+                (MP4File*)dstFile,
+                dstTrackId,
+                dstSampleDuration );
+            return true;
+        }
+        catch( MP4Error* e ) {
+            ((MP4File*)srcFile)->GetVerbosity(), e->Print();
+            delete e;
         }
 
-        if (dstFile == MP4_INVALID_FILE_HANDLE) {
-            dstFile = srcFile;
-        }
-        if (dstTrackId == MP4_INVALID_TRACK_ID) {
-            dstTrackId = srcTrackId;
-        }
-        if (dstSampleDuration != MP4_INVALID_DURATION) {
-            sampleDuration = dstSampleDuration;
-        }
-
-        //if (ismacrypEncryptSampleAddHeader(ismaCryptSId, numBytes, pBytes,
-        //                        &encSampleLength, &encSampleData) != 0) {
-        if (encfcnp(encfcnparam1, numBytes, pBytes,
-                    &encSampleLength, &encSampleData) != 0) {
-            fprintf(stderr,
-                    "Can't encrypt the sample and add its header %u\n",
-                    srcSampleId);
-        }
-
-        rc = MP4WriteSample(
-                 dstFile,
-                 dstTrackId,
-                 encSampleData,
-                 encSampleLength,
-                 sampleDuration,
-                 renderingOffset,
-                 isSyncSample);
-
-        free(pBytes);
-
-        if (encSampleData != NULL) {
-            free(encSampleData);
-        }
-
-        return rc;
+        return false;
     }
 
     bool MP4ReferenceSample(
