@@ -425,8 +425,13 @@ genericSetItem( MP4File& file, const MP4ItmfItem* item )
     if( (uint32_t)item->index >= ilst->GetNumberOfChildAtoms() )
         return genericAddItem( file, item );
 
+    MP4ItemAtom* old = (MP4ItemAtom*)ilst->GetChildAtom( item->index );
+    if( old ) {
+        ilst->DeleteChildAtom( ilst->GetChildAtom( item->index ));
+        delete old;
+    }
+
     MP4ItemAtom& itemAtom = *(MP4ItemAtom*)MP4Atom::CreateAtom( ilst, item->code );
-    ilst->DeleteChildAtom( ilst->GetChildAtom( item->index ));
     ilst->InsertChildAtom( &itemAtom, item->index );
 
     return __itemModelToAtom( *item, itemAtom );
@@ -447,7 +452,17 @@ genericRemoveItem( MP4File& file, const MP4ItmfItem* item )
     if( (uint32_t)item->index >= ilst->GetNumberOfChildAtoms() )
         return false;
 
-    ilst->DeleteChildAtom( ilst->GetChildAtom( item->index ));
+    MP4ItemAtom* itemAtom = (MP4ItemAtom*)ilst->GetChildAtom( item->index );
+    if( itemAtom ) {
+        ilst->DeleteChildAtom( ilst->GetChildAtom( item->index ));
+        delete itemAtom;
+    }
+
+    if( ilst->GetNumberOfChildAtoms() == 0 ) {
+        ilst->GetParentAtom()->DeleteChildAtom( ilst );
+        delete ilst;
+    }
+
     return true;
 }
 
