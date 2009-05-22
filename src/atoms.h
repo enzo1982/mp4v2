@@ -515,7 +515,7 @@ public:
     MP4MeanAtom();
     void Read();
 
-    MP4StringProperty& value;
+    MP4BytesProperty& value;
 };
 
 /// iTMF name-atom.
@@ -525,7 +525,7 @@ public:
     MP4NameAtom();
     void Read();
 
-    MP4StringProperty& value;
+    MP4BytesProperty& value;
 };
 
 /// iTMF data-atom.

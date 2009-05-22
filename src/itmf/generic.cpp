@@ -163,14 +163,15 @@ __itemAtomToModel( uint32_t index, MP4ItemAtom& item_atom, MP4ItmfItem& model )
         MP4MeanAtom* mean = (MP4MeanAtom*)item_atom.FindAtom( "----.mean" );
         if( !mean )
             return true;
+
         // copy atom UTF-8 value (not NULL-terminated) to model (NULL-terminated)
-        model.mean = strdup( mean->value.GetValue() );
+        model.mean = mean->value.GetValueStringAlloc();
 
         // name is optional
         MP4NameAtom* name = (MP4NameAtom*)item_atom.FindAtom( "----.name" );
         if( name ) {
             // copy atom UTF-8 value (not NULL-terminated) to model (NULL-terminated)
-            model.name = strdup( name->value.GetValue() );
+            model.name = name->value.GetValueStringAlloc();
         }
     }
 
@@ -218,12 +219,12 @@ __itemModelToAtom( const MP4ItmfItem& model, MP4ItemAtom& atom )
         ASSERT( model.mean ); // mandatory
         MP4MeanAtom& meanAtom = *(MP4MeanAtom*)MP4Atom::CreateAtom( &atom, "mean" );
         atom.AddChildAtom( &meanAtom );
-        meanAtom.value.SetValue( model.mean );
+        meanAtom.value.SetValue( (const uint8_t*)model.mean, strlen( model.mean ));
 
         if( model.name ) {
             MP4NameAtom& nameAtom = *(MP4NameAtom*)MP4Atom::CreateAtom( &atom, "name" );
             atom.AddChildAtom( &nameAtom );
-            nameAtom.value.SetValue( model.name );
+            nameAtom.value.SetValue( (const uint8_t*)model.name, strlen( model.name ));
         }
     }
 
@@ -361,7 +362,7 @@ genericGetItemsByMeaning( MP4File& file, const string& meaning, const string& na
         MP4MeanAtom* meanAtom = (MP4MeanAtom*)atom.FindAtom( "----.mean" );
         if( !meanAtom )
             continue;
-        if( meaning != meanAtom->value.GetValue() )
+        if( meanAtom->value.CompareToString( meaning ))
             continue;
 
         if( !name.empty() ) {
@@ -369,7 +370,7 @@ genericGetItemsByMeaning( MP4File& file, const string& meaning, const string& na
             MP4MeanAtom* nameAtom = (MP4MeanAtom*)atom.FindAtom( "----.name" );
             if( !nameAtom )
                 continue;
-            if( name != nameAtom->value.GetValue() )
+            if( nameAtom->value.CompareToString( name ))
                 continue;
         }
 

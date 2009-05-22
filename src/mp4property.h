@@ -385,6 +385,17 @@ public:
         *pValueSize = m_valueSizes[index];
     }
 
+    char* GetValueStringAlloc( uint32_t index = 0 ) {
+        char* buf = (char*)MP4Malloc( m_valueSizes[index] + 1 );
+        memcpy( buf, m_values[index], m_valueSizes[index] );
+        buf[m_valueSizes[index]] = '\0';
+        return buf;
+    }
+
+    bool CompareToString( const string& s, uint32_t index = 0 ) {
+        return string( (const char*)m_values[index], m_valueSizes[index] ) != s;
+    }
+
     void CopyValue(uint8_t* pValue, uint32_t index = 0) {
         // N.B. caller takes responsbility for valid pointer
         // and sufficient memory at the destination
@@ -400,7 +411,7 @@ public:
         SetValue(pValue, valueSize, count);
     }
 
-    uint32_t GetValueSize(uint32_t valueSize, uint32_t index = 0) {
+    uint32_t GetValueSize( uint32_t index = 0 ) {
         return m_valueSizes[index];
     }
 

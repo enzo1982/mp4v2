@@ -75,7 +75,7 @@ MP4ItemAtom::MP4ItemAtom( const char* type )
 
 MP4MeanAtom::MP4MeanAtom()
     : MP4FullAtom ( "mean" )
-    , value       ( *new MP4StringProperty( "value" ))
+    , value       ( *new MP4BytesProperty( "value" ))
 {
     AddProperty( &value );
 }
@@ -84,15 +84,15 @@ void
 MP4MeanAtom::Read()
 {
     // calculate size of the metadata from the atom size
-    value.SetFixedLength( m_size - 4 );
+    value.SetValueSize( m_size - 4 );
     MP4Atom::Read();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 MP4NameAtom::MP4NameAtom()
-    : MP4FullAtom( "name" )
-    , value       ( *new MP4StringProperty( "value" ))
+    : MP4FullAtom ( "name" )
+    , value       ( *new MP4BytesProperty( "value" ))
 {
     AddProperty( &value );
 }
@@ -101,7 +101,7 @@ void
 MP4NameAtom::Read()
 {
     // calculate size of the metadata from the atom size
-    value.SetFixedLength( m_size - 4 );
+    value.SetValueSize( m_size - 4 );
     MP4FullAtom::Read();
 }
 
