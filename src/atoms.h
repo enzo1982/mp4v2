@@ -501,6 +501,18 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/// iTMF hdlr-atom.
+class MP4ItmfHdlrAtom : public MP4FullAtom
+{
+public:
+    MP4ItmfHdlrAtom();
+
+    MP4Integer32Property& reserved1;
+    MP4BytesProperty&     handlerType;
+    MP4BytesProperty&     reserved2;
+    MP4StringProperty&    name;
+};
+
 /// iTMF item-atom.
 class MP4ItemAtom : public MP4Atom
 {

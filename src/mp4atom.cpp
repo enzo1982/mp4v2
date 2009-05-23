@@ -813,6 +813,10 @@ MP4Atom::factory( MP4Atom* parent, const char* type )
                     return new MP4NameAtom();
             }
         }
+        else if( ATOMID( ptype ) == ATOMID( "meta" )) {
+            if( ATOMID( type ) == ATOMID( "hdlr" ))
+                return new MP4ItmfHdlrAtom();
+        }
         else if( ATOMID( ptype ) == ATOMID( "udta" )) {
             for( const char* const* p = UDTA_ELEMENTS; *p; p++ )
                 if( !strcmp( type, *p ))

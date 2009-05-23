@@ -73,6 +73,24 @@ MP4ItemAtom::MP4ItemAtom( const char* type )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+MP4ItmfHdlrAtom::MP4ItmfHdlrAtom()
+    : MP4FullAtom ( "hdlr" )
+    , reserved1   ( *new MP4Integer32Property( "reserved1" ))
+    , handlerType ( *new MP4BytesProperty( "handlerType", 4 ))
+    , reserved2   ( *new MP4BytesProperty( "reserved2", 12 ))
+    , name        ( *new MP4StringProperty( "name" ))
+{
+    AddProperty( &reserved1 );
+    AddProperty( &handlerType );
+    AddProperty( &reserved2 );
+    AddProperty( &name );
+
+    handlerType.SetValue( (const uint8_t*)"mdir", 4 );
+    reserved2.SetValueSize( 12 );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 MP4MeanAtom::MP4MeanAtom()
     : MP4FullAtom ( "mean" )
     , value       ( *new MP4BytesProperty( "value" ))
