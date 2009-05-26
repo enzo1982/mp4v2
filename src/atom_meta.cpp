@@ -78,14 +78,18 @@ MP4ItmfHdlrAtom::MP4ItmfHdlrAtom()
     , reserved1   ( *new MP4Integer32Property( "reserved1" ))
     , handlerType ( *new MP4BytesProperty( "handlerType", 4 ))
     , reserved2   ( *new MP4BytesProperty( "reserved2", 12 ))
-    , name        ( *new MP4BytesProperty( "name" ))
+    , name        ( *new MP4BytesProperty( "name", 1 ))
 {
     AddProperty( &reserved1 );
     AddProperty( &handlerType );
     AddProperty( &reserved2 );
     AddProperty( &name );
 
-    handlerType.SetValue( (const uint8_t*)"mdir", 4 );
+    const uint8_t htData[] = { 'm', 'd', 'i', 'r' };
+    handlerType.SetValue( htData, sizeof( htData ));
+
+    const uint8_t nameData[] = { 0 };
+    name.SetValue( nameData, sizeof( nameData ));
 }
 
 void
