@@ -647,7 +647,7 @@ void
 Tags::storeTrack( MP4File& file, const MP4TagTrack& cpp, const MP4TagTrack* c )
 {
     if( c ) {
-        uint8_t buf[7];
+        uint8_t buf[8]; // iTMF spec says 7 but iTunes media is 8
         memset( buf, 0, sizeof(buf) );
 
         buf[2] = uint8_t((cpp.index & 0xff00) >> 8);
