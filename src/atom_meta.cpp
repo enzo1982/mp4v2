@@ -76,9 +76,9 @@ MP4ItemAtom::MP4ItemAtom( const char* type )
 MP4ItmfHdlrAtom::MP4ItmfHdlrAtom()
     : MP4FullAtom ( "hdlr" )
     , reserved1   ( *new MP4Integer32Property( "reserved1" ))
-    , handlerType ( *new MP4BytesProperty( "handlerType" ))
+    , handlerType ( *new MP4BytesProperty( "handlerType", 4 ))
     , reserved2   ( *new MP4BytesProperty( "reserved2", 12 ))
-    , name        ( *new MP4StringProperty( "name" ))
+    , name        ( *new MP4BytesProperty( "name" ))
 {
     AddProperty( &reserved1 );
     AddProperty( &handlerType );
@@ -86,6 +86,13 @@ MP4ItmfHdlrAtom::MP4ItmfHdlrAtom()
     AddProperty( &name );
 
     handlerType.SetValue( (const uint8_t*)"mdir", 4 );
+}
+
+void
+MP4ItmfHdlrAtom::Read()
+{
+    name.SetValueSize( m_size - 24 );
+    MP4FullAtom::Read();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -100,7 +107,6 @@ MP4MeanAtom::MP4MeanAtom()
 void
 MP4MeanAtom::Read()
 {
-    // calculate size of the metadata from the atom size
     value.SetValueSize( m_size - 4 );
     MP4Atom::Read();
 }
@@ -117,7 +123,6 @@ MP4NameAtom::MP4NameAtom()
 void
 MP4NameAtom::Read()
 {
-    // calculate size of the metadata from the atom size
     value.SetValueSize( m_size - 4 );
     MP4FullAtom::Read();
 }

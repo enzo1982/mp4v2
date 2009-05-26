@@ -506,11 +506,12 @@ class MP4ItmfHdlrAtom : public MP4FullAtom
 {
 public:
     MP4ItmfHdlrAtom();
+    void Read();
 
     MP4Integer32Property& reserved1;
     MP4BytesProperty&     handlerType;
     MP4BytesProperty&     reserved2;
-    MP4StringProperty&    name;
+    MP4BytesProperty&     name;
 };
 
 /// iTMF item-atom.
