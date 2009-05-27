@@ -624,10 +624,26 @@ void MP4BytesProperty::Dump(FILE* pFile, uint8_t indent,
         return;
     }
 
+    // specialization for ilst item data always show all bytes except for covr
+    bool showall = false;
+    if( m_pParentAtom ) {
+        MP4Atom* const datac = m_pParentAtom->GetParentAtom(); // data container
+        if( datac ) {
+            MP4Atom* const datacc = datac->GetParentAtom();
+            if( datacc &&
+                ATOMID( datacc->GetType() ) == ATOMID( "ilst" ) &&
+                ATOMID( datac->GetType() ) != ATOMID( "covr" ) )
+            {
+                showall = true;
+            }
+        }
+    }
+
     uint32_t adjsize;
     bool supressed;
 
-    if( size < 128 ||
+    if( showall ||
+        size < 128 ||
         !m_pParentAtom ||
         !m_pParentAtom->GetFile() ||
         (m_pParentAtom->GetFile()->GetVerbosity() & MP4_DETAILS_TABLE) )
