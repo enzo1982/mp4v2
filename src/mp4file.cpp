@@ -463,6 +463,45 @@ void MP4File::BeginWrite()
 
 void MP4File::FinishWrite()
 {
+    // remove empty moov.udta.meta.ilst
+    {
+        MP4Atom* ilst = FindAtom( "moov.udta.meta.ilst" );
+        if( ilst ) {
+            if( ilst->GetNumberOfChildAtoms() == 0 ) {
+                ilst->GetParentAtom()->DeleteChildAtom( ilst );
+                delete ilst;
+            }
+        }
+    }
+
+    // remove empty moov.udta.meta
+    {
+        MP4Atom* meta = FindAtom( "moov.udta.meta" );
+        if( meta ) {
+            if( meta->GetNumberOfChildAtoms() == 0 ) {
+                meta->GetParentAtom()->DeleteChildAtom( meta );
+                delete meta;
+            }
+            else if( meta->GetNumberOfChildAtoms() == 1 ) {
+                if( ATOMID( meta->GetChildAtom( 0 )->GetType() ) == ATOMID( "hdlr" )) {
+                    meta->GetParentAtom()->DeleteChildAtom( meta );
+                    delete meta;
+                }
+            }
+        }
+    }
+
+    // remove empty moov.udta
+    {
+        MP4Atom* udta = FindAtom( "moov.udta" );
+        if( udta ) {
+            if( udta->GetNumberOfChildAtoms() == 0 ) {
+                udta->GetParentAtom()->DeleteChildAtom( udta );
+                delete udta;
+            }
+        }
+    }
+
     // for all tracks, flush chunking buffers
     for( uint32_t i = 0; i < m_pTracks.Size(); i++ ) {
         ASSERT( m_pTracks[i] );

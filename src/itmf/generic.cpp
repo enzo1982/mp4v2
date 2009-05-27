@@ -83,10 +83,10 @@ __dataListResize( MP4ItmfDataList& list, uint32_t size )
 void
 __itemInit( MP4ItmfItem& item )
 {
-    item.index = -1;
-    item.code  = NULL;
-    item.mean  = NULL;
-    item.name  = NULL;
+    item.__handle = NULL;
+    item.code     = NULL;
+    item.mean     = NULL;
+    item.name     = NULL;
 
     __dataListInit( item.dataList );
 }
@@ -151,11 +151,11 @@ __itemListAlloc()
 ///////////////////////////////////////////////////////////////////////////////
 
 static bool
-__itemAtomToModel( uint32_t index, MP4ItemAtom& item_atom, MP4ItmfItem& model )
+__itemAtomToModel( MP4ItemAtom& item_atom, MP4ItmfItem& model )
 {
     __itemClear( model );
-    model.index = index;
-    model.code  = strdup( item_atom.GetType() );
+    model.__handle = &item_atom;
+    model.code     = strdup( item_atom.GetType() );
 
     // handle special meaning atom
     if( ATOMID( item_atom.GetType() ) == ATOMID( "----" )) {
@@ -302,7 +302,7 @@ genericGetItems( MP4File& file )
     __itemListResize( list, itemCount );
 
     for( uint32_t i = 0; i < list.size; i++ )
-        __itemAtomToModel( i, *(MP4ItemAtom*)ilst->GetChildAtom( i ), list.elements[i] );
+        __itemAtomToModel( *(MP4ItemAtom*)ilst->GetChildAtom( i ), list.elements[i] );
 
     return &list;
 }
@@ -335,7 +335,7 @@ genericGetItemsByCode( MP4File& file, const string& code )
     const vector<uint32_t>::size_type max = indexList.size();
     for( vector<uint32_t>::size_type i = 0; i < max; i++ ) {
         uint32_t& aidx = indexList[i];
-        __itemAtomToModel( aidx, *(MP4ItemAtom*)ilst->GetChildAtom( aidx ), list.elements[i] );
+        __itemAtomToModel( *(MP4ItemAtom*)ilst->GetChildAtom( aidx ), list.elements[i] );
     }
 
     return &list;
@@ -387,7 +387,7 @@ genericGetItemsByMeaning( MP4File& file, const string& meaning, const string& na
     const vector<uint32_t>::size_type max = indexList.size();
     for( vector<uint32_t>::size_type i = 0; i < max; i++ ) {
         uint32_t& aidx = indexList[i];
-        __itemAtomToModel( aidx, *(MP4ItemAtom*)ilst->GetChildAtom( aidx ), list.elements[i] );
+        __itemAtomToModel( *(MP4ItemAtom*)ilst->GetChildAtom( aidx ), list.elements[i] );
     }
 
     return &list;
@@ -416,24 +416,32 @@ genericAddItem( MP4File& file, const MP4ItmfItem* item )
 bool
 genericSetItem( MP4File& file, const MP4ItmfItem* item )
 {
-    if( item->index == -1 )
+    if( !item->__handle )
         return false;
 
     MP4Atom* ilst = file.FindAtom( "moov.udta.meta.ilst" );
     if( !ilst )
         return false;
 
-    if( (uint32_t)item->index >= ilst->GetNumberOfChildAtoms() )
-        return genericAddItem( file, item );
-
-    MP4ItemAtom* old = (MP4ItemAtom*)ilst->GetChildAtom( item->index );
-    if( old ) {
-        ilst->DeleteChildAtom( ilst->GetChildAtom( item->index ));
-        delete old;
+    MP4ItemAtom* const old = static_cast<MP4ItemAtom*>(item->__handle);
+    const uint32_t childCount = ilst->GetNumberOfChildAtoms();
+    uint32_t fidx = numeric_limits<uint32_t>::max();
+    for( uint32_t i = 0; i < childCount; i++ ) {
+        MP4Atom* atom = ilst->GetChildAtom( i );
+        if( atom == old ) {
+            fidx = i;
+            break;
+        }
     }
 
+    if( fidx == numeric_limits<uint32_t>::max() )
+        return false;
+
+    ilst->DeleteChildAtom( old );
+    delete old;
+
     MP4ItemAtom& itemAtom = *(MP4ItemAtom*)MP4Atom::CreateAtom( ilst, item->code );
-    ilst->InsertChildAtom( &itemAtom, item->index );
+    ilst->InsertChildAtom( &itemAtom, fidx );
 
     return __itemModelToAtom( *item, itemAtom );
 }
@@ -443,26 +451,16 @@ genericSetItem( MP4File& file, const MP4ItmfItem* item )
 bool
 genericRemoveItem( MP4File& file, const MP4ItmfItem* item )
 {
-    if( item->index == -1 )
+    if( !item->__handle )
         return false;
 
     MP4Atom* ilst = file.FindAtom( "moov.udta.meta.ilst" );
     if( !ilst )
         return false;
 
-    if( (uint32_t)item->index >= ilst->GetNumberOfChildAtoms() )
-        return false;
-
-    MP4ItemAtom* itemAtom = (MP4ItemAtom*)ilst->GetChildAtom( item->index );
-    if( itemAtom ) {
-        ilst->DeleteChildAtom( ilst->GetChildAtom( item->index ));
-        delete itemAtom;
-    }
-
-    if( ilst->GetNumberOfChildAtoms() == 0 ) {
-        ilst->GetParentAtom()->DeleteChildAtom( ilst );
-        delete ilst;
-    }
+    MP4ItemAtom* const old = static_cast<MP4ItemAtom*>(item->__handle);
+    ilst->DeleteChildAtom( old );
+    delete old;
 
     return true;
 }
