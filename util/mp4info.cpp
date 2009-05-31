@@ -130,6 +130,9 @@ extern "C" int main( int argc, char** argv )
             if ( tags->genre ) {
                 fprintf( stdout, " Genre: %s\n", tags->genre );
             }
+            if ( tags->genreType ) {
+                fprintf( stdout, " GenreType: %u\n", *tags->genreType );
+            }
             if ( tags->grouping ) {
                 fprintf( stdout, " Grouping: %s\n", tags->grouping );
             }
