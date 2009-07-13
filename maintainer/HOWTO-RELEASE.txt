@@ -108,6 +108,7 @@ to branch from 1.0.0 (not trunk!). Here is an example 1.0.1 point-release.
     svn cp -m "BRANCHED: RELEASE 1.0.1" \
         https://mp4v2.googlecode.com/svn/releases/1.0.0 \
         https://mp4v2.googlecode.com/svn/releases/1.0.1
+    svn co https://mp4v2.googlecode.com/svn/releases/1.0.1
     cd 1.0.1/
     vi project/project.m4sugar # bump version to 1.0.1
     svn ci
