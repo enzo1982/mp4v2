@@ -228,7 +228,7 @@ mp4trackdump_LDADD = libmp4v2.la $(X_LDFLAGS)
 
 DEJATOOL = main
 
-TESTLOGDIR = $(builddir)/testlog
+TESTLOGDIR = $(top_builddir)/testlog
 
 override RUNTESTDEFAULTFLAGS = --tool $$tool --srcdir $$srcdir/testsuite --outdir $(TESTLOGDIR)
 
