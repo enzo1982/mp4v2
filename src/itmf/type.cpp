@@ -290,7 +290,7 @@ namespace {
 
     // POD static init does not need singletons
     static ImageHeader IMAGE_HEADERS[] = {
-        { BT_BMP,  "\x4d\x42" },
+        { BT_BMP,  "\x42\x4d" },
         { BT_GIF,  "GIF87a" },
         { BT_GIF,  "GIF89a" },
         { BT_JPEG, "\xff\xd8\xff\xe0" },
