@@ -31,7 +31,7 @@ typedef enum MP4FileMode_e
     FILEMODE_UNDEFINED, /**< undefined */
     FILEMODE_READ,      /**< file may be read */
     FILEMODE_MODIFY,    /**< file may be read/written */
-    FILEMODE_CREATE,    /**< file will be created/truncated for read/write */
+    FILEMODE_CREATE    /**< file will be created/truncated for read/write */
 } MP4FileMode;
 
 /** Structure of functions implementing custom file provider.

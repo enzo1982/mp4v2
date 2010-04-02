@@ -60,7 +60,7 @@ typedef enum MP4TagArtworkType_e
     MP4_ART_BMP       = 1,
     MP4_ART_GIF       = 2,
     MP4_ART_JPEG      = 3,
-    MP4_ART_PNG       = 4,
+    MP4_ART_PNG       = 4
 } MP4TagArtworkType;
 
 /** Data object representing a single piece of artwork. */

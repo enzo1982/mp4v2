@@ -21,7 +21,7 @@ typedef enum MP4SampleDependencyType_e {
     MP4_SDT_IS_DEPENDENT                  = 0x10, /**< references other samples */
     MP4_SDT_IS_INDEPENDENT                = 0x20, /**< does not reference other samples */
     MP4_SDT_EARLIER_DISPLAY_TIMES_ALLOWED = 0x40, /**< subequent samples in GOP may display earlier */
-    _MP4_SDT_RESERVED                     = 0x80, /**< reserved */
+    _MP4_SDT_RESERVED                     = 0x80 /**< reserved */
 } MP4SampleDependencyType;
 
 /** Read a track sample.
