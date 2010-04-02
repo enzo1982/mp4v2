@@ -36,7 +36,7 @@ typedef enum MP4FileMode_e
 
 /** Structure of functions implementing custom file provider.
  *
- *  Except for <b>open</b>, al the functions must return a true value
+ *  Except for <b>open</b>, all the functions must return a true value
  *  to indicate failure or false on success. The open function must return
  *  a pointer or handle which represents the open file, otherwise NULL.
  *
@@ -109,6 +109,10 @@ void MP4Close(
  *  with a non-zero size.
  *
  *  @param fileName pathname of the file to be created.
+ *      On Windows, this should be a UTF-8 encoded string.
+ *      On other platforms, it should be an 8-bit encoding that is
+ *      appropriate for the platform, locale, file system, etc.
+ *      (prefer to use UTF-8 when possible).
  *  @param verbosity bitmask of diagnostic details the library
  *      should print to stdout during its functioning.
  *  @param flags bitmask that allows the user to set 64-bit values for
@@ -133,6 +137,10 @@ MP4FileHandle MP4Create(
  *  MP4CreateEx is an extended version of MP4Create().
  *
  *  @param fileName pathname of the file to be created.
+ *      On Windows, this should be a UTF-8 encoded string.
+ *      On other platforms, it should be an 8-bit encoding that is
+ *      appropriate for the platform, locale, file system, etc.
+ *      (prefer to use UTF-8 when possible).
  *  @param verbosity bitmask of diagnostic details the library
  *      should print to stdout during its functioning.
  *  @param flags bitmask that allows the user to set 64-bit values for
@@ -209,15 +217,19 @@ bool MP4Dump(
  *  The following is an example of the output of MP4Info():
 @verbatim
 Track  Type   Info
-1      video  MPEG−4 Simple @ L3, 119.625 secs, 1008 kbps, 352x288 @ 24.00 fps
-2      audio  MPEG−4, 119.327 secs, 128 kbps, 44100 Hz
-3      hint   Payload MP4V−ES for track 1
-4      hint   Payload mpeg4−generic for track 2
+1      video  MPEG-4 Simple @ L3, 119.625 secs, 1008 kbps, 352x288 @ 24.00 fps
+2      audio  MPEG-4, 119.327 secs, 128 kbps, 44100 Hz
+3      hint   Payload MP4V-ES for track 1
+4      hint   Payload mpeg4-generic for track 2
 5      od     Object Descriptors
 6      scene  BIFS
 @endverbatim
  *
  *  @param fileName pathname to mp4 file to summarize.
+ *      On Windows, this should be a UTF-8 encoded string.
+ *      On other platforms, it should be an 8-bit encoding that is
+ *      appropriate for the platform, locale, file system, etc.
+ *      (prefer to use UTF-8 when possible).
  *  @param trackId specifies track to summarize. If the value is
  *      #MP4_INVALID_TRACK_ID, the summary info is created for all
  *      tracks in the file.
@@ -246,10 +258,10 @@ char* MP4FileInfo(
  *  The following is an example of the output of MP4Info():
 @verbatim
 Track  Type   Info
-1      video  MPEG−4 Simple @ L3, 119.625 secs, 1008 kbps, 352x288 @ 24.00 fps
-2      audio  MPEG−4, 119.327 secs, 128 kbps, 44100 Hz
-3      hint   Payload MP4V−ES for track 1
-4      hint   Payload mpeg4−generic for track 2
+1      video  MPEG-4 Simple @ L3, 119.625 secs, 1008 kbps, 352x288 @ 24.00 fps
+2      audio  MPEG-4, 119.327 secs, 128 kbps, 44100 Hz
+3      hint   Payload MP4V-ES for track 1
+4      hint   Payload mpeg4-generic for track 2
 5      od     Object Descriptors
 6      scene  BIFS
 @endverbatim
@@ -275,11 +287,15 @@ char* MP4Info(
  *  an existing mp4 file. It is roughly equivalent to opening a file in
  *  read/write mode.
  *
- *  Since modifications to an existing mp4 file can result in a sub−optimal
+ *  Since modifications to an existing mp4 file can result in a sub-optimal
  *  file layout, you may want to use MP4Optimize() after you have  modified
  *  and closed the mp4 file.
  *
  *  @param fileName pathname of the file to be modified.
+ *      On Windows, this should be a UTF-8 encoded string.
+ *      On other platforms, it should be an 8-bit encoding that is
+ *      appropriate for the platform, locale, file system, etc.
+ *      (prefer to use UTF-8 when possible).
  *  @param verbosity bitmask of diagnostic details the library
  *      should print to stdout during its functioning.
  *  @param flags currently ignored.
@@ -322,7 +338,15 @@ MP4FileHandle MP4Modify(
  *  actual media data.
  *
  *  @param fileName pathname of (existing) file to be optimized.
+ *      On Windows, this should be a UTF-8 encoded string.
+ *      On other platforms, it should be an 8-bit encoding that is
+ *      appropriate for the platform, locale, file system, etc.
+ *      (prefer to use UTF-8 when possible).
  *  @param newFileName pathname of the new optimized file.
+ *      On Windows, this should be a UTF-8 encoded string.
+ *      On other platforms, it should be an 8-bit encoding that is
+ *      appropriate for the platform, locale, file system, etc.
+ *      (prefer to use UTF-8 when possible).
  *      If NULL a temporary file will be used and <b>fileName</b>
  *      will be over-written upon successful completion.
  *  @param verbosity bitmask of diagnostic details the library
@@ -347,6 +371,10 @@ bool MP4Optimize(
  *  read into memory until MP4ReadSample() is called.
  *
  *  @param fileName pathname of the file to be read.
+ *      On Windows, this should be a UTF-8 encoded string.
+ *      On other platforms, it should be an 8-bit encoding that is
+ *      appropriate for the platform, locale, file system, etc.
+ *      (prefer to use UTF-8 when possible).
  *  @param verbosity bitmask of diagnostic details the library
  *      should print to stdout during its functioning.
  *
@@ -370,6 +398,10 @@ MP4FileHandle MP4Read(
  *  read into memory until MP4ReadSample() is called.
  *
  *  @param fileName pathname of the file to be read.
+ *      On Windows, this should be a UTF-8 encoded string.
+ *      On other platforms, it should be an 8-bit encoding that is
+ *      appropriate for the platform, locale, file system, etc.
+ *      (prefer to use UTF-8 when possible).
  *  @param verbosity bitmask of diagnostic details the library
  *      should print to stdout during its functioning.
  *  @param fileProvider custom implementation of file I/O operations.

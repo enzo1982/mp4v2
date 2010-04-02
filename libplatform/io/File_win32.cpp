@@ -56,7 +56,7 @@ StandardFileProvider::open( std::string name, Mode mode )
             break;
     }
 
-    _handle = CreateFileA( name.c_str(), access, share, NULL, crdisp, flags, NULL );
+    _handle = CreateFileW( win32::Utf8ToWideChar( name ), access, share, NULL, crdisp, flags, NULL );
     return _handle == INVALID_HANDLE_VALUE;
 }
 
