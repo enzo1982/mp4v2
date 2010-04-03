@@ -306,7 +306,7 @@ ChapterUtility::actionEvery( JobContext& job )
     {
         MP4Chapter_t chap;
         chap.duration = chapterDuration.duration;
-        sprintf(chap.title, "Chapter %lu", chapters.size()+1);
+        sprintf(chap.title, "Chapter %u", chapters.size()+1);
 
         chapters.push_back( chap );
 
@@ -531,13 +531,13 @@ ChapterUtility::actionImport( JobContext& job )
     }
 
     // convert start time into duration
-    uint64_t framerate = CHAPTERTIMESCALE;
+	uint32_t framerate = static_cast<uint32_t>( CHAPTERTIMESCALE );
     if( Timecode::FRAME == format )
     {
         // get the framerate
         MP4SampleId sampleCount = MP4GetTrackNumberOfSamples( job.fileHandle, refTrackId );
         Timecode tmpcd( refTrackDuration.svalue, CHAPTERTIMESCALE );
-        framerate = std::ceil( ((double)sampleCount / (double)tmpcd.duration) * CHAPTERTIMESCALE );
+		framerate = static_cast<uint32_t>( std::ceil( ((double)sampleCount / (double)tmpcd.duration) * CHAPTERTIMESCALE ) );
     }
 
     for( vector<MP4Chapter_t>::iterator it = chapters.begin(); it != chapters.end(); ++it )

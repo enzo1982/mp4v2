@@ -576,7 +576,7 @@ bool
 MP4ItmfAddItem( MP4FileHandle hFile, const MP4ItmfItem* item )
 {
     if( !MP4_IS_VALID_FILE_HANDLE( hFile ))
-        return NULL;
+        return false;
 
     try {
         return itmf::genericAddItem( *(MP4File*)hFile, item );
@@ -595,7 +595,7 @@ bool
 MP4ItmfSetItem( MP4FileHandle hFile, const MP4ItmfItem* item )
 {
     if( !MP4_IS_VALID_FILE_HANDLE( hFile ))
-        return NULL;
+        return false;
 
     try {
         return itmf::genericSetItem( *(MP4File*)hFile, item );
@@ -614,7 +614,7 @@ bool
 MP4ItmfRemoveItem( MP4FileHandle hFile, const MP4ItmfItem* item )
 {
     if( !MP4_IS_VALID_FILE_HANDLE( hFile ))
-        return NULL;
+        return false;
 
     try {
         return itmf::genericRemoveItem( *(MP4File*)hFile, item );
