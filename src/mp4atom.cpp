@@ -198,7 +198,15 @@ MP4Atom* MP4Atom::ReadAtom(MP4File* pFile, MP4Atom* pParentAtom)
 
     pAtom->SetParentAtom(pParentAtom);
 
-    pAtom->Read();
+	try {
+		pAtom->Read();
+	}
+	catch (MP4Error* e) {
+		// delete atom and rethrow so we don't leak memory.
+		delete pAtom;	
+		throw e;
+	}
+
 
     return pAtom;
 }

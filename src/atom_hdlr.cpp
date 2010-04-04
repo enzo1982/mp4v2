@@ -47,9 +47,14 @@ void MP4HdlrAtom::Read()
 {
     // read all the properties but the "name" field
     ReadProperties(0, 5);
+
     uint64_t pos = m_pFile->GetPosition();
     uint64_t end = GetEnd();
-    if (pos == end) return;
+	if (pos == end){
+		// A hdlr atom with missing "name".     
+		// Apparently that's what some of the iTunes m4p files have.
+		return;
+	}
 
     // take a peek at the next byte
     uint8_t strLength;
