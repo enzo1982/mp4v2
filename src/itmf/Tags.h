@@ -81,10 +81,12 @@ public:
     static const string CODE_ITUNESACCOUNT;
     static const string CODE_ITUNESACCOUNTTYPE;
     static const string CODE_ITUNESCOUNTRY;
-    static const string CODE_CNID;
-    static const string CODE_ATID;
-    static const string CODE_PLID;
-    static const string CODE_GEID;
+    static const string CODE_CONTENTID;
+    static const string CODE_ARTISTID;
+    static const string CODE_PLAYLISTID;
+    static const string CODE_GENREID;
+    static const string CODE_COMPOSERID;
+    static const string CODE_XID;
 
 public:
     string      name;
@@ -138,10 +140,12 @@ public:
     string   iTunesAccount;
     uint8_t  iTunesAccountType;
     uint32_t iTunesCountry;
-    uint32_t cnID;
-    uint32_t atID;
-    uint64_t plID;
-    uint32_t geID;
+    uint32_t contentID;
+    uint32_t artistID;
+    uint64_t playlistID;
+    uint32_t genreID;
+    uint32_t composerID;
+    string   xid;
 
 public:
     Tags();

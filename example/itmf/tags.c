@@ -152,6 +152,21 @@ int main( int argc, char** argv )
     if( tags->gapless )
         printf( "gapless: %u\n", *tags->gapless );
 
+    if( tags->contentID )
+        printf( "contentID: %u\n", *tags->contentID );
+
+    if( tags->artistID )
+        printf( "artistID: %u\n", *tags->artistID );
+
+    if( tags->playlistID )
+        printf( "playlistID: %llu\n", *tags->playlistID );
+
+    if( tags->genreID )
+        printf( "genreID: %u\n", *tags->genreID );
+
+    if( tags->xid )
+        printf( "xid: %s\n", tags->xid );
+
     if( tags->iTunesAccount )
         printf( "iTunesAccount: %s\n", tags->iTunesAccount );
 
@@ -160,18 +175,6 @@ int main( int argc, char** argv )
 
     if( tags->iTunesCountry )
         printf( "iTunesCountry: %u\n", *tags->iTunesCountry );
-
-    if( tags->cnID )
-        printf( "cnID: %u\n", *tags->cnID );
-
-    if( tags->atID )
-        printf( "atID: %u\n", *tags->atID );
-
-    if( tags->plID )
-        printf( "plID: %llu\n", *tags->plID );
-
-    if( tags->geID )
-        printf( "geID: %u\n", *tags->geID );
 
     /**************************************************************************
      * modify various tags values
@@ -252,13 +255,16 @@ int main( int argc, char** argv )
     n32 = 143441; /* USA */
     MP4TagsSetITunesCountry     ( tags, &n32 );
     n32 = 0;
-    MP4TagsSetCNID              ( tags, &n32 );
+    MP4TagsSetContentID         ( tags, &n32 );
     n32 = 0;
-    MP4TagsSetATID              ( tags, &n32 );
+    MP4TagsSetArtistID          ( tags, &n32 );
     n64 = 0;
-    MP4TagsSetPLID              ( tags, &n64 );
+    MP4TagsSetPlaylistID        ( tags, &n64 );
     n32 = 0;
-    MP4TagsSetGEID              ( tags, &n32 );
+    MP4TagsSetGenreID           ( tags, &n32 );
+    n32 = 0;
+    MP4TagsSetComposerID        ( tags, &n32 );
+    MP4TagsSetXID               ( tags, "my prefix:my scheme:my identifier" );
 
     /* push data to mp4 file */
     MP4TagsStore( tags, file );

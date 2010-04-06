@@ -207,8 +207,23 @@ extern "C" int main( int argc, char** argv )
             if ( tags->category ) {
                 fprintf( stdout, " Category: %s\n", tags->category );
             }
-            if ( tags->cnID ) {
-                fprintf( stdout, " cnID: %u\n", *tags->cnID );
+            if ( tags->contentID ) {
+                fprintf( stdout, " Content ID: %u\n", *tags->contentID );
+            }
+            if ( tags->artistID ) {
+                fprintf( stdout, " Artist ID: %u\n", *tags->artistID );
+            }
+            if ( tags->playlistID ) {
+                fprintf( stdout, " Playlist ID: %llu\n", *tags->playlistID );
+            }
+            if ( tags->genreID ) {
+                fprintf( stdout, " Genre ID: %u\n", *tags->genreID );
+            }
+            if ( tags->composerID ) {
+                fprintf( stdout, " Composer ID: %u\n", *tags->composerID );
+            }
+            if ( tags->xid ) {
+                fprintf( stdout, " xid: %s\n", tags->xid );
             }
             if ( tags->iTunesAccount ) {
                 fprintf( stdout, " iTunes Account: %s\n", tags->iTunesAccount );
@@ -223,15 +238,6 @@ extern "C" int main( int argc, char** argv )
             if ( tags->iTunesCountry ) {
                 string s = itmf::enumCountryCode.toString( static_cast<itmf::CountryCode>( *tags->iTunesCountry ), true );
                 fprintf( stdout, " iTunes Store Country: %s\n", s.c_str() );
-            }
-            if ( tags->atID ) {
-                fprintf( stdout, " atID: %u\n", *tags->atID );
-            }
-            if ( tags->plID ) {
-                fprintf( stdout, " plID: %llu\n", *tags->plID );
-            }
-            if ( tags->geID ) {
-                fprintf( stdout, " geID: %u\n", *tags->geID );
             }
             MP4TagsFree( tags );
             MP4Close( mp4file );

@@ -458,35 +458,51 @@ MP4TagsSetITunesCountry( const MP4Tags* m, const uint32_t* value )
 }
 
 void
-MP4TagsSetCNID( const MP4Tags* m, const uint32_t* value )
+MP4TagsSetContentID( const MP4Tags* m, const uint32_t* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
     MP4Tags& c = *const_cast<MP4Tags*>(m);
-    cpp.c_setInteger( value, cpp.cnID, c.cnID );
+    cpp.c_setInteger( value, cpp.contentID, c.contentID );
 }
 
 void
-MP4TagsSetATID( const MP4Tags* m, const uint32_t* value )
+MP4TagsSetArtistID( const MP4Tags* m, const uint32_t* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
     MP4Tags& c = *const_cast<MP4Tags*>(m);
-    cpp.c_setInteger( value, cpp.atID, c.atID );
+    cpp.c_setInteger( value, cpp.artistID, c.artistID );
 }
 
 void
-MP4TagsSetPLID( const MP4Tags* m, const uint64_t* value )
+MP4TagsSetPlaylistID( const MP4Tags* m, const uint64_t* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
     MP4Tags& c = *const_cast<MP4Tags*>(m);
-    cpp.c_setInteger( value, cpp.plID, c.plID );
+    cpp.c_setInteger( value, cpp.playlistID, c.playlistID );
 }
 
 void
-MP4TagsSetGEID( const MP4Tags* m, const uint32_t* value )
+MP4TagsSetGenreID( const MP4Tags* m, const uint32_t* value )
 {
     itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
     MP4Tags& c = *const_cast<MP4Tags*>(m);
-    cpp.c_setInteger( value, cpp.geID, c.geID );
+    cpp.c_setInteger( value, cpp.genreID, c.genreID );
+}
+
+void
+MP4TagsSetComposerID( const MP4Tags* m, const uint32_t* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setInteger( value, cpp.composerID, c.composerID );
+}
+
+void
+MP4TagsSetXID( const MP4Tags* m, const char* value )
+{
+    itmf::Tags& cpp = *static_cast<itmf::Tags*>(m->__handle);
+    MP4Tags& c = *const_cast<MP4Tags*>(m);
+    cpp.c_setString( value, cpp.xid, c.xid );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
