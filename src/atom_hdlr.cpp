@@ -50,11 +50,11 @@ void MP4HdlrAtom::Read()
 
     uint64_t pos = m_pFile->GetPosition();
     uint64_t end = GetEnd();
-	if (pos == end) {
-		// A hdlr atom with missing "name".     
-		// Apparently that's what some of the iTunes m4p files have.
-		return;
-	}
+    if (pos == end) {
+        // A hdlr atom with missing "name".     
+        // Apparently that's what some of the iTunes m4p files have.
+        return;
+    }
 
     // take a peek at the next byte
     uint8_t strLength;
@@ -69,21 +69,21 @@ void MP4HdlrAtom::Read()
         pNameProp->SetCountedFormat(false);
     } else {
         // read a null terminated string
-		try {
-			// Unfortunately, there are some invalid mp4 writers that don't
-			// null the hdlr name string.  Generally this will be "automatically"
-			// terminated for them by the size field of the subsequent atom.  So if
-			// our size is off by one...let it slide.  otherwise, rethrow.
-			// The Skip() call will set our start to the correct location
-			// for the next Atom. See issue #52
-			ReadProperties(5);
-		}
-		catch(MP4Error*e) { 
-			if( m_pFile->GetPosition() - GetEnd() == 1 )
-				delete e;
-			else
-				throw e;
-		}
+        try {
+            // Unfortunately, there are some invalid mp4 writers that don't
+            // null the hdlr name string.  Generally this will be "automatically"
+            // terminated for them by the size field of the subsequent atom.  So if
+            // our size is off by one...let it slide.  otherwise, rethrow.
+            // The Skip() call will set our start to the correct location
+            // for the next Atom. See issue #52
+            ReadProperties(5);
+        }
+        catch(MP4Error*e) { 
+            if( m_pFile->GetPosition() - GetEnd() == 1 )
+                delete e;
+            else
+                throw e;
+        }
     }
 
     Skip(); // to end of atom
