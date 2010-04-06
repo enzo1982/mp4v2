@@ -392,11 +392,14 @@ void MP4StringProperty::Read( MP4File* pFile, uint32_t index )
     for( uint32_t i = begin; i < max; i++ ) {
         char*& value = m_values[i];
 
+        // Generally a default atom setting, e.g. see atom_avc1.cpp, "JVT/AVC Coding"; we'll leak this string if
+        // we don't free.  Note that MP4Free checks for null.
+        MP4Free(value); 
+
         if( m_useCountedFormat ) {
             value = pFile->ReadCountedString( (m_useUnicode ? 2 : 1), m_useExpandedCount, m_fixedLength );
         }
         else if( m_fixedLength ) {
-            MP4Free( value );
             value = (char*)MP4Calloc( m_fixedLength + 1 );
             pFile->ReadBytes( (uint8_t*)value, m_fixedLength );
         }
