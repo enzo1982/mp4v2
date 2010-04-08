@@ -357,7 +357,7 @@ TrackModifier::setUserDataName( const string& value )
         _props.update();
     }
 
-    _props.userDataName->SetValue( reinterpret_cast<const uint8_t*>(value.c_str()), value.size() );
+    _props.userDataName->SetValue( reinterpret_cast<const uint8_t*>(value.c_str()), (uint32_t)value.size() );
     fetch();
 }
 

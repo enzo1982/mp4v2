@@ -170,7 +170,7 @@ Database::parsePair( string& name, string& value )
                         if( delimVisible ) {
                             mode = VALUE;
                             value = c;
-                            visibleLength = value.length();
+                            visibleLength = (uint32_t)value.length();
                         }
                         delimVisible = true;
                         break;
@@ -178,7 +178,7 @@ Database::parsePair( string& name, string& value )
                     default:
                         mode = VALUE;
                         value = c;
-                        visibleLength = value.length();
+                        visibleLength = (uint32_t)value.length();
                         break;
                 }
                 break;
@@ -201,7 +201,7 @@ Database::parsePair( string& name, string& value )
 
                     default:
                         value += c;
-                        visibleLength = value.length();
+                        visibleLength = (uint32_t)value.length();
                         break;
                 }
                 break;

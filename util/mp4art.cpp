@@ -180,7 +180,7 @@ ArtUtility::actionExtract( JobContext& job )
     bool onesuccess = false;
     const CoverArtBox::ItemList::size_type max = items.size();
     for( CoverArtBox::ItemList::size_type i = 0; i < max; i++ ) {
-        bool rv = extractSingle( job, items[i], i );
+        bool rv = extractSingle( job, items[i], (uint32_t)i );
         if( !rv )
             onesuccess = true;
         if( !_keepgoing && rv )

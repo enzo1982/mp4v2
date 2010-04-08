@@ -146,7 +146,7 @@ void MP4RtpAtom::WriteHntiType()
     // since length of string is implicit in size of atom
     // we need to handle this specially, and not write the terminating \0
     MP4StringProperty* pSdp = (MP4StringProperty*)m_pProperties[1];
-    pSdp->SetFixedLength(strlen(pSdp->GetValue()));
+    pSdp->SetFixedLength((uint32_t)strlen(pSdp->GetValue()));
     MP4Atom::Write();
     pSdp->SetFixedLength(0);
 }

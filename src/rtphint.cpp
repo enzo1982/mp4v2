@@ -333,7 +333,7 @@ void MP4RtpHintTrack::GetPayload(
             if (pSlash) {
                 length = pSlash - pRtpMap;
             } else {
-                length = strlen(pRtpMap);
+                length = (uint32_t)strlen(pRtpMap);
             }
 
             if (ppPayloadName) {
@@ -346,7 +346,7 @@ void MP4RtpHintTrack::GetPayload(
                 if (pSlash != NULL) {
                     pSlash++;
                     if (pSlash != '\0') {
-                        length = strlen(pRtpMap) - (pSlash - pRtpMap);
+                        length = (uint32_t)strlen(pRtpMap) - (pSlash - pRtpMap);
                         *ppEncodingParams = (char *)MP4Calloc(length + 1);
                         strncpy(*ppEncodingParams, pSlash, length);
                     }
@@ -425,7 +425,7 @@ void MP4RtpHintTrack::SetPayload(
     }
 
     uint32_t maxlen =
-        strlen(sdpMediaType) + strlen(rtpMapBuf) + 256;
+        (uint32_t)strlen(sdpMediaType) + (uint32_t)strlen(rtpMapBuf) + 256;
     char* sdpBuf = (char*)MP4Malloc(maxlen);
     uint32_t buflen;
     buflen = snprintf(sdpBuf, maxlen,

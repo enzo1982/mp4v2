@@ -588,7 +588,7 @@ char* MP4Info(
                     trackId = MP4FindTrackId(mp4File, i);
                     char* trackInfo = PrintTrackInfo(mp4File, trackId);
                     strncat(info, trackInfo, buflen);
-                    uint32_t newlen = strlen(trackInfo);
+                    uint32_t newlen = (uint32_t)strlen(trackInfo);
                     if (newlen > buflen) buflen = 0;
                     else buflen -= newlen;
                     MP4Free(trackInfo);

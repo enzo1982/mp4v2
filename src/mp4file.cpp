@@ -2217,7 +2217,7 @@ void MP4File::AddChapter(MP4TrackId chapterTrackId, MP4Duration chapterDuration,
     {
         MP4Track * pChapterTrack = GetTrack(chapterTrackId);
         snprintf( text, 1023, "Chapter %03d", pChapterTrack->GetNumberOfSamples() + 1 );
-        textLen = strlen(text);
+        textLen = (uint32_t)strlen(text);
     }
 
     sampleLength = textLen + 2 + 12; // Account for text length code and other marker
@@ -3117,7 +3117,7 @@ bool MP4File::SetTrackName( MP4TrackId trackId, const char* name )
                                    (MP4Property**)&pMetadataProperty));
     ASSERT(pMetadataProperty);
 
-    pMetadataProperty->SetValue((uint8_t*)name, strlen(name));
+    pMetadataProperty->SetValue((uint8_t*)name, (uint32_t)strlen(name));
 
     return true;
 }

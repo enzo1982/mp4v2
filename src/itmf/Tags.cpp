@@ -44,7 +44,7 @@ void
 Tags::c_addArtwork( MP4Tags*& tags, MP4TagArtwork& c_artwork )
 {
     artwork.resize( artwork.size() + 1 );
-    c_setArtwork( tags, artwork.size() - 1, c_artwork );
+    c_setArtwork( tags, (uint32_t)artwork.size() - 1, c_artwork );
     updateArtworkShadow( tags );
 }
 
@@ -756,7 +756,7 @@ void
 Tags::storeString( MP4File& file, const string& code, const string& cpp, const char* c )
 {
     if( c )
-        store( file, code, MP4_ITMF_BT_UTF8, cpp.c_str(), cpp.size() );
+        store( file, code, MP4_ITMF_BT_UTF8, cpp.c_str(), (uint32_t)cpp.size() );
     else
         remove( file, code );
 }
@@ -776,7 +776,7 @@ Tags::updateArtworkShadow( MP4Tags*& tags )
         return;
 
     MP4TagArtwork* const cartwork = new MP4TagArtwork[ artwork.size() ];
-    uint32_t max = artwork.size();
+    uint32_t max = (uint32_t)artwork.size();
 
     for( uint32_t i = 0; i < max; i++ ) {
         MP4TagArtwork& a = cartwork[i];

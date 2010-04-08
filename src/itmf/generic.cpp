@@ -219,12 +219,12 @@ __itemModelToAtom( const MP4ItmfItem& model, MP4ItemAtom& atom )
         ASSERT( model.mean ); // mandatory
         MP4MeanAtom& meanAtom = *(MP4MeanAtom*)MP4Atom::CreateAtom( &atom, "mean" );
         atom.AddChildAtom( &meanAtom );
-        meanAtom.value.SetValue( (const uint8_t*)model.mean, strlen( model.mean ));
+        meanAtom.value.SetValue( (const uint8_t*)model.mean, (uint32_t)strlen( model.mean ));
 
         if( model.name ) {
             MP4NameAtom& nameAtom = *(MP4NameAtom*)MP4Atom::CreateAtom( &atom, "name" );
             atom.AddChildAtom( &nameAtom );
-            nameAtom.value.SetValue( (const uint8_t*)model.name, strlen( model.name ));
+            nameAtom.value.SetValue( (const uint8_t*)model.name, (uint32_t)strlen( model.name ));
         }
     }
 
@@ -329,7 +329,7 @@ genericGetItemsByCode( MP4File& file, const string& code )
         return __itemListAlloc();
 
     MP4ItmfItemList& list = *__itemListAlloc();
-    __itemListResize( list, indexList.size() );
+    __itemListResize( list, (uint32_t)indexList.size() );
 
     // pass 2: process each atom
     const vector<uint32_t>::size_type max = indexList.size();
@@ -381,7 +381,7 @@ genericGetItemsByMeaning( MP4File& file, const string& meaning, const string& na
         return __itemListAlloc();
 
     MP4ItmfItemList& list = *__itemListAlloc();
-    __itemListResize( list, indexList.size() );
+    __itemListResize( list, (uint32_t)indexList.size() );
 
     // pass 2: process each atom
     const vector<uint32_t>::size_type max = indexList.size();

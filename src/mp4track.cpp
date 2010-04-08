@@ -569,7 +569,7 @@ void MP4Track::FinishSdtp()
     MP4SdtpAtom* sdtp = (MP4SdtpAtom*)m_pTrakAtom->FindAtom( "trak.mdia.minf.stbl.sdtp" );
     if( !sdtp )
         sdtp = (MP4SdtpAtom*)AddAtom( "trak.mdia.minf.stbl", "sdtp" );
-    sdtp->data.SetValue( (const uint8_t*)m_sdtpLog.data(), m_sdtpLog.size() );
+    sdtp->data.SetValue( (const uint8_t*)m_sdtpLog.data(), (uint32_t)m_sdtpLog.size() );
 
     // add avc1 compatibility indicator if not present
     MP4FtypAtom* ftyp = (MP4FtypAtom*)m_pFile->FindAtom( "ftyp" );

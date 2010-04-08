@@ -51,7 +51,7 @@ void MP4SdpAtom::Write()
     MP4StringProperty* pSdp = (MP4StringProperty*)m_pProperties[0];
     const char* sdpText = pSdp->GetValue();
     if (sdpText) {
-        pSdp->SetFixedLength(strlen(sdpText));
+        pSdp->SetFixedLength((uint32_t)strlen(sdpText));
     }
     MP4Atom::Write();
     pSdp->SetFixedLength(0);

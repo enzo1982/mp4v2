@@ -317,7 +317,7 @@ ChapterUtility::actionEvery( JobContext& job )
     {
         chapters.back().duration = (refTrackDuration - (durationSum - chapterDuration)).duration;
 
-        MP4SetChapters(job.fileHandle, &chapters[0], chapters.size(), _ChapterType);
+        MP4SetChapters(job.fileHandle, &chapters[0], (uint32_t)chapters.size(), _ChapterType);
     }
 
     fixQtScale( job.fileHandle );
@@ -560,7 +560,7 @@ ChapterUtility::actionImport( JobContext& job )
     }
 
     // now set the chapters
-    MP4SetChapters( job.fileHandle, &chapters[0], chapters.size(), _ChapterType );
+    MP4SetChapters( job.fileHandle, &chapters[0], (uint32_t)chapters.size(), _ChapterType );
 
     fixQtScale( job.fileHandle );
     job.optimizeApplicable = true;
@@ -989,7 +989,7 @@ ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& c
                     titleStart++;
                 }
 
-                titleLen = strlen( titleStart );
+                titleLen = (uint32_t)strlen( titleStart );
 
                 // advance to the end of the line
                 pos = titleStart + 1 + titleLen;
@@ -1048,7 +1048,7 @@ ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& c
                                                                  : FMT_STATE_TITLE_LINE;
 
                 titleStart = equalsPos + 1;
-                titleLen = strlen( titleStart );
+                titleLen = (uint32_t)strlen( titleStart );
 
                 // advance to the end of the line
                 pos = titleStart + titleLen;

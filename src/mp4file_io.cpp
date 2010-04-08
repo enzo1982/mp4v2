@@ -380,7 +380,7 @@ void MP4File::WriteString(char* string)
         uint8_t zero = 0;
         WriteBytes(&zero, 1);
     } else {
-        WriteBytes((uint8_t*)string, strlen(string) + 1);
+        WriteBytes((uint8_t*)string, (uint32_t)strlen(string) + 1);
     }
 }
 
@@ -445,7 +445,7 @@ void MP4File::WriteCountedString(char* string,
     uint8_t zero[1];
 
     if (string) {
-        byteLength = strlen(string);
+        byteLength = (uint32_t)strlen(string);
         if (fixedLength && (byteLength >= fixedLength)) {
             byteLength = fixedLength-1;
         }

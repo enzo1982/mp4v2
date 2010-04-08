@@ -184,7 +184,7 @@ void MP4File::MakeIsmaCompliant(bool addIsmaComplianceSdp)
 
     char* iodBase64 = MP4ToBase64(pBytes, numBytes);
 
-    uint32_t sdpBufLen = strlen(iodBase64) + 256;
+    uint32_t sdpBufLen = (uint32_t)strlen(iodBase64) + 256;
     uint32_t used;
     char* sdpBuf = (char*)MP4Calloc(sdpBufLen);
 
@@ -192,7 +192,7 @@ void MP4File::MakeIsmaCompliant(bool addIsmaComplianceSdp)
         strncpy(sdpBuf, "a=isma-compliance:1,1.0,1\015\012", sdpBufLen);
     }
 
-    used = strlen(sdpBuf);
+    used = (uint32_t)strlen(sdpBuf);
     sdpBufLen -= used;
     snprintf(&sdpBuf[used], sdpBufLen,
              "a=mpeg4-iod: \042data:application/mpeg4-iod;base64,%s\042\015\012",
@@ -285,7 +285,7 @@ void MP4File::CreateIsmaIodFromFile(
 
     char* odCmdBase64 = MP4ToBase64(pBytes, numBytes);
 
-    uint32_t urlBufLen = strlen(odCmdBase64) + 64;
+    uint32_t urlBufLen = (uint32_t)strlen(odCmdBase64) + 64;
     char* urlBuf = (char*)MP4Malloc(urlBufLen);
 
     snprintf(urlBuf, urlBufLen,
