@@ -89,16 +89,6 @@ Tags::c_fetch( MP4Tags*& tags, MP4FileHandle hFile )
     fetchString(  cim, CODE_GENRE,             genre,             c.genre );
     fetchGenre(   cim,                         genreType,         c.genreType );
 
-	// Fix for issue #45 - two different ways to specify a genre string, the
-	// ~gen atom which contains a string and the gnre atom, which contains
-	// an index.  if our genre is empty and we have a valid genreType,
-	// go ahead and populate genre with the correct string.
-	if (genre == "" && genreType != GENRE_UNDEFINED) {
-		genre = enumGenreType.data[genreType-1].formal;
-		c.genre = genre.c_str();
-	}
-
-
     fetchString(  cim, CODE_RELEASEDATE,       releaseDate,       c.releaseDate );
     fetchTrack(   cim,                         track,             c.track );
     fetchDisk(    cim,                         disk,              c.disk );
