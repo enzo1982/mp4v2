@@ -62,6 +62,10 @@ protected:
     ///
     /// @param write <b>true</b> to open file for writing, <b>false</b> for reading.
     /// @param fname filename to open.
+    ///     On Windows, this should be a UTF-8 encoded string.
+    ///     On other platforms, it should be an 8-bit encoding that is
+    ///     appropriate for the platform, locale, file system, etc.
+    ///     (prefer to use UTF-8 when possible).
     ///
     /// @return <b>true</b> on error.
     ///

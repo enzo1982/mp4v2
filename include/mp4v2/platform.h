@@ -22,9 +22,9 @@
 #endif
 
 #if defined( _WIN32 ) || defined( __MINGW32__ )
-#   if defined( _WINDLL ) || defined( DLL_EXPORT )
+#   if defined( MP4V2_EXPORTS )
 #       define MP4V2_EXPORT __declspec(dllexport)
-#   elif defined( _DLL ) || defined( DLL_IMPORT ) 
+#   elif defined( MP4V2_USE_DLL_IMPORT ) || !defined( MP4V2_USE_STATIC_LIB )
 #       define MP4V2_EXPORT __declspec(dllimport)
 #   else
 #       define MP4V2_EXPORT
