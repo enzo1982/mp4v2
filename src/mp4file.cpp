@@ -2095,6 +2095,50 @@ MP4TrackId MP4File::AddSubtitleTrack(uint32_t timescale,
     return trackId;
 }
 
+MP4TrackId MP4File::AddSubpicTrack(uint32_t timescale,
+                                     uint16_t width,
+                                     uint16_t height)
+{
+    MP4TrackId trackId =
+        AddTrack(MP4_SUBPIC_TRACK_TYPE, timescale);
+
+    InsertChildAtom(MakeTrackName(trackId, "mdia.minf"), "nmhd", 0);
+
+    (void)AddChildAtom(MakeTrackName(trackId, "mdia.minf.stbl.stsd"), "mp4s");
+
+    SetTrackFloatProperty(trackId, "tkhd.width", width);
+    SetTrackFloatProperty(trackId, "tkhd.height", height);
+    SetTrackIntegerProperty(trackId, "tkhd.layer", 0);
+
+    // stsd is a unique beast in that it has a count of the number
+    // of child atoms that needs to be incremented after we add the mp4s atom
+    MP4Integer32Property* pStsdCountProperty;
+    FindIntegerProperty(
+        MakeTrackName(trackId, "mdia.minf.stbl.stsd.entryCount"),
+        (MP4Property**)&pStsdCountProperty);
+    pStsdCountProperty->IncrementValue();
+
+    SetTrackIntegerProperty(trackId,
+                            "mdia.minf.stbl.stsd.mp4s.esds.ESID",
+#if 0
+                            // note - for a file, these values need to
+                            // be 0 - wmay - 04/16/2003
+                            trackId
+#else
+                            0
+#endif
+                           );
+
+    SetTrackIntegerProperty(trackId,
+                            "mdia.minf.stbl.stsd.mp4s.esds.decConfigDescr.objectTypeId",
+                            MP4SubpicObjectType);
+
+    SetTrackIntegerProperty(trackId,
+                            "mdia.minf.stbl.stsd.mp4s.esds.decConfigDescr.streamType",
+                            MP4NeroSubpicStreamType);
+    return trackId;
+}
+
 MP4TrackId MP4File::AddChapterTextTrack(MP4TrackId refTrackId, uint32_t timescale)
 {
     // validate reference track id

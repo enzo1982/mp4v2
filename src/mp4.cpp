@@ -1174,6 +1174,23 @@ MP4FileHandle MP4ReadProvider( const char* fileName, uint32_t verbosity, const M
         return MP4_INVALID_TRACK_ID;
     }
 
+    MP4TrackId MP4AddSubpicTrack(MP4FileHandle hFile,
+                                   uint32_t timescale,
+                                   uint16_t width,
+                                   uint16_t height)
+    {
+        if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
+            try {
+                return ((MP4File*)hFile)->AddSubpicTrack(timescale, width, height);
+            }
+            catch (MP4Error* e) {
+                PRINT_ERROR(e);
+                delete e;
+            }
+        }
+        return MP4_INVALID_TRACK_ID;
+    }
+
     MP4TrackId MP4AddChapterTextTrack(
         MP4FileHandle hFile, MP4TrackId refTrackId, uint32_t timescale)
     {

@@ -119,6 +119,7 @@ protected:
 // ES objectTypeId
 const uint8_t MP4SystemsV1ObjectType            = 0x01;
 const uint8_t MP4SystemsV2ObjectType            = 0x02;
+const uint8_t MP4SubpicObjectType               = 0xe0;
 
 // ES streamType
 const uint8_t MP4ObjectDescriptionStreamType    = 0x01;
@@ -131,6 +132,7 @@ const uint8_t MP4IPMPStreamType                 = 0x07;
 const uint8_t MP4OCIStreamType                  = 0x08;
 const uint8_t MP4MPEGJStreamType                = 0x09;
 const uint8_t MP4UserPrivateStreamType          = 0x20;
+const uint8_t MP4NeroSubpicStreamType           = 0x38;
 
 ///////////////////////////////////////////////////////////////////////////////
 
