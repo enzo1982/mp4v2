@@ -92,8 +92,6 @@ AC_MSG_CHECKING([$PACKAGE_NAME platform portability])
 X_PLATFORM=posix
 case ${host} in
 *-*-cygwin)
-    # do not support shared
-    enable_shared=no
     X_CXX_W="$X_CXX_W -Wno-format"
     if test "$enable_cygwin_win32" = "yes"; then
         X_PLATFORM=win32
@@ -205,6 +203,9 @@ fi
 case ${host} in
     *-*-darwin*)
         X_libmp4v2_la_LDFLAGS='-Wl,-current_version,$(PROJECT_version_major).$(PROJECT_version_minor).$(PROJECT_version_point) -Wl,-compatibility_version,$(PROJECT_version_major).0.0'
+        ;;
+    *-*-cygwin*)
+        X_libmp4v2_la_LDFLAGS='-no-undefined'
         ;;
     *)
         X_libmp4v2_la_LDFLAGS=

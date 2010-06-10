@@ -200,7 +200,7 @@ siteclean:
 ###############################################################################
 
 $(DOC.man.out): | $(dir $(DOC.man.out))
-$(DOC.man.out): $(DOC.out/)man/man1/%.1: $(BUILD/)%
+$(DOC.man.out): $(DOC.out/)man/man1/%.1: $(BUILD/)%$(EXEEXT)
 	$(call HELP2MAN.cmd,$<,$@)
 
 $(DOC.texi2html.out): $(DOC.texi.includes) | $(dir $(DOC.texi2html.out))
