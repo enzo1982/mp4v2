@@ -42,16 +42,16 @@ MP4SoundAtom::MP4SoundAtom(const char *atomid)
     AddProperty( /* 5 */
         new MP4Integer16Property("sampleSize"));
     AddProperty( /* 6 */
-        new MP4Integer16Property("packetSize"));
+        new MP4Integer16Property("compressionId"));
     AddProperty( /* 7 */
+        new MP4Integer16Property("packetSize"));
+    AddProperty( /* 8 */
         new MP4Integer32Property("timeScale"));
 
     if (ATOMID(atomid) == ATOMID("mp4a")) {
-        AddReserved("reserved3", 2); /* 8 */
         ExpectChildAtom("esds", Required, OnlyOne);
         ExpectChildAtom("wave", Optional, OnlyOne);
     } else if (ATOMID(atomid) == ATOMID("alac")) {
-        AddReserved("reserved3", 2); /* 8 */
         ExpectChildAtom("alac", Optional, Optional);
         //AddProperty( new MP4BytesProperty("alacInfo", 36));
     }
@@ -60,13 +60,13 @@ MP4SoundAtom::MP4SoundAtom(const char *atomid)
 void MP4SoundAtom::AddProperties (uint8_t version)
 {
     if (version > 0) {
-        AddProperty( /* 8 */
-            new MP4Integer32Property("samplesPerPacket"));
         AddProperty( /* 9 */
-            new MP4Integer32Property("bytesPerPacket"));
+            new MP4Integer32Property("samplesPerPacket"));
         AddProperty( /* 10 */
-            new MP4Integer32Property("bytesPerFrame"));
+            new MP4Integer32Property("bytesPerPacket"));
         AddProperty( /* 11 */
+            new MP4Integer32Property("bytesPerFrame"));
+        AddProperty( /* 12 */
             new MP4Integer32Property("bytesPerSample"));
     }
     if (version == 2) {
@@ -78,9 +78,9 @@ void MP4SoundAtom::Generate()
     MP4Atom::Generate();
 
     ((MP4Integer16Property*)m_pProperties[1])->SetValue(1);
+    ((MP4Integer16Property*)m_pProperties[2])->SetValue(0);
 
     // property reserved2 has non-zero fixed values
-    ((MP4Integer16Property*)m_pProperties[2])->SetValue(0);
     static const uint8_t reserved2[6] = {
         0x00, 0x00, 0x00, 0x00,
         0x00, 0x00,

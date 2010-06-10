@@ -1272,7 +1272,7 @@ MP4TrackId MP4File::AddAudioTrack(
     pStsdCountProperty->IncrementValue();
 
     SetTrackIntegerProperty(trackId,
-                            "mdia.minf.stbl.stsd.mp4a.timeScale", timeScale);
+                            "mdia.minf.stbl.stsd.mp4a.timeScale", timeScale << 16);
 
     SetTrackIntegerProperty(trackId,
                             "mdia.minf.stbl.stsd.mp4a.esds.ESID",
