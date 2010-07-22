@@ -898,7 +898,9 @@ File* MP4Track::GetSampleFile( MP4SampleId sampleId )
 
     File* file;
 
-    if( pUrlAtom->GetFlags() & 1 ) {
+    // make sure this is actually a url atom (somtimes it's "cios", like in iTunes videos)
+    if( strcmp(pUrlAtom->GetType(), "url ") ||
+        pUrlAtom->GetFlags() & 1 ) {
         file = NULL; // self-contained
     }
     else {
