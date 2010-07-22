@@ -49,6 +49,7 @@ using namespace mp4v2::util;
 #define OPT_TVEPISODEID  'o'
 #define OPT_PLAYLISTID   'p'
 #define OPT_PICTURE      'P'
+#define OPT_PODCAST      'B'
 #define OPT_ALBUM_ARTIST 'R'
 #define OPT_NAME         's'
 #define OPT_TVSHOW       'S'
@@ -60,7 +61,7 @@ using namespace mp4v2::util;
 #define OPT_ARTISTID     'z'
 #define OPT_COMPOSERID   'Z'
 
-#define OPT_STRING  "r:A:a:b:c:C:d:D:e:E:g:G:H:i:I:j:l:L:m:M:n:N:o:p:P:R:s:S:t:T:x:w:y:z:Z:"
+#define OPT_STRING  "r:A:a:b:c:C:d:D:e:E:g:G:H:i:I:j:l:L:m:M:n:N:o:p:P:B:R:s:S:t:T:x:w:y:z:Z:"
 
 #define ELEMENT_OF(x,i) x[int(i)]
 
@@ -94,6 +95,7 @@ static const char* const help_text =
     "  -o, -episodeid   STR  Set the TV episode ID\n"
     "  -p, -playlistid  NUM  Set the playlist ID\n"
     "  -P, -picture     PTH  Set the picture as a .png\n"
+    "  -B, -podcast     NUM  Set the podcast flag.\n"
     "  -R, -albumartist STR  Set the album artist\n"
     "  -s, -song        STR  Set the song title\n"
     "  -S  -show        STR  Set the TV show\n"
@@ -136,6 +138,7 @@ extern "C" int
         { "episodeid",   prog::Option::REQUIRED_ARG, 0, OPT_TVEPISODEID  },
         { "playlistid",  prog::Option::REQUIRED_ARG, 0, OPT_PLAYLISTID   },
         { "picture",     prog::Option::REQUIRED_ARG, 0, OPT_PICTURE      },
+        { "podcast",     prog::Option::REQUIRED_ARG, 0, OPT_PODCAST      },
         { "song",        prog::Option::REQUIRED_ARG, 0, OPT_NAME         },
         { "show",        prog::Option::REQUIRED_ARG, 0, OPT_TVSHOW       },
         { "tempo",       prog::Option::REQUIRED_ARG, 0, OPT_TEMPO        },
@@ -195,6 +198,7 @@ extern "C" int
             case OPT_TRACKS:
             case OPT_ARTISTID:
             case OPT_COMPOSERID:
+            case OPT_PODCAST:
                 if ( c == OPT_PLAYLISTID ) {
                     r = sscanf( prog::optarg, "%llu", &nums[c] );
                 } else {
@@ -361,6 +365,9 @@ extern "C" int
                         break;
                     case OPT_COMPOSERID:
                         MP4TagsSetComposerID( mdata, NULL );
+                        break;
+                    case OPT_PODCAST:
+                        MP4TagsSetPodcast(mdata, NULL);
                         break;
                 }
             }
@@ -549,6 +556,12 @@ extern "C" int
                     {
                         uint32_t value = static_cast<uint32_t>( nums[i] );
                         MP4TagsSetComposerID( mdata, &value );
+                        break;
+                    }
+                    case OPT_PODCAST:
+                    {
+                        uint8_t value = static_cast<uint8_t>( nums[i] );
+                        MP4TagsSetPodcast(mdata, &value);
                         break;
                     }
                 }
