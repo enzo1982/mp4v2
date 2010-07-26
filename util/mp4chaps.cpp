@@ -298,25 +298,21 @@ ChapterUtility::actionEvery( JobContext& job )
 
     Timecode chapterDuration( _ChaptersEvery * 1000, CHAPTERTIMESCALE );
     chapterDuration.setFormat( Timecode::DECIMAL );
-    Timecode durationSum( 0, CHAPTERTIMESCALE );
-    durationSum.setFormat( Timecode::DECIMAL );
     vector<MP4Chapter_t> chapters;
 
-    while( durationSum + chapterDuration < refTrackDuration )
+    do
     {
         MP4Chapter_t chap;
-        chap.duration = chapterDuration.duration;
+        chap.duration = refTrackDuration.duration > chapterDuration.duration ? chapterDuration.duration : refTrackDuration.duration;
         sprintf(chap.title, "Chapter %u", chapters.size()+1);
 
         chapters.push_back( chap );
-
-        durationSum += chapterDuration;
+        refTrackDuration -= chapterDuration;
     }
+    while( refTrackDuration.duration > 0 );
 
     if( 0 < chapters.size() )
     {
-        chapters.back().duration = (refTrackDuration - (durationSum - chapterDuration)).duration;
-
         MP4SetChapters(job.fileHandle, &chapters[0], (uint32_t)chapters.size(), _ChapterType);
     }
 
