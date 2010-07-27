@@ -2996,7 +2996,7 @@ void MP4File::MakeFtypAtom(
 
     ftyp->compatibleBrands.SetCount( compatibleBrandsCount );
     for( uint32_t i = 0; i < compatibleBrandsCount; i++ )
-        ftyp->compatibleBrands.SetValue( compatibleBrands[i] );
+        ftyp->compatibleBrands.SetValue( compatibleBrands[i], i );
 }
 
 char* MP4File::MakeTrackName(MP4TrackId trackId, const char* name)
