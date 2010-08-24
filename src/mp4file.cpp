@@ -1057,13 +1057,13 @@ void MP4File::AddDataReference(MP4TrackId trackId, const char* url)
     }
 }
 
-MP4TrackId MP4File::AddSystemsTrack(const char* type)
+MP4TrackId MP4File::AddSystemsTrack(const char* type, uint32_t timeScale)
 {
     const char* normType = MP4NormalizeTrackType(type, m_verbosity);
 
     // TBD if user type, fix name to four chars, and warn
 
-    MP4TrackId trackId = AddTrack(type, MP4_MSECS_TIME_SCALE);
+    MP4TrackId trackId = AddTrack(type, timeScale);
 
     (void)InsertChildAtom(MakeTrackName(trackId, "mdia.minf"), "nmhd", 0);
 

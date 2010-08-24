@@ -20,6 +20,7 @@
  *
  *  @param hFile handle of file for operation.
  *  @param type specifies the type of track to be added.
+ *  @param timeScale the time scale in ticks per second of the track.  Default is 1000.
  *
  *  @return On success, the track-id of new track.
  *      On failure, #MP4_INVALID_TRACK_ID.
@@ -27,7 +28,8 @@
 MP4V2_EXPORT
 MP4TrackId MP4AddTrack(
     MP4FileHandle hFile,
-    const char*   type );
+    const char*   type,
+    uint32_t      timeScale DEFAULT(MP4_MSECS_TIME_SCALE) );
 
 /** Add an MPEG-4 systems track.
  *

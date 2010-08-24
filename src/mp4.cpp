@@ -583,11 +583,11 @@ MP4FileHandle MP4ReadProvider( const char* fileName, uint32_t verbosity, const M
     /* track operations */
 
     MP4TrackId MP4AddTrack(
-        MP4FileHandle hFile, const char* type)
+        MP4FileHandle hFile, const char* type,uint32_t timeScale)
     {
         if (MP4_IS_VALID_FILE_HANDLE(hFile)) {
             try {
-                return ((MP4File*)hFile)->AddSystemsTrack(type);
+                return ((MP4File*)hFile)->AddSystemsTrack(type, timeScale);
             }
             catch (MP4Error* e) {
                 PRINT_ERROR(e);
