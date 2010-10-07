@@ -515,10 +515,10 @@ extern "C" int
                             art.type = MP4_ART_UNDEFINED;
 
                             File::Size nin;
-                            if( in.read( art.data, art.size, nin ) && nin == art.size ) {
+                            if( !in.read( art.data, art.size, nin ) && nin == art.size ) {
                                 if( mdata->artworkCount )
                                     MP4TagsRemoveArtwork( mdata, 0 );
-                                MP4TagsAddArtwork( mdata, &art );
+                                MP4TagsAddArtwork( mdata, &art ); 
                             }
 
                             free( art.data );
