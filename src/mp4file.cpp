@@ -491,27 +491,6 @@ void MP4File::FinishWrite()
         }
     }
 
-    // remove moov.trak[*].udta.name if empty.  then remove udta if no child atoms.
-    for( uint32_t i = 0; i < m_pTracks.Size(); i++ ) {
-        ASSERT( m_pTracks[i] );
-        MP4Atom* trak = m_pTracks[i]->GetTrakAtom();
-        MP4BytesProperty* nameProperty = NULL;
-        trak->FindProperty("trak.udta.name.value", (MP4Property**) &nameProperty);
-        if( nameProperty != NULL && nameProperty->GetValueSize() == 0 ){
-            MP4Atom* name = trak->FindChildAtom("udta.name");
-            if( name ) {
-                MP4Atom* udta = name->GetParentAtom();
-                udta->DeleteChildAtom( name );
-                delete name;
-
-                if( udta->GetNumberOfChildAtoms() == 0 ) {
-                    udta->GetParentAtom()->DeleteChildAtom( udta );
-                    delete udta;
-                }
-            }
-        }
-    }
-
     // remove empty moov.udta.name
     {
         MP4Atom* name = FindAtom( "moov.udta.name" );

@@ -551,6 +551,24 @@ void MP4Track::FinishWrite()
                 (MP4Property**)&pBitrateProperty)) {
         pBitrateProperty->SetValue(GetAvgBitrate());
     }
+
+    // cleaup trak.udta
+    MP4BytesProperty* nameProperty = NULL;
+    m_pTrakAtom->FindProperty("trak.udta.name.value", (MP4Property**) &nameProperty);
+    if( nameProperty != NULL && nameProperty->GetValueSize() == 0 ){
+        // Zero length name value--delete name, and then udta if no child atoms
+        MP4Atom* name = m_pTrakAtom->FindChildAtom("udta.name");
+        if( name ) {
+            MP4Atom* udta = name->GetParentAtom();
+            udta->DeleteChildAtom( name );
+            delete name;
+
+            if( udta->GetNumberOfChildAtoms() == 0 ) {
+                udta->GetParentAtom()->DeleteChildAtom( udta );
+                delete udta;
+            }
+        }
+    }
 }
 
 // Process sdtp log and add sdtp atom.
