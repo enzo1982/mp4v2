@@ -347,7 +347,8 @@ MP4FileHandle MP4Modify(
  *      On other platforms, it should be an 8-bit encoding that is
  *      appropriate for the platform, locale, file system, etc.
  *      (prefer to use UTF-8 when possible).
- *      If NULL a temporary file will be used and <b>fileName</b>
+ *      If NULL a temporary file in the same directory as the
+ *      <b>fileName</b> will be used and <b>fileName</b>
  *      will be over-written upon successful completion.
  *  @param verbosity bitmask of diagnostic details the library
  *      should print to stdout during its functioning.
