@@ -244,9 +244,26 @@ void MP4File::Optimize( const char* srcFileName, const char* dstFileName )
     // compute destination filename
     string dname;
     if( dstFileName )
+    {
         dname = dstFileName;
-    else
-        FileSystem::pathnameTemp( dname, ".", "tmp", ".mp4" );
+    } else {
+        // No destination given, so let's kludge together a temporary file.
+        // We'll try to create it in the same directory as the srcFileName, since
+        // it's more likely that directory is writable.  In the absence of that,
+        // we'll create it in "./", which is the default pathnameTemp() provides.
+        string s(srcFileName);
+        size_t pos = s.find_last_of("\\/");
+        const char *d;
+        if (pos == string::npos)
+        {
+            d = ".";
+        } else {
+            s = s.substr(0, pos);
+            d = s.c_str();
+        }
+        FileSystem::pathnameTemp( dname, d, "tmp", ".mp4" );
+    }
+
 
     Open( dname.c_str(), File::MODE_CREATE, NULL );
     File* const dst = m_file;
