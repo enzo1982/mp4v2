@@ -396,7 +396,7 @@ extern "C" int
             MP4TagsSetTrack( mdata, &tt );
         }
 
-        if ( ELEMENT_OF(tags,OPT_TRACK) || ELEMENT_OF(tags,OPT_TRACKS) ) {
+        if ( ELEMENT_OF(tags,OPT_DISK) || ELEMENT_OF(tags,OPT_DISKS) ) {
             MP4TagDisk td;
             td.index = 0;
             td.total = 0;
