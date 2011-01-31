@@ -617,7 +617,10 @@ Tags::storeGenre( MP4File& file, uint16_t cpp, const uint16_t* c )
         buf[0] = uint8_t((cpp & 0xff00) >> 8);
         buf[1] = uint8_t((cpp & 0x00ff)     );
 
-        store( file, CODE_GENRETYPE, MP4_ITMF_BT_GENRES, buf, sizeof(buf) );
+        // it's not clear if you must use implicit in these situations and iirc iTunes and other software are not consistent in this regard.
+        // many other tags must be integer type yet no issues there. Silly that iTunes insists it must be implict, which is then hardcoded 
+        // to interpret as genres anyways.
+        store( file, CODE_GENRETYPE, MP4_ITMF_BT_IMPLICIT, buf, sizeof(buf) );
     }
     else {
         remove( file, CODE_GENRETYPE );
