@@ -14,10 +14,12 @@
 // 
 //  The Initial Developer of the Original Code is Kona Blend.
 //  Portions created by Kona Blend are Copyright (C) 2008.
+//  Portions created by David Byron are Copyright (C) 2010.
 //  All Rights Reserved.
 //
 //  Contributors:
 //      Kona Blend, kona8lend@@gmail.com
+//      David Byron, dbyron@dbyron.com
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -240,7 +242,7 @@ TrackUtility::actionColorParameterAdd( JobContext& job )
     if( dryrunAbort() )
         return SUCCESS;
 
-    job.fileHandle = MP4Modify( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Modify( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
@@ -265,7 +267,7 @@ TrackUtility::actionColorParameterAdd( JobContext& job )
 bool
 TrackUtility::actionColorParameterList( JobContext& job )
 {
-    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Read( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
 
@@ -348,7 +350,7 @@ TrackUtility::actionColorParameterRemove( JobContext& job )
     if( dryrunAbort() )
         return SUCCESS;
 
-    job.fileHandle = MP4Modify( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Modify( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
@@ -410,7 +412,7 @@ TrackUtility::actionColorParameterSet( JobContext& job )
     if( dryrunAbort() )
         return SUCCESS;
 
-    job.fileHandle = MP4Modify( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Modify( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
@@ -440,7 +442,7 @@ TrackUtility::actionList( JobContext& job )
 
     ostringstream report;
 
-    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Read( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
 
@@ -505,7 +507,7 @@ TrackUtility::actionPictureAspectRatioAdd( JobContext& job )
     if( dryrunAbort() )
         return SUCCESS;
 
-    job.fileHandle = MP4Modify( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Modify( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
@@ -530,7 +532,7 @@ TrackUtility::actionPictureAspectRatioAdd( JobContext& job )
 bool
 TrackUtility::actionPictureAspectRatioList( JobContext& job )
 {
-    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Read( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
 
@@ -608,7 +610,7 @@ TrackUtility::actionPictureAspectRatioRemove( JobContext& job )
     if( dryrunAbort() )
         return SUCCESS;
 
-    job.fileHandle = MP4Modify( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Modify( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
@@ -670,7 +672,7 @@ TrackUtility::actionPictureAspectRatioSet( JobContext& job )
     if( dryrunAbort() )
         return SUCCESS;
 
-    job.fileHandle = MP4Modify( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Modify( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
@@ -716,7 +718,7 @@ TrackUtility::actionTrackModifierRemove( JobContext& job )
     if( dryrunAbort() )
         return SUCCESS;
 
-    job.fileHandle = MP4Modify( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Modify( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 
@@ -755,7 +757,7 @@ TrackUtility::actionTrackModifierSet( JobContext& job )
     if( dryrunAbort() )
         return SUCCESS;
 
-    job.fileHandle = MP4Modify( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Modify( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
 

@@ -172,7 +172,6 @@ protected:
 
     uint32_t          _jobCount;
     uint32_t          _jobTotal;
-    uint32_t          _debugVerbosity;
     bool              _debugImplicits;
 
     Group         _group; // group to which standard options are added

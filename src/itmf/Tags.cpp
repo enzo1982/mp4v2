@@ -14,11 +14,13 @@
 // 
 //  The Initial Developer of the Original Code is Kona Blend.
 //  Portions created by Kona Blend are Copyright (C) 2008.
+//  Portions created by David Byron are Copyright (C) 2011.
 //  All Rights Reserved.
 //
 //  Contributors:
 //      Kona Blend, kona8lend@@gmail.com
 //      Rouven Wessling, mp4v2@rouvenwessling.de
+//      David Byron, dbyron@dbyron.com
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -29,6 +31,7 @@ namespace mp4v2 { namespace impl { namespace itmf {
 ///////////////////////////////////////////////////////////////////////////////
 
 Tags::Tags()
+    : hasMetadata(false)
 {
 }
 
@@ -67,6 +70,8 @@ Tags::c_fetch( MP4Tags*& tags, MP4FileHandle hFile )
     MP4File& file = *static_cast<MP4File*>(hFile);
 
     MP4ItmfItemList* itemList = genericGetItems( file ); // alloc
+
+    hasMetadata = (itemList->size > 0);
 
     /* create code -> item map.
      * map will only be used for items which do not repeat; we do not care if

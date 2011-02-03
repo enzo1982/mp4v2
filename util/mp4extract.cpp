@@ -45,7 +45,7 @@ extern "C" int main( int argc, char** argv )
     MP4TrackId trackId = MP4_INVALID_TRACK_ID;
     MP4SampleId sampleId = MP4_INVALID_SAMPLE_ID;
     char* dstFileName = NULL;
-    uint32_t verbosity = MP4_DETAILS_ERROR;
+    MP4LogLevel verbosity = MP4_LOG_ERROR;
 
 #if 0
     fprintf( stderr, "You don't want to use this utility - use mp4creator --extract instead\n" );
@@ -96,18 +96,18 @@ extern "C" int main( int argc, char** argv )
                 }
                 break;
             case 'v':
-                verbosity |= MP4_DETAILS_READ;
+                verbosity = MP4_LOG_VERBOSE1;
                 if ( prog::optarg ) {
                     uint32_t level;
                     if ( sscanf( prog::optarg, "%u", &level ) == 1 ) {
                         if ( level >= 2 ) {
-                            verbosity |= MP4_DETAILS_TABLE;
+                            verbosity = MP4_LOG_VERBOSE2;
                         }
                         if ( level >= 3 ) {
-                            verbosity |= MP4_DETAILS_SAMPLE;
+                            verbosity = MP4_LOG_VERBOSE3;
                         }
                         if ( level >= 4 ) {
-                            verbosity = MP4_DETAILS_ALL;
+                            verbosity = MP4_LOG_VERBOSE4;
                         }
                     }
                 }
@@ -130,6 +130,7 @@ extern "C" int main( int argc, char** argv )
         exit( 1 );
     }
 
+    MP4LogSetLevel(verbosity);
     if ( verbosity ) {
         fprintf( stderr, "%s version %s\n", ProgName, MP4V2_PROJECT_version );
     }
@@ -162,7 +163,7 @@ extern "C" int main( int argc, char** argv )
     /* end processing of command line */
 
 
-    MP4FileHandle mp4File = MP4Read( Mp4PathName, verbosity );
+    MP4FileHandle mp4File = MP4Read( Mp4PathName );
 
     if ( !mp4File ) {
         exit( 1 );
@@ -193,7 +194,7 @@ extern "C" int main( int argc, char** argv )
 void ExtractTrack( MP4FileHandle mp4File, MP4TrackId trackId,
                    bool sampleMode, MP4SampleId sampleId, char* dstFileName )
 {
-    char outName[MP4V2_PATH_MAX];
+    static char outName[MP4V2_PATH_MAX];
     File out;
 
     if( !sampleMode ) {

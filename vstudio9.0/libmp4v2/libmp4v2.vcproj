@@ -163,7 +163,7 @@
 			IntermediateDirectory="..\..\obj\Windows-$(PlatformName)\$(ConfigurationName)\$(ProjectName)"
 			ConfigurationType="2"
 			CharacterSet="1"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -310,6 +310,7 @@
 			IntermediateDirectory="..\..\obj\Windows-$(PlatformName)\$(ConfigurationName)\$(ProjectName)"
 			ConfigurationType="4"
 			CharacterSet="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -1193,6 +1194,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\log.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\log.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\mp4.cpp"
 				>
 			</File>
@@ -1222,10 +1231,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\mp4descriptor.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\mp4error.h"
 				>
 			</File>
 			<File
@@ -1434,6 +1439,10 @@
 			</File>
 			<File
 				RelativePath="..\..\libplatform\platform_base.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\libplatform\platform_win32.cpp"
 				>
 			</File>
 			<File

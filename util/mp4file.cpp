@@ -14,10 +14,12 @@
 // 
 //  The Initial Developer of the Original Code is Kona Blend.
 //  Portions created by Kona Blend are Copyright (C) 2008.
+//  Portions created by David Byron are Copyright (C) 2010.
 //  All Rights Reserved.
 //
 //  Contributors:
 //      Kona Blend, kona8lend@@gmail.com
+//      David Byron, dbyron@dbyron.com
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -90,11 +92,11 @@ FileUtility::FileUtility( int argc, char** argv )
 bool
 FileUtility::actionDump( JobContext& job )
 {
-    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Read( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
 
-    if( !MP4Dump( job.fileHandle, stdout, _debugImplicits ))
+    if( !MP4Dump( job.fileHandle, _debugImplicits ))
         return herrf( "dump failed: %s\n", job.file.c_str() );
 
     return SUCCESS;
@@ -122,7 +124,7 @@ FileUtility::actionList( JobContext& job )
         report << setfill('-') << setw(70) << "" << setfill(' ') << '\n';
     }
 
-    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Read( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
 
@@ -163,7 +165,7 @@ FileUtility::actionOptimize( JobContext& job )
     if( dryrunAbort() )
         return SUCCESS;
 
-    if( !MP4Optimize( job.file.c_str(), NULL , _debugVerbosity ))
+    if( !MP4Optimize( job.file.c_str(), NULL ))
         return herrf( "optimize failed: %s\n", job.file.c_str() );
 
     return SUCCESS;

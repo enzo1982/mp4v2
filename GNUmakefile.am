@@ -78,6 +78,8 @@ libmp4v2_la_SOURCES = \
     src/enum.tcc                         \
     src/impl.h                           \
     src/isma.cpp                         \
+    src/log.h                            \
+    src/log.cpp                          \
     src/mp4.cpp                          \
     src/mp4array.h                       \
     src/mp4atom.cpp                      \

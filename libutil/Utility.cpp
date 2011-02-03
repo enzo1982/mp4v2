@@ -40,7 +40,6 @@ Utility::Utility( string name_, int argc_, char** argv_ )
     , _debug            ( 0 )
     , _verbosity        ( 1 )
     , _jobCount         ( 0 )
-    , _debugVerbosity   ( 0 )
     , _debugImplicits   ( false )
     , _group            ( "OPTIONS" )
 
@@ -107,15 +106,11 @@ Utility::batch( int argi )
                 subResult = SUCCESS;
             }
         }
-        catch( mp4v2::impl::MP4Error* x ) {
-            x->Print( stderr );
+        catch( Exception* x ) {
+            mp4v2::impl::log.errorf(*x);
             delete x;
         }
-        catch( MP4Exception* x ) {
-            herrf( "%s\n", x->what.c_str() );
-            delete x;
-        }
-
+ 
         if( !_keepgoing && subResult == FAILURE )
             return FAILURE;
     }
@@ -128,36 +123,40 @@ Utility::batch( int argi )
 void
 Utility::debugUpdate( uint32_t debug )
 {
+    MP4LogLevel level;
+
     _debug = debug;
     verbose2f( "debug level: %u\n", _debug );
 
     switch( _debug ) {
         case 0:
-            _debugVerbosity = 0;
+            level = MP4_LOG_NONE;
             _debugImplicits = false;
             break;
 
         case 1:
-            _debugVerbosity = MP4_DETAILS_ERROR;
+            level = MP4_LOG_ERROR;
             _debugImplicits = false;
             break;
 
         case 2:
-            _debugVerbosity = MP4_DETAILS_ERROR | MP4_DETAILS_TABLE;
+            level = MP4_LOG_VERBOSE2;
             _debugImplicits = false;
             break;
 
         case 3:
-            _debugVerbosity = MP4_DETAILS_ERROR | MP4_DETAILS_TABLE;
+            level = MP4_LOG_VERBOSE2;
             _debugImplicits = true;
             break;
 
         case 4:
         default:
-            _debugVerbosity = MP4_DETAILS_ALL;
+            level = MP4_LOG_VERBOSE4;
             _debugImplicits = true;
             break;
     }
+
+    MP4LogSetLevel(level);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -297,12 +296,8 @@ Utility::job( string arg )
     try {
         result = utility_job( job );
     }
-    catch( mp4v2::impl::MP4Error* x ) {
-        x->Print( stderr );
-        delete x;
-    }
-    catch( MP4Exception* x ) {
-        herrf( "%s\n", x->what.c_str() );
+    catch( Exception* x ) {
+        mp4v2::impl::log.errorf(*x);
         delete x;
     }
 
@@ -457,10 +452,9 @@ Utility::process()
     try {
         rv = process_impl();
     }
-    catch( MP4Exception* x ) {
-        // rare usage of herrf, make sure its not a warning header.
+    catch( Exception* x ) {
         _keepgoing = false;
-        herrf( "%s\n", x->what.c_str() );
+        mp4v2::impl::log.errorf(*x);
         delete x;
     }
 

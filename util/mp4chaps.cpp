@@ -14,11 +14,13 @@
 // 
 //  The Initial Developer of the Original Code is Ullrich Pollaehne.
 //  Portions created by Kona Blend are Copyright (C) 2008.
+//  Portions created by David Byron are Copyright (C) 2010.
 //  All Rights Reserved.
 //
 //  Contributors:
 //      Kona Blend, kona8lend@@gmail.com
 //      Ullrich Pollaehne, u.pollaehne@@gmail.com
+//      David Byron, dbyron@dbyron.com
 //
 ///////////////////////////////////////////////////////////////////////////////
 #include "util/impl.h"
@@ -162,7 +164,7 @@ ChapterUtility::ChapterUtility( int argc, char** argv )
 bool
 ChapterUtility::actionList( JobContext& job )
 {
-    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Read( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
     {
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
@@ -240,7 +242,7 @@ ChapterUtility::actionConvert( JobContext& job )
         return SUCCESS;
     }
 
-    job.fileHandle = MP4Modify( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Modify( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
     {
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
@@ -280,7 +282,7 @@ ChapterUtility::actionEvery( JobContext& job )
         return SUCCESS;
     }
 
-    job.fileHandle = MP4Modify( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Modify( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
     {
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
@@ -304,7 +306,7 @@ ChapterUtility::actionEvery( JobContext& job )
     {
         MP4Chapter_t chap;
         chap.duration = refTrackDuration.duration > chapterDuration.duration ? chapterDuration.duration : refTrackDuration.duration;
-        sprintf(chap.title, "Chapter %u", chapters.size()+1);
+        sprintf(chap.title, "Chapter %lu", (unsigned long)chapters.size()+1);
 
         chapters.push_back( chap );
         refTrackDuration -= chapterDuration;
@@ -333,7 +335,7 @@ ChapterUtility::actionEvery( JobContext& job )
 bool
 ChapterUtility::actionExport( JobContext& job )
 {
-    job.fileHandle = MP4Read( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Read( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
     {
         return herrf( "unable to open for read: %s\n", job.file.c_str() );
@@ -483,7 +485,7 @@ ChapterUtility::actionImport( JobContext& job )
         return herrf( "No chapters found in file %s\n", inName.c_str() );
     }
 
-    job.fileHandle = MP4Modify( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Modify( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
     {
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
@@ -584,7 +586,7 @@ ChapterUtility::actionRemove( JobContext& job )
         return SUCCESS;
     }
 
-    job.fileHandle = MP4Modify( job.file.c_str(), _debugVerbosity );
+    job.fileHandle = MP4Modify( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
     {
         return herrf( "unable to open for write: %s\n", job.file.c_str() );
