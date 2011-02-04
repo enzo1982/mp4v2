@@ -22,7 +22,6 @@
         typedef unsigned int       uint32_t;
         typedef unsigned long long uint64_t;
     #else
-#error including stdint.h
         #include <stdint.h>
     #endif
 #endif
