@@ -436,8 +436,8 @@ void MP4Atom::ReadChildAtoms()
         // if child atom is of known type
         // but not expected here print warning
         if (pChildAtomInfo == NULL && !pChildAtom->IsUnknownType()) {
-            log.warningf("%s: \"%s\": In atom %s unexpected child atom %s", __FUNCTION__,
-                         m_File.GetFilename().c_str(), GetType(), pChildAtom->GetType());
+            log.verbose1f("%s: \"%s\": In atom %s unexpected child atom %s", __FUNCTION__,
+                          m_File.GetFilename().c_str(), GetType(), pChildAtom->GetType());
         }
 
         // if child atoms should have just one instance
