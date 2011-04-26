@@ -896,7 +896,7 @@ TrackUtility::utility_option( int code, bool& handled )
         case LC_LANGUAGE:
             _action = &TrackUtility::actionTrackModifierSet;
             _actionTrackModifierSet_function = &TrackModifier::setLanguage;
-            _actionTrackModifierSet_name     = "langauge";
+            _actionTrackModifierSet_name     = "language";
             _actionTrackModifierSet_value    = prog::optarg;
             break;
 

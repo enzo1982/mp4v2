@@ -86,7 +86,7 @@ static const char* const help_text =
     "  -i, -type        STR  Set the Media Type(tvshow, movie, music, ...)\n"
     "  -I, -contentid   NUM  Set the content ID\n"
     "  -j, -genreid     NUM  Set the genre ID\n"
-    "  -l, -longdesc    NUM  Set the short description\n"
+    "  -l, -longdesc    STR  Set the long description\n"
     "  -L, -lyrics      NUM  Set the lyrics\n"
     "  -m, -description STR  Set the short description\n"
     "  -M, -episode     NUM  Set the episode number\n"
