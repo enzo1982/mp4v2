@@ -303,9 +303,12 @@ void MP4File::Optimize( const char* srcFileName, const char* dstFileName )
     }
     catch (...) {
         // cleanup and rethrow.  Without this, we'd leak memory and an open file handle(s).
+       if(src == NULL && dst == NULL)
+            delete m_file;// We didn't make it far enough to have m_file go to src or dst.
+
+        m_file = NULL;
         delete dst;
         delete src;
-        m_file = NULL;
         throw;
     }
 
