@@ -759,8 +759,6 @@ static const char* const UDTA_ELEMENTS[] = {
     "\xA9" "swr",
     "\xA9" "wrt",
     "Allf",
-    "hinf",
-    "hnti",
     "name",
     "LOOP",
     "ptv ",
@@ -799,6 +797,10 @@ MP4Atom::factory( MP4File &file, MP4Atom* parent, const char* type )
                 return new MP4ItmfHdlrAtom(file);
         }
         else if( ATOMID( ptype ) == ATOMID( "udta" )) {
+            if( ATOMID( type ) == ATOMID( "hnti" ))
+                return new MP4HntiAtom(file);
+            if( ATOMID( type ) == ATOMID( "hinf" ))
+                return new MP4HinfAtom(file);
             for( const char* const* p = UDTA_ELEMENTS; *p; p++ )
                 if( !strcmp( type, *p ))
                     return new MP4UdtaElementAtom( file, type );
@@ -879,10 +881,6 @@ MP4Atom::factory( MP4File &file, MP4Atom* parent, const char* type )
                 return new MP4HdlrAtom(file);
             if( ATOMID(type) == ATOMID("hint") )
                 return new MP4TrefTypeAtom( file, type );
-            if( ATOMID(type) == ATOMID("hnti") )
-                return new MP4HntiAtom(file);
-            if( ATOMID(type) == ATOMID("hinf") )
-                return new MP4HinfAtom(file);
             if( ATOMID(type) == ATOMID("h263") )
                 return new MP4VideoAtom( file, type );
             if( ATOMID(type) == ATOMID("href") )
