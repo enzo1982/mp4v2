@@ -219,10 +219,12 @@ MP4FileHandle MP4ReadProvider( const char* fileName, const MP4FileProvider* file
         return MP4_INVALID_FILE_HANDLE;
     }
 
-    bool MP4Optimize(const char* existingFileName,
+    bool MP4Optimize(const char* fileName,
                      const char* newFileName)
     {
-        if (!existingFileName || !newFileName)
+        // Must at least have fileName for in-place optimize; newFileName
+        // can be null, however.
+        if (fileName == NULL)
             return false;
 
         MP4File* pFile = ConstructMP4File();
@@ -231,7 +233,7 @@ MP4FileHandle MP4ReadProvider( const char* fileName, const MP4FileProvider* file
 
         try {
             ASSERT(pFile);
-            pFile->Optimize(existingFileName, newFileName);
+            pFile->Optimize(fileName, newFileName);
             delete pFile;
             return true;
         }
@@ -241,7 +243,7 @@ MP4FileHandle MP4ReadProvider( const char* fileName, const MP4FileProvider* file
         }
         catch( ... ) {
             mp4v2::impl::log.errorf("%s(%s,%s) failed", __FUNCTION__,
-                                    existingFileName, newFileName );
+                                    fileName, newFileName );
         }
 
         if (pFile)
