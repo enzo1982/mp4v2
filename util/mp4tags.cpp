@@ -47,6 +47,7 @@ using namespace mp4v2::util;
 #define OPT_TVSEASON     'n'
 #define OPT_TVNETWORK    'N'
 #define OPT_TVEPISODEID  'o'
+#define OPT_CATEGORY     'O'
 #define OPT_PLAYLISTID   'p'
 #define OPT_PICTURE      'P'
 #define OPT_PODCAST      'B'
@@ -56,12 +57,13 @@ using namespace mp4v2::util;
 #define OPT_TRACK        't'
 #define OPT_TRACKS       'T'
 #define OPT_XID          'x'
+#define OPT_RATING       'X'
 #define OPT_COMPOSER     'w'
 #define OPT_RELEASEDATE  'y'
 #define OPT_ARTISTID     'z'
 #define OPT_COMPOSERID   'Z'
 
-#define OPT_STRING  "r:A:a:b:c:C:d:D:e:E:g:G:H:i:I:j:l:L:m:M:n:N:o:p:P:B:R:s:S:t:T:x:w:y:z:Z:"
+#define OPT_STRING  "r:A:a:b:c:C:d:D:e:E:g:G:H:i:I:j:l:L:m:M:n:N:o:O:p:P:B:R:s:S:t:T:x:X:w:y:z:Z:"
 
 #define ELEMENT_OF(x,i) x[int(i)]
 
@@ -93,6 +95,7 @@ static const char* const help_text =
     "  -n, -season      NUM  Set the season number\n"
     "  -N, -network     STR  Set the TV network\n"
     "  -o, -episodeid   STR  Set the TV episode ID\n"
+	"  -O, -category    STR  Set the category\n"
     "  -p, -playlistid  NUM  Set the playlist ID\n"
     "  -P, -picture     PTH  Set the picture as a .png\n"
     "  -B, -podcast     NUM  Set the podcast flag.\n"
@@ -102,6 +105,7 @@ static const char* const help_text =
     "  -t, -track       NUM  Set the track number\n"
     "  -T, -tracks      NUM  Set the number of tracks\n"
     "  -x, -xid         STR  Set the globally-unique xid (vendor:scheme:id)\n"
+	"  -X, -rating      STR  Set the Rating(none, clean, explicit)\n"
     "  -w, -writer      STR  Set the composer information\n"
     "  -y, -year        NUM  Set the release date\n"
     "  -z, -artistid    NUM  Set the artist ID\n"
@@ -151,6 +155,8 @@ extern "C" int
         { "composerid",  prog::Option::REQUIRED_ARG, 0, OPT_COMPOSERID   },
         { "remove",      prog::Option::REQUIRED_ARG, 0, OPT_REMOVE       },
         { "albumartist", prog::Option::REQUIRED_ARG, 0, OPT_ALBUM_ARTIST },
+        { "category",    prog::Option::REQUIRED_ARG, 0, OPT_CATEGORY },
+        { "rating",      prog::Option::REQUIRED_ARG, 0, OPT_RATING },
         { NULL, prog::Option::NO_ARG, 0, 0 }
     };
 
@@ -369,6 +375,12 @@ extern "C" int
                     case OPT_PODCAST:
                         MP4TagsSetPodcast(mdata, NULL);
                         break;
+                    case OPT_CATEGORY:
+                        MP4TagsSetCategory(mdata, NULL);
+                        break;
+                    case OPT_RATING:
+                        MP4TagsSetContentRating(mdata, NULL);
+                        break;
                 }
             }
         }
@@ -562,6 +574,17 @@ extern "C" int
                     {
                         uint8_t value = static_cast<uint8_t>( nums[i] );
                         MP4TagsSetPodcast(mdata, &value);
+                        break;
+                    }
+                    case OPT_CATEGORY:
+                    {
+                        MP4TagsSetCategory(mdata, tags[i]);
+                        break;
+                    }
+                    case OPT_RATING:
+                    {
+                        uint8_t rating = static_cast<uint8_t>( itmf::enumContentRating.toType( tags[i] ) ) ;
+                        MP4TagsSetContentRating(mdata, &rating);
                         break;
                     }
                 }
