@@ -209,16 +209,18 @@ MP4Atom* MP4Atom::ReadAtom(MP4File& file, MP4Atom* pParentAtom)
 
 bool MP4Atom::IsReasonableType(const char* type)
 {
-    for (uint8_t i = 0; i < 4; i++) {
-        if (isalnum((unsigned char) type[i])) {
-            continue;
+    // Unwound this.  Pricy when called a lot.
+    if( isalnum((unsigned char) type[0])) {
+        if( isalnum((unsigned char) type[1])) {
+            if( isalnum((unsigned char) type[2])) {
+                if( isalnum((unsigned char) type[3]) || type[3] == ' ' ) {
+                    return true;
+                }
+            }
         }
-        if (i == 3 && type[i] == ' ') {
-            continue;
-        }
-        return false;
     }
-    return true;
+
+    return false;
 }
 
 // generic read
