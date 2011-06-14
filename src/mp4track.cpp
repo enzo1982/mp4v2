@@ -838,13 +838,14 @@ uint32_t MP4Track::GetMaxBitrate()
                 (thisSecStart + timeScale) - lastSampleTime;
             // calculate the duration of the last sample
             MP4Duration lastSampleDur = sampleTime - lastSampleTime;
-            uint32_t overflow_bytes;
             // now, calculate the number of bytes we overflowed.  Round up.
-            overflow_bytes =
-                ((lastSampleSize * overflow_dur) + (lastSampleDur - 1)) / lastSampleDur;
+            if( lastSampleDur > 0 ) {
+                uint32_t overflow_bytes = 0;
+                overflow_bytes = ((lastSampleSize * overflow_dur) + (lastSampleDur - 1)) / lastSampleDur;
 
-            if (bytesThisSec - overflow_bytes > maxBytesPerSec) {
-                maxBytesPerSec = bytesThisSec - overflow_bytes;
+                if (bytesThisSec - overflow_bytes > maxBytesPerSec) {
+                    maxBytesPerSec = bytesThisSec - overflow_bytes;
+                }
             }
 
             // now adjust the values for this sample.  Remove the bytes
