@@ -782,8 +782,10 @@ void MP4RtpHint::Write(MP4File& file)
 
     file.SetPosition(endPos);
 
-    log.verbose1f("\"%s\": WriteRtpHint:", GetTrack().GetFile().GetFilename().c_str());
-    Dump(14, false);
+    if (log.verbosity >= MP4_LOG_VERBOSE1) {
+        log.verbose1f("\"%s\": WriteRtpHint:", GetTrack().GetFile().GetFilename().c_str());
+        Dump(14, false);
+    }
 }
 
 void MP4RtpHint::Dump(uint8_t indent, bool dumpImplicits)
