@@ -251,14 +251,14 @@ MP4FileHandle MP4ReadProvider( const char* fileName, const MP4FileProvider* file
         return false;
     }
 
-    void MP4Close(MP4FileHandle hFile)
+    void MP4Close(MP4FileHandle hFile, uint32_t  flags)
     {
         if( !MP4_IS_VALID_FILE_HANDLE( hFile ))
             return;
 
         MP4File& f = *(MP4File*)hFile;
         try {
-            f.Close();
+            f.Close(flags);
         }
         catch( Exception* x ) {
             mp4v2::impl::log.errorf(*x);

@@ -516,7 +516,7 @@ void MP4Track::WriteChunkBuffer()
     m_chunkDuration = 0;
 }
 
-void MP4Track::FinishWrite()
+void MP4Track::FinishWrite(uint32_t options)
 {
     FinishSdtp();
 
@@ -540,18 +540,21 @@ void MP4Track::FinishWrite()
         pBufferSizeProperty->SetValue(GetMaxSampleSize());
     }
 
-    MP4Integer32Property* pBitrateProperty;
+	// don't overwrite bitrate if it was requested in the Close call
+    if( !(options & MP4_CLOSE_DO_NOT_COMPUTE_BITRATE)) {
+        MP4Integer32Property* pBitrateProperty;
 
-    if (m_trakAtom.FindProperty(
-                "trak.mdia.minf.stbl.stsd.*.esds.decConfigDescr.maxBitrate",
-                (MP4Property**)&pBitrateProperty)) {
-        pBitrateProperty->SetValue(GetMaxBitrate());
-    }
+        if (m_trakAtom.FindProperty(
+                    "trak.mdia.minf.stbl.stsd.*.esds.decConfigDescr.maxBitrate",
+                    (MP4Property**)&pBitrateProperty)) {
+            pBitrateProperty->SetValue(GetMaxBitrate());
+        }
 
-    if (m_trakAtom.FindProperty(
-                "trak.mdia.minf.stbl.stsd.*.esds.decConfigDescr.avgBitrate",
-                (MP4Property**)&pBitrateProperty)) {
-        pBitrateProperty->SetValue(GetAvgBitrate());
+        if (m_trakAtom.FindProperty(
+                    "trak.mdia.minf.stbl.stsd.*.esds.decConfigDescr.avgBitrate",
+                    (MP4Property**)&pBitrateProperty)) {
+            pBitrateProperty->SetValue(GetAvgBitrate());
+        }
     }
 
     // cleaup trak.udta

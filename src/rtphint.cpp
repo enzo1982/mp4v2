@@ -647,7 +647,7 @@ void MP4RtpHintTrack::WriteHint(MP4Duration duration, bool isSyncSample)
     m_pWriteHint = NULL;
 }
 
-void MP4RtpHintTrack::FinishWrite()
+void MP4RtpHintTrack::FinishWrite(uint32_t option)
 {
     if (m_writeHintId != MP4_INVALID_SAMPLE_ID) {
         m_pMaxPdu->SetValue(m_pPmax->GetValue());
