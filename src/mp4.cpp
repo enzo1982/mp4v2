@@ -2424,7 +2424,7 @@ MP4FileHandle MP4ReadProvider( const char* fileName, const MP4FileProvider* file
 
                 MP4Track *pTrack = pFile->GetTrack(trackId);
                 uint64_t bytes = pTrack->GetTotalOfSampleSizes();
-                bytes *= UINT64_C(8 * 1000);
+                bytes *= UINT64_C(8000);	// 8 * 1000
                 bytes /= msDuration;
                 return (uint32_t)bytes;
             }

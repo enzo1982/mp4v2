@@ -56,10 +56,10 @@ static void DumpTrack ( MP4FileHandle mp4file, MP4TrackId tid )
             hrtime = mintime = sectime = UINT64_C( 0 );
         }
         else {
-            hrtime = msectime / UINT64_C( 3600 * 1000 );
-            msectime -= hrtime * UINT64_C( 3600 * 1000 );
-            mintime = msectime / UINT64_C( 60 * 1000 );
-            msectime -= ( mintime * UINT64_C( 60 * 1000 ) );
+            hrtime = msectime / UINT64_C( 3600000 ); // 3600 * 1000
+            msectime -= hrtime * UINT64_C( 3600000 );// 3600 * 1000
+            mintime = msectime / UINT64_C( 60000 );// 60 * 1000
+            msectime -= ( mintime * UINT64_C( 60000 ) );// 60 * 1000
             sectime = msectime / UINT64_C( 1000 );
             msectime -= sectime * UINT64_C( 1000 );
         }
