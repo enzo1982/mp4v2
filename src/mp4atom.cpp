@@ -803,8 +803,6 @@ MP4Atom::factory( MP4File &file, MP4Atom* parent, const char* type )
                 return new MP4HntiAtom(file);
             if( ATOMID( type ) == ATOMID( "hinf" ))
                 return new MP4HinfAtom(file);
-            if( ATOMID( type ) == ATOMID( "Xtra" ))
-                return new MP4XtraAtom(file);
             for( const char* const* p = UDTA_ELEMENTS; *p; p++ )
                 if( !strcmp( type, *p ))
                     return new MP4UdtaElementAtom( file, type );
@@ -1007,11 +1005,6 @@ MP4Atom::factory( MP4File &file, MP4Atom* parent, const char* type )
         case 'y':
             if( ATOMID(type) == ATOMID("yuv2") )
                 return new MP4VideoAtom( file, type );
-            break;
-
-        case 'X':
-            if( ATOMID(type) == ATOMID("Xtra") )
-                return new MP4XtraAtom(file);
             break;
 
         default:

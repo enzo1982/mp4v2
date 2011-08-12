@@ -78,7 +78,7 @@ CoverArtBox::Item::operator=( const Item& rhs )
 void
 CoverArtBox::Item::reset()
 {
-    if( autofree )
+    if( autofree && buffer )
         MP4Free( buffer );
 
     type     = BT_UNDEFINED;
