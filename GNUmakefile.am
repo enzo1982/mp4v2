@@ -68,8 +68,10 @@ libmp4v2_la_SOURCES = \
     src/atom_uuid.cpp                    \
     src/atom_video.cpp                   \
     src/atom_vmhd.cpp                    \
+    src/atom_Xtra.cpp                    \
     src/atoms.h                          \
     src/cmeta.cpp                        \
+    src/cxtra.cpp                        \
     src/descriptors.cpp                  \
     src/descriptors.h                    \
     src/exception.cpp                    \
@@ -127,7 +129,9 @@ libmp4v2_la_SOURCES += \
     src/itmf/impl.h           \
     src/itmf/itmf.h           \
     src/itmf/type.cpp         \
-    src/itmf/type.h
+    src/itmf/type.h           \
+    src/itmf/Xtra.cpp         \
+    src/itmf/Xtra.h
 
 libmp4v2_la_SOURCES += \
     src/qtff/ColorParameterBox.cpp      \
@@ -203,6 +207,7 @@ if ADD_UTIL
     bin_PROGRAMS += mp4tags
     bin_PROGRAMS += mp4track
     bin_PROGRAMS += mp4trackdump
+    bin_PROGRAMS += mp4xtratags
 endif
 
 mp4art_SOURCES       = util/impl.h util/mp4art.cpp
@@ -214,6 +219,7 @@ mp4subtitle_SOURCES  = util/impl.h util/mp4subtitle.cpp
 mp4tags_SOURCES      = util/impl.h util/mp4tags.cpp
 mp4track_SOURCES     = util/impl.h util/mp4track.cpp
 mp4trackdump_SOURCES = util/impl.h util/mp4trackdump.cpp
+mp4xtratags_SOURCES  = util/impl.h util/mp4xtratags.cpp
 
 mp4art_LDADD       = libmp4v2.la $(X_LDFLAGS)
 mp4chaps_LDADD     = libmp4v2.la $(X_LDFLAGS)
@@ -224,6 +230,7 @@ mp4subtitle_LDADD  = libmp4v2.la $(X_LDFLAGS)
 mp4tags_LDADD      = libmp4v2.la $(X_LDFLAGS)
 mp4track_LDADD     = libmp4v2.la $(X_LDFLAGS)
 mp4trackdump_LDADD = libmp4v2.la $(X_LDFLAGS)
+mp4xtratags_LDADD  = libmp4v2.la $(X_LDFLAGS)
 
 ###############################################################################
 
@@ -252,7 +259,8 @@ mp4v2inc_HEADERS = \
     include/mp4v2/sample.h                      \
     include/mp4v2/streaming.h                   \
     include/mp4v2/track.h                       \
-    include/mp4v2/track_prop.h
+    include/mp4v2/track_prop.h                  \
+    include/mp4v2/xtra_tags.h
 
 ###############################################################################
 

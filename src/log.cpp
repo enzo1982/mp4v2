@@ -478,11 +478,8 @@ Log::hexDump( uint8_t           indent,
         this->printf(verbosity_,"%s",oneLine.str().c_str());
     }
 
-    if (desc)
-    {
-        MP4Free(desc);
-        desc = NULL;
-    }
+    MP4Free(desc);
+    desc = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

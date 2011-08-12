@@ -38,6 +38,7 @@ namespace mp4v2 { namespace impl { namespace itmf {
 
 #include "CoverArtBox.h"
 #include "Tags.h"
+#include "Xtra.h"
 #include "generic.h"
 
 ///////////////////////////////////////////////////////////////////////////////

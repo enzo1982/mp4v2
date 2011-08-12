@@ -824,6 +824,41 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class XtraTagProperty
+{
+public:
+    XtraTagProperty( uint16_t type, uint32_t valueSize, uint8_t* valueData );
+    XtraTagProperty( const XtraTagProperty& );
+    XtraTagProperty();
+    ~XtraTagProperty();
+    XtraTagProperty& operator=( XtraTagProperty );
+    void swap( XtraTagProperty& );
+
+    uint16_t    type;
+    uint32_t    valueSize;
+    uint8_t*    valueData;
+private:
+    void initData( uint8_t* valueData );
+};
+
+typedef map<string, XtraTagProperty> XtraTagMap;
+
+class MP4XtraAtom : public MP4Atom
+{
+public:
+    MP4XtraAtom( MP4File &file );
+    void Read();
+    void Write();
+
+    void Set( const char* name, const XtraTagProperty& prop );
+    const XtraTagProperty* Get( const char *name );
+    bool Remove( const char *name );
+
+    XtraTagMap tags;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 }} // namespace mp4v2::impl
 
 #endif // MP4V2_IMPL_ATOMS_H
