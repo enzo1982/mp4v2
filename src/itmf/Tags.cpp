@@ -420,6 +420,8 @@ Tags::fetchGenre( const CodeItemMap& cim, uint16_t& cpp, const uint16_t*& c )
         return;
 
     MP4ItmfData& data = f->second->dataList.elements[0];
+    if( NULL == data.value )
+        return;
 
     cpp = (uint16_t(data.value[0]) <<  8)
         | (uint16_t(data.value[1])      );
@@ -441,6 +443,9 @@ Tags::fetchDisk( const CodeItemMap& cim, MP4TagDisk& cpp, const MP4TagDisk*& c )
         return;
 
     MP4ItmfData& data = f->second->dataList.elements[0];
+
+    if( NULL == data.value )
+        return;
 
     cpp.index = (uint16_t(data.value[2]) <<  8)
               | (uint16_t(data.value[3])      );
@@ -466,6 +471,9 @@ Tags::fetchTrack( const CodeItemMap& cim, MP4TagTrack& cpp, const MP4TagTrack*& 
 
     MP4ItmfData& data = f->second->dataList.elements[0];
 
+    if( NULL == data.value )
+        return;
+
     cpp.index = (uint16_t(data.value[2]) <<  8)
               | (uint16_t(data.value[3])      );
 
@@ -488,6 +496,9 @@ Tags::fetchInteger( const CodeItemMap& cim, const string& code, uint8_t& cpp, co
         return;
 
     MP4ItmfData& data = f->second->dataList.elements[0];
+    if( NULL == data.value )
+        return;
+
     cpp = data.value[0];
     c = &cpp;
 }
@@ -505,6 +516,9 @@ Tags::fetchInteger( const CodeItemMap& cim, const string& code, uint16_t& cpp, c
         return;
 
     MP4ItmfData& data = f->second->dataList.elements[0];
+
+    if( NULL == data.value )
+        return;
 
     cpp = (uint16_t(data.value[0]) <<  8)
         | (uint16_t(data.value[1])      );
@@ -525,6 +539,9 @@ Tags::fetchInteger( const CodeItemMap& cim, const string& code, uint32_t& cpp, c
         return;
 
     MP4ItmfData& data = f->second->dataList.elements[0];
+
+    if( NULL == data.value )
+        return;
 
     cpp = (uint32_t(data.value[0]) << 24)
         | (uint32_t(data.value[1]) << 16)
@@ -547,6 +564,9 @@ Tags::fetchInteger( const CodeItemMap& cim, const string& code, uint64_t& cpp, c
         return;
 
     MP4ItmfData& data = f->second->dataList.elements[0];
+
+    if( NULL == data.value )
+        return;
 
     cpp = (uint64_t(data.value[0]) << 56)
         | (uint64_t(data.value[1]) << 48)
@@ -573,6 +593,10 @@ Tags::fetchString( const CodeItemMap& cim, const string& code, string& cpp, cons
         return;
 
     MP4ItmfData& data = f->second->dataList.elements[0];
+
+    if( NULL == data.value )
+        return;
+
     cpp.append( reinterpret_cast<char*>( data.value ), data.valueSize );
     c = cpp.c_str();
 }
