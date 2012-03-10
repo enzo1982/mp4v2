@@ -733,7 +733,7 @@ void
 ChapterUtility::fixQtScale(MP4FileHandle file)
 {
     // get around a QuickTime/iPod issue with storing the number of samples in a signed 32Bit value
-    if( INT_MAX < (MP4GetDuration(file) * MP4GetTimeScale(file)) )
+    if( INT_MAX < MP4GetDuration(file))
     {
         bool isVideoTrack = false;
         if( MP4_IS_VALID_TRACK_ID(getReferencingTrack( file, isVideoTrack )) & isVideoTrack )
