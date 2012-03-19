@@ -194,17 +194,20 @@ extern "C" int main( int argc, char** argv )
 void ExtractTrack( MP4FileHandle mp4File, MP4TrackId trackId,
                    bool sampleMode, MP4SampleId sampleId, char* dstFileName )
 {
-    static char outName[MP4V2_PATH_MAX];
+    static string outName;
     File out;
 
     if( !sampleMode ) {
-        if( !dstFileName )
-            snprintf( outName, sizeof( outName ), "%s.t%u", Mp4FileName, trackId );
-        else
-            snprintf( outName, sizeof( outName ), "%s", dstFileName );
+        if( !dstFileName ) {
+            stringstream ss;
+            ss << Mp4FileName << ".t" << trackId;
+            outName = ss.str();
+        } else {
+            outName = dstFileName;
+        }
 
-        if( out.open( outName, File::MODE_CREATE )) {
-            fprintf( stderr, "%s: can't open %s: %s\n", ProgName, outName, sys::getLastErrorStr() );
+        if( out.open( outName.c_str(), File::MODE_CREATE )) {
+            fprintf( stderr, "%s: can't open %s: %s\n", ProgName, outName.c_str(), sys::getLastErrorStr() );
             return;
         }
     }
@@ -225,22 +228,24 @@ void ExtractTrack( MP4FileHandle mp4File, MP4TrackId trackId,
         uint32_t sampleSize = 0;
 
         if( !MP4ReadSample( mp4File, trackId, sampleId, &pSample, &sampleSize )) {
-            fprintf( stderr, "%s: read sample %u for %s failed\n", ProgName, sampleId, outName );
+            fprintf( stderr, "%s: read sample %u for %s failed\n", ProgName, sampleId, outName.c_str() );
             break;
         }
 
         if ( sampleMode ) {
-            snprintf( outName, sizeof( outName ), "%s.t%u.s%u", Mp4FileName, trackId, sampleId );
+            stringstream ss;
+            ss << Mp4FileName << ".t" << trackId << ".s" << sampleId;
+            outName = ss.str();
 
-            if( out.open( outName, File::MODE_CREATE )) {
-                fprintf( stderr, "%s: can't open %s: %s\n", ProgName, outName, sys::getLastErrorStr() );
+            if( out.open( outName.c_str(), File::MODE_CREATE )) {
+                fprintf( stderr, "%s: can't open %s: %s\n", ProgName, outName.c_str(), sys::getLastErrorStr() );
                 break;
             }
         }
 
         File::Size nout;
         if( out.write( pSample, sampleSize, nout )) {
-            fprintf( stderr, "%s: write to %s failed: %s\n", ProgName, outName, sys::getLastErrorStr() );
+            fprintf( stderr, "%s: write to %s failed: %s\n", ProgName, outName.c_str(), sys::getLastErrorStr() );
             break;
         }
 
