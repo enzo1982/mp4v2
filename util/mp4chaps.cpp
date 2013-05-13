@@ -856,6 +856,7 @@ ChapterUtility::readChapterFile( const string filename, char** buffer, File::Siz
     if( in.read( inBuf, fileSize, nin ) )
     {
         in.close();
+        free(inBuf);
         return herrf( "reading chapter file '%s' failed: %s\n", filename.c_str(), sys::getLastErrorStr() );
     }
     in.close();
