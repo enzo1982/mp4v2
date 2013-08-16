@@ -60,6 +60,8 @@ namespace mp4v2 { namespace platform {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+// If using Visual Studio 2010 or newer these aren't needed since stdint.h is available.
+#if !(defined(_MSC_VER) && _MSC_VER >= 1600)
 // some macros for constant expressions
 #define INT8_C(x)    x
 #define INT16_C(x)   x
@@ -70,6 +72,7 @@ namespace mp4v2 { namespace platform {
 #define UINT16_C(x)  x
 #define UINT32_C(x)  x ## UL
 #define UINT64_C(x)  x ## ULL
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 
