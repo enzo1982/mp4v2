@@ -30,6 +30,7 @@ public:
     virtual bool read( void* buffer, Size size, Size& nin, Size maxChunkSize ) = 0;
     virtual bool write( const void* buffer, Size size, Size& nout, Size maxChunkSize ) = 0;
     virtual bool close() = 0;
+    virtual bool getSize( Size& nout ) = 0;
 
 protected:
     FileProvider() { }
@@ -163,6 +164,18 @@ public:
 
     bool write( const void* buffer, Size size, Size& nout, Size maxChunkSize = 0 );
 
+    ///////////////////////////////////////////////////////////////////////////
+    //!
+    //! Get size of file in bytes.
+    //!
+    //! @param nout output indicating the size of the file in bytes.
+    //!
+    //! @return true on failure, false on success.
+    //!
+    ///////////////////////////////////////////////////////////////////////////
+
+    bool getSize( Size& nout );
+
 private:
     std::string   _name;
     bool          _isOpen;
@@ -195,6 +208,7 @@ public:
     bool read( void* buffer, Size size, Size& nin, Size maxChunkSize );
     bool write( const void* buffer, Size size, Size& nout, Size maxChunkSize );
     bool close();
+    bool getSize( Size& nout );
 
 private:
     MP4FileProvider _call;

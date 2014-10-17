@@ -37,6 +37,7 @@ public:
     bool read( void* buffer, Size size, Size& nin, Size maxChunkSize );
     bool write( const void* buffer, Size size, Size& nout, Size maxChunkSize );
     bool close();
+    bool getSize( Size& nout );
 
 private:
     HANDLE _handle;
@@ -243,6 +244,26 @@ StandardFileProvider::close()
     // CloseHandle return 0/false to indicate failure, but
     // we return 0/false to indicate success, so negate.
     return !retval;
+}
+
+/**
+ * Get the size of a the file in bytes
+ *
+ * @param nout populated with the size of the file in
+ * bytes if the function succeeds
+ *
+ * @retval false successfully got the file size
+ * @retval true error getting the file size
+ */
+bool
+StandardFileProvider::getSize( Size& nout )
+{
+    BOOL retval;
+
+    // getFileSize will log if it fails
+    retval = FileSystem::getFileSize( _name, nout );
+
+    return retval;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
