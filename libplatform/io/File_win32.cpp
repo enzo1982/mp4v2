@@ -46,6 +46,11 @@ private:
      * The UTF-8 encoded file name
      */
     std::string _name;
+
+    /**
+     * Argument for FileSystem::getFileSize()
+     */
+    std::string _orig_name;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -67,6 +72,8 @@ StandardFileProvider::StandardFileProvider()
 bool
 StandardFileProvider::open( std::string name, Mode mode )
 {
+    _orig_name = name;
+
     DWORD access = 0;
     DWORD share  = 0;
     DWORD crdisp = 0;
@@ -261,7 +268,8 @@ StandardFileProvider::getSize( Size& nout )
     BOOL retval;
 
     // getFileSize will log if it fails
-    retval = FileSystem::getFileSize( _name, nout );
+    // (cannot use _name because it may have UNC prefix)
+    retval = FileSystem::getFileSize( _orig_name, nout );
 
     return retval;
 }
