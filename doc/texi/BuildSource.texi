@@ -1,4 +1,4 @@
-@input texinfo @c -*- Texinfo -*-
+\input texinfo @c -*- Texinfo -*-
 @c %**start of header
 @setfilename BuildSource.info
 @include base/article.texi
@@ -19,10 +19,10 @@ This document describes the recommended process to build @value{PROJECT.name} fr
 This chapter is for the impatient or those just looking for a quick summary of all the commands used in a typical build. You may skip this summary and jump to @ref{Build Process}.
 
 @example
-@COMMAND.extract{}
-@COMMAND.configure{}
-@COMMAND.build{}
-@COMMAND.install{}
+@COMMANDextract{}
+@COMMANDconfigure{}
+@COMMANDbuild{}
+@COMMANDinstall{}
 @end example
 
 @anchor{Build Process}

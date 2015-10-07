@@ -3,7 +3,7 @@
 The following command configures the project for a build.  It is highly recommended that you invoke configure from an empty directory.
 
 @example
-@COMMAND.configure{}
+@COMMANDconfigure{}
 @end example
 
 Please see @file{INSTALL} for details on configure usage, and standard options. Additionally, the following custom options have been added to @file{configure}:

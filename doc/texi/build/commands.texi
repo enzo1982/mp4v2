@@ -1,33 +1,33 @@
-@macro COMMAND.checkout{}
+@macro COMMANDcheckout{}
 git clone @value{PROJECT.repo.url} @value{PROJECT.name.lower}
 cd @value{PROJECT.name.lower}
 @end macro
 
-@macro COMMAND.bootstrap{}
+@macro COMMANDbootstrap{}
 autoreconf -fiv
 @end macro
 
-@macro COMMAND.extract{}
+@macro COMMANDextract{}
 tar xf @value{PROJECT.name.lower}-@value{PROJECT.version}.tar.bz2
 cd @value{PROJECT.name.lower}-@value{PROJECT.version}/
 @end macro
 
-@macro COMMAND.configure{}
+@macro COMMANDconfigure{}
 rm -fr build/
 mkdir build/
 cd build/
 ../configure 
 @end macro
 
-@macro COMMAND.build{}
+@macro COMMANDbuild{}
 make
 @end macro
 
-@macro COMMAND.install{}
+@macro COMMANDinstall{}
 make install
 make install-man
 @end macro
 
-@macro COMMAND.dist{}
+@macro COMMANDdist{}
 make dist
 @end macro

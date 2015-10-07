@@ -4,5 +4,5 @@
 The following command will install @value{PROJECT.name}.
 
 @example
-@COMMAND.install{}
+@COMMANDinstall{}
 @end example

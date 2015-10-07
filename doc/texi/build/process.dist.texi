@@ -3,7 +3,7 @@
 The following command will create a @value{PROJECT.name} source distribution. It is during this step that shipped documentation is generated.
 
 @example
-@COMMAND.dist{}
+@COMMANDdist{}
 @end example
 
 This step in the build process introduces additional requirements to the host system. While most of the following utilities are generally available, @command{help2man} is used to generate man-pages; however if this command is not available the man-pages will be empty. This is acceptable for non-release builds but for full quality builds this command is required.

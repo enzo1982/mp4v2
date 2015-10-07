@@ -1,4 +1,4 @@
-@input texinfo @c -*- Texinfo -*-
+\input texinfo @c -*- Texinfo -*-
 @c %**start of header
 @setfilename ReleaseNotes.info
 @include base/article.texi
