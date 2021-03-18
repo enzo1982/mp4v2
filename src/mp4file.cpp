@@ -3402,6 +3402,9 @@ const char *MP4File::GetTrackMediaDataName (MP4TrackId trackId)
     MP4Atom *pAtom =
         FindAtom(MakeTrackName(trackId,
                                "mdia.minf.stbl.stsd"));
+    if ( pAtom == nullptr )
+       return nullptr;
+
     if (pAtom->GetNumberOfChildAtoms() != 1) {
         log.errorf("%s: \"%s\": track %d has more than 1 child atoms in stsd", 
                    __FUNCTION__, GetFilename().c_str(), trackId);
