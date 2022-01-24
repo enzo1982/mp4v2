@@ -882,6 +882,21 @@ void MP4File::FindFloatProperty(const char* name,
     }
 }
 
+void MP4File::FindDoubleProperty(const char* name,
+                                 MP4Property** ppProperty, uint32_t* pIndex)
+{
+    if (!FindProperty(name, ppProperty, pIndex)) {
+        ostringstream msg;
+        msg << "no such property - " << name;
+        throw new EXCEPTION(msg.str());
+    }
+    if ((*ppProperty)->GetType() != Float64Property) {
+        ostringstream msg;
+        msg << "type mismatch - property " << name << " type " << (*ppProperty)->GetType();
+        throw new EXCEPTION(msg.str());
+    }
+}
+
 float MP4File::GetFloatProperty(const char* name)
 {
     MP4Property* pProperty;
@@ -890,6 +905,16 @@ float MP4File::GetFloatProperty(const char* name)
     FindFloatProperty(name, &pProperty, &index);
 
     return ((MP4Float32Property*)pProperty)->GetValue(index);
+}
+
+double MP4File::GetDoubleProperty(const char* name)
+{
+    MP4Property* pProperty;
+    uint32_t index;
+
+    FindDoubleProperty(name, &pProperty, &index);
+
+    return ((MP4Float64Property*)pProperty)->GetValue(index);
 }
 
 void MP4File::SetFloatProperty(const char* name, float value)
@@ -902,6 +927,18 @@ void MP4File::SetFloatProperty(const char* name, float value)
     FindFloatProperty(name, &pProperty, &index);
 
     ((MP4Float32Property*)pProperty)->SetValue(value, index);
+}
+
+void MP4File::SetDoubleProperty(const char* name, double value)
+{
+    PROTECT_WRITE_OPERATION();
+
+    MP4Property* pProperty;
+    uint32_t index;
+
+    FindDoubleProperty(name, &pProperty, &index);
+
+    ((MP4Float64Property*)pProperty)->SetValue(value, index);
 }
 
 void MP4File::FindStringProperty(const char* name,
@@ -3191,6 +3228,12 @@ void MP4File::SetTrackFloatProperty(MP4TrackId trackId, const char* name,
                                     float value)
 {
     SetFloatProperty(MakeTrackName(trackId, name), value);
+}
+
+void MP4File::SetTrackDoubleProperty(MP4TrackId trackId, const char* name,
+                                     double value)
+{
+    SetDoubleProperty(MakeTrackName(trackId, name), value);
 }
 
 const char* MP4File::GetTrackStringProperty(MP4TrackId trackId, const char* name)
