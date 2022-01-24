@@ -899,11 +899,18 @@ MP4Atom::factory( MP4File &file, MP4Atom* parent, const char* type )
                 return new MP4TrefTypeAtom( file, type );
             if( ATOMID(type) == ATOMID("ima4") )
                 return new MP4SoundAtom( file, type );
+            if( ATOMID(type) == ATOMID("ipcm") )
+                return new MP4SoundAtom( file, type );
             break;
 
         case 'j':
             if( ATOMID(type) == ATOMID("jpeg") )
                 return new MP4VideoAtom(file, "jpeg");
+            break;
+
+        case 'l':
+            if( ATOMID(type) == ATOMID("lpcm") )
+                return new MP4SoundAtom( file, type );
             break;
 
         case 'm':
