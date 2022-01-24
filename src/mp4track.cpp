@@ -1382,6 +1382,9 @@ bool MP4Track::IsSyncSample(MP4SampleId sampleId)
             return true;
         }
 
+        if (stssLIndex == stssRIndex)
+            break;
+
         if (sampleId > syncSampleId) {
             stssLIndex = stssIndex + 1;
         } else {
