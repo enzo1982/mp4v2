@@ -29,7 +29,7 @@ namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class MP4V2_EXPORT Exception
+class Exception
 {
 public:
     explicit Exception( const string&   what_,
@@ -47,7 +47,7 @@ public:
     const string        function;
 };
 
-class MP4V2_EXPORT PlatformException : public Exception
+class PlatformException : public Exception
 {
 public:
     explicit PlatformException( const string&   what_,
