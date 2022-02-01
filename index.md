@@ -19,21 +19,41 @@ I would like this new project to become the place to go for anything related to 
 
 Ultimately, my goal for this project is for it to be recognized as the official source of a renewed MP4v2.
 
-### Current plans
+### Roadmap
 #### Short term - *MP4v2 v2.1.0*
-- Update/fix the Autotools build system and get ready to publish new releases
-- Add support for building with CMake and update/add Visual Studio and Xcode projects
-- Import fixes made in various MP4v2 forks since the abandonment of the original project
+- Build systems
+	- Update/fix the Autotools build system and get ready to publish new releases ✔️
+	- Add support for building with CMake ✔️
+	- Update/add Visual Studio and Xcode projects ✔️
+- Update code
+	- Import fixes made in various MP4v2 forks since the abandonment of the original project 👷
+	- Fix compiler warnings and errors ✔️
+	- Fix issues found by Cppcheck ✔️
+	- Fix open CVEs:
+		- https://nvd.nist.gov/vuln/detail/CVE-2018-7339 ❓
+		(probably fixed by [d781fcf1](https://github.com/enzo1982/mp4v2/commit/d781fcf1) and [35c20e02](https://github.com/enzo1982/mp4v2/commit/35c20e02))
+		- https://nvd.nist.gov/vuln/detail/CVE-2018-17235 ✔️
+		- https://nvd.nist.gov/vuln/detail/CVE-2018-17236 ✔️
+- New features
+	- Add proper callback based I/O to replace MP4ReadProvider and MP4CreateProvider[Ex] ✔️
+- Update documentation
+	- Update outdated API man pages and move their contents to Doxygen comments in header files 👷
+	- Regenerate Doxygen API documentation 👷
 
 #### Near term - *MP4v2 v2.2.0*
 - Import improvements made in various MP4v2 forks since the abandonment of the original project:
-	- Support for creating ALAC files
+	- Support for ALAC, E-AC-3 and LPCM audio tracks
+	- Support for HEVC and AV1 video tracks
+	- Improved tagging support
 	- [to be defined after analyzing changes in MP4v2 forks]
 
 #### Mid term - *MP4v2 v3.0.0*
+- Add API functions for defining custom atoms
+- Add a public C++ API
 - Add support for new standards not available in public MP4v2 forks yet:
-	- Support for reading [DASH](https://en.wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP) files
+	- Support for [DASH](https://en.wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP) files
 	- [to be defined]
+- Use fuzzing to harden the library against errors and possible vulnerabilities
 
 #### Long term - *MP4v2 future releases*
 - Maintain the MP4v2 library by fixing issues, reviewing and integrating pull requests and adding new features as necessary
@@ -52,13 +72,13 @@ The MP4v2 library and utilities can be built using the following build systems:
 	(only necessary when building directly from repository sources)
 	2. Run `./configure && make` in the MP4v2 project base folder
 
-- **CMake** *(coming soon)*
-	- Run `cmake && make` in the MP4v2 project base folder
+- **CMake**
+	- Run `cmake . && make` in the MP4v2 project base folder
 
-- **Visual Studio** *(coming soon)*
+- **Visual Studio**
 	- Use the Visual Studio solution at `vstudio/mp4v2.sln`
 
-- **Xcode** *(coming soon)*
+- **Xcode**
 	- Use the Xcode project at `xcode/mp4v2.xcodeproj`
 
 MP4v2 has no special dependencies other than a working C++ compiler and build environment.
@@ -66,5 +86,4 @@ MP4v2 has no special dependencies other than a working C++ compiler and build en
 ### Support
 Please use the *[Issues](https://github.com/enzo1982/mp4v2/issues)* area on GitHub to report bugs and other issues or make feature requests. For questions and general discussion, please use the *[Discussions](https://github.com/enzo1982/mp4v2/discussions)* area.
 
-If you need to contact the maintainer, please send an email to support@freac.org.
-
+If you need to contact the maintainer, please send an email to [support@mp4v2.org](mailto:support@mp4v2.org).
