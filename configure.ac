@@ -313,10 +313,10 @@ fi
 if test "$enable_debug" = "no"; then
     changequote(<<,>>)dnl
     if test "$GCC" = "yes"; then
-        CFLAGS=`echo "$CFLAGS" | sed -e 's/-g[^ ]*[ ]*//' -e 's/^ //' -e 's/ $//'`
+        CFLAGS=`echo "-DNDEBUG $CFLAGS" | sed -e 's/-g[^ ]*[ ]*//' -e 's/^ //' -e 's/ $//'`
     fi
     if test "$GXX" = "yes"; then
-        CXXFLAGS=`echo "$CXXFLAGS" | sed -e 's/-g[^ ]*[ ]*//' -e 's/^ //' -e 's/ $//'`
+        CXXFLAGS=`echo "-DNDEBUG $CXXFLAGS" | sed -e 's/-g[^ ]*[ ]*//' -e 's/^ //' -e 's/ $//'`
     fi
     changequote([,])dnl
 fi
