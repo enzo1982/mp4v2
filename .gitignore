@@ -1,0 +1,40 @@
+# Autotools files
+aclocal.m4
+config.log
+config.status
+configure
+autoaux
+autom4te.cache
+libtool
+stamp-h1
+*~
+
+# Visual Studio files
+.vs
+vstudio/build-*
+*.vcxproj.user
+
+# Generated files
+m4
+GNUmakefile
+GNUmakefile.in
+include/mp4v2/project.h
+libplatform/config.h
+libplatform/config.h.in
+project/project.m4
+
+# Build artifacts
+.dirstamp
+.deps
+.libs
+doc/man/man1
+doc/texi/base/project.texi
+impl.h.gch
+mp4v2--r*
+*.o
+*.lo
+*.a
+*.la
+*.lai
+*.exe
+*.tar.bz2
