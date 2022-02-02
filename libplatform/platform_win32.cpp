@@ -108,15 +108,17 @@ static struct utf8_len_info s_len_info[] =
  * Utf8ToFilename constructor
  *
  * @param utf8string a UTF-8 encoded string that does not
- * begin with \\\?\\ nor \\\?\\UNC\\
+ * begin with \\?\ nor \\?\UNC\
  *
  * @see IsValidUTF16 to see whether the constructor
  * succeeded
  */
-Utf8ToFilename::Utf8ToFilename( const string &utf8string )
+Utf8ToFilename::Utf8ToFilename( const string &_utf8string )
     : _wideCharString( NULL )
       , utf8( _utf8 )
 {
+    string utf8string = StripPrefix( _utf8string );
+
     // See
     // http://msdn.microsoft.com/en-us/library/aa365247%28v=vs.85%29.aspx
     // for notes about path lengths, prefixes, etc.  The
@@ -398,56 +400,69 @@ Utf8ToFilename::ConvertToUTF16Buf ( const char      *utf8,
 }
 
 /**
- * Accessor for the length of a prefix (i.e. \\\?\\ or
- * \\\?\\UNC\\) that begins a filename
+ * Check for the presence of a prefix (i.e. \\?\) 
+ * at the beginning of a filename
  *
  * @param utf8string the UTF-8 encoded filename to
  * examine
  *
- * @return the length of the prefix of @p utf8string in
- * characters
+ * @return true if @p utf8string begins with a
+ * prefix, false otherwise
  */
-size_t
-Utf8ToFilename::GetPrefixLen ( const string &utf8string )
+bool
+Utf8ToFilename::HasPrefix ( const string &utf8string )
 {
-    if (utf8string.find("\\\\?\\") == 0)
-    {
-        return strlen("\\\\?\\");
-    }
+    return (utf8string.find("\\\\?\\") == 0);
+}
 
+/**
+ * Strip a prefix (i.e. \\?\ or \\?\UNC\) from a
+ * filename and return the corresponding unprefixed
+ * path
+ *
+ * @param utf8string the UTF-8 encoded filename to
+ * work on
+ *
+ * @return the unprefixed path corresponding to
+ * @p utf8string
+ */
+string
+Utf8ToFilename::StripPrefix ( const string &utf8string )
+{
+    if (!HasPrefix( utf8string ))
+        return utf8string;
+
+    // convert \\?\UNC\server\path to \\server\path
     if (utf8string.find("\\\\?\\UNC\\") == 0)
-    {
-        return strlen("\\\\?\\UNC\\");
-    }
+        return string("\\\\").append(utf8string.substr(8));
 
-    return 0;
+    // just strip Windows \\?\ prefix otherwise
+    return utf8string.substr(4);
 }
 
 /**
  * Determine if a path is absolute or not
  *
  * @param utf8string the UTF-8 encoded path to examine
- * that does not begin with \\\?\\ nor \\\?\\UNC\\
+ * that does not begin with \\?\ nor \\?\UNC\
  *
  * @retval 0 @p utf8string is not an absolute path
  * @retval 1 @p utf8string is an absolute path
- */       
+ */
 int
 Utf8ToFilename::IsAbsolute ( const string &utf8string )
 {
     // Assume utf8string doesn't already start with a
     // long filename prefix (i.e. \\?\ or \\?\UNC\)
     // since the logic here depends on that.
-    ASSERT(GetPrefixLen(utf8string) == 0);
+    ASSERT(!HasPrefix(utf8string));
 
     // Is an empty string absolute or relative?  It's
     // not absolute since we can't tell what
     // drive/volume it's for so say it's relative.
     if (utf8string.length() == 0)
-    {
         return 0;
-    }
-        
+
     // Here we're looking for:
     //  x:   drive relative
     //  x:\  absolute path
@@ -486,11 +501,11 @@ Utf8ToFilename::IsPathSeparator ( char c )
  * Determine if a path is a UNC path
  *
  * @param utf8string the UTF-8 encoded path to examine
- * that does not begin with \\\?\\ nor \\\?\\UNC\\
+ * that does not begin with \\?\ nor \\?\UNC\
  *
  * @retval 0 @p utf8string is not a UNC path
  * @retval 1 @p utf8string is a UNC path
- */       
+ */
 int
 Utf8ToFilename::IsUncPath ( const string &utf8string )
 {
@@ -501,13 +516,11 @@ Utf8ToFilename::IsUncPath ( const string &utf8string )
     // Assume utf8string doesn't already start with a
     // long filename prefix (i.e. \\?\ or \\?\UNC\)
     // since the logic here depends on that.
-    ASSERT(GetPrefixLen(utf8string) == 0);
+    ASSERT(!HasPrefix(utf8string));
 
     // Is an empty string a UNC path?  No.
     if (utf8string.length() == 0)
-    {
         return 0;
-    }
 
     //  Recognize:
     //    //volume/path
@@ -549,10 +562,8 @@ Utf8ToFilename::IsUncPath ( const string &utf8string )
     // but that's someone else's problem.  It's not a
     // UNC path.
     if (num_slashes == 1)
-    {
         return 0;
-    }
-    
+
     // If we're here, we've got two slashes followed by
     // a non-slash.  Something like //foo.  To be a
     // proper UNC path, we need to see a hostname
