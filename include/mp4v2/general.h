@@ -456,12 +456,6 @@ char* MP4BinaryToBase64(
     uint32_t       dataSize );
 
 MP4V2_EXPORT
-uint8_t* Base64ToBinary(
-    const char* pData,
-    uint32_t    decodeSize,
-    uint32_t*   pDataSize );
-
-MP4V2_EXPORT
 void MP4Free(
     void* p );
 
