@@ -8,6 +8,7 @@ check_PROGRAMS =
 
 libmp4v2_la_LDFLAGS = \
     $(AM_LDFLAGS) \
+    -no-undefined \
     -version-number $(PROJECT_version_major):$(PROJECT_version_minor):$(PROJECT_version_point) $(X_libmp4v2_la_LDFLAGS)
 
 libmp4v2_la_SOURCES = \
@@ -174,7 +175,9 @@ if ADD_PLATFORM_WIN32
         libplatform/io/FileSystem_win32.cpp    \
         libplatform/number/random_win32.cpp    \
         libplatform/process/process_win32.cpp  \
-        libplatform/time/time_win32.cpp
+        libplatform/time/time_win32.cpp        \
+        libplatform/platform_win32.cpp         \
+        libplatform/platform_win32_impl.h
 endif
 
 if ADD_UTIL
@@ -274,6 +277,8 @@ AM_CPPFLAGS = $(strip $(MK_CXX_ARCH) $(X_CXX_ARCH) $(MK_CXX_I) $(X_CXX_I))
 AM_LDFLAGS = $(strip $(MK_CXX_ARCH) $(X_CXX_ARCH))
 
 AM_CXXFLAGS = $(strip $(MK_CXX_W) $(X_CXX_W))
+
+ACLOCAL_AMFLAGS = -I m4
 
 LIBS := $(LIBS) $(X_MINGW_LIBS)
 

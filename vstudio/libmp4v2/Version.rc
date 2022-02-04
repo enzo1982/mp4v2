@@ -7,8 +7,8 @@
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION MP4V2_PROJECT_version_major, MP4V2_PROJECT_version_minor, MP4V2_PROJECT_version_point, MP4V2_PROJECT_repo_rev
- PRODUCTVERSION MP4V2_PROJECT_version_major, MP4V2_PROJECT_version_minor, MP4V2_PROJECT_version_point, MP4V2_PROJECT_repo_rev
+ FILEVERSION MP4V2_PROJECT_version_major, MP4V2_PROJECT_version_minor, MP4V2_PROJECT_version_point, 0
+ PRODUCTVERSION MP4V2_PROJECT_version_major, MP4V2_PROJECT_version_minor, MP4V2_PROJECT_version_point, 0
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L

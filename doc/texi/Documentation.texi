@@ -9,7 +9,7 @@
 @end titlepage
 
 @majorheading @value{PROJECT.name.formal} Documentation
-@include releasenotes/intro.@value{PROJECT.repo.type}.texi
+@include releasenotes/intro.stable.texi
 
 @heading Introduction
 Project @value{PROJECT.name} consists of a C-library and various command-line utilities which permit creation and modification of MP4 files as defined by as defined by @cite{ISO base media file format}, document number @cite{ISO/IEC 14496-12:2005(E)}.

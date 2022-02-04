@@ -4,30 +4,15 @@
 
 m4_include([project/project.m4sugar])
 
-m4_define([SVNINFO],m4_esyscmd([LANG=en svn info 2>/dev/null]))
-
-changequote(<<,>>)dnl
-    m4_define(<<PRJ_repo_url>>,m4_bregexp(SVNINFO,<<^URL: *\(.+\)>>,<<\1>>))
-    m4_define(<<PRJ_repo_branch>>,m4_bregexp(PRJ_repo_url,<<\([^/]+\)$>>,<<\1>>))
-    m4_define(<<PRJ_repo_root>>,m4_bregexp(SVNINFO,<<^Repository Root: *\(.+\)>>,<<\1>>))
-    m4_define(<<PRJ_repo_uuid>>,m4_bregexp(SVNINFO,<<^Repository UUID: *\(.+\)>>,<<\1>>))
-    m4_define(<<PRJ_repo_rev>>,m4_bregexp(SVNINFO,<<^Last Changed Rev: *\(.+\)>>,<<\1>>))
-    m4_define(<<PRJ_repo_date>>,m4_bregexp(SVNINFO,<<^Last Changed Date: *\(.+\)>>,<<\1>>))
-    m4_define(<<PRJ_repo_type>>,ifelse(m4_bregexp(PRJ_repo_url,<</releases/>>),<<-1>>,<<developer>>,<<stable>>))
-changequote([,])dnl
-
 m4_define([PRJ_version_hex],m4_format([0x%04x%02x%02x],PRJ_version_major,PRJ_version_minor,PRJ_version_point))
-
-m4_define([PRJ_version],ifelse(
-    PRJ_repo_type,[stable],m4_format([%s],PRJ_repo_branch),
-    m4_format([%s-r%s],PRJ_repo_branch,PRJ_repo_rev)))
+m4_define([PRJ_version],m4_format([%s.%s.%s],PRJ_version_major,PRJ_version_minor,PRJ_version_point))
 
 ###############################################################################
 # initialization
 ###############################################################################
 
-AC_PREREQ([2.61])
-AC_INIT(PRJ_name,PRJ_version,PRJ_bugreport)
+AC_PREREQ([2.69])
+AC_INIT([PRJ_name],[PRJ_version],[PRJ_support],[PRJ_name_lower],[PRJ_url_website])
 
 AC_MSG_NOTICE([
   -->
@@ -35,7 +20,7 @@ AC_MSG_NOTICE([
   -->])
 
 AC_CONFIG_AUX_DIR([autoaux])
-AM_INIT_AUTOMAKE([1.9.6 foreign -Wall -Wno-portability -Werror subdir-objects nostdinc no-dist-gzip dist-bzip2 dist-zip dejagnu])
+AM_INIT_AUTOMAKE([1.9.6 foreign -Wall -Wno-portability -Werror subdir-objects nostdinc no-dist-gzip dist-bzip2 dejagnu])
 
 AC_CONFIG_SRCDIR([src/mp4.cpp])
 
@@ -60,27 +45,32 @@ AC_ARG_ENABLE([optimize],
     [AS_HELP_STRING([--disable-optimize],[disable optimizing compilation])])
 AC_ARG_ENABLE([fvisibility],
     [AS_HELP_STRING([--disable-fvisibility],[disable use of -fvisibility])])
-AC_ARG_ENABLE([gch],
-    [AS_HELP_STRING([--disable-gch],[disable GCC precompiled-headers])])
 AC_ARG_ENABLE([largefile],
     [AS_HELP_STRING([--disable-largefile],[disable LFS (large file support)])])
 AC_ARG_ENABLE([util],
     [AS_HELP_STRING([--disable-util],[disable build of command-line utilities])])
+AC_ARG_ENABLE([gch],
+    [AS_HELP_STRING([--enable-gch],[enable use of precompiled headers])])
 AC_ARG_ENABLE([bi],
     [AS_HELP_STRING([--enable-bi=ARCH],[enable -mARCH for bi-arch compilation])])
 AC_ARG_ENABLE([ub],
     [AS_HELP_STRING([--enable-ub@<:@=ARCHS@:>@],[enable -arch ARCH for universal-binaries (OSX only)])])
 AC_ARG_ENABLE([cygwin_win32],
     [AS_HELP_STRING([--enable-cygwin-win32],[when building with Cygwin use -mwin32])])
-AC_ARG_ENABLE([mingw_mt],
+AC_ARG_ENABLE([mingw_threads],
     [AS_HELP_STRING([--enable-mingw-threads],[when building with MinGW use -mthreads])])
+
+###############################################################################
+# use libtool
+###############################################################################
+
+LT_INIT([disable-static win32-dll])
 
 ###############################################################################
 # checks for programs
 ###############################################################################
 
 AC_PROG_CXX
-AC_PROG_LIBTOOL
 
 AC_CHECK_PROG([FOUND_HELP2MAN],[help2man],[yes],[no])
 
@@ -91,16 +81,14 @@ AC_CHECK_PROG([FOUND_HELP2MAN],[help2man],[yes],[no])
 AC_MSG_CHECKING([$PACKAGE_NAME platform portability])
 X_PLATFORM=posix
 case ${host} in
-*-*-cygwin)
+*-*-cygwin*)
     X_CXX_W="$X_CXX_W -Wno-format"
     if test "$enable_cygwin_win32" = "yes"; then
         X_PLATFORM=win32
         X_CXX_ARCH="$X_CXX_ARCH -mwin32"
     fi
     ;;
-*-*-mingw*)
-    # do not support shared
-    enable_shared=no
+*-*-msys*|*-*-mingw*)
     X_PLATFORM=win32
     X_MINGW_LIBS="$X_MINGW_LIBS"
     X_CXX_W="$X_CXX_W -Wno-format"
@@ -122,8 +110,8 @@ PROJECT_name_formal="PRJ_name PRJ_version"
 PROJECT_url_website="PRJ_url_website"
 PROJECT_url_downloads="PRJ_url_downloads"
 PROJECT_url_discussion="PRJ_url_discussion"
-PROJECT_irc="PRJ_irc"
-PROJECT_bugreport="<PRJ_bugreport>"
+PROJECT_url_bugreport="PRJ_url_bugreport"
+PROJECT_support="<PRJ_support>"
 
 PROJECT_version="PRJ_version"
 PROJECT_version_hex="PRJ_version_hex"
@@ -131,25 +119,13 @@ PROJECT_version_major="PRJ_version_major"
 PROJECT_version_minor="PRJ_version_minor"
 PROJECT_version_point="PRJ_version_point"
 PROJECT_repo_url="PRJ_repo_url"
-PROJECT_repo_branch="PRJ_repo_branch"
-PROJECT_repo_root="PRJ_repo_root"
-PROJECT_repo_uuid="PRJ_repo_uuid"
-PROJECT_repo_rev="PRJ_repo_rev"
-PROJECT_repo_date="PRJ_repo_date"
-PROJECT_repo_type="PRJ_repo_type"
 PROJECT_build="`date`"
 
 test -z "$PROJECT_version_hex"   && PROJECT_version_hex="0x0000000000000000LL"
 test -z "$PROJECT_version_major" && PROJECT_version_major="0"
 test -z "$PROJECT_version_minor" && PROJECT_version_minor="0"
 test -z "$PROJECT_version_point" && PROJECT_version_point="0"
-test -z "$PROJECT_repo_url"      && PROJECT_repo_url="svn://nowhere.com/project/unknown"
-test -z "$PROJECT_repo_branch"   && PROJECT_repo_branch="unknown"
-test -z "$PROJECT_repo_root"     && PROJECT_repo_root="svn://nowhere.com/project"
-test -z "$PROJECT_repo_uuid"     && PROJECT_repo_uuid="00000000-0000-0000-0000-000000000000"
-test -z "$PROJECT_repo_rev"      && PROJECT_repo_rev="0"
-test -z "$PROJECT_repo_date"     && PROJECT_repo_date="unknown"
-test -z "$PROJECT_repo_type"     && PROJECT_repo_type="unknown"
+test -z "$PROJECT_repo_url"      && PROJECT_repo_url="git@nowhere.com:project.git"
 test -z "$PROJECT_build"         && PROJECT_build="unknown"
 
 AC_SUBST([PROJECT_name])
@@ -159,20 +135,14 @@ AC_SUBST([PROJECT_name_formal])
 AC_SUBST([PROJECT_url_website])
 AC_SUBST([PROJECT_url_downloads])
 AC_SUBST([PROJECT_url_discussion])
-AC_SUBST([PROJECT_irc])
-AC_SUBST([PROJECT_bugreport])
+AC_SUBST([PROJECT_url_bugreport])
+AC_SUBST([PROJECT_support])
 AC_SUBST([PROJECT_version])
 AC_SUBST([PROJECT_version_hex])
 AC_SUBST([PROJECT_version_major])
 AC_SUBST([PROJECT_version_minor])
 AC_SUBST([PROJECT_version_point])
 AC_SUBST([PROJECT_repo_url])
-AC_SUBST([PROJECT_repo_branch])
-AC_SUBST([PROJECT_repo_root])
-AC_SUBST([PROJECT_repo_uuid])
-AC_SUBST([PROJECT_repo_rev])
-AC_SUBST([PROJECT_repo_date])
-AC_SUBST([PROJECT_repo_type])
 AC_SUBST([PROJECT_build])
 
 ###############################################################################
@@ -204,7 +174,7 @@ case ${host} in
     *-*-darwin*)
         X_libmp4v2_la_LDFLAGS='-Wl,-current_version,$(PROJECT_version_major).$(PROJECT_version_minor).$(PROJECT_version_point) -Wl,-compatibility_version,$(PROJECT_version_major).0.0'
         ;;
-    *-*-cygwin*)
+    *-*-cygwin*|*-*-msys*|*-*-mingw*)
         X_libmp4v2_la_LDFLAGS='-no-undefined'
         ;;
     *)
@@ -220,16 +190,14 @@ AC_SUBST([X_libmp4v2_la_LDFLAGS])
 
 if test "$enable_fvisibility" != "no" -a "$GXX" = "yes"; then
     case ${host} in
-        *-*-cygwin)
-            ;;
-        *-*-mingw*)
+        *-*-cygwin*|*-*-msys*|*-*-mingw*)
             ;;
         *)
             AC_LANG(C++)
             AC_CACHE_CHECK([if $CXX supports -fvisibility],[x_cv_fvisibility],[
                 x_save="$CXXFLAGS"
                 CXXFLAGS="$CXXFLAGS -fvisibility=hidden"
-                AC_TRY_COMPILE([],[],[x_cv_fvisibility=yes],[x_cv_fvisibility=no])
+                AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[x_cv_fvisibility=yes],[x_cv_fvisibility=no])
                 if test "$x_cv_fvisibility" != "yes"; then
                     CXXFLAGS="$x_save"
                 fi
@@ -243,7 +211,7 @@ fi
 # check for --disable-gch
 ###############################################################################
 
-AC_MSG_CHECKING([if GCC precompiled-headers should be created])
+AC_MSG_CHECKING([if precompiled-headers should be created])
 
 X_GCH=0
 X_GCH_FLAGS=
@@ -253,19 +221,8 @@ X_GCH_SHARED=0
 X_GCH_SHARED_FLAGS="$lt_prog_compiler_pic_CXX"
 
 if test "$enable_gch" = "yes"; then
-    X_GCH=1
-elif test "$enable_gch" != "no"; then
-    if test "$GXX" = "yes"; then
-        case ${host_os} in
-            cygwin*|darwin*|freebsd*|linux*|mingw*|solaris*)
-                X_GCH=1
-                ;;
-        esac
-    fi
-fi
-
-if test "$X_GCH" -eq 1; then
     x_gch_result="yes"
+    X_GCH=1
     if test "$enable_static" = "yes"; then
         X_GCH_STATIC=1
     fi
@@ -290,22 +247,18 @@ AC_SUBST([X_GCH_SHARED_FLAGS])
 ###############################################################################
 
 if test "$enable_largefile" != "no" -a "$ac_cv_header_unistd_h" = "yes"; then
-    case ${host_cpu} in
-        i?86|ppc)
-            AC_LANG(C++)
-            AC_CACHE_CHECK([if LFS (large file support) is required],[x_cv_largefile],[
-                AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+    AC_LANG(C++)
+    AC_CACHE_CHECK([if LFS (large file support) is required],[x_cv_largefile],[
+        AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 #include <unistd.h>
 #ifndef _LFS_LARGEFILE
     error: not LFS conformant
 #endif
-                ]])],[x_cv_largefile=yes],[x_cv_largefile=no])
-            ])
-            if test "$x_cv_largefile" = "yes"; then
-                AC_DEFINE([NEED_LFS_ACTIVATION],[1],[Define to 1 if LFS should be activated])
-            fi
-            ;;
-    esac
+        ]])],[x_cv_largefile=yes],[x_cv_largefile=no])
+    ])
+    if test "$x_cv_largefile" = "yes"; then
+        AC_DEFINE([NEED_LFS_ACTIVATION],[1],[Define to 1 if LFS should be activated])
+    fi
 fi
 
 ###############################################################################
@@ -323,7 +276,7 @@ if test "$GXX" = "yes"; then
             yes)
                 case ${host} in
                     *-*-darwin*)
-                        x_flags="$xflags -arch i386 -arch x86_64 -arch ppc -arch ppc64"
+                        x_flags="$xflags -arch x86_64 -arch arm64"
                         ;;
                 esac
                 ;;
@@ -405,6 +358,15 @@ AC_SUBST([X_CXX_W])
 AC_SUBST([X_CXX_D])
 AC_SUBST([X_CXX_I])
 AC_SUBST([X_MINGW_LIBS])
+
+AH_VERBATIM([MP4V2_EXPORTS],
+[/* libtool defines DLL_EXPORT for windows dll
+   builds, but we use MP4V2_EXPORTS instead. */
+#ifdef DLL_EXPORT
+# define MP4V2_EXPORTS
+#else
+# define MP4V2_USE_STATIC_LIB
+#endif])
 
 ###############################################################################
 # output files

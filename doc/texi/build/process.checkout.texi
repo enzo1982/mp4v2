@@ -1,6 +1,6 @@
 @section Checkout Sources
 
-Checkout sources from the project's Subversion repository.
+Checkout sources from the project's Git repository.
 
 Sources are checked out from either the trunk, release or a branch. This document was generated from one of those, and for example purposes, we will use exactly the same URL which used to create the distribution which contains this document.
 
@@ -10,5 +10,5 @@ If you are a project member, then you may add the appropriate login/password inf
 @COMMAND.checkout{}
 @end example
 
-It is recommended to use Subversion 1.5.0 or higher.
+It is recommended to use Git 2.17.0 or higher.
 Lower versions might work.

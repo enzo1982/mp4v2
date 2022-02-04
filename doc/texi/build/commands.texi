@@ -1,5 +1,5 @@
 @macro COMMAND.checkout{}
-svn checkout @value{PROJECT.repo.url} @value{PROJECT.name.lower}
+git clone @value{PROJECT.repo.url} @value{PROJECT.name.lower}
 cd @value{PROJECT.name.lower}
 @end macro
 

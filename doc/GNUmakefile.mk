@@ -98,7 +98,7 @@ DOC.m4.out = \
 DOC.man.utils = mp4art mp4file mp4subtitle mp4track
 DOC.man.out   = $(DOC.man.utils:%=$(DOC.out/)man/man1/%.1)
 
-DOC.texi.articles = $(wildcard $(DOC.in/)texi/*.texi $(DOC.out/)texi/*.texi)
+DOC.texi.articles = $(wildcard $(DOC.in/)texi/*.texi)
 
 DOC.texi.includes = \
     doc/texi/base/project.texi \
@@ -123,13 +123,15 @@ DOC.site.out.html  = $(patsubst $(DOC.out.articles/)html/%,$(DOC.out.site/)%, \
 
 MKDIRS += $(dir $(DOC.m4.out))
 MKDIRS += $(DOC.out/)man/man1/
-MKDIRS += $(foreach n,html man texi txt wiki xml,$(DOC.out.articles/)$n)
+MKDIRS += $(foreach n,html man texi txt wiki xml,$(DOC.out.articles/)$n/)
 MKDIRS += $(DOC.out.api/)
 MKDIRS += $(DOC.out.site/)
 
 ###############################################################################
 
 EXTRA_DIST += \
+    $(wildcard $(SOURCE/)example/**/*.c) \
+    $(wildcard $(SOURCE/)testsuite/**/*.exp) \
     $(SOURCE/)vstudio/mp4v2.sln \
     $(SOURCE/)vstudio/include/mp4v2/project.h \
     $(wildcard $(SOURCE/)vstudio/*/*.rc) \

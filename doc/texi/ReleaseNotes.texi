@@ -9,7 +9,7 @@
 @end titlepage
 
 @majorheading @value{PROJECT.name.formal} Release Notes
-@include releasenotes/intro.@value{PROJECT.repo.type}.texi
+@include releasenotes/intro.stable.texi
 @contents
 
 @chapter What's New?
@@ -55,9 +55,4 @@ SetMetadataUint8().
 @appendix SCM repository details
 @example
 url:  @value{PROJECT.repo.url}
-root: @value{PROJECT.repo.root}
-uuid: @value{PROJECT.repo.uuid}
-rev:  @value{PROJECT.repo.rev}
-date: @value{PROJECT.repo.date}
-type: @value{PROJECT.repo.type}
 @end example

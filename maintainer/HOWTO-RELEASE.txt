@@ -18,7 +18,7 @@ the version is accomplished by editing the corresponding values in:
 
 And all releases follow this repository URL convention:
 
-    https://mp4v2.googlecode.com/svn/releases/MAJOR.MINOR.POINT
+    https://github.com/enzo1982/mp4v2/releases/vMAJOR.MINOR.POINT
 
 Thus, releases will produce dist bundles of this pattern:
 
