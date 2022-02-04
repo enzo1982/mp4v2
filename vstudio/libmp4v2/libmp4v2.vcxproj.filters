@@ -1,0 +1,580 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{a64866e6-8532-42fe-90ce-0c16494259d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{2da116a9-01b3-4737-9228-43befe22751e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{c8df477c-8c99-48d8-a2f6-0063a7ddeac3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\bmff">
+      <UniqueIdentifier>{8e22ce02-1c22-41a5-87fe-8691c4a3ddf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\itmf">
+      <UniqueIdentifier>{147945ac-b835-4b8a-befc-24be70f48560}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\qtff">
+      <UniqueIdentifier>{822d7701-f202-443e-8159-be007c8706ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libutil">
+      <UniqueIdentifier>{1d0d0658-d1fd-4e5c-b6e3-c0b7f225aeff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libplatform">
+      <UniqueIdentifier>{bd0743d0-9245-41f6-9346-e22d092f25e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libplatform\io">
+      <UniqueIdentifier>{7e8adaf8-4eb1-4ff2-aef3-4895f8b73379}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libplatform\number">
+      <UniqueIdentifier>{c4d53141-d37d-437b-8820-163f3920eaeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libplatform\process">
+      <UniqueIdentifier>{f4393ccb-181c-40c6-a696-caea31cd5a2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libplatform\prog">
+      <UniqueIdentifier>{ff46fa5d-06bf-424c-bd63-7f16299aefb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libplatform\sys">
+      <UniqueIdentifier>{831ac34a-83a1-44e2-8c40-ac026a91fab4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libplatform\time">
+      <UniqueIdentifier>{dc8ee91d-cf13-46c3-ae0d-410479571e53}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\mp4v2\chapter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\mp4v2\file.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\mp4v2\file_prop.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\mp4v2\general.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\mp4v2\isma.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\mp4v2\itmf_generic.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\mp4v2\itmf_tags.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\mp4v2\mp4v2.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\mp4v2\platform.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\mp4v2\project.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\mp4v2\sample.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\mp4v2\streaming.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\mp4v2\track.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\mp4v2\track_prop.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\atoms.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\descriptors.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\enum.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\exception.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\impl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\log.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mp4array.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mp4atom.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mp4container.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mp4descriptor.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mp4file.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mp4property.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mp4track.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mp4util.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ocidescriptors.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\odcommands.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\qosqualifiers.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rtphint.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\src.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\text.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\util.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bmff\bmff.h">
+      <Filter>src\bmff</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bmff\impl.h">
+      <Filter>src\bmff</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bmff\typebmff.h">
+      <Filter>src\bmff</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\itmf\CoverArtBox.h">
+      <Filter>src\itmf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\itmf\generic.h">
+      <Filter>src\itmf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\itmf\impl.h">
+      <Filter>src\itmf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\itmf\itmf.h">
+      <Filter>src\itmf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\itmf\Tags.h">
+      <Filter>src\itmf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\itmf\type.h">
+      <Filter>src\itmf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\qtff\coding.h">
+      <Filter>src\qtff</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\qtff\ColorParameterBox.h">
+      <Filter>src\qtff</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\qtff\impl.h">
+      <Filter>src\qtff</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\qtff\PictureAspectRatioBox.h">
+      <Filter>src\qtff</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\qtff\qtff.h">
+      <Filter>src\qtff</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libplatform\endian.h">
+      <Filter>libplatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libplatform\impl.h">
+      <Filter>libplatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libplatform\platform.h">
+      <Filter>libplatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libplatform\platform_base.h">
+      <Filter>libplatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libplatform\platform_win32.h">
+      <Filter>libplatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libplatform\platform_win32_impl.h">
+      <Filter>libplatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libplatform\warning.h">
+      <Filter>libplatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libplatform\io\File.h">
+      <Filter>libplatform\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libplatform\io\FileSystem.h">
+      <Filter>libplatform\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libplatform\number\random.h">
+      <Filter>libplatform\number</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libplatform\process\process.h">
+      <Filter>libplatform\process</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libplatform\prog\option.h">
+      <Filter>libplatform\prog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libplatform\sys\error.h">
+      <Filter>libplatform\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libplatform\time\time.h">
+      <Filter>libplatform\time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libutil\crc.h">
+      <Filter>libutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libutil\Database.h">
+      <Filter>libutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libutil\impl.h">
+      <Filter>libutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libutil\other.h">
+      <Filter>libutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libutil\Timecode.h">
+      <Filter>libutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libutil\TrackModifier.h">
+      <Filter>libutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libutil\util.h">
+      <Filter>libutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libutil\Utility.h">
+      <Filter>libutil</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\3gp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_ac3.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_amr.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_avc1.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_avcC.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_chpl.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_colr.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_d263.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_dac3.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_damr.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_dref.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_elst.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_enca.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_encv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_free.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_ftab.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_ftyp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_gmin.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_hdlr.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_hinf.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_hnti.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_href.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_mdat.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_mdhd.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_meta.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_mp4s.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_mp4v.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_mvhd.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_nmhd.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_ohdr.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_pasp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_root.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_rtp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_s263.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_sdp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_sdtp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_smi.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_sound.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_standard.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_stbl.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_stdp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_stsc.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_stsd.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_stsz.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_stz2.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_text.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_tfhd.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_tkhd.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_treftype.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_trun.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_tx3g.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_udta.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_url.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_urn.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_uuid.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_video.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\atom_vmhd.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmeta.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\descriptors.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\exception.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\isma.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\log.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mp4.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mp4atom.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mp4container.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mp4descriptor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mp4file.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mp4file_io.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mp4info.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mp4property.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mp4track.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mp4util.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ocidescriptors.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\odcommands.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\qosqualifiers.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rtphint.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\text.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bmff\typebmff.cpp">
+      <Filter>src\bmff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\itmf\CoverArtBox.cpp">
+      <Filter>src\itmf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\itmf\generic.cpp">
+      <Filter>src\itmf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\itmf\Tags.cpp">
+      <Filter>src\itmf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\itmf\type.cpp">
+      <Filter>src\itmf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\qtff\coding.cpp">
+      <Filter>src\qtff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\qtff\ColorParameterBox.cpp">
+      <Filter>src\qtff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\qtff\PictureAspectRatioBox.cpp">
+      <Filter>src\qtff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libplatform\platform_win32.cpp">
+      <Filter>libplatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libplatform\io\File.cpp">
+      <Filter>libplatform\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libplatform\io\File_win32.cpp">
+      <Filter>libplatform\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libplatform\io\FileSystem.cpp">
+      <Filter>libplatform\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libplatform\io\FileSystem_win32.cpp">
+      <Filter>libplatform\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libplatform\number\random_win32.cpp">
+      <Filter>libplatform\number</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libplatform\process\process_win32.cpp">
+      <Filter>libplatform\process</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libplatform\prog\option.cpp">
+      <Filter>libplatform\prog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libplatform\sys\error.cpp">
+      <Filter>libplatform\sys</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libplatform\time\time.cpp">
+      <Filter>libplatform\time</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libplatform\time\time_win32.cpp">
+      <Filter>libplatform\time</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libutil\crc.cpp">
+      <Filter>libutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libutil\Database.cpp">
+      <Filter>libutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libutil\other.cpp">
+      <Filter>libutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libutil\Timecode.cpp">
+      <Filter>libutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libutil\TrackModifier.cpp">
+      <Filter>libutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libutil\Utility.cpp">
+      <Filter>libutil</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\enum.tcc">
+      <Filter>src</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Version.rc">
+      <Filter>resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
