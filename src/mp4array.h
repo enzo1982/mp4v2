@@ -77,9 +77,10 @@ protected:
                   throw new PLATFORM_EXCEPTION("illegal array index", ERANGE); \
             } \
             if (m_numElements == m_maxNumElements) { \
-                m_maxNumElements = max(m_maxNumElements, (MP4ArrayIndex)1) * 2; \
+                MP4ArrayIndex newSize = max(m_maxNumElements, (MP4ArrayIndex)1) * 2; \
                 m_elements = (type*)MP4Realloc(m_elements, \
-                    m_maxNumElements * sizeof(type)); \
+                    newSize * sizeof(type)); \
+                m_maxNumElements = newSize; \
             } \
             memmove(&m_elements[newIndex + 1], &m_elements[newIndex], \
                 (m_numElements - newIndex) * sizeof(type)); \
@@ -100,12 +101,12 @@ protected:
             } \
         } \
         void Resize(MP4ArrayIndex newSize) { \
+            if ( (uint64_t) newSize * sizeof(type) > 0xFFFFFFFF ) \
+                throw new PLATFORM_EXCEPTION("requested array size exceeds 4GB", ERANGE); /* prevent overflow */ \
+            m_elements = (type*)MP4Realloc(m_elements, \
+                newSize * sizeof(type)); \
             m_numElements = newSize; \
             m_maxNumElements = newSize; \
-            if ( (uint64_t) m_maxNumElements * sizeof(type) > 0xFFFFFFFF ) \
-               throw new PLATFORM_EXCEPTION("requested array size exceeds 4GB", ERANGE); /* prevent overflow */ \
-            m_elements = (type*)MP4Realloc(m_elements, \
-                m_maxNumElements * sizeof(type)); \
         } \
         \
         type& operator[](MP4ArrayIndex index) { \
