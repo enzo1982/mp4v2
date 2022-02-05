@@ -9,6 +9,11 @@ libtool
 stamp-h1
 *~
 
+# CMake files
+CMakeFiles
+*CMakeCache.txt
+cmake_install.cmake
+
 # Visual Studio files
 .vs
 vstudio/build-*
@@ -18,6 +23,7 @@ vstudio/build-*
 m4
 GNUmakefile
 GNUmakefile.in
+Makefile
 include/mp4v2/project.h
 libplatform/config.h
 libplatform/config.h.in
@@ -36,5 +42,7 @@ mp4v2--r*
 *.a
 *.la
 *.lai
+*.so
+*.dll
 *.exe
 *.tar.bz2

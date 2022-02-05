@@ -130,6 +130,8 @@ MKDIRS += $(DOC.out.site/)
 ###############################################################################
 
 EXTRA_DIST += \
+    $(SOURCE/)CMakeLists.txt \
+    $(SOURCE/)libplatform/config.h.cmake \
     $(wildcard $(SOURCE/)example/**/*.c) \
     $(wildcard $(SOURCE/)testsuite/**/*.exp) \
     $(SOURCE/)vstudio/mp4v2.sln \
