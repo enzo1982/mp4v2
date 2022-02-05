@@ -138,7 +138,11 @@ EXTRA_DIST += \
     $(SOURCE/)vstudio/include/mp4v2/project.h \
     $(wildcard $(SOURCE/)vstudio/*/*.rc) \
     $(wildcard $(SOURCE/)vstudio/*/*.vcxproj) \
-    $(wildcard $(SOURCE/)vstudio/*/*.vcxproj.filters)
+    $(wildcard $(SOURCE/)vstudio/*/*.vcxproj.filters) \
+    $(SOURCE/)xcode/include/libplatform/config.h \
+    $(SOURCE/)xcode/include/mp4v2/project.h \
+    $(SOURCE/)xcode/mp4v2.xcodeproj/project.pbxproj \
+    $(SOURCE/)xcode/mp4v2.xcodeproj/project.xcworkspace/contents.xcworkspacedata
 
 ###############################################################################
 
