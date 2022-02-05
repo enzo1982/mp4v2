@@ -771,29 +771,35 @@ public:
     void ReadBytes( uint8_t* buf, uint32_t bufsiz, File* file = NULL );
     void PeekBytes( uint8_t* buf, uint32_t bufsiz, File* file = NULL );
 
-    uint64_t ReadUInt(uint8_t size);
     uint8_t ReadUInt8();
     uint16_t ReadUInt16();
     uint32_t ReadUInt24();
     uint32_t ReadUInt32();
     uint64_t ReadUInt64();
+
+    template<class type, int size> type ReadUInt();
+
     float ReadFixed16();
     float ReadFixed32();
     float ReadFloat();
     char* ReadString();
-    char* ReadCountedString(
-        uint8_t charSize = 1, bool allowExpandedCount = false, uint8_t fixedLength = 0);
+    char* ReadCountedString(uint8_t charSize = 1,
+                            bool allowExpandedCount = false,
+                            uint8_t fixedLength = 0);
     uint64_t ReadBits(uint8_t numBits);
     void FlushReadBits();
     uint32_t ReadMpegLength();
 
-
     void WriteBytes( uint8_t* buf, uint32_t bufsiz, File* file = NULL );
+
     void WriteUInt8(uint8_t value);
     void WriteUInt16(uint16_t value);
     void WriteUInt24(uint32_t value);
     void WriteUInt32(uint32_t value);
     void WriteUInt64(uint64_t value);
+
+    template<class type, int size> void WriteUInt(type value);
+
     void WriteFixed16(float value);
     void WriteFixed32(float value);
     void WriteFloat(float value);
@@ -982,6 +988,18 @@ protected:
     MP4File ( const MP4File &src );
     MP4File &operator= ( const MP4File &src );
 };
+
+template<> inline uint8_t MP4File::ReadUInt<uint8_t, 8> () { return ReadUInt8(); }
+template<> inline uint16_t MP4File::ReadUInt<uint16_t, 16> () { return ReadUInt16(); }
+template<> inline uint32_t MP4File::ReadUInt<uint32_t, 24> () { return ReadUInt24(); }
+template<> inline uint32_t MP4File::ReadUInt<uint32_t, 32> () { return ReadUInt32(); }
+template<> inline uint64_t MP4File::ReadUInt<uint64_t, 64> () { return ReadUInt64(); }
+
+template<> inline void MP4File::WriteUInt<uint8_t, 8> (uint8_t value) { WriteUInt8(value); }
+template<> inline void MP4File::WriteUInt<uint16_t, 16> (uint16_t value) { WriteUInt16(value); }
+template<> inline void MP4File::WriteUInt<uint32_t, 24> (uint32_t value) { WriteUInt24(value); }
+template<> inline void MP4File::WriteUInt<uint32_t, 32> (uint32_t value) { WriteUInt32(value); }
+template<> inline void MP4File::WriteUInt<uint64_t, 64> (uint64_t value) { WriteUInt64(value); }
 
 ///////////////////////////////////////////////////////////////////////////////
 

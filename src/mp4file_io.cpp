@@ -165,25 +165,6 @@ void MP4File::WriteBytes( uint8_t* buf, uint32_t bufsiz, File* file )
         throw new EXCEPTION("not all bytes written");
 }
 
-uint64_t MP4File::ReadUInt(uint8_t size)
-{
-    switch (size) {
-    case 1:
-        return ReadUInt8();
-    case 2:
-        return ReadUInt16();
-    case 3:
-        return ReadUInt24();
-    case 4:
-        return ReadUInt32();
-    case 8:
-        return ReadUInt64();
-    default:
-        ASSERT(false);
-        return 0;
-    }
-}
-
 uint8_t MP4File::ReadUInt8()
 {
     uint8_t data;

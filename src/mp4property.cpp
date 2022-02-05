@@ -145,8 +145,8 @@ void MP4IntegerProperty::IncrementValue(int32_t increment, uint32_t index)
     SetValue(GetValue() + increment);
 }
 
-void MP4Integer8Property::Dump(uint8_t indent,
-                               bool dumpImplicits, uint32_t index)
+template<> void MP4Integer8Property::Dump(uint8_t indent,
+                                          bool dumpImplicits, uint32_t index)
 {
     if (m_implicit && !dumpImplicits) {
         return;
@@ -161,8 +161,8 @@ void MP4Integer8Property::Dump(uint8_t indent,
                  m_name, m_values[index], m_values[index]);
 }
 
-void MP4Integer16Property::Dump(uint8_t indent,
-                                bool dumpImplicits, uint32_t index)
+template<> void MP4Integer16Property::Dump(uint8_t indent,
+                                           bool dumpImplicits, uint32_t index)
 {
     if (m_implicit && !dumpImplicits) {
         return;
@@ -177,8 +177,8 @@ void MP4Integer16Property::Dump(uint8_t indent,
                  m_name, m_values[index], m_values[index]);
 }
 
-void MP4Integer24Property::Dump(uint8_t indent,
-                                bool dumpImplicits, uint32_t index)
+template<> void MP4Integer24Property::Dump(uint8_t indent,
+                                           bool dumpImplicits, uint32_t index)
 {
     if (m_implicit && !dumpImplicits) {
         return;
@@ -193,8 +193,8 @@ void MP4Integer24Property::Dump(uint8_t indent,
                  m_name, m_values[index], m_values[index]);
 }
 
-void MP4Integer32Property::Dump(uint8_t indent,
-                                bool dumpImplicits, uint32_t index)
+template<> void MP4Integer32Property::Dump(uint8_t indent,
+                                           bool dumpImplicits, uint32_t index)
 {
     if (m_implicit && !dumpImplicits) {
         return;
@@ -209,8 +209,8 @@ void MP4Integer32Property::Dump(uint8_t indent,
                  m_name, m_values[index], m_values[index]);
 }
 
-void MP4Integer64Property::Dump(uint8_t indent,
-                                bool dumpImplicits, uint32_t index)
+template<> void MP4Integer64Property::Dump(uint8_t indent,
+                                           bool dumpImplicits, uint32_t index)
 {
     if (m_implicit && !dumpImplicits) {
         return;
