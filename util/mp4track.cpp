@@ -128,7 +128,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-string toStringTrackType( string );
+string toStringTrackType( const string& );
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -425,8 +425,6 @@ TrackUtility::actionList( JobContext& job )
 {
     if( _jobTotal > 1 )
         verbose1f( "file %u of %u: %s\n", _jobCount+1, _jobTotal, job.file.c_str() );
-
-    ostringstream report;
 
     job.fileHandle = MP4Read( job.file.c_str() );
     if( job.fileHandle == MP4_INVALID_FILE_HANDLE )
@@ -949,7 +947,7 @@ TrackUtility::utility_option( int code, bool& handled )
 ///////////////////////////////////////////////////////////////////////////////
 
 string
-toStringTrackType( string code )
+toStringTrackType( const string& code )
 {
     if( !code.compare( "vide" ))    // 14496-12
         return "video";

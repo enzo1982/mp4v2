@@ -4,7 +4,7 @@ namespace mp4v2 { namespace platform { namespace io {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-File::File( std::string name_, Mode mode_, FileProvider* provider_ )
+File::File( const std::string& name_, Mode mode_, FileProvider* provider_ )
     : _name     ( name_ )
     , _isOpen   ( false )
     , _mode     ( mode_ )
@@ -44,7 +44,7 @@ File::setName( const std::string& name_ )
 ///////////////////////////////////////////////////////////////////////////////
 
 bool
-File::open( std::string name_, Mode mode_ )
+File::open( const std::string& name_, Mode mode_ )
 {
     if( _isOpen )
         return true;
@@ -142,7 +142,7 @@ CustomFileProvider::CustomFileProvider( const MP4FileProvider& provider )
 }
 
 bool
-CustomFileProvider::open( std::string name, Mode mode )
+CustomFileProvider::open( const std::string& name, Mode mode )
 {
     MP4FileMode fm;
     switch( mode ) {

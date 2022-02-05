@@ -111,8 +111,7 @@ MP4FileHandle MP4Read( const char* fileName )
                                 fileName );
     }
 
-    if (pFile)
-        delete pFile;
+    delete pFile;
     return MP4_INVALID_FILE_HANDLE;
 }
 
@@ -138,8 +137,7 @@ MP4FileHandle MP4ReadProvider( const char* fileName, const MP4FileProvider* file
                                 fileName );
     }
 
-    if (pFile)
-        delete pFile;
+    delete pFile;
     return MP4_INVALID_FILE_HANDLE;
 }
 
@@ -208,8 +206,7 @@ MP4FileHandle MP4ReadProvider( const char* fileName, const MP4FileProvider* file
                                     fileName );
         }
 
-        if (pFile)
-            delete pFile;
+        delete pFile;
         return MP4_INVALID_FILE_HANDLE;
     }
 
@@ -240,8 +237,7 @@ MP4FileHandle MP4ReadProvider( const char* fileName, const MP4FileProvider* file
                                     fileName );
         }
 
-        if (pFile)
-            delete pFile;
+        delete pFile;
         return MP4_INVALID_FILE_HANDLE;
     }
 
@@ -272,8 +268,7 @@ MP4FileHandle MP4ReadProvider( const char* fileName, const MP4FileProvider* file
                                     fileName, newFileName );
         }
 
-        if (pFile)
-            delete pFile;
+        delete pFile;
         return false;
     }
 
@@ -4009,8 +4004,7 @@ MP4FileHandle MP4ReadProvider( const char* fileName, const MP4FileProvider* file
             mp4v2::impl::log.errorf("%s: failed", __FUNCTION__ );
         }
 
-        if (pFile)
-            delete pFile;
+        delete pFile;
         return false;
     }
 
@@ -4044,8 +4038,7 @@ MP4FileHandle MP4ReadProvider( const char* fileName, const MP4FileProvider* file
                                     fileName );
         }
 
-        if (pFile)
-            delete pFile;
+        delete pFile;
         return false;
     }
 
@@ -4104,8 +4097,7 @@ MP4FileHandle MP4ReadProvider( const char* fileName, const MP4FileProvider* file
             mp4v2::impl::log.errorf("%s: failed", __FUNCTION__ );
         }
 
-        if (pFile)
-            delete pFile;
+        delete pFile;
         return NULL;
     }
 

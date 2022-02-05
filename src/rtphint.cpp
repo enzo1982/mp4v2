@@ -237,12 +237,12 @@ void MP4RtpHintTrack::ReadPacket(
             pPacket->GetData(pDest);
         }
     }
-    catch (Exception* x) {
+    catch (Exception*) {
         if (buffer_malloc) {
             MP4Free(*ppBytes);
             *ppBytes = NULL;
         }
-        throw x;
+        throw;
     }
 
     log.hexDump(0, MP4_LOG_VERBOSE1, *ppBytes, *pNumBytes,

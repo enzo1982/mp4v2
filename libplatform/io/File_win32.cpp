@@ -14,7 +14,7 @@ class StandardFileProvider : public FileProvider
 public:
     StandardFileProvider();
 
-    bool open( std::string name, Mode mode );
+    bool open( const std::string& name, Mode mode );
     bool seek( Size pos );
     bool read( void* buffer, Size size, Size& nin, Size maxChunkSize );
     bool write( const void* buffer, Size size, Size& nout, Size maxChunkSize );
@@ -47,7 +47,7 @@ StandardFileProvider::StandardFileProvider()
  * @retval true error opening @p name
  */
 bool
-StandardFileProvider::open( std::string name, Mode mode )
+StandardFileProvider::open( const std::string& name, Mode mode )
 {
     _name = name;
 

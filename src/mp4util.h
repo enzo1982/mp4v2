@@ -39,15 +39,10 @@ namespace mp4v2 { namespace impl {
 
 #ifdef NDEBUG
 #   define WARNING(expr) \
-        if (expr) { \
-            log.errorf("Warning: %s", LIBMPV42_STRINGIFY(expr)); \
-        }
+        log.errorf("Warning: %s", LIBMPV42_STRINGIFY(expr));
 #else
 #   define WARNING(expr) \
-        if (expr) { \
-            log.errorf("Warning (%s) in %s at line %u", \
-                            LIBMPV42_STRINGIFY(expr), __FILE__, __LINE__); \
-        }
+        log.errorf("Warning (%s) in %s at line %u", LIBMPV42_STRINGIFY(expr), __FILE__, __LINE__);
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -61,7 +56,7 @@ namespace mp4v2 { namespace impl {
 inline void* MP4Malloc(size_t size) {
     if (size == 0) return NULL;
     void* p = malloc(size);
-    if (p == NULL && size > 0) {
+    if (p == NULL) {
         throw new PLATFORM_EXCEPTION("malloc failed", errno);
     }
     return p;

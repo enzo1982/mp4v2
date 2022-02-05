@@ -75,7 +75,9 @@ void MP4File::ReadBytes( uint8_t* buf, uint32_t bufsiz, File* file )
         return;
 
     ASSERT( buf );
-    WARNING( m_numReadBits > 0 );
+    if ( m_numReadBits > 0 ) {
+        WARNING( m_numReadBits > 0 );
+    }
 
     if( m_memoryBuffer ) {
         if( m_memoryBufferPosition + bufsiz > m_memoryBufferSize )

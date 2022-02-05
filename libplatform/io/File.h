@@ -25,7 +25,7 @@ public:
 public:
     virtual ~FileProvider() { }
 
-    virtual bool open( std::string name, Mode mode ) = 0;
+    virtual bool open( const std::string& name, Mode mode ) = 0;
     virtual bool seek( Size pos ) = 0;
     virtual bool read( void* buffer, Size size, Size& nin, Size maxChunkSize ) = 0;
     virtual bool write( const void* buffer, Size size, Size& nout, Size maxChunkSize ) = 0;
@@ -70,7 +70,7 @@ public:
     //!
     ///////////////////////////////////////////////////////////////////////////
 
-    explicit File( std::string name = "", Mode mode = MODE_UNDEFINED, FileProvider* = NULL );
+    explicit File( const std::string& name = "", Mode mode = MODE_UNDEFINED, FileProvider* = NULL );
 
     ///////////////////////////////////////////////////////////////////////////
     //!
@@ -97,7 +97,7 @@ public:
     //!
     ///////////////////////////////////////////////////////////////////////////
 
-    bool open( std::string name = "", Mode mode = MODE_UNDEFINED );
+    bool open( const std::string& name = "", Mode mode = MODE_UNDEFINED );
 
     ///////////////////////////////////////////////////////////////////////////
     //!
@@ -203,7 +203,7 @@ class CustomFileProvider : public FileProvider
 public:
     CustomFileProvider( const MP4FileProvider& );
 
-    bool open( std::string name, Mode mode );
+    bool open( const std::string& name, Mode mode );
     bool seek( Size pos );
     bool read( void* buffer, Size size, Size& nin, Size maxChunkSize );
     bool write( const void* buffer, Size size, Size& nout, Size maxChunkSize );

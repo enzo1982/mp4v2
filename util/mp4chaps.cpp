@@ -93,8 +93,8 @@ private:
     void        fixQtScale(MP4FileHandle );
     MP4TrackId  getReferencingTrack( MP4FileHandle, bool& );
     string      getChapterTypeName( MP4ChapterType ) const;
-    bool        parseChapterFile( const string, vector<MP4Chapter_t>&, Timecode::Format& );
-    bool        readChapterFile( const string, char**, File::Size& );
+    bool        parseChapterFile( const string&, vector<MP4Chapter_t>&, Timecode::Format& );
+    bool        readChapterFile( const string&, char**, File::Size& );
     MP4Duration convertFrameToMillis( MP4Duration, uint32_t );
 
     MP4ChapterType _ChapterType;
@@ -834,7 +834,7 @@ ChapterUtility::getChapterTypeName( MP4ChapterType chapterType) const
  *  @return true if there was an error, false otherwise
  */
 bool
-ChapterUtility::readChapterFile( const string filename, char** buffer, File::Size& fileSize )
+ChapterUtility::readChapterFile( const string& filename, char** buffer, File::Size& fileSize )
 {
     // open the file
     File in( filename, File::MODE_READ );
@@ -880,7 +880,7 @@ ChapterUtility::readChapterFile( const string filename, char** buffer, File::Siz
  *  @return true if there was an error, false otherwise
  */
 bool
-ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& chapters, Timecode::Format& format )
+ChapterUtility::parseChapterFile( const string& filename, vector<MP4Chapter_t>& chapters, Timecode::Format& format )
 {
     // get the content
     char * inBuf;
@@ -913,8 +913,6 @@ ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& c
     pos = inBuf;
 
     // check for a BOM
-    char bom[5] = {0};
-    int bomLen = 0;
     const unsigned char* uPos = reinterpret_cast<unsigned char*>( pos );
     if( 0xEF == *uPos && 0xBB == *(uPos+1) && 0xBF == *(uPos+2) )
     {
@@ -924,22 +922,12 @@ ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& c
     else if(   ( 0xFE == *uPos && 0xFF == *(uPos+1) )   // UTF-16 big endian
             || ( 0xFF == *uPos && 0xFE == *(uPos+1) ) ) // UTF-16 little endian
     {
-        // store the BOM to prepend the title strings
-        bom[0] = *pos++;
-        bom[1] = *pos++;
-        bomLen = 2;
         return herrf( "chapter file '%s' has UTF-16 encoding which is not supported (only UTF-8 is allowed)\n",
                       filename.c_str() );
     }
     else if(   ( 0x0 == *uPos && 0x0 == *(uPos+1) && 0xFE == *(uPos+2) && 0xFF == *(uPos+3) )   // UTF-32 big endian
             || ( 0xFF == *uPos && *(uPos+1) == 0xFE && *(uPos+2) == 0x0 && 0x0 == *(uPos+3) ) ) // UTF-32 little endian
     {
-        // store the BOM to prepend the title strings
-        bom[0] = *pos++;
-        bom[1] = *pos++;
-        bom[2] = *pos++;
-        bom[3] = *pos++;
-        bomLen = 4;
         return herrf( "chapter file '%s' has UTF-32 encoding which is not supported (only UTF-8 is allowed)\n",
                       filename.c_str() );
     }
@@ -1030,7 +1018,7 @@ ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& c
             {
                 // mark the chapter title
                 uint32_t chNr = 0;
-                sscanf( pos, "chapter%dname", &chNr );
+                sscanf( pos, "chapter%uname", &chNr );
                 if( chNr != currentChapter )
                 {
                     // different chapter number => different chapter definition pair
@@ -1056,7 +1044,7 @@ ChapterUtility::parseChapterFile( const string filename, vector<MP4Chapter_t>& c
             {
                 // mark the chapter start time
                 uint32_t chNr = 0;
-                sscanf( pos, "chapter%d", &chNr );
+                sscanf( pos, "chapter%u", &chNr );
                 if( chNr != currentChapter )
                 {
                     // different chapter number => different chapter definition pair

@@ -346,7 +346,7 @@ void MP4Track::ReadSample(
         }
     }
 
-    catch (Exception* x) {
+    catch (Exception*) {
         if( bufferMalloc ) {
             MP4Free( *ppBytes );
             *ppBytes = NULL;
@@ -355,7 +355,7 @@ void MP4Track::ReadSample(
         if( m_File.IsWriteMode() )
             m_File.SetPosition( oldPos, fin );
 
-        throw x;
+        throw;
     }
 
     if( m_File.IsWriteMode() )
@@ -1201,7 +1201,6 @@ uint32_t MP4Track::GetSampleCttsIndex(MP4SampleId sampleId,
     }
 
     throw new EXCEPTION("sample id out of range");
-    return 0; // satisfy MS compiler
 }
 
 MP4Duration MP4Track::GetSampleRenderingOffset(MP4SampleId sampleId)
@@ -1603,14 +1602,14 @@ void MP4Track::ReadChunk(MP4ChunkId chunkId,
         m_File.SetPosition( chunkOffset );
         m_File.ReadBytes( *ppChunk, *pChunkSize );
     }
-    catch( Exception* x ) {
+    catch( Exception* ) {
         MP4Free( *ppChunk );
         *ppChunk = NULL;
 
         if( m_File.IsWriteMode() )
             m_File.SetPosition( oldPos );
 
-        throw x;
+        throw;
     }
 
     if( m_File.IsWriteMode() )
@@ -1787,9 +1786,9 @@ MP4SampleId MP4Track::GetSampleIdFromEditTime(
             editElapsedDuration +=
                 m_pElstDurationProperty->GetValue(editId - 1);
 
-            // calculate difference between the specified edit time
-            // and the end of this edit segment
-            if (editElapsedDuration - editWhen <= 0) {
+            // check whether the specified edit
+            // time is within this edit segment
+            if (editWhen >= editElapsedDuration) {
                 // the specified time has not yet been reached
                 continue;
             }

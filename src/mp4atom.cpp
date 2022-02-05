@@ -198,15 +198,14 @@ MP4Atom* MP4Atom::ReadAtom(MP4File& file, MP4Atom* pParentAtom)
 
     pAtom->SetParentAtom(pParentAtom);
 
-	try {
-		pAtom->Read();
-	}
-	catch (Exception* x) {
-		// delete atom and rethrow so we don't leak memory.
-		delete pAtom;	
-		throw x;
-	}
-
+    try {
+        pAtom->Read();
+    }
+    catch (Exception*) {
+        // delete atom and rethrow so we don't leak memory.
+        delete pAtom;
+        throw;
+    }
 
     return pAtom;
 }
@@ -651,7 +650,7 @@ void MP4Atom::Dump(uint8_t indent, bool dumpImplicits)
         // create contextual atom-name
         string can;
         const list<string>::iterator ie = tlist.end();
-        for( list<string>::iterator it = tlist.begin(); it != ie; it++ )
+        for( list<string>::iterator it = tlist.begin(); it != ie; ++it )
             can += *it + '.';
         if( can.length() )
             can.resize( can.length() - 1 );

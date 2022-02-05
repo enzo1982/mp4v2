@@ -652,9 +652,6 @@ void MP4BytesProperty::Dump(uint8_t indent,
         supressed = true;
     }
 
-    ostringstream oss;
-    ostringstream text;
-
     log.dump(indent, MP4_LOG_VERBOSE2, "\"%s\": %s = <%u bytes>",
              m_parentAtom.GetFile().GetFilename().c_str(),
              m_name, size );
@@ -974,7 +971,7 @@ void MP4DescriptorProperty::Read(MP4File& file, uint32_t index)
                 delete x;
                 break;
             }
-            throw x;
+            throw;
         }
 
         // check if tag is in desired range

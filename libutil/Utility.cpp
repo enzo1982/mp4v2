@@ -27,7 +27,7 @@ namespace mp4v2 { namespace util {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Utility::Utility( string name_, int argc_, char** argv_ )
+Utility::Utility( const string& name_, int argc_, char** argv_ )
     : _longOptions      ( NULL )
     , _name             ( name_ )
     , _argc             ( argc_ )
@@ -40,6 +40,7 @@ Utility::Utility( string name_, int argc_, char** argv_ )
     , _debug            ( 0 )
     , _verbosity        ( 1 )
     , _jobCount         ( 0 )
+    , _jobTotal         ( 0 )
     , _debugImplicits   ( false )
     , _group            ( "OPTIONS" )
 
@@ -190,10 +191,10 @@ Utility::formatGroups()
     // determine longest long-option [+space +argname]
     int longMax = 0;
     list<Group*>::reverse_iterator ie = _groups.rend();
-    for( list<Group*>::reverse_iterator it = _groups.rbegin(); it != ie; it++ ) {
+    for( list<Group*>::reverse_iterator it = _groups.rbegin(); it != ie; ++it ) {
         Group& group = **it;
         const Group::List::const_iterator ieo = group.options.end();
-        for( Group::List::const_iterator ito = group.options.begin(); ito != ieo; ito++ ) {
+        for( Group::List::const_iterator ito = group.options.begin(); ito != ieo; ++ito ) {
             const Option& option = **ito;
             if( option.hidden )
                 continue;
@@ -212,13 +213,13 @@ Utility::formatGroups()
     int groupCount = 0;
     int optionCount = 0;
     ie = _groups.rend();
-    for( list<Group*>::reverse_iterator it = _groups.rbegin(); it != ie; it++, groupCount++ ) {
+    for( list<Group*>::reverse_iterator it = _groups.rbegin(); it != ie; ++it, groupCount++ ) {
         if( groupCount )
             oss << '\n';
         Group& group = **it;
         oss << '\n' << group.name;
         const Group::List::const_iterator ieo = group.options.end();
-        for( Group::List::const_iterator ito = group.options.begin(); ito != ieo; ito++, optionCount++ ) {
+        for( Group::List::const_iterator ito = group.options.begin(); ito != ieo; ++ito, optionCount++ ) {
             const Option& option = **ito;
             if( option.hidden )
                 continue;
@@ -262,10 +263,10 @@ Utility::formatGroups()
 
     int optionIndex = 0;
     ie = _groups.rend();
-    for( list<Group*>::reverse_iterator it = _groups.rbegin(); it != ie; it++ ) {
+    for( list<Group*>::reverse_iterator it = _groups.rbegin(); it != ie; ++it ) {
         Group& group = **it;
         const Group::List::const_iterator ieo = group.options.end();
-        for( Group::List::const_iterator ito = group.options.begin(); ito != ieo; ito++, optionIndex++ ) {
+        for( Group::List::const_iterator ito = group.options.begin(); ito != ieo; ++ito, optionIndex++ ) {
             const Option& a = **ito;
             prog::Option& b = _longOptions[optionIndex];
 
@@ -286,7 +287,7 @@ Utility::formatGroups()
 ///////////////////////////////////////////////////////////////////////////////
 
 bool
-Utility::job( string arg )
+Utility::job( const string& arg )
 {
     verbose2f( "job begin: %s\n", arg.c_str() );
 
@@ -316,7 +317,7 @@ Utility::job( string arg )
 
     // free data flagged with job
     list<void*>::iterator ie = job.tofree.end();
-    for( list<void*>::iterator it = job.tofree.begin(); it != ie; it++ )
+    for( list<void*>::iterator it = job.tofree.begin(); it != ie; ++it )
         free( *it );
 
 
@@ -380,10 +381,10 @@ Utility::printHelp( bool extended, bool toerr )
 
     if( extended ) {
         const list<Group*>::reverse_iterator ie = _groups.rend();
-        for( list<Group*>::reverse_iterator it = _groups.rbegin(); it != ie; it++ ) {
+        for( list<Group*>::reverse_iterator it = _groups.rbegin(); it != ie; ++it ) {
             Group& group = **it;
             const Group::List::const_iterator ieo = group.options.end();
-            for( Group::List::const_iterator ito = group.options.begin(); ito != ieo; ito++ ) {
+            for( Group::List::const_iterator ito = group.options.begin(); ito != ieo; ++ito ) {
                 const Option& option = **ito;
                 if( option.help.empty() )
                     continue;
@@ -466,7 +467,7 @@ Utility::process_impl()
     // populate code lookup set
     set<int> codes;
     const Group::List::const_iterator ie = _group.options.end();
-    for( Group::List::const_iterator it = _group.options.begin(); it != ie; it++ ) {
+    for( Group::List::const_iterator it = _group.options.begin(); it != ie; ++it ) {
         const Option& option = **it;
         if( option.scode != 0 )
             codes.insert( option.scode );
@@ -658,7 +659,7 @@ const bool Utility::FAILURE = true;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Utility::Group::Group( string name_ )
+Utility::Group::Group( const string& name_ )
     : name    ( name_ )
     , options ( _options )
 {
@@ -669,7 +670,7 @@ Utility::Group::Group( string name_ )
 Utility::Group::~Group()
 {
     const List::iterator ie = _optionsDelete.end();
-    for( List::iterator it = _optionsDelete.begin(); it != ie; it++ )
+    for( List::iterator it = _optionsDelete.begin(); it != ie; ++it )
         delete *it;
 }
 
@@ -685,15 +686,15 @@ Utility::Group::add( const Option& option )
 
 void
 Utility::Group::add(
-    char     scode,
-    bool     shasarg,
-    string   lname,
-    bool     lhasarg,
-    uint32_t lcode,
-    string   descr,
-    string   argname,
-    string   help,
-    bool     hidden )
+    char          scode,
+    bool          shasarg,
+    const string& lname,
+    bool          lhasarg,
+    uint32_t      lcode,
+    const string& descr,
+    const string& argname,
+    const string& help,
+    bool          hidden )
 {
     Option* o = new Option( scode, shasarg, lname, lhasarg, lcode, descr, argname, help, hidden );
     _options.push_back( o );
@@ -704,13 +705,13 @@ Utility::Group::add(
 
 void
 Utility::Group::add( 
-    string   lname,
-    bool     lhasarg,
-    uint32_t lcode,
-    string   descr,
-    string   argname,
-    string   help,
-    bool     hidden )
+    const string& lname,
+    bool          lhasarg,
+    uint32_t      lcode,
+    const string& descr,
+    const string& argname,
+    const string& help,
+    bool          hidden )
 {
     add( 0, false, lname, lhasarg, lcode, descr, argname, help, hidden );
 }
@@ -718,15 +719,15 @@ Utility::Group::add(
 ///////////////////////////////////////////////////////////////////////////////
 
 Utility::Option::Option(
-    char     scode_,
-    bool     shasarg_,
-    string   lname_,
-    bool     lhasarg_,
-    uint32_t lcode_,
-    string   descr_,
-    string   argname_,
-    string   help_,
-    bool     hidden_ )
+    char          scode_,
+    bool          shasarg_,
+    const string& lname_,
+    bool          lhasarg_,
+    uint32_t      lcode_,
+    const string& descr_,
+    const string& argname_,
+    const string& help_,
+    bool          hidden_ )
         : scode   ( scode_ )
         , shasarg ( shasarg_ )
         , lname   ( lname_ )
@@ -741,7 +742,7 @@ Utility::Option::Option(
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Utility::JobContext::JobContext( string file_ )
+Utility::JobContext::JobContext( const string& file_ )
     : file               ( file_ )
     , fileHandle         ( MP4_INVALID_FILE_HANDLE )
     , optimizeApplicable ( false )

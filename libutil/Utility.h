@@ -63,7 +63,7 @@ protected:
 
     class MP4V2_EXPORT Option {
     public:
-        Option( char, bool, string, bool, uint32_t, string, string = "ARG", string = "", bool = false );
+        Option( char, bool, const string&, bool, uint32_t, const string&, const string & = "ARG", const string & = "", bool = false );
 
         const char     scode;
         const bool     shasarg;
@@ -78,12 +78,12 @@ protected:
 
     class MP4V2_EXPORT Group {
     public:
-        explicit Group( string );
+        explicit Group( const string& );
         ~Group();
 
         void add( const Option& ); // options added this way will not be deleted
-        void add( char, bool, string, bool, uint32_t, string, string = "ARG", string = "", bool = false );
-        void add( string, bool, uint32_t, string, string = "ARG", string = "", bool = false );
+        void add( char, bool, const string&, bool, uint32_t, const string&, const string & = "ARG", const string & = "", bool = false );
+        void add( const string&, bool, uint32_t, const string&, const string & = "ARG", const string & = "", bool = false );
 
         const string name;
 
@@ -102,7 +102,7 @@ protected:
     class MP4V2_EXPORT JobContext
     {
     public:
-        JobContext( string file_ );
+        JobContext( const string& file_ );
 
         const string  file;               //!< file job is working on
         MP4FileHandle fileHandle;         //!< handle of file, if applicable to job
@@ -116,7 +116,7 @@ public:
     bool process();
 
 protected:
-    Utility( string, int, char** );
+    Utility( const string&, int, char** );
 
     void printUsage   ( bool );       //!< print usage
     void printHelp    ( bool, bool ); //!< print help
@@ -132,8 +132,8 @@ protected:
     void verbose2f ( const char*, ... ) MP4V2_WFORMAT_PRINTF(2,3);
     void verbose3f ( const char*, ... ) MP4V2_WFORMAT_PRINTF(2,3);
 
-    bool batch ( int );    //!< process all remaining arguments (jobs)
-    bool job   ( string ); //!< process next argument
+    bool batch ( int );           //!< process all remaining arguments (jobs)
+    bool job   ( const string& ); //!< process next argument
 
     //! open file in consideration of overwrite/force options
     bool openFileForWriting( io::File& );

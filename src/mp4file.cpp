@@ -1522,8 +1522,6 @@ MP4TrackId MP4File::AddEncAudioTrack(uint32_t timeScale,
                                      bool use_ismacryp
                                     )
 {
-    uint32_t original_fmt = 0;
-
     MP4TrackId trackId = AddTrack(MP4_AUDIO_TRACK_TYPE, timeScale);
 
     AddTrackToOd(trackId);
@@ -1545,7 +1543,7 @@ MP4TrackId MP4File::AddEncAudioTrack(uint32_t timeScale,
     /* set all the ismacryp-specific values */
     // original format is mp4a
     if (use_ismacryp) {
-        original_fmt = ATOMID("mp4a");
+        uint32_t original_fmt = ATOMID("mp4a");
         SetTrackIntegerProperty(trackId,
                                 "mdia.minf.stbl.stsd.enca.sinf.frma.data-format",
                                 original_fmt);
@@ -2335,7 +2333,7 @@ void MP4File::AddChapter(MP4TrackId chapterTrackId, MP4Duration chapterDuration,
     else
     {
         MP4Track * pChapterTrack = GetTrack(chapterTrackId);
-        snprintf( text, 1023, "Chapter %03d", pChapterTrack->GetNumberOfSamples() + 1 );
+        snprintf( text, 1023, "Chapter %03" PRIu32, pChapterTrack->GetNumberOfSamples() + 1 );
         textLen = (uint32_t)strlen(text);
     }
 
@@ -2382,7 +2380,7 @@ void MP4File::AddNeroChapter(MP4Timestamp chapterStart, const char * chapterTitl
     char buffer[256] = { 0 };
 
     if (0 == chapterTitle)
-        snprintf( buffer, 255, "Chapter %03d", pCount->GetValue() );
+        snprintf( buffer, 255, "Chapter %03" PRIu32, pCount->GetValue() );
     else
         strncpy( buffer, chapterTitle, 255 );
 
@@ -2391,7 +2389,7 @@ void MP4File::AddNeroChapter(MP4Timestamp chapterStart, const char * chapterTitl
     {
         MP4Integer64Property * pStartTime = (MP4Integer64Property *) pTable->GetProperty(0);
         MP4StringProperty * pName = (MP4StringProperty *) pTable->GetProperty(1);
-        if (pStartTime && pTable)
+        if (pStartTime && pName)
         {
             pStartTime->AddValue(chapterStart);
             pName->AddValue(buffer);
@@ -2865,7 +2863,6 @@ MP4TrackId MP4File::AllocTrackId()
 
     // extreme case where mp4 file has 2^16 tracks in it
     throw new EXCEPTION("too many existing tracks");
-    return MP4_INVALID_TRACK_ID;        // to keep MSVC happy
 }
 
 MP4TrackId MP4File::FindTrackId(uint16_t trackIndex,
@@ -2904,7 +2901,6 @@ MP4TrackId MP4File::FindTrackId(uint16_t trackIndex,
     ostringstream msg;
     msg << "Track index doesn't exist - track " << trackIndex << " type " << type;
     throw new EXCEPTION(msg.str());
-    return MP4_INVALID_TRACK_ID; // satisfy MS compiler
 }
 
 uint16_t MP4File::FindTrackIndex(MP4TrackId trackId)
@@ -2918,7 +2914,6 @@ uint16_t MP4File::FindTrackIndex(MP4TrackId trackId)
     ostringstream msg;
     msg << "Track id " << trackId << " doesn't exist";
     throw new EXCEPTION(msg.str());
-    return (uint16_t)-1; // satisfy MS compiler
 }
 
 uint16_t MP4File::FindTrakAtomIndex(MP4TrackId trackId)
@@ -2934,7 +2929,6 @@ uint16_t MP4File::FindTrakAtomIndex(MP4TrackId trackId)
     ostringstream msg;
     msg << "Track id " << trackId << " doesn't exist";
     throw new EXCEPTION(msg.str());
-    return (uint16_t)-1; // satisfy MS compiler
 }
 
 uint32_t MP4File::GetSampleSize(MP4TrackId trackId, MP4SampleId sampleId)

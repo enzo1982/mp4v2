@@ -466,10 +466,10 @@ Utf8ToFilename::IsAbsolute ( const string &utf8string )
     // Here we're looking for:
     //  x:   drive relative
     //  x:\  absolute path
-    if (utf8string[1] == ':')
+    if (utf8string.length() > 1 && utf8string[1] == ':')
     {
         // It starts with x:, but is it x:/ ?
-        if ((utf8string.length() >= 2) && IsPathSeparator(utf8string[2]))
+        if ((utf8string.length() > 2) && IsPathSeparator(utf8string[2]))
         {
             // Yup -- it's absolute
             return 1;

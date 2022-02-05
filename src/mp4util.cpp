@@ -146,7 +146,6 @@ char* MP4ToBase64(const uint8_t* pData, uint32_t dataSize)
     char* s = (char*)MP4Calloc((((dataSize + 2) * 4) / 3) + 1);
 
     const uint8_t* src = pData;
-    if (pData == NULL) return NULL;
     char* dest = s;
     uint32_t numGroups = dataSize / 3;
 
