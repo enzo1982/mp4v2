@@ -25,6 +25,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mp4track", "mp4track\mp4tra
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mp4subtitle", "mp4subtitle\mp4subtitle.vcxproj", "{B2B082CA-748D-48A2-9AF1-4BD4F54E5604}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libutil", "libutil\libutil.vcxproj", "{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Static|ARM = Debug Static|ARM
@@ -365,6 +367,38 @@ Global
 		{B2B082CA-748D-48A2-9AF1-4BD4F54E5604}.Release|Win32.Build.0 = Release|Win32
 		{B2B082CA-748D-48A2-9AF1-4BD4F54E5604}.Release|x64.ActiveCfg = Release|x64
 		{B2B082CA-748D-48A2-9AF1-4BD4F54E5604}.Release|x64.Build.0 = Release|x64
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Debug Static|ARM.ActiveCfg = Debug Static|ARM
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Debug Static|ARM.Build.0 = Debug Static|ARM
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Debug Static|ARM64.ActiveCfg = Debug Static|ARM64
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Debug Static|ARM64.Build.0 = Debug Static|ARM64
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Debug Static|Win32.ActiveCfg = Debug Static|Win32
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Debug Static|Win32.Build.0 = Debug Static|Win32
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Debug Static|x64.ActiveCfg = Debug Static|x64
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Debug Static|x64.Build.0 = Debug Static|x64
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Debug|ARM.ActiveCfg = Debug|ARM
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Debug|ARM.Build.0 = Debug|ARM
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Debug|ARM64.Build.0 = Debug|ARM64
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Debug|Win32.Build.0 = Debug|Win32
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Debug|x64.ActiveCfg = Debug|x64
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Debug|x64.Build.0 = Debug|x64
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Release Static|ARM.ActiveCfg = Release Static|ARM
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Release Static|ARM.Build.0 = Release Static|ARM
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Release Static|ARM64.ActiveCfg = Release Static|ARM64
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Release Static|ARM64.Build.0 = Release Static|ARM64
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Release Static|Win32.ActiveCfg = Release Static|Win32
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Release Static|Win32.Build.0 = Release Static|Win32
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Release Static|x64.ActiveCfg = Release Static|x64
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Release Static|x64.Build.0 = Release Static|x64
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Release|ARM.ActiveCfg = Release|ARM
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Release|ARM.Build.0 = Release|ARM
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Release|ARM64.ActiveCfg = Release|ARM64
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Release|ARM64.Build.0 = Release|ARM64
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Release|Win32.ActiveCfg = Release|Win32
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Release|Win32.Build.0 = Release|Win32
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Release|x64.ActiveCfg = Release|x64
+		{9C382FF0-5607-46AF-B2F3-BEABD3F44ADC}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -31,9 +31,6 @@
     <Filter Include="libplatform\number">
       <UniqueIdentifier>{c4d53141-d37d-437b-8820-163f3920eaeb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="libplatform\process">
-      <UniqueIdentifier>{f4393ccb-181c-40c6-a696-caea31cd5a2d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="libplatform\prog">
       <UniqueIdentifier>{ff46fa5d-06bf-424c-bd63-7f16299aefb1}</UniqueIdentifier>
     </Filter>
@@ -222,9 +219,6 @@
     <ClInclude Include="..\..\libplatform\number\random.h">
       <Filter>libplatform\number</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\libplatform\process\process.h">
-      <Filter>libplatform\process</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\libplatform\prog\option.h">
       <Filter>libplatform\prog</Filter>
     </ClInclude>
@@ -234,19 +228,10 @@
     <ClInclude Include="..\..\libplatform\time\time.h">
       <Filter>libplatform\time</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\libutil\crc.h">
-      <Filter>libutil</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libutil\Database.h">
-      <Filter>libutil</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\libutil\impl.h">
       <Filter>libutil</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libutil\other.h">
-      <Filter>libutil</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libutil\Timecode.h">
       <Filter>libutil</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libutil\TrackModifier.h">
@@ -533,9 +518,6 @@
     <ClCompile Include="..\..\libplatform\number\random_win32.cpp">
       <Filter>libplatform\number</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libplatform\process\process_win32.cpp">
-      <Filter>libplatform\process</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\libplatform\prog\option.cpp">
       <Filter>libplatform\prog</Filter>
     </ClCompile>
@@ -548,16 +530,7 @@
     <ClCompile Include="..\..\libplatform\time\time_win32.cpp">
       <Filter>libplatform\time</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\libutil\crc.cpp">
-      <Filter>libutil</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libutil\Database.cpp">
-      <Filter>libutil</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\libutil\other.cpp">
-      <Filter>libutil</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libutil\Timecode.cpp">
       <Filter>libutil</Filter>
     </ClCompile>
     <ClCompile Include="..\..\libutil\TrackModifier.cpp">

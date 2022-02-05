@@ -1,4 +1,5 @@
 lib_LTLIBRARIES = libmp4v2.la
+noinst_LTLIBRARIES = libutil.la
 
 bin_PROGRAMS =
 
@@ -152,7 +153,6 @@ libmp4v2_la_SOURCES += \
     libplatform/platform_base.h          \
     libplatform/platform_posix.h         \
     libplatform/platform_win32.h         \
-    libplatform/process/process.h        \
     libplatform/prog/option.cpp          \
     libplatform/prog/option.h            \
     libplatform/sys/error.cpp            \
@@ -166,7 +166,6 @@ if ADD_PLATFORM_POSIX
         libplatform/io/File_posix.cpp          \
         libplatform/io/FileSystem_posix.cpp    \
         libplatform/number/random_posix.cpp    \
-        libplatform/process/process_posix.cpp  \
         libplatform/time/time_posix.cpp
 endif
 if ADD_PLATFORM_WIN32
@@ -174,7 +173,6 @@ if ADD_PLATFORM_WIN32
         libplatform/io/File_win32.cpp          \
         libplatform/io/FileSystem_win32.cpp    \
         libplatform/number/random_win32.cpp    \
-        libplatform/process/process_win32.cpp  \
         libplatform/time/time_win32.cpp        \
         libplatform/platform_win32.cpp         \
         libplatform/platform_win32_impl.h
@@ -182,20 +180,20 @@ endif
 
 if ADD_UTIL
     libmp4v2_la_SOURCES += \
-        libutil/Database.cpp       \
-        libutil/Database.h         \
-        libutil/Timecode.cpp       \
-        libutil/Timecode.h         \
         libutil/TrackModifier.cpp  \
         libutil/TrackModifier.h    \
         libutil/Utility.cpp        \
         libutil/Utility.h          \
-        libutil/crc.cpp            \
-        libutil/crc.h              \
         libutil/impl.h             \
         libutil/other.cpp          \
         libutil/other.h            \
         libutil/util.h
+
+    libutil_la_SOURCES = \
+        libutil/crc.cpp      \
+        libutil/crc.h        \
+        libutil/Timecode.cpp \
+        libutil/Timecode.h
 
     bin_PROGRAMS += mp4art
     bin_PROGRAMS += mp4chaps
@@ -218,8 +216,8 @@ mp4tags_SOURCES      = util/impl.h util/mp4tags.cpp
 mp4track_SOURCES     = util/impl.h util/mp4track.cpp
 mp4trackdump_SOURCES = util/impl.h util/mp4trackdump.cpp
 
-mp4art_LDADD       = libmp4v2.la $(X_LDFLAGS)
-mp4chaps_LDADD     = libmp4v2.la $(X_LDFLAGS)
+mp4art_LDADD       = libmp4v2.la libutil.la $(X_LDFLAGS)
+mp4chaps_LDADD     = libmp4v2.la libutil.la $(X_LDFLAGS)
 mp4extract_LDADD   = libmp4v2.la $(X_LDFLAGS)
 mp4file_LDADD      = libmp4v2.la $(X_LDFLAGS)
 mp4info_LDADD      = libmp4v2.la $(X_LDFLAGS)
@@ -241,20 +239,19 @@ override RUNTESTDEFAULTFLAGS = --tool $$tool --srcdir $$srcdir/testsuite --outdi
 mp4v2incdir = $(pkgincludedir)
 
 mp4v2inc_HEADERS = \
-    include/mp4v2/project.h \
-    \
-    include/mp4v2/chapter.h                     \
-    include/mp4v2/file.h                        \
-    include/mp4v2/file_prop.h                   \
-    include/mp4v2/general.h                     \
-    include/mp4v2/isma.h                        \
-    include/mp4v2/itmf_generic.h                \
-    include/mp4v2/itmf_tags.h                   \
-    include/mp4v2/mp4v2.h                       \
-    include/mp4v2/platform.h                    \
-    include/mp4v2/sample.h                      \
-    include/mp4v2/streaming.h                   \
-    include/mp4v2/track.h                       \
+    include/mp4v2/project.h      \
+    include/mp4v2/chapter.h      \
+    include/mp4v2/file.h         \
+    include/mp4v2/file_prop.h    \
+    include/mp4v2/general.h      \
+    include/mp4v2/isma.h         \
+    include/mp4v2/itmf_generic.h \
+    include/mp4v2/itmf_tags.h    \
+    include/mp4v2/mp4v2.h        \
+    include/mp4v2/platform.h     \
+    include/mp4v2/sample.h       \
+    include/mp4v2/streaming.h    \
+    include/mp4v2/track.h        \
     include/mp4v2/track_prop.h
 
 ###############################################################################

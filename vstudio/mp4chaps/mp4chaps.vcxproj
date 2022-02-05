@@ -612,6 +612,9 @@
       <Project>{bdb97a37-90b8-4906-bcab-663d983e33e3}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\libutil\libutil.vcxproj">
+      <Project>{9c382ff0-5607-46af-b2f3-beabd3f44adc}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
