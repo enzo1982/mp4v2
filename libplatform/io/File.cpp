@@ -4,12 +4,6 @@ namespace mp4v2 { namespace platform { namespace io {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-namespace {
-    const File::Size __maxChunkSize = 1024*1024;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 File::File( std::string name_, Mode mode_, FileProvider* provider_ )
     : _name     ( name_ )
     , _isOpen   ( false )

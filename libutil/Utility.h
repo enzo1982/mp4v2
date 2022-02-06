@@ -52,7 +52,7 @@ class MP4V2_EXPORT Utility
 {
 protected:
     enum LongCode {
-        LC_NONE = 0xf0000000, // safe (cannot conflict with char values)
+        LC_NONE = 0x00010000, // safe (cannot conflict with char values)
         LC_DEBUG,
         LC_VERBOSE,
         LC_HELP,

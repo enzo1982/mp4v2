@@ -44,7 +44,7 @@ enum MP4PropertyType {
     TableProperty,
     DescriptorProperty,
     LanguageCodeProperty,
-    BasicTypeProperty,
+    BasicTypeProperty
 };
 
 class MP4Property {

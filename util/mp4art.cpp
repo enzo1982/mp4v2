@@ -40,7 +40,7 @@ private:
         LC_ADD,
         LC_REMOVE,
         LC_REPLACE,
-        LC_EXTRACT,
+        LC_EXTRACT
     };
 
 public:

@@ -47,6 +47,9 @@ class MP4AtomInfo {
 public:
     MP4AtomInfo() {
         m_name = NULL;
+        m_mandatory = Optional;
+        m_onlyOne = OnlyOne;
+        m_count = 0;
     }
     MP4AtomInfo(const char* name, bool mandatory, bool onlyOne);
 

@@ -215,7 +215,7 @@ extern "C" int main( int argc, char** argv )
                 fprintf( stdout, " Artist ID: %u\n", *tags->artistID );
             }
             if ( tags->playlistID ) {
-                fprintf( stdout, " Playlist ID: %llu\n", *tags->playlistID );
+                fprintf( stdout, " Playlist ID: %" PRIu64 "\n", *tags->playlistID );
             }
             if ( tags->genreID ) {
                 fprintf( stdout, " Genre ID: %u\n", *tags->genreID );

@@ -16,7 +16,7 @@ public:
         MODE_UNDEFINED, //!< undefined
         MODE_READ,      //!< file may be read
         MODE_MODIFY,    //!< file may be read/written
-        MODE_CREATE,    //!< file will be created/truncated for read/write
+        MODE_CREATE     //!< file will be created/truncated for read/write
     };
 
     //! type used to represent all file sizes and offsets

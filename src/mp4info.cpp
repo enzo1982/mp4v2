@@ -376,7 +376,7 @@ static char* PrintVideoInfo(
                 snprintf(levelb, 20, "unknown level %x", level);
                 break;
             }
-            if (originalFormat != NULL && originalFormat[0] != '\0')
+            if (originalFormat[0] != 0)
                 snprintf(oformatbuffer, 32, "(%s) ", originalFormat);
             snprintf(typebuffer, sizeof(typebuffer), "H264 %s%s@%s",
                      oformatbuffer, profileb, levelb);

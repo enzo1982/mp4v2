@@ -206,7 +206,7 @@ extern "C" int
             case OPT_COMPOSERID:
             case OPT_PODCAST:
                 if ( c == OPT_PLAYLISTID ) {
-                    r = sscanf( prog::optarg, "%llu", &nums[c] );
+                    r = sscanf( prog::optarg, "%" PRIu64, &nums[c] );
                 } else {
                     unsigned int n;
                     r = sscanf( prog::optarg, "%u", &n );

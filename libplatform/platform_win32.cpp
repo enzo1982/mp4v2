@@ -71,12 +71,12 @@ struct utf8_len_info
     /**
      * This structure applies to a number >= @p range_min.
      */
-    UINT32      range_min;
+    uint32_t    range_min;
 
     /**
      * This structure applies to a number <= @p range_max.
      */
-    UINT32      range_max;
+    uint32_t    range_max;
 
     /**
      * The number of characters required to encode a number
@@ -194,7 +194,7 @@ Utf8ToFilename::~Utf8ToFilename( )
 wchar_t *
 Utf8ToFilename::ConvertToUTF16 ( const string &utf8string )
 {
-    int         num_bytes;
+    size_t      num_bytes;
     size_t      num_chars;
     wchar_t     *retval;
 
@@ -281,13 +281,13 @@ Utf8ToFilename::ConvertToUTF16Buf ( const char      *utf8,
                                     wchar_t         *utf16_buf,
                                     size_t          num_bytes )
 {
-    size_t      i;
-    const UINT8 *next_char;
-    size_t      num_chars;
-    size_t      num_utf16_chars;
-    size_t      num_input_bytes;
-    const UINT8 *p;
-    wchar_t     this_utf16[2];
+    size_t        i;
+    const uint8_t *next_char;
+    size_t        num_chars;
+    size_t        num_utf16_chars;
+    size_t        num_input_bytes;
+    const uint8_t *p;
+    wchar_t       this_utf16[2];
 
     ASSERT(utf8);
     ASSERT(utf16_buf || (num_bytes == 0));
@@ -332,7 +332,7 @@ Utf8ToFilename::ConvertToUTF16Buf ( const char      *utf8,
     // in utf16_buf
     num_utf16_chars = num_bytes / sizeof(wchar_t);
 
-    p = (const UINT8 *)utf8;
+    p = (const uint8_t *)utf8;
     i = 0;
     while (*p && (i < num_utf16_chars))
     {
@@ -407,7 +407,7 @@ Utf8ToFilename::ConvertToUTF16Buf ( const char      *utf8,
  * @return the length of the prefix of @p utf8string in
  * characters
  */
-int
+size_t
 Utf8ToFilename::GetPrefixLen ( const string &utf8string )
 {
     if (utf8string.find("\\\\?\\") == 0)
@@ -674,21 +674,21 @@ Utf8ToFilename::IsUTF16Valid( ) const
  * be valid to dereference depending on the value of @p
  * num_bytes.
  */
-const UINT8 *
-Utf8ToFilename::Utf8DecodeChar ( const UINT8    *utf8_char,
+const uint8_t *
+Utf8ToFilename::Utf8DecodeChar ( const uint8_t  *utf8_char,
                                  size_t         num_bytes,
                                  wchar_t        *utf16,
                                  int            *invalid )
 
 {
-    wchar_t     high_half;
-    int         i;
-    UINT8       len;
-    wchar_t     low_half;
-    UINT8       mask;
-    const UINT8 *p;
-    UINT32      ucs4;
-    int         valid_len;
+    wchar_t       high_half;
+    int           i;
+    uint8_t       len;
+    wchar_t       low_half;
+    uint8_t       mask;
+    const uint8_t *p;
+    uint32_t      ucs4;
+    size_t        valid_len;
 
     ASSERT(utf8_char);
     ASSERT(num_bytes > 0);
@@ -709,7 +709,7 @@ Utf8ToFilename::Utf8DecodeChar ( const UINT8    *utf8_char,
     ** Traverse the UTF-8 encoding and figure out what we've
     ** got.
     */
-    p = (const UINT8 *)(utf8_char);
+    p = (const uint8_t *)(utf8_char);
 
     /*
     ** This is the number of bytes we expect based on the
@@ -982,7 +982,7 @@ Utf8ToFilename::Utf8DecodeChar ( const UINT8    *utf8_char,
  * UTF-8 encoding of @p ucs4
  */
 size_t
-Utf8ToFilename::Utf8LenFromUcs4 ( UINT32 ucs4 )
+Utf8ToFilename::Utf8LenFromUcs4 ( uint32_t ucs4 )
 {
     size_t      table_idx;
 
@@ -1017,8 +1017,8 @@ Utf8ToFilename::Utf8LenFromUcs4 ( UINT32 ucs4 )
  * @retval [1,6] the number of octets that @p
  * utf8_first_byte should occupy
  */
-UINT8
-Utf8ToFilename::Utf8NumOctets ( UINT8 utf8_first_byte )
+uint8_t
+Utf8ToFilename::Utf8NumOctets ( uint8_t utf8_first_byte )
 {
     /**
      * Here's a mapping from the first byte of a UTF-8

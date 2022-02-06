@@ -131,7 +131,7 @@ Timecode::operator+=( const Timecode& rhs )
     uint64_t dur = _duration + convertDuration( rhs );
     // overflow check
     if( dur < _duration )
-        dur = numeric_limits<long long>::max();
+        dur = numeric_limits<uint64_t>::max();
 
     setDuration( dur );
     return *this;
@@ -284,7 +284,7 @@ Timecode::parse( const string& time, string* outError )
         HOURS,
         MINUTES,
         SECONDS,
-        SUBSECONDS,
+        SUBSECONDS
     };
 
     // setup target before parsing

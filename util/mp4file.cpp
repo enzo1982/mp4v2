@@ -35,7 +35,7 @@ private:
     enum FileLongCode {
         LC_LIST = _LC_MAX,
         LC_OPTIMIZE,
-        LC_DUMP,
+        LC_DUMP
     };
 
 public:

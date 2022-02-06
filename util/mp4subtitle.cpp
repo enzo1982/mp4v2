@@ -35,7 +35,7 @@ private:
         LC_LIST = _LC_MAX,
         LC_EXPORT,
         LC_IMPORT,
-        LC_REMOVE,
+        LC_REMOVE
     };
 
 public:

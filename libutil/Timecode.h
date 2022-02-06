@@ -50,7 +50,7 @@ class MP4V2_EXPORT Timecode {
 public:
     enum Format {
         FRAME,
-        DECIMAL,
+        DECIMAL
     };
 
 private:

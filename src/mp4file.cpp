@@ -2335,9 +2335,7 @@ void MP4File::AddChapter(MP4TrackId chapterTrackId, MP4Duration chapterDuration,
     {
         textLen = min((uint32_t)strlen(chapterTitle), (uint32_t)MP4V2_CHAPTER_TITLE_MAX);
         if (0 < textLen)
-        {
-            strncpy(text, chapterTitle, textLen);
-        }
+            strncpy(text, chapterTitle, MP4V2_CHAPTER_TITLE_MAX);
     }
     else
     {
@@ -2386,18 +2384,12 @@ void MP4File::AddNeroChapter(MP4Timestamp chapterStart, const char * chapterTitl
     MP4Integer32Property * pCount = (MP4Integer32Property*)pChpl->GetProperty(3);
     pCount->IncrementValue();
 
-    char buffer[256];
+    char buffer[256] = { 0 };
 
     if (0 == chapterTitle)
-    {
         snprintf( buffer, 255, "Chapter %03d", pCount->GetValue() );
-    }
     else
-    {
-        int len = min((uint32_t)strlen(chapterTitle), (uint32_t)255);
-        strncpy( buffer, chapterTitle, len );
-        buffer[len] = 0;
-    }
+        strncpy( buffer, chapterTitle, 255 );
 
     MP4TableProperty * pTable;
     if (pChpl->FindProperty("chpl.chapters", (MP4Property **)&pTable))
@@ -2425,9 +2417,8 @@ MP4TrackId MP4File::FindChapterReferenceTrack(MP4TrackId chapterTrackId, char * 
             {
                 if( 0 != trackName )
                 {
-                    int nameLen = min((uint32_t)strlen(name), (uint32_t)trackNameSize);
-                    strncpy(trackName, name, nameLen);
-                    trackName[nameLen] = 0;
+                    strncpy(trackName, name, trackNameSize - 1);
+                    trackName[trackNameSize - 1] = 0;
                 }
 
                 return m_pTracks[i]->GetId();
@@ -2476,14 +2467,10 @@ MP4ChapterType MP4File::DeleteChapters(MP4ChapterType chapterType, MP4TrackId ch
 
         // no text track given, find a suitable
         if (MP4_INVALID_TRACK_ID == chapterTrackId)
-        {
-            chapterTrackId = FindChapterTrack(trackName, 127);
-        }
+            chapterTrackId = FindChapterTrack(trackName, 128);
 
         if (MP4_INVALID_TRACK_ID != chapterTrackId)
-        {
-            FindChapterReferenceTrack(chapterTrackId, trackName, 127);
-        }
+            FindChapterReferenceTrack(chapterTrackId, trackName, 128);
 
         if (MP4_INVALID_TRACK_ID != chapterTrackId && 0 != trackName[0])
         {
@@ -2634,9 +2621,8 @@ MP4ChapterType MP4File::GetChapters(MP4Chapter_t ** chapterList, uint32_t * chap
         for (i = 0, j = 1; i < counter; ++i, ++j)
         {
             // insert the chapter title
-            uint32_t len = min((uint32_t)strlen(name), (uint32_t)MP4V2_CHAPTER_TITLE_MAX);
-            strncpy(chapters[i].title, name, len);
-            chapters[i].title[len] = 0;
+            strncpy(chapters[i].title, name, MP4V2_CHAPTER_TITLE_MAX);
+            chapters[i].title[MP4V2_CHAPTER_TITLE_MAX] = 0;
 
             // calculate the duration
             MP4Duration duration = 0;

@@ -46,7 +46,7 @@ static MP4File  *ConstructMP4File ( void )
     try {
         pFile = new MP4File();
     }
-    catch( std::bad_alloc ) {
+    catch( const std::bad_alloc& ) {
         mp4v2::impl::log.errorf("%s: unable to allocate MP4File", __FUNCTION__);
     }
     catch( Exception* x ) {
@@ -896,7 +896,7 @@ MP4FileHandle MP4ReadProvider( const char* fileName, const MP4FileProvider* file
         }
 
         catch (...) {
-            return MP4_INVALID_TRACK_ID;
+            return NULL;
         }
     }
 
@@ -4421,7 +4421,7 @@ MP4FileHandle MP4ReadProvider( const char* fileName, const MP4FileProvider* file
         {
             ipod_uuid = new IPodUUIDAtom(*(MP4File*)hFile);
         }
-        catch( std::bad_alloc ) {
+        catch( const std::bad_alloc& ) {
             mp4v2::impl::log.errorf("%s: unable to allocate IPodUUIDAtom", __FUNCTION__);
         }
         catch( Exception* x ) {

@@ -332,17 +332,17 @@ void MP4RtpHintTrack::GetPayload(
 
             if (ppPayloadName) {
                 *ppPayloadName = (char*)MP4Calloc(length + 1);
-                strncpy(*ppPayloadName, pRtpMap, length);
+                memcpy(*ppPayloadName, pRtpMap, length);
             }
             if (pSlash && ppEncodingParams) {
                 pSlash++;
                 pSlash = strchr(pSlash, '/');
                 if (pSlash != NULL) {
                     pSlash++;
-                    if (pSlash != '\0') {
+                    if (*pSlash != '\0') {
                         length = (uint32_t)strlen(pRtpMap) - (pSlash - pRtpMap);
                         *ppEncodingParams = (char *)MP4Calloc(length + 1);
-                        strncpy(*ppEncodingParams, pSlash, length);
+                        memcpy(*ppEncodingParams, pSlash, length);
                     }
                 }
             }

@@ -7,8 +7,6 @@
 #ifdef __MINGW32__
 #   undef  __MSVCRT_VERSION__
 #   define __MSVCRT_VERSION__ 0x800
-// JAN: see http://code.google.com/p/mp4v2/issues/detail?id=132
-#   define _USE_32BIT_TIME_T
 #endif
 
 // set minimum win32 API requirement to Windows 2000 or higher
@@ -60,18 +58,17 @@ namespace mp4v2 { namespace platform {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// If using Visual Studio 2010 or newer these aren't needed since stdint.h is available.
-#if !(defined(_MSC_VER) && _MSC_VER >= 1600)
 // some macros for constant expressions
-#define INT8_C(x)    x
-#define INT16_C(x)   x
-#define INT32_C(x)   x ## L
-#define INT64_C(x)   x ## LL
+#ifndef INT8_C
+#   define INT8_C(x)    x
+#   define INT16_C(x)   x
+#   define INT32_C(x)   x ## L
+#   define INT64_C(x)   x ## LL
 
-#define UINT8_C(x)   x
-#define UINT16_C(x)  x
-#define UINT32_C(x)  x ## UL
-#define UINT64_C(x)  x ## ULL
+#   define UINT8_C(x)   x
+#   define UINT16_C(x)  x
+#   define UINT32_C(x)  x ## UL
+#   define UINT64_C(x)  x ## ULL
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -86,9 +83,9 @@ namespace mp4v2 { namespace platform {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define snprintf(s,n,...)  _snprintf(s,n,__VA_ARGS__)
-#define strcasecmp(s1,s2)  _stricmp(s1,s2)
-#define strdup(s)          _strdup(s)
+#ifndef strcasecmp
+#   define strcasecmp(s1,s2) _stricmp(s1,s2)
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 
