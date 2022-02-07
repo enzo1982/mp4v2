@@ -95,25 +95,26 @@ MP4File::GetFilename() const
     return m_file->name;
 }
 
-void MP4File::Read( const char* name, const MP4FileProvider* provider )
+void MP4File::Read( const char* fileName, const MP4FileProvider* provider, const MP4IOCallbacks* callbacks, void* handle )
 {
-    Open( name, File::MODE_READ, provider );
+    Open( fileName, File::MODE_READ, provider, callbacks, handle );
     ReadFromFile();
     CacheProperties();
 }
 
-void MP4File::Create( const char*            fileName,
-                      uint32_t               flags,
-                      const MP4FileProvider* provider,
-                      int                    add_ftyp,
-                      int                    add_iods,
-                      char*                  majorBrand,
-                      uint32_t               minorVersion,
-                      char**                 supportedBrands,
-                      uint32_t               supportedBrandsCount )
+void MP4File::Create( const char*           fileName,
+                      const MP4IOCallbacks* callbacks,
+                      void*                 handle,
+                      uint32_t              flags,
+                      int                   add_ftyp,
+                      int                   add_iods,
+                      char*                 majorBrand,
+                      uint32_t              minorVersion,
+                      char**                supportedBrands,
+                      uint32_t              supportedBrandsCount )
 {
     m_createFlags = flags;
-    Open( fileName, File::MODE_CREATE, provider );
+    Open( fileName, File::MODE_CREATE, NULL, callbacks, handle );
 
     // generate a skeletal atom tree
     m_pRootAtom = MP4Atom::CreateAtom(*this, NULL, NULL);
@@ -167,7 +168,7 @@ void MP4File::Check64BitStatus (const char *atomName)
 
 bool MP4File::Modify( const char* fileName )
 {
-    Open( fileName, File::MODE_MODIFY, NULL );
+    Open( fileName, File::MODE_MODIFY );
     ReadFromFile();
 
     // find the moov atom
@@ -282,7 +283,7 @@ void MP4File::Optimize( const char* srcFileName, const char* dstFileName )
 
     try {
         // file source to optimize
-        Open( srcFileName, File::MODE_READ, NULL );
+        Open( srcFileName, File::MODE_READ );
         ReadFromFile();
         CacheProperties(); // of moov atom
 
@@ -290,7 +291,7 @@ void MP4File::Optimize( const char* srcFileName, const char* dstFileName )
         m_file = NULL;
 
         // optimized file destination
-        Open( dname.c_str(), File::MODE_CREATE, NULL );
+        Open( dname.c_str(), File::MODE_CREATE );
         dst = m_file;
 
         SetIntegerProperty( "moov.mvhd.modificationTime", MP4GetAbsTimestamp() );
@@ -391,11 +392,24 @@ void MP4File::RewriteMdat( File& src, File& dst )
     delete [] nextChunkTimes;
 }
 
-void MP4File::Open( const char* name, File::Mode mode, const MP4FileProvider* provider )
+void MP4File::Open( const char*            fileName,
+                    File::Mode             mode,
+                    const MP4FileProvider* fileProvider,
+                    const MP4IOCallbacks*  callbacks,
+                    void*                  handle )
 {
     ASSERT( !m_file );
 
-    m_file = new File( name, mode, provider ? new io::CustomFileProvider( *provider ) : NULL );
+    const char* name = fileName;
+    io::FileProvider* provider = NULL;
+    if (fileProvider)
+        provider = new io::CustomFileProvider( *fileProvider );
+    else if (callbacks) {
+        name = "<callbacks>";
+        provider = new io::CallbacksFileProvider( *callbacks, handle );
+    }
+
+    m_file = new File( name, mode, provider );
     if( m_file->open() ) {
         ostringstream msg;
         msg << "open(" << name << ") failed";

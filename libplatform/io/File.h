@@ -209,6 +209,26 @@ public:
 private:
     MP4FileProvider _call;
     void*           _handle;
+    std::string     _name;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class CallbacksFileProvider : public FileProvider
+{
+public:
+    CallbacksFileProvider( const MP4IOCallbacks& callbacks, void* handle );
+
+    bool open( const std::string& name, Mode mode );
+    bool seek( Size pos );
+    bool read( void* buffer, Size size, Size& nin );
+    bool write( const void* buffer, Size size, Size& nout );
+    bool close();
+    bool getSize( Size& nout );
+
+private:
+    MP4IOCallbacks _call;
+    void*          _handle;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

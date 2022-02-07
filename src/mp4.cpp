@@ -89,30 +89,7 @@ const char* MP4GetFilename( MP4FileHandle hFile )
 
 MP4FileHandle MP4Read( const char* fileName )
 {
-    if (!fileName)
-        return MP4_INVALID_FILE_HANDLE;
-
-    MP4File *pFile = ConstructMP4File();
-    if (!pFile)
-        return MP4_INVALID_FILE_HANDLE;
-
-    try
-    {
-        ASSERT(pFile);
-        pFile->Read( fileName, NULL );
-        return (MP4FileHandle)pFile;
-    }
-    catch( Exception* x ) {
-        mp4v2::impl::log.errorf(*x);
-        delete x;
-    }
-    catch( ... ) {
-        mp4v2::impl::log.errorf("%s: \"%s\": failed", __FUNCTION__,
-                                fileName );
-    }
-
-    delete pFile;
-    return MP4_INVALID_FILE_HANDLE;
+    return MP4ReadProvider( fileName, NULL );
 }
 
 MP4FileHandle MP4ReadProvider( const char* fileName, const MP4FileProvider* fileProvider )
@@ -125,7 +102,7 @@ MP4FileHandle MP4ReadProvider( const char* fileName, const MP4FileProvider* file
         return MP4_INVALID_FILE_HANDLE;
 
     try {
-        pFile->Read( fileName, fileProvider );
+        pFile->Read( fileName, fileProvider, NULL, NULL );
         return (MP4FileHandle)pFile;
     }
     catch( Exception* x ) {
@@ -141,74 +118,121 @@ MP4FileHandle MP4ReadProvider( const char* fileName, const MP4FileProvider* file
     return MP4_INVALID_FILE_HANDLE;
 }
 
+MP4FileHandle MP4ReadCallbacks( const MP4IOCallbacks* callbacks, void* handle )
+{
+    if (!callbacks)
+        return MP4_INVALID_FILE_HANDLE;
+
+    MP4File *pFile = ConstructMP4File();
+    if (!pFile)
+        return MP4_INVALID_FILE_HANDLE;
+
+    try {
+        pFile->Read( NULL, NULL, callbacks, handle );
+        return (MP4FileHandle)pFile;
+    }
+    catch( Exception* x ) {
+        mp4v2::impl::log.errorf(*x);
+        delete x;
+    }
+    catch( ... ) {
+        mp4v2::impl::log.errorf("%s: failed", __FUNCTION__ );
+    }
+
+    delete pFile;
+    return MP4_INVALID_FILE_HANDLE;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
-    MP4FileHandle MP4Create (const char* fileName,
-                             uint32_t flags)
-    {
-        return MP4CreateProviderEx(fileName, flags);
-    }
+MP4FileHandle MP4Create (const char* fileName,
+                         uint32_t flags)
+{
+    return MP4CreateEx(fileName, flags);
+}
 
-    MP4FileHandle MP4CreateEx (const char* fileName,
-                               uint32_t  flags,
-                               int add_ftyp,
-                               int add_iods,
-                               char* majorBrand,
-                               uint32_t minorVersion,
-                               char** supportedBrands,
-                               uint32_t supportedBrandsCount)
-    {
-        return MP4CreateProviderEx(fileName, flags, NULL,
-                                   add_ftyp, add_iods,
-                                   majorBrand, minorVersion,
-                                   supportedBrands, supportedBrandsCount);
-    }
-
-    MP4FileHandle MP4CreateProvider (const char* fileName,
-                                     uint32_t flags,
-                                     const MP4FileProvider* fileProvider)
-    {
-        return MP4CreateProviderEx(fileName, flags, fileProvider);
-    }
-
-    MP4FileHandle MP4CreateProviderEx (const char* fileName,
-                                       uint32_t flags,
-                                       const MP4FileProvider* fileProvider,
-                                       int add_ftyp,
-                                       int add_iods,
-                                       char* majorBrand,
-                                       uint32_t minorVersion,
-                                       char** supportedBrands,
-                                       uint32_t supportedBrandsCount)
-    {
-        if (!fileName)
-            return MP4_INVALID_FILE_HANDLE;
-
-        MP4File* pFile = ConstructMP4File();
-        if (!pFile)
-            return MP4_INVALID_FILE_HANDLE;
-
-        try {
-            ASSERT(pFile);
-            // LATER useExtensibleFormat, moov first, then mvex's
-            pFile->Create(fileName, flags, fileProvider,
-                          add_ftyp, add_iods,
-                          majorBrand, minorVersion,
-                          supportedBrands, supportedBrandsCount);
-            return (MP4FileHandle)pFile;
-        }
-        catch( Exception* x ) {
-            mp4v2::impl::log.errorf(*x);
-            delete x;
-        }
-        catch( ... ) {
-            mp4v2::impl::log.errorf("%s: \"%s\": failed", __FUNCTION__,
-                                    fileName );
-        }
-
-        delete pFile;
+MP4FileHandle MP4CreateEx (const char* fileName,
+                           uint32_t flags,
+                           int add_ftyp,
+                           int add_iods,
+                           char* majorBrand,
+                           uint32_t minorVersion,
+                           char** supportedBrands,
+                           uint32_t supportedBrandsCount)
+{
+    if (!fileName)
         return MP4_INVALID_FILE_HANDLE;
+
+    MP4File* pFile = ConstructMP4File();
+    if (!pFile)
+        return MP4_INVALID_FILE_HANDLE;
+
+    try {
+        // LATER useExtensibleFormat, moov first, then mvex's
+        pFile->Create(fileName, NULL,
+                      NULL, flags,
+                      add_ftyp, add_iods,
+                      majorBrand, minorVersion,
+                      supportedBrands, supportedBrandsCount);
+        return (MP4FileHandle)pFile;
     }
+    catch( Exception* x ) {
+        mp4v2::impl::log.errorf(*x);
+        delete x;
+    }
+    catch( ... ) {
+        mp4v2::impl::log.errorf("%s: \"%s\": failed", __FUNCTION__,
+                                fileName );
+    }
+
+    delete pFile;
+    return MP4_INVALID_FILE_HANDLE;
+}
+
+MP4FileHandle MP4CreateCallbacks (const MP4IOCallbacks* callbacks,
+                                  void* handle,
+                                  uint32_t flags)
+{
+    return MP4CreateCallbacksEx(callbacks, handle, flags);
+}
+
+MP4FileHandle MP4CreateCallbacksEx (const MP4IOCallbacks* callbacks,
+                                    void* handle,
+                                    uint32_t flags,
+                                    int add_ftyp,
+                                    int add_iods,
+                                    char* majorBrand,
+                                    uint32_t minorVersion,
+                                    char** supportedBrands,
+                                    uint32_t supportedBrandsCount)
+{
+    if (!callbacks)
+        return MP4_INVALID_FILE_HANDLE;
+
+    MP4File* pFile = ConstructMP4File();
+    if (!pFile)
+        return MP4_INVALID_FILE_HANDLE;
+
+    try {
+        // LATER useExtensibleFormat, moov first, then mvex's
+        pFile->Create(NULL, callbacks,
+                      handle, flags,
+                      add_ftyp, add_iods,
+                      majorBrand, minorVersion,
+                      supportedBrands, supportedBrandsCount);
+        return (MP4FileHandle)pFile;
+    }
+    catch( Exception* x ) {
+        mp4v2::impl::log.errorf(*x);
+        delete x;
+    }
+    catch( ... ) {
+        mp4v2::impl::log.errorf("%s: failed", __FUNCTION__ );
+    }
+
+    delete pFile;
+    return MP4_INVALID_FILE_HANDLE;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -74,18 +74,24 @@ public:
     // file ops
     ///////////////////////////////////////////////////////////////////////////
 
-    void Create( const char*            fileName,
-                 uint32_t               flags,
-                 const MP4FileProvider* provider = NULL,
-                 int                    add_ftyp = 1,
-                 int                    add_iods = 1,
-                 char*                  majorBrand = NULL,
-                 uint32_t               minorVersion = 0,
-                 char**                 supportedBrands = NULL,
-                 uint32_t               supportedBrandsCount = 0 );
-
     const std::string &GetFilename() const;
-    void Read( const char* name, const MP4FileProvider* provider );
+
+    void Read( const char*            fileName,
+               const MP4FileProvider* provider,
+               const MP4IOCallbacks*  callbacks,
+               void*                  handle );
+
+    void Create( const char*           fileName,
+                 const MP4IOCallbacks* callbacks,
+                 void*                 handle,
+                 uint32_t              flags,
+                 int                   add_ftyp = 1,
+                 int                   add_iods = 1,
+                 char*                 majorBrand = NULL,
+                 uint32_t              minorVersion = 0,
+                 char**                supportedBrands = NULL,
+                 uint32_t              supportedBrandsCount = 0 );
+
     bool Modify( const char* fileName );
     void Optimize( const char* srcFileName, const char* dstFileName = NULL );
     bool CopyClose( const string& copyFileName );
@@ -854,7 +860,13 @@ public:
 
 protected:
     void Init();
-    void Open( const char* name, File::Mode mode, const MP4FileProvider* provider );
+
+    void Open( const char*            fileName,
+               File::Mode             mode,
+               const MP4FileProvider* provider = NULL,
+               const MP4IOCallbacks*  callbacks = NULL,
+               void*                  handle = NULL );
+
     void ReadFromFile();
     void GenerateTracks();
     void BeginWrite();

@@ -26,6 +26,9 @@ typedef enum MP4FileMode_e
 
 /** Structure of functions implementing custom file provider.
  *
+ *  @deprecated since MP4v2 2.1.0
+ *  @see Please use MP4IOCallbacks instead.
+ *
  *  Except for <b>open</b>, all the functions must return 0 upon success
  *  or a non-zero value to indicate failure. The open function must return
  *  a pointer or handle which represents the open file, otherwise NULL.
@@ -34,13 +37,26 @@ typedef enum MP4FileMode_e
  */
 typedef struct MP4FileProvider_s
 {
-    void* ( *open    )( const char* name, MP4FileMode mode );
-    int   ( *seek    )( void* handle, int64_t pos );
-    int   ( *read    )( void* handle, void* buffer, int64_t size, int64_t* nin, int64_t reserved );
-    int   ( *write   )( void* handle, const void* buffer, int64_t size, int64_t* nout, int64_t reserved );
-    int   ( *close   )( void* handle );
-    int   ( *getSize )( void* handle, int64_t* nout );
+    void* ( *open  )( const char* name, MP4FileMode mode );
+    int   ( *seek  )( void* handle, int64_t pos );
+    int   ( *read  )( void* handle, void* buffer, int64_t size, int64_t* nin, int64_t reserved );
+    int   ( *write )( void* handle, const void* buffer, int64_t size, int64_t* nout, int64_t reserved );
+    int   ( *close )( void* handle );
 } MP4FileProvider;
+
+/** Structure of functions implementing custom I/O callbacks.
+ *
+ *  Except for <b>size</b>, all the functions must return 0 upon success
+ *  or a non-zero value to indicate failure. The size function must return
+ *  the size of the file/buffer or -1 in case of failure.
+ */
+typedef struct MP4IOCallbacks_s
+{
+    int64_t ( *size  )( void* handle );
+    int     ( *seek  )( void* handle, int64_t pos );
+    int     ( *read  )( void* handle, void* buffer, int64_t size, int64_t* nin );
+    int     ( *write )( void* handle, const void* buffer, int64_t size, int64_t* nout );
+} MP4IOCallbacks;
 
 /** Close an mp4 file.
  *  MP4Close closes a previously opened mp4 file. If the file was opened
@@ -123,51 +139,49 @@ MP4FileHandle MP4CreateEx(
 
 /** Create a new mp4 file.
  *
- *  MP4CreateProvider is the first call that should be used when you want to
+ *  MP4CreateCallbacks is the first call that should be used when you want to
  *  create a new, empty mp4 file. It is equivalent to opening a file for
  *  writing, but also involved with creation of necessary mp4 framework
- *  structures. ie. invoking MP4CreateProvider() followed by MP4Close() will
+ *  structures. ie. invoking MP4CreateCallbacks() followed by MP4Close() will
  *  result in a file with a non-zero size.
  *
- *  @param fileName pathname of the file to be created.
- *      On Windows, this should be a UTF-8 encoded string.
- *      On other platforms, it should be an 8-bit encoding that is
- *      appropriate for the platform, locale, file system, etc.
- *      (prefer to use UTF-8 when possible).
+ *  @param callbacks custom implementation of I/O operations.
+ *      The size, seek and write callbacks must be implemented.
+ *      The callbacks structure is immediately copied internally.
+ *  @param handle a custom handle that will be passed as the first argument to
+ *      any callback function call. This can be used to pass a handle to an
+ *      application specific I/O object or an application defined struct
+ *      containing a pointer to a buffer.
  *  @param flags bitmask that allows the user to set 64-bit values for
  *      data or time atoms. Valid bits may be any combination of:
  *          @li #MP4_CREATE_64BIT_DATA
  *          @li #MP4_CREATE_64BIT_TIME
- *  @param fileProvider custom implementation of file I/O operations.
- *      All functions in structure must be implemented.
- *      The structure is immediately copied internally.
  *
  *  @return On success a handle of the newly created file for use in
  *      subsequent calls to the library.
  *      On error, #MP4_INVALID_FILE_HANDLE.
  */
 MP4V2_EXPORT
-MP4FileHandle MP4CreateProvider(
-    const char*            fileName,
-    uint32_t               flags DEFAULT(0),
-    const MP4FileProvider* fileProvider DEFAULT(NULL) );
+MP4FileHandle MP4CreateCallbacks(
+    const MP4IOCallbacks*   callbacks,
+    void*                   handle DEFAULT(NULL),
+    uint32_t                flags DEFAULT(0));
 
 /** Create a new mp4 file with extended options.
  *
- *  MP4CreateProviderEx is an extended version of MP4CreateProvider().
+ *  MP4CreateCallbacksEx is an extended version of MP4CreateCallbacks().
  *
- *  @param fileName pathname of the file to be created.
- *      On Windows, this should be a UTF-8 encoded string.
- *      On other platforms, it should be an 8-bit encoding that is
- *      appropriate for the platform, locale, file system, etc.
- *      (prefer to use UTF-8 when possible).
+ *  @param callbacks custom implementation of I/O operations.
+ *      The size, seek and write callbacks must be implemented.
+ *      The callbacks structure is immediately copied internally.
+ *  @param handle a custom handle that will be passed as the first argument to
+ *      any callback function call. This can be used to pass a handle to an
+ *      application specific I/O object or an application defined struct
+ *      containing a pointer to a buffer.
  *  @param flags bitmask that allows the user to set 64-bit values for
  *      data or time atoms. Valid bits may be any combination of:
  *          @li #MP4_CREATE_64BIT_DATA
  *          @li #MP4_CREATE_64BIT_TIME
- *  @param fileProvider custom implementation of file I/O operations.
- *      All functions in structure must be implemented.
- *      The structure is immediately copied internally.
  *  @param add_ftyp if true an <b>ftyp</b> atom is automatically created.
  *  @param add_iods if true an <b>iods</b> atom is automatically created.
  *  @param majorBrand <b>ftyp</b> brand identifier.
@@ -182,16 +196,16 @@ MP4FileHandle MP4CreateProvider(
  *      On error, #MP4_INVALID_FILE_HANDLE.
  */
 MP4V2_EXPORT
-MP4FileHandle MP4CreateProviderEx(
-    const char*            fileName,
-    uint32_t               flags DEFAULT(0),
-    const MP4FileProvider* fileProvider DEFAULT(NULL),
-    int                    add_ftyp DEFAULT(1),
-    int                    add_iods DEFAULT(1),
-    char*                  majorBrand DEFAULT(0),
-    uint32_t               minorVersion DEFAULT(0),
-    char**                 compatibleBrands DEFAULT(0),
-    uint32_t               compatibleBrandsCount DEFAULT(0) );
+MP4FileHandle MP4CreateCallbacksEx(
+    const MP4IOCallbacks*   callbacks,
+    void*                   handle DEFAULT(NULL),
+    uint32_t                flags DEFAULT(0),
+    int                     add_ftyp DEFAULT(1),
+    int                     add_iods DEFAULT(1),
+    char*                   majorBrand DEFAULT(0),
+    uint32_t                minorVersion DEFAULT(0),
+    char**                  compatibleBrands DEFAULT(0),
+    uint32_t                compatibleBrandsCount DEFAULT(0) );
 
 /** Dump mp4 file contents as ASCII either to stdout or the
  *  log callback (@p see MP4SetLogCallback)
@@ -201,7 +215,6 @@ MP4FileHandle MP4CreateProviderEx(
  *  until you familiarize yourself with the mp4 specification (or the Quicktime
  *  File Format specification).
  *
-
  *  Note that MP4Dump() will not print the individual values of control tables,
  *  such as the size of each sample, unless the current log level is at least
  *  #MP4_LOG_VERBOSE2.  @p see MP4LogSetLevel() for how to set this.
@@ -405,6 +418,9 @@ MP4FileHandle MP4Read(
 
 /** Read an existing mp4 file.
  *
+ * @deprecated since MP4v2 2.1.0
+ * @see Please use MP4ReadCallbacks instead.
+ *
  *  MP4ReadProvider is the first call that should be used when you want to just
  *  read an existing mp4 file. It is equivalent to opening a file for
  *  reading, but in addition the mp4 file is parsed and the control
@@ -428,6 +444,31 @@ MP4V2_EXPORT
 MP4FileHandle MP4ReadProvider(
     const char*            fileName,
     const MP4FileProvider* fileProvider DEFAULT(NULL) );
+
+/** Read an existing mp4 file.
+ *
+ *  MP4ReadCallbacks is the first call that should be used when you want to
+ *  just read an existing mp4 file. It is equivalent to opening a file for
+ *  reading, but in addition the mp4 file is parsed and the control
+ *  information is loaded into memory. Note that actual track samples are not
+ *  read into memory until MP4ReadSample() is called.
+ *
+ *  @param callbacks custom implementation of I/O operations.
+ *      The size, seek and read callbacks must be implemented.
+ *      The callbacks structure is immediately copied internally.
+ *  @param handle a custom handle that will be passed as the first argument to
+ *      any callback function call. This can be used to pass a handle to an
+ *      application specific I/O object or an application defined struct
+ *      containing a pointer to a buffer.
+ *
+ *  @return On success a handle of the file for use in subsequent calls to
+ *      the library.
+ *      On error, #MP4_INVALID_FILE_HANDLE.
+ */
+MP4V2_EXPORT
+MP4FileHandle MP4ReadCallbacks(
+    const MP4IOCallbacks*   callbacks,
+    void*                   handle DEFAULT(NULL) );
 
 /** @} ***********************************************************************/
 

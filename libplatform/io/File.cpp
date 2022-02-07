@@ -144,6 +144,8 @@ CustomFileProvider::CustomFileProvider( const MP4FileProvider& provider )
 bool
 CustomFileProvider::open( const std::string& name, Mode mode )
 {
+    _name = name;
+
     MP4FileMode fm;
     switch( mode ) {
         case MODE_READ:   fm = FILEMODE_READ;   break;
@@ -156,7 +158,7 @@ CustomFileProvider::open( const std::string& name, Mode mode )
             break;
     }
 
-    _handle = _call.open( name.c_str(), fm );
+    _handle = _call.open( _name.c_str(), fm );
     return _handle == NULL;
 }
 
@@ -187,7 +189,56 @@ CustomFileProvider::close()
 bool
 CustomFileProvider::getSize( Size& nout )
 {
-    return _call.getSize( _handle, &nout );
+    return FileSystem::getFileSize( _name, nout );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+CallbacksFileProvider::CallbacksFileProvider( const MP4IOCallbacks& callbacks, void* handle )
+    : _handle( handle )
+{
+    memcpy( &_call, &callbacks, sizeof(MP4IOCallbacks) );
+}
+
+bool
+CallbacksFileProvider::open( const std::string& name, Mode mode )
+{
+    return seek(0);
+}
+
+bool
+CallbacksFileProvider::seek( Size pos )
+{
+    return _call.seek( _handle, pos );
+}
+
+bool
+CallbacksFileProvider::read( void* buffer, Size size, Size& nin )
+{
+    return _call.read( _handle, buffer, size, &nin );
+}
+
+bool
+CallbacksFileProvider::write( const void* buffer, Size size, Size& nout )
+{
+    return _call.write( _handle, buffer, size, &nout );
+}
+
+bool
+CallbacksFileProvider::close()
+{
+    return false;
+}
+
+bool
+CallbacksFileProvider::getSize( Size& nout )
+{
+    Size size = _call.size( _handle );
+    if (size == -1)
+        return true;
+
+    nout = size;
+    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
