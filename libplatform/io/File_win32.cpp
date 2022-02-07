@@ -16,8 +16,8 @@ public:
 
     bool open( const std::string& name, Mode mode );
     bool seek( Size pos );
-    bool read( void* buffer, Size size, Size& nin, Size maxChunkSize );
-    bool write( const void* buffer, Size size, Size& nout, Size maxChunkSize );
+    bool read( void* buffer, Size size, Size& nin );
+    bool write( const void* buffer, Size size, Size& nout );
     bool close();
     bool getSize( Size& nout );
 
@@ -120,7 +120,7 @@ StandardFileProvider::seek( Size pos )
  * @retval true error reading from the file
  */
 bool
-StandardFileProvider::read( void* buffer, Size size, Size& nin, Size maxChunkSize )
+StandardFileProvider::read( void* buffer, Size size, Size& nin )
 {
     Size count = fread( buffer, 1, size, _file );
     if( ferror(_file) )
@@ -143,7 +143,7 @@ StandardFileProvider::read( void* buffer, Size size, Size& nin, Size maxChunkSiz
  * @retval true error writing to the file
  */
 bool
-StandardFileProvider::write( const void* buffer, Size size, Size& nout, Size maxChunkSize )
+StandardFileProvider::write( const void* buffer, Size size, Size& nout )
 {
     Size count = fwrite( buffer, 1, size, _file );
     if( ferror(_file) )

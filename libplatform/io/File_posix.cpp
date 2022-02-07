@@ -11,8 +11,8 @@ public:
 
     bool open( const std::string& name, Mode mode );
     bool seek( Size pos );
-    bool read( void* buffer, Size size, Size& nin, Size maxChunkSize );
-    bool write( const void* buffer, Size size, Size& nout, Size maxChunkSize );
+    bool read( void* buffer, Size size, Size& nin );
+    bool write( const void* buffer, Size size, Size& nout );
     bool close();
     bool getSize( Size& nout );
 
@@ -73,7 +73,7 @@ StandardFileProvider::seek( Size pos )
 }
 
 bool
-StandardFileProvider::read( void* buffer, Size size, Size& nin, Size maxChunkSize )
+StandardFileProvider::read( void* buffer, Size size, Size& nin )
 {
     _fstream.read( (char*)buffer, size );
     if( _fstream.fail() )
@@ -83,7 +83,7 @@ StandardFileProvider::read( void* buffer, Size size, Size& nin, Size maxChunkSiz
 }
 
 bool
-StandardFileProvider::write( const void* buffer, Size size, Size& nout, Size maxChunkSize )
+StandardFileProvider::write( const void* buffer, Size size, Size& nout )
 {
     _fstream.write( (const char*)buffer, size );
     if( _fstream.fail() )

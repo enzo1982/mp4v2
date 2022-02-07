@@ -27,8 +27,8 @@ public:
 
     virtual bool open( const std::string& name, Mode mode ) = 0;
     virtual bool seek( Size pos ) = 0;
-    virtual bool read( void* buffer, Size size, Size& nin, Size maxChunkSize ) = 0;
-    virtual bool write( const void* buffer, Size size, Size& nout, Size maxChunkSize ) = 0;
+    virtual bool read( void* buffer, Size size, Size& nin ) = 0;
+    virtual bool write( const void* buffer, Size size, Size& nout ) = 0;
     virtual bool close() = 0;
     virtual bool getSize( Size& nout ) = 0;
 
@@ -135,14 +135,12 @@ public:
     //! @param buffer storage for data read from file.
     //! @param size maximum number of bytes to read from file.
     //! @param nin output indicating number of bytes read from file.
-    //! @param maxChunkSize maximum chunk size for reads issued to operating
-    //!     system or 0 for default.
     //!
     //! @return true on failure, false on success.
     //!
     ///////////////////////////////////////////////////////////////////////////
 
-    bool read( void* buffer, Size size, Size& nin, Size maxChunkSize = 0 );
+    bool read( void* buffer, Size size, Size& nin );
 
     ///////////////////////////////////////////////////////////////////////////
     //!
@@ -155,14 +153,12 @@ public:
     //! @param buffer data to be written out to file.
     //! @param size maximum number of bytes to read from file.
     //! @param nout output indicating number of bytes written to file.
-    //! @param maxChunkSize maximum chunk size for writes issued to operating
-    //!     system or 0 for default.
     //!
     //! @return true on failure, false on success.
     //!
     ///////////////////////////////////////////////////////////////////////////
 
-    bool write( const void* buffer, Size size, Size& nout, Size maxChunkSize = 0 );
+    bool write( const void* buffer, Size size, Size& nout );
 
     ///////////////////////////////////////////////////////////////////////////
     //!
@@ -205,8 +201,8 @@ public:
 
     bool open( const std::string& name, Mode mode );
     bool seek( Size pos );
-    bool read( void* buffer, Size size, Size& nin, Size maxChunkSize );
-    bool write( const void* buffer, Size size, Size& nout, Size maxChunkSize );
+    bool read( void* buffer, Size size, Size& nin );
+    bool write( const void* buffer, Size size, Size& nout );
     bool close();
     bool getSize( Size& nout );
 

@@ -77,14 +77,14 @@ File::seek( Size pos )
 }
 
 bool
-File::read( void* buffer, Size size, Size& nin, Size maxChunkSize )
+File::read( void* buffer, Size size, Size& nin )
 {
     nin = 0;
 
     if( !_isOpen )
         return true;
 
-    if( _provider.read( buffer, size, nin, maxChunkSize ))
+    if( _provider.read( buffer, size, nin ))
         return true;
 
     _position += nin;
@@ -95,14 +95,14 @@ File::read( void* buffer, Size size, Size& nin, Size maxChunkSize )
 }
 
 bool
-File::write( const void* buffer, Size size, Size& nout, Size maxChunkSize )
+File::write( const void* buffer, Size size, Size& nout )
 {
     nout = 0;
 
     if( !_isOpen )
         return true;
 
-    if( _provider.write( buffer, size, nout, maxChunkSize ))
+    if( _provider.write( buffer, size, nout ))
         return true;
 
     _position += nout;
@@ -167,15 +167,15 @@ CustomFileProvider::seek( Size pos )
 }
 
 bool
-CustomFileProvider::read( void* buffer, Size size, Size& nin, Size maxChunkSize )
+CustomFileProvider::read( void* buffer, Size size, Size& nin )
 {
-    return _call.read( _handle, buffer, size, &nin, maxChunkSize );
+    return _call.read( _handle, buffer, size, &nin, 0 );
 }
 
 bool
-CustomFileProvider::write( const void* buffer, Size size, Size& nout, Size maxChunkSize )
+CustomFileProvider::write( const void* buffer, Size size, Size& nout )
 {
-    return _call.write( _handle, buffer, size, &nout, maxChunkSize );
+    return _call.write( _handle, buffer, size, &nout, 0 );
 }
 
 bool

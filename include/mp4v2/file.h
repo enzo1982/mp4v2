@@ -26,19 +26,18 @@ typedef enum MP4FileMode_e
 
 /** Structure of functions implementing custom file provider.
  *
- *  Except for <b>open</b>, all the functions must return a true value
- *  to indicate failure or false on success. The open function must return
+ *  Except for <b>open</b>, all the functions must return 0 upon success
+ *  or a non-zero value to indicate failure. The open function must return
  *  a pointer or handle which represents the open file, otherwise NULL.
  *
- *  maxChunkSize is a hint suggesting what the max size of data should be read
- *  as in underlying read/write operations. A value of 0 indicates there is no hint.
+ *  The reserved argument is currently always 0 and should be ignored.
  */
 typedef struct MP4FileProvider_s
 {
     void* ( *open    )( const char* name, MP4FileMode mode );
     int   ( *seek    )( void* handle, int64_t pos );
-    int   ( *read    )( void* handle, void* buffer, int64_t size, int64_t* nin, int64_t maxChunkSize );
-    int   ( *write   )( void* handle, const void* buffer, int64_t size, int64_t* nout, int64_t maxChunkSize );
+    int   ( *read    )( void* handle, void* buffer, int64_t size, int64_t* nin, int64_t reserved );
+    int   ( *write   )( void* handle, const void* buffer, int64_t size, int64_t* nout, int64_t reserved );
     int   ( *close   )( void* handle );
     int   ( *getSize )( void* handle, int64_t* nout );
 } MP4FileProvider;
