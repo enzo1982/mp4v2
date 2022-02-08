@@ -49,7 +49,7 @@
 #define PACKAGE "mp4v2"
 
 /* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT "support@freac.org"
+#define PACKAGE_BUGREPORT "support@mp4v2.org"
 
 /* Define to the full name of this package. */
 #define PACKAGE_NAME "MP4v2"
@@ -61,7 +61,7 @@
 #define PACKAGE_TARNAME "mp4v2"
 
 /* Define to the home page for this package. */
-#define PACKAGE_URL "https://mp4v2.freac.org"
+#define PACKAGE_URL "https://mp4v2.org"
 
 /* Define to the version of this package. */
 #define PACKAGE_VERSION "2.1.0"
