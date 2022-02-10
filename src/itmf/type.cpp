@@ -250,9 +250,10 @@ const itmf::EnumCountryCode::Entry itmf::EnumCountryCode::data[] = {
 
 template <>
 const itmf::EnumContentRating::Entry itmf::EnumContentRating::data[] = {
-    { mp4v2::impl::itmf::CR_NONE,      "none",       "None" },
-    { mp4v2::impl::itmf::CR_CLEAN,     "clean",      "Clean" },
-    { mp4v2::impl::itmf::CR_EXPLICIT,  "explicit",   "Explicit" },
+    { mp4v2::impl::itmf::CR_NONE,         "none",       "None" },
+    { mp4v2::impl::itmf::CR_EXPLICIT,     "explicit",   "Explicit" },
+    { mp4v2::impl::itmf::CR_CLEAN,        "clean",      "Clean" },
+    { mp4v2::impl::itmf::CR_EXPLICIT_OLD, "explicit",   "Explicit" },
 
     { mp4v2::impl::itmf::CR_UNDEFINED } // must be last
 };

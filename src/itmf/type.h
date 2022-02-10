@@ -274,11 +274,12 @@ MP4V2_EXPORT extern const EnumCountryCode enumCountryCode;
 /// enumerated 8-bit Content Rating used by iTunes.
 /// Note values are not formally defined in any specification.
 enum ContentRating {   
-    CR_NONE      = 0,
-    CR_CLEAN     = 2,
-    CR_EXPLICIT  = 4,
+    CR_NONE         = 0,
+    CR_EXPLICIT     = 1,
+    CR_CLEAN        = 2,
+    CR_EXPLICIT_OLD = 4,
 
-    CR_UNDEFINED = 255
+    CR_UNDEFINED    = 255
 };
 
 typedef Enum<ContentRating,CR_UNDEFINED> EnumContentRating;
