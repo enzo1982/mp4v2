@@ -2830,7 +2830,7 @@ uint32_t MP4File::GetNumberOfTracks(const char* type, uint8_t subType)
                     if (subType != GetTrackEsdsObjectTypeId(m_pTracks[i]->GetId())) {
                         continue;
                     }
-                } else if (strcmp(normType, MP4_VIDEO_TRACK_TYPE)) {
+                } else if (strcmp(normType, MP4_VIDEO_TRACK_TYPE) == 0) {
                     if (subType != GetTrackEsdsObjectTypeId(m_pTracks[i]->GetId())) {
                         continue;
                     }
