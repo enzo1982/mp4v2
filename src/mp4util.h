@@ -53,6 +53,11 @@ namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+#define strequal(str1, str2) (strcmp((str1), (str2)) == 0)
+#define strnequal(str1, str2, n) (strncmp((str1), (str2), (n)) == 0)
+
+///////////////////////////////////////////////////////////////////////////////
+
 inline void* MP4Malloc(size_t size) {
     if (size == 0) return NULL;
     void* p = malloc(size);

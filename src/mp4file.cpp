@@ -194,12 +194,12 @@ bool MP4File::Modify( const char* fileName )
             const char* type = pAtom->GetType();
 
             // get rid of any trailing free or skips
-            if (!strcmp(type, "free") || !strcmp(type, "skip")) {
+            if (strequal(type, "free") || strequal(type, "skip")) {
                 m_pRootAtom->DeleteChildAtom(pAtom);
                 continue;
             }
 
-            if (strcmp(type, "moov")) {
+            if (!strequal(type, "moov")) {
                 if (pLastAtom == NULL) {
                     pLastAtom = pAtom;
                     lastAtomIsMoov = false;
@@ -359,7 +359,7 @@ void MP4File::RewriteMdat( File& src, File& dst )
                 continue;
 
             // prefer hint tracks to media tracks if times are equal
-            if( nextChunkTimes[i] == nextTime && strcmp( m_pTracks[i]->GetType(), MP4_HINT_TRACK_TYPE ))
+            if( nextChunkTimes[i] == nextTime && !strequal( m_pTracks[i]->GetType(), MP4_HINT_TRACK_TYPE ))
                 continue;
 
             // this is our current choice of tracks
@@ -485,7 +485,7 @@ void MP4File::GenerateTracks()
 
             MP4Track* pTrack = NULL;
             try {
-                if (!strcmp(pTypeProperty->GetValue(), MP4_HINT_TRACK_TYPE)) {
+                if (strequal(pTypeProperty->GetValue(), MP4_HINT_TRACK_TYPE)) {
                     pTrack = new MP4RtpHintTrack(*this, *pTrakAtom);
                 } else {
                     pTrack = new MP4Track(*this, *pTrakAtom);
@@ -498,7 +498,7 @@ void MP4File::GenerateTracks()
             }
 
             // remember when we encounter the OD track
-            if (pTrack && !strcmp(pTrack->GetType(), MP4_OD_TRACK_TYPE)) {
+            if (pTrack && strequal(pTrack->GetType(), MP4_OD_TRACK_TYPE)) {
                 if (m_odTrackId == MP4_INVALID_TRACK_ID) {
                     m_odTrackId = pTrackIdProperty->GetValue();
                 } else {
@@ -655,7 +655,7 @@ MP4Track* MP4File::GetTrack(MP4TrackId trackId)
 MP4Atom* MP4File::FindAtom(const char* name)
 {
     MP4Atom* pAtom = NULL;
-    if (!name || !strcmp(name, "")) {
+    if (!name || strequal(name, "")) {
         pAtom = m_pRootAtom;
     } else {
         pAtom = m_pRootAtom->FindAtom(name);
@@ -953,7 +953,7 @@ MP4TrackId MP4File::AddTrack(const char* type, uint32_t timeScale)
 
     // now have enough to create MP4Track object
     MP4Track* pTrack = NULL;
-    if (!strcmp(normType, MP4_HINT_TRACK_TYPE)) {
+    if (strequal(normType, MP4_HINT_TRACK_TYPE)) {
         pTrack = new MP4RtpHintTrack(*this, *pTrakAtom);
     } else {
         pTrack = new MP4Track(*this, *pTrakAtom);
@@ -961,7 +961,7 @@ MP4TrackId MP4File::AddTrack(const char* type, uint32_t timeScale)
     m_pTracks.Add(pTrack);
 
     // mark non-hint tracks as enabled
-    if (strcmp(normType, MP4_HINT_TRACK_TYPE)) {
+    if (!strequal(normType, MP4_HINT_TRACK_TYPE)) {
         SetTrackIntegerProperty(trackId, "tkhd.flags", 1);
     }
 
@@ -2824,13 +2824,13 @@ uint32_t MP4File::GetNumberOfTracks(const char* type, uint8_t subType)
     const char* normType = MP4NormalizeTrackType(type);
 
     for (uint32_t i = 0; i < m_pTracks.Size(); i++) {
-        if (!strcmp(normType, m_pTracks[i]->GetType())) {
+        if (strequal(normType, m_pTracks[i]->GetType())) {
             if (subType) {
-                if (strcmp(normType, MP4_AUDIO_TRACK_TYPE) == 0) {
+                if (strequal(normType, MP4_AUDIO_TRACK_TYPE)) {
                     if (subType != GetTrackEsdsObjectTypeId(m_pTracks[i]->GetId())) {
                         continue;
                     }
-                } else if (strcmp(normType, MP4_VIDEO_TRACK_TYPE) == 0) {
+                } else if (strequal(normType, MP4_VIDEO_TRACK_TYPE)) {
                     if (subType != GetTrackEsdsObjectTypeId(m_pTracks[i]->GetId())) {
                         continue;
                     }
@@ -2890,13 +2890,13 @@ MP4TrackId MP4File::FindTrackId(uint16_t trackIndex,
     const char* normType = MP4NormalizeTrackType(type);
 
     for (uint32_t i = 0; i < m_pTracks.Size(); i++) {
-        if (!strcmp(normType, m_pTracks[i]->GetType())) {
+        if (strequal(normType, m_pTracks[i]->GetType())) {
             if (subType) {
-                if (strcmp(normType, MP4_AUDIO_TRACK_TYPE) == 0) {
+                if (strequal(normType, MP4_AUDIO_TRACK_TYPE)) {
                     if (subType != GetTrackEsdsObjectTypeId(m_pTracks[i]->GetId())) {
                         continue;
                     }
-                } else if (strcmp(normType, MP4_VIDEO_TRACK_TYPE) == 0) {
+                } else if (strequal(normType, MP4_VIDEO_TRACK_TYPE)) {
                     if (subType != GetTrackEsdsObjectTypeId(m_pTracks[i]->GetId())) {
                         continue;
                     }
@@ -3701,7 +3701,7 @@ void MP4File::SetHintTrackSdp(MP4TrackId hintTrackId, const char* sdpString)
 {
     MP4Track* pTrack = m_pTracks[FindTrackIndex(hintTrackId)];
 
-    if (strcmp(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
+    if (!strequal(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
         throw new EXCEPTION("track is not a hint track");
     }
 
@@ -3741,7 +3741,7 @@ void MP4File::GetHintTrackRtpPayload(
 {
     MP4Track* pTrack = m_pTracks[FindTrackIndex(hintTrackId)];
 
-    if (strcmp(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
+    if (!strequal(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
         throw new EXCEPTION("track is not a hint track");
     }
 
@@ -3757,7 +3757,7 @@ void MP4File::SetHintTrackRtpPayload(MP4TrackId hintTrackId,
 {
     MP4Track* pTrack = m_pTracks[FindTrackIndex(hintTrackId)];
 
-    if (strcmp(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
+    if (!strequal(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
         throw new EXCEPTION("track is not a hint track");
     }
 
@@ -3818,7 +3818,7 @@ MP4TrackId MP4File::GetHintTrackReferenceTrackId(
 {
     MP4Track* pTrack = m_pTracks[FindTrackIndex(hintTrackId)];
 
-    if (strcmp(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
+    if (!strequal(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
         throw new EXCEPTION("track is not a hint track");
     }
 
@@ -3837,7 +3837,7 @@ void MP4File::ReadRtpHint(
 {
     MP4Track* pTrack = m_pTracks[FindTrackIndex(hintTrackId)];
 
-    if (strcmp(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
+    if (!strequal(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
         throw new EXCEPTION("track is not a hint track");
     }
     ((MP4RtpHintTrack*)pTrack)->
@@ -3849,7 +3849,7 @@ uint16_t MP4File::GetRtpHintNumberOfPackets(
 {
     MP4Track* pTrack = m_pTracks[FindTrackIndex(hintTrackId)];
 
-    if (strcmp(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
+    if (!strequal(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
         throw new EXCEPTION("track is not a hint track");
     }
     return ((MP4RtpHintTrack*)pTrack)->GetHintNumberOfPackets();
@@ -3861,7 +3861,7 @@ int8_t MP4File::GetRtpPacketBFrame(
 {
     MP4Track* pTrack = m_pTracks[FindTrackIndex(hintTrackId)];
 
-    if (strcmp(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
+    if (!strequal(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
         throw new EXCEPTION("track is not a hint track");
     }
     return ((MP4RtpHintTrack*)pTrack)->GetPacketBFrame(packetIndex);
@@ -3873,7 +3873,7 @@ int32_t MP4File::GetRtpPacketTransmitOffset(
 {
     MP4Track* pTrack = m_pTracks[FindTrackIndex(hintTrackId)];
 
-    if (strcmp(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
+    if (!strequal(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
         throw new EXCEPTION("track is not a hint track");
     }
     return ((MP4RtpHintTrack*)pTrack)->GetPacketTransmitOffset(packetIndex);
@@ -3890,7 +3890,7 @@ void MP4File::ReadRtpPacket(
 {
     MP4Track* pTrack = m_pTracks[FindTrackIndex(hintTrackId)];
 
-    if (strcmp(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
+    if (!strequal(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
         throw new EXCEPTION("track is not a hint track");
     }
     ((MP4RtpHintTrack*)pTrack)->ReadPacket(
@@ -3903,7 +3903,7 @@ MP4Timestamp MP4File::GetRtpTimestampStart(
 {
     MP4Track* pTrack = m_pTracks[FindTrackIndex(hintTrackId)];
 
-    if (strcmp(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
+    if (!strequal(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
         throw new EXCEPTION("track is not a hint track");
     }
     return ((MP4RtpHintTrack*)pTrack)->GetRtpTimestampStart();
@@ -3915,7 +3915,7 @@ void MP4File::SetRtpTimestampStart(
 {
     MP4Track* pTrack = m_pTracks[FindTrackIndex(hintTrackId)];
 
-    if (strcmp(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
+    if (!strequal(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
         throw new EXCEPTION("track is not a hint track");
     }
     ((MP4RtpHintTrack*)pTrack)->SetRtpTimestampStart(rtpStart);
@@ -3928,7 +3928,7 @@ void MP4File::AddRtpHint(MP4TrackId hintTrackId,
 
     MP4Track* pTrack = m_pTracks[FindTrackIndex(hintTrackId)];
 
-    if (strcmp(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
+    if (!strequal(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
         throw new EXCEPTION("track is not a hint track");
     }
     ((MP4RtpHintTrack*)pTrack)->AddHint(isBframe, timestampOffset);
@@ -3941,7 +3941,7 @@ void MP4File::AddRtpPacket(
 
     MP4Track* pTrack = m_pTracks[FindTrackIndex(hintTrackId)];
 
-    if (strcmp(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
+    if (!strequal(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
         throw new EXCEPTION("track is not a hint track");
     }
     ((MP4RtpHintTrack*)pTrack)->AddPacket(setMbit, transmitOffset);
@@ -3954,7 +3954,7 @@ void MP4File::AddRtpImmediateData(MP4TrackId hintTrackId,
 
     MP4Track* pTrack = m_pTracks[FindTrackIndex(hintTrackId)];
 
-    if (strcmp(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
+    if (!strequal(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
         throw new EXCEPTION("track is not a hint track");
     }
     ((MP4RtpHintTrack*)pTrack)->AddImmediateData(pBytes, numBytes);
@@ -3967,7 +3967,7 @@ void MP4File::AddRtpSampleData(MP4TrackId hintTrackId,
 
     MP4Track* pTrack = m_pTracks[FindTrackIndex(hintTrackId)];
 
-    if (strcmp(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
+    if (!strequal(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
         throw new EXCEPTION("track is not a hint track");
     }
     ((MP4RtpHintTrack*)pTrack)->AddSampleData(
@@ -3980,7 +3980,7 @@ void MP4File::AddRtpESConfigurationPacket(MP4TrackId hintTrackId)
 
     MP4Track* pTrack = m_pTracks[FindTrackIndex(hintTrackId)];
 
-    if (strcmp(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
+    if (!strequal(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
         throw new EXCEPTION("track is not a hint track");
     }
     ((MP4RtpHintTrack*)pTrack)->AddESConfigurationPacket();
@@ -3993,7 +3993,7 @@ void MP4File::WriteRtpHint(MP4TrackId hintTrackId,
 
     MP4Track* pTrack = m_pTracks[FindTrackIndex(hintTrackId)];
 
-    if (strcmp(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
+    if (!strequal(pTrack->GetType(), MP4_HINT_TRACK_TYPE)) {
         throw new EXCEPTION("track is not a hint track");
     }
     ((MP4RtpHintTrack*)pTrack)->WriteHint(duration, isSyncSample);
@@ -4047,19 +4047,19 @@ uint8_t MP4File::ConvertTrackTypeToStreamType(const char* trackType)
 {
     uint8_t streamType;
 
-    if (!strcmp(trackType, MP4_OD_TRACK_TYPE)) {
+    if (strequal(trackType, MP4_OD_TRACK_TYPE)) {
         streamType = MP4ObjectDescriptionStreamType;
-    } else if (!strcmp(trackType, MP4_SCENE_TRACK_TYPE)) {
+    } else if (strequal(trackType, MP4_SCENE_TRACK_TYPE)) {
         streamType = MP4SceneDescriptionStreamType;
-    } else if (!strcmp(trackType, MP4_CLOCK_TRACK_TYPE)) {
+    } else if (strequal(trackType, MP4_CLOCK_TRACK_TYPE)) {
         streamType = MP4ClockReferenceStreamType;
-    } else if (!strcmp(trackType, MP4_MPEG7_TRACK_TYPE)) {
+    } else if (strequal(trackType, MP4_MPEG7_TRACK_TYPE)) {
         streamType = MP4Mpeg7StreamType;
-    } else if (!strcmp(trackType, MP4_OCI_TRACK_TYPE)) {
+    } else if (strequal(trackType, MP4_OCI_TRACK_TYPE)) {
         streamType = MP4OCIStreamType;
-    } else if (!strcmp(trackType, MP4_IPMP_TRACK_TYPE)) {
+    } else if (strequal(trackType, MP4_IPMP_TRACK_TYPE)) {
         streamType = MP4IPMPStreamType;
-    } else if (!strcmp(trackType, MP4_MPEGJ_TRACK_TYPE)) {
+    } else if (strequal(trackType, MP4_MPEGJ_TRACK_TYPE)) {
         streamType = MP4MPEGJStreamType;
     } else {
         streamType = MP4UserPrivateStreamType;

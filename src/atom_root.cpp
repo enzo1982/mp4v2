@@ -111,7 +111,7 @@ void MP4RootAtom::FinishOptimalWrite()
 
     uint32_t i;
     for (i = 0; i < size; i++) {
-        if (!strcmp("moov", m_pChildAtoms[i]->GetType())) {
+        if (strequal("moov", m_pChildAtoms[i]->GetType())) {
             pMoovAtom = m_pChildAtoms[i];
             break;
         }
@@ -133,7 +133,7 @@ void MP4RootAtom::FinishOptimalWrite()
 uint32_t MP4RootAtom::GetLastMdatIndex()
 {
     for (int32_t i = m_pChildAtoms.Size() - 1; i >= 0; i--) {
-        if (!strcmp("mdat", m_pChildAtoms[i]->GetType())) {
+        if (strequal("mdat", m_pChildAtoms[i]->GetType())) {
             return i;
         }
     }
@@ -146,7 +146,7 @@ void MP4RootAtom::WriteAtomType(const char* type, bool onlyOne)
     uint32_t size = m_pChildAtoms.Size();
 
     for (uint32_t i = 0; i < size; i++) {
-        if (!strcmp(type, m_pChildAtoms[i]->GetType())) {
+        if (strequal(type, m_pChildAtoms[i]->GetType())) {
             m_pChildAtoms[i]->Write();
             if (onlyOne) {
                 break;

@@ -530,21 +530,21 @@ static char* PrintTrackInfo(
         MP4GetTrackType(mp4File, trackId);
     if (trackType == NULL) return NULL;
 
-    if (!strcmp(trackType, MP4_AUDIO_TRACK_TYPE)) {
+    if (strequal(trackType, MP4_AUDIO_TRACK_TYPE)) {
         trackInfo = PrintAudioInfo(mp4File, trackId);
-    } else if (!strcmp(trackType, MP4_VIDEO_TRACK_TYPE)) {
+    } else if (strequal(trackType, MP4_VIDEO_TRACK_TYPE)) {
         trackInfo = PrintVideoInfo(mp4File, trackId);
-    } else if (!strcmp(trackType, MP4_HINT_TRACK_TYPE)) {
+    } else if (strequal(trackType, MP4_HINT_TRACK_TYPE)) {
         trackInfo = PrintHintInfo(mp4File, trackId);
-    } else if (strcmp(trackType, MP4_CNTL_TRACK_TYPE) == 0) {
+    } else if (strequal(trackType, MP4_CNTL_TRACK_TYPE)) {
         trackInfo = PrintCntlInfo(mp4File, trackId);
     } else {
         trackInfo = (char*)MP4Malloc(256);
-        if (!strcmp(trackType, MP4_OD_TRACK_TYPE)) {
+        if (strequal(trackType, MP4_OD_TRACK_TYPE)) {
             snprintf(trackInfo, 256,
                      "%u\tod\tObject Descriptors\n",
                      trackId);
-        } else if (!strcmp(trackType, MP4_SCENE_TRACK_TYPE)) {
+        } else if (strequal(trackType, MP4_SCENE_TRACK_TYPE)) {
             snprintf(trackInfo, 256,
                      "%u\tscene\tBIFS\n",
                      trackId);

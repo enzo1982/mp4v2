@@ -48,7 +48,7 @@ searchFor64bit( MP4Atom& atom, FileSummaryInfo& info )
         if( child.FindProperty( "version", (MP4Property**)&version ) && version->GetValue() == 1 )
             info.nversion1++;
 
-        if( !strcmp( child.GetType(), "co64" ))
+        if( strequal( child.GetType(), "co64" ))
             info.nspecial++;
 
         searchFor64bit( child, info );

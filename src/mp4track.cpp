@@ -597,7 +597,7 @@ void MP4Track::FinishSdtp()
         bool found = false;
         const uint32_t max = ftyp->compatibleBrands.GetCount();
         for( uint32_t i = 0; i < max; i++ ) {
-            if( !strcmp( ftyp->compatibleBrands.GetValue( i ), "avc1" )) {
+            if( strequal( ftyp->compatibleBrands.GetValue( i ), "avc1" )) {
                 found = true;
                 break;
             }
@@ -909,7 +909,7 @@ File* MP4Track::GetSampleFile( MP4SampleId sampleId )
             return NULL;
 
         // ... but most often it is present with a "qt  " value
-        if ( ::strcmp( pFtypAtom->majorBrand.GetValue(), "qt  " ) == 0 )
+        if ( strequal( pFtypAtom->majorBrand.GetValue(), "qt  " ) )
             return NULL;
 
         throw new EXCEPTION("invalid stsd entry");
@@ -926,7 +926,7 @@ File* MP4Track::GetSampleFile( MP4SampleId sampleId )
     File* file;
 
     // make sure this is actually a url atom (somtimes it's "cios", like in iTunes videos)
-    if( strcmp(pUrlAtom->GetType(), "url ") ||
+    if( !strequal(pUrlAtom->GetType(), "url ") ||
         pUrlAtom->GetFlags() & 1 ) {
         file = NULL; // self-contained
     }
@@ -944,10 +944,10 @@ File* MP4Track::GetSampleFile( MP4SampleId sampleId )
 
         // attempt to open url if it's a file url
         // currently this is the only thing we understand
-        if( !strncmp( url, "file:", 5 )) {
+        if( strnequal( url, "file:", 5 )) {
             const char* fileName = url + 5;
 
-            if( !strncmp(fileName, "//", 2 ))
+            if( strnequal(fileName, "//", 2 ))
                 fileName = strchr( fileName + 2, '/' );
 
             if( fileName ) {

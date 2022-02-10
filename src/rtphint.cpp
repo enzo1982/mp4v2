@@ -403,11 +403,11 @@ void MP4RtpHintTrack::SetPayload(
 
     // set sdp media type
     const char* sdpMediaType;
-    if (!strcmp(m_pRefTrack->GetType(), MP4_AUDIO_TRACK_TYPE)) {
+    if (strequal(m_pRefTrack->GetType(), MP4_AUDIO_TRACK_TYPE)) {
         sdpMediaType = "audio";
-    } else if (!strcmp(m_pRefTrack->GetType(), MP4_VIDEO_TRACK_TYPE)) {
+    } else if (strequal(m_pRefTrack->GetType(), MP4_VIDEO_TRACK_TYPE)) {
         sdpMediaType = "video";
-    } else if (!strcmp(m_pRefTrack->GetType(), MP4_CNTL_TRACK_TYPE)) {
+    } else if (strequal(m_pRefTrack->GetType(), MP4_CNTL_TRACK_TYPE)) {
         sdpMediaType = "control";
     } else {
         sdpMediaType = "application";

@@ -304,7 +304,7 @@ bool MP4Atom::IsMe(const char* name)
     }
 
     // root atom always matches
-    if (!strcmp(m_type, "")) {
+    if (strequal(m_type, "")) {
         return true;
     }
 
@@ -606,7 +606,7 @@ void MP4Atom::ExpectChildAtom(const char* name, bool mandatory, bool onlyOne)
 
 uint8_t MP4Atom::GetVersion()
 {
-    if (strcmp("version", m_pProperties[0]->GetName())) {
+    if (!strequal("version", m_pProperties[0]->GetName())) {
         return 0;
     }
     return ((MP4Integer8Property*)m_pProperties[0])->GetValue();
@@ -614,7 +614,7 @@ uint8_t MP4Atom::GetVersion()
 
 void MP4Atom::SetVersion(uint8_t version)
 {
-    if (strcmp("version", m_pProperties[0]->GetName())) {
+    if (!strequal("version", m_pProperties[0]->GetName())) {
         return;
     }
     ((MP4Integer8Property*)m_pProperties[0])->SetValue(version);
@@ -622,7 +622,7 @@ void MP4Atom::SetVersion(uint8_t version)
 
 uint32_t MP4Atom::GetFlags()
 {
-    if (strcmp("flags", m_pProperties[1]->GetName())) {
+    if (!strequal("flags", m_pProperties[1]->GetName())) {
         return 0;
     }
     return ((MP4Integer24Property*)m_pProperties[1])->GetValue();
@@ -630,7 +630,7 @@ uint32_t MP4Atom::GetFlags()
 
 void MP4Atom::SetFlags(uint32_t flags)
 {
-    if (strcmp("flags", m_pProperties[1]->GetName())) {
+    if (!strequal("flags", m_pProperties[1]->GetName())) {
         return;
     }
     ((MP4Integer24Property*)m_pProperties[1])->SetValue(flags);
@@ -809,7 +809,7 @@ MP4Atom::factory( MP4File &file, MP4Atom* parent, const char* type )
             if( ATOMID( type ) == ATOMID( "hinf" ))
                 return new MP4HinfAtom(file);
             for( const char* const* p = UDTA_ELEMENTS; *p; p++ )
-                if( !strcmp( type, *p ))
+                if( strequal( type, *p ))
                     return new MP4UdtaElementAtom( file, type );
         }
     }

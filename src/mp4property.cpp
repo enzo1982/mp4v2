@@ -894,7 +894,7 @@ bool MP4DescriptorProperty::FindProperty(const char *name,
         MP4Property** ppProperty, uint32_t* pIndex)
 {
     // we're unnamed, so just check contained properties
-    if (m_name == NULL || !strcmp(m_name, "")) {
+    if (m_name == NULL || strequal(m_name, "")) {
         return FindContainedProperty(name, ppProperty, pIndex);
     }
 
