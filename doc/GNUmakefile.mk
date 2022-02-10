@@ -136,6 +136,7 @@ EXTRA_DIST += \
     $(wildcard $(SOURCE/)testsuite/**/*.exp) \
     $(SOURCE/)vstudio/mp4v2.sln \
     $(SOURCE/)vstudio/include/mp4v2/project.h \
+    $(wildcard $(SOURCE/)vstudio/*/*.natvis) \
     $(wildcard $(SOURCE/)vstudio/*/*.rc) \
     $(wildcard $(SOURCE/)vstudio/*/*.vcxproj) \
     $(wildcard $(SOURCE/)vstudio/*/*.vcxproj.filters) \

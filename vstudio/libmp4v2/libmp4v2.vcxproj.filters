@@ -550,4 +550,7 @@
       <Filter>resources</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="libmp4v2.natvis" />
+  </ItemGroup>
 </Project>

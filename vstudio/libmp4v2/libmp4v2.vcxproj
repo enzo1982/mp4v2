@@ -792,6 +792,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release Static|ARM64'">true</ExcludedFromBuild>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="libmp4v2.natvis" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

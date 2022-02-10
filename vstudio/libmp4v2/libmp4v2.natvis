@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <Type Name="mp4v2::impl::MP4RootAtom">
+    <DisplayString>{{{"root"} m_size={m_size} ...}}</DisplayString>
+    <Expand>
+        <Item Name="m_pChildAtoms">m_pChildAtoms</Item>
+    </Expand>
+  </Type>
+  <Type Name="mp4v2::impl::MP4Atom">
+    <DisplayString>{{{m_type,s} m_size={m_size} ...}}</DisplayString>
+    <Expand>
+        <Item Name="m_pParentAtom">m_pParentAtom</Item>
+        <Item Name="m_pChildAtoms">m_pChildAtoms</Item>
+        <Item Name="m_pProperties">m_pProperties</Item>
+    </Expand>
+  </Type>
+  <Type Name="mp4v2::impl::MP4Property">
+    <DisplayString>{{{m_name,s} ...}}</DisplayString>
+  </Type>
+  <Type Name="mp4v2::impl::MP4SizedIntegerProperty&lt;*,*&gt;">
+    <DisplayString>{{{m_name,s} = {uint64_t(m_values[0])}}}</DisplayString>
+  </Type>
+  <Type Name="mp4v2::impl::MP4Float32Property">
+    <DisplayString>{{{m_name,s} = {m_values[0],s}}}</DisplayString>
+  </Type>
+  <Type Name="mp4v2::impl::MP4StringProperty">
+    <DisplayString>{{{m_name,s} = {m_values[0],s}}}</DisplayString>
+  </Type>
+  <Type Name="mp4v2::impl::MP4Array&lt;*&gt;">
+    <DisplayString>{{m_numElements={m_numElements}}}</DisplayString>
+    <Expand>
+      <IndexListItems>
+        <Size>m_numElements</Size>
+        <ValueNode>m_elements[$i]</ValueNode>
+      </IndexListItems>
+    </Expand>
+  </Type>
+</AutoVisualizer>
