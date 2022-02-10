@@ -247,11 +247,20 @@ bool MP4File::Modify( const char* fileName )
 
     numAtoms = m_pRootAtom->GetNumberOfChildAtoms();
 
-    // insert another mdat prior to moov atom (the last atom)
-    MP4Atom* pMdatAtom = InsertChildAtom(m_pRootAtom, "mdat", numAtoms - 1);
+    // unless there already is an empty mdat atom,
+    // insert another one prior to moov atom (the last atom)
+    if (numAtoms > 1)
+    {
+        MP4Atom* pPreviousAtom = m_pRootAtom->GetChildAtom(numAtoms - 2);
+        if (!strequal(pPreviousAtom->GetType(), "mdat") || pPreviousAtom->GetSize() > 0)
+        {
+            MP4Atom* pMdatAtom = InsertChildAtom(m_pRootAtom, "mdat", numAtoms - 1);
 
-    // start writing new mdat
-    pMdatAtom->BeginWrite(Use64Bits("mdat"));
+            // start writing new mdat
+            pMdatAtom->BeginWrite(Use64Bits("mdat"));
+        }
+    }
+
     return true;
 }
 
