@@ -113,6 +113,20 @@ File::write( const void* buffer, Size size, Size& nout )
 }
 
 bool
+File::truncate( Size size )
+{
+    if( !_isOpen )
+        return true;
+
+    if( _provider.truncate( size ))
+        return true;
+
+    _size = size;
+
+    return false;
+}
+
+bool
 File::close()
 {
     if( !_isOpen )
@@ -181,6 +195,12 @@ CustomFileProvider::write( const void* buffer, Size size, Size& nout )
 }
 
 bool
+CustomFileProvider::truncate( Size size )
+{
+    return true;
+}
+
+bool
 CustomFileProvider::close()
 {
     return _call.close( _handle );
@@ -222,6 +242,12 @@ bool
 CallbacksFileProvider::write( const void* buffer, Size size, Size& nout )
 {
     return _call.write( _handle, buffer, size, &nout );
+}
+
+bool
+CallbacksFileProvider::truncate( Size size )
+{
+    return _call.truncate( _handle, size );
 }
 
 bool

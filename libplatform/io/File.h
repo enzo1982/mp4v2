@@ -29,6 +29,7 @@ public:
     virtual bool seek( Size pos ) = 0;
     virtual bool read( void* buffer, Size size, Size& nin ) = 0;
     virtual bool write( const void* buffer, Size size, Size& nout ) = 0;
+    virtual bool truncate( Size size ) = 0;
     virtual bool close() = 0;
     virtual bool getSize( Size& nout ) = 0;
 
@@ -162,6 +163,18 @@ public:
 
     ///////////////////////////////////////////////////////////////////////////
     //!
+    //! Truncate file to length in bytes.
+    //!
+    //! @param size number of bytes to truncate the file to.
+    //!
+    //! @return true on failure, false on success.
+    //!
+    ///////////////////////////////////////////////////////////////////////////
+
+    bool truncate( Size size );
+
+    ///////////////////////////////////////////////////////////////////////////
+    //!
     //! Get size of file in bytes.
     //!
     //! @param nout output indicating the size of the file in bytes.
@@ -203,6 +216,7 @@ public:
     bool seek( Size pos );
     bool read( void* buffer, Size size, Size& nin );
     bool write( const void* buffer, Size size, Size& nout );
+    bool truncate( Size size );
     bool close();
     bool getSize( Size& nout );
 
@@ -223,6 +237,7 @@ public:
     bool seek( Size pos );
     bool read( void* buffer, Size size, Size& nin );
     bool write( const void* buffer, Size size, Size& nout );
+    bool truncate( Size size );
     bool close();
     bool getSize( Size& nout );
 

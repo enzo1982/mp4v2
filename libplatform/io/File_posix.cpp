@@ -13,6 +13,7 @@ public:
     bool seek( Size pos );
     bool read( void* buffer, Size size, Size& nin );
     bool write( const void* buffer, Size size, Size& nout );
+    bool truncate( Size size );
     bool close();
     bool getSize( Size& nout );
 
@@ -90,6 +91,25 @@ StandardFileProvider::write( const void* buffer, Size size, Size& nout )
         return true;
     nout = size;
     return false;
+}
+
+bool
+StandardFileProvider::truncate( Size size )
+{
+    // close the file prior to truncating it
+    _fstream.close();
+
+    // truncate the file using the POSIX truncate function
+    if( ::truncate( _name.c_str(), size ) != 0)
+        return true;
+
+    // reopen the file and seek to the new end
+    _fstream.clear();
+    _fstream.open( _name.c_str(), ios::binary | ios::in | ios::out);
+    if ( _fstream.fail() )
+        return true;
+
+    return seek( size );
 }
 
 bool

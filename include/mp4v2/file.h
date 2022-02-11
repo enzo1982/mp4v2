@@ -52,10 +52,11 @@ typedef struct MP4FileProvider_s
  */
 typedef struct MP4IOCallbacks_s
 {
-    int64_t ( *size  )( void* handle );
-    int     ( *seek  )( void* handle, int64_t pos );
-    int     ( *read  )( void* handle, void* buffer, int64_t size, int64_t* nin );
-    int     ( *write )( void* handle, const void* buffer, int64_t size, int64_t* nout );
+    int64_t ( *size     )( void* handle );
+    int     ( *seek     )( void* handle, int64_t pos );
+    int     ( *read     )( void* handle, void* buffer, int64_t size, int64_t* nin );
+    int     ( *write    )( void* handle, const void* buffer, int64_t size, int64_t* nout );
+    int     ( *truncate )( void* handle, int64_t size );
 } MP4IOCallbacks;
 
 /** Close an mp4 file.

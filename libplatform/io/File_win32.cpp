@@ -18,6 +18,7 @@ public:
     bool seek( Size pos );
     bool read( void* buffer, Size size, Size& nin );
     bool write( const void* buffer, Size size, Size& nout );
+    bool truncate( Size size );
     bool close();
     bool getSize( Size& nout );
 
@@ -150,6 +151,43 @@ StandardFileProvider::write( const void* buffer, Size size, Size& nout )
         return true;
     nout = count;
     return false;
+}
+
+/**
+ * Truncate file size
+ *
+ * @param size the number of bytes to truncate the file to
+ *
+ * @retval false successfully truncated the file
+ * @retval true error truncating the file
+ */
+bool
+StandardFileProvider::truncate( Size size )
+{
+    // close the file prior to truncating it
+    fclose( _file );
+
+    // truncate the file using Windows API functions
+    win32::Utf8ToFilename filename(_name);
+    HANDLE handle = CreateFileW( filename, GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
+    if ( handle == INVALID_HANDLE_VALUE )
+        return true;
+
+    LARGE_INTEGER end;
+    end.QuadPart = size;
+    if ( !SetFilePointerEx( handle, end, NULL, FILE_BEGIN ) || !SetEndOfFile( handle ) ) {
+        CloseHandle( handle );
+        return true;
+    }
+
+    CloseHandle( handle );
+
+    // reopen the file and seek to the new end
+    _file = _wfopen( filename, L"r+bN" );
+    if ( _file == NULL )
+        return true;
+
+    return seek( size );
 }
 
 /**

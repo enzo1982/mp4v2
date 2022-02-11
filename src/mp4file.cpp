@@ -604,9 +604,11 @@ void MP4File::FinishWrite(uint32_t options)
     // ask root atom to write
     m_pRootAtom->FinishWrite();
 
-    // finished all writes, if position < size then file has shrunk and
-    // we mark remaining bytes as free atom; otherwise trailing garbage remains.
-    if( GetPosition() < GetSize() ) {
+    // finished all writes, if position < size then the file has
+    // shrunk and we first mark the remaining bytes with a free
+    // atom, then attempt to truncate
+    uint64_t endPosition = GetPosition();
+    if( endPosition < GetSize() ) {
         MP4RootAtom* root = (MP4RootAtom*)FindAtom( "" );
         ASSERT( root );
 
@@ -622,6 +624,12 @@ void MP4File::FinishWrite(uint32_t options)
         freeAtom->SetSize( size );
         root->AddChildAtom( freeAtom );
         freeAtom->Write();
+
+        // now attempt to truncate the file at the previous end position
+        // this is done after marking the area as free, because if truncate
+        // fails it may leave the file inaccessible, preventing us from
+        // inserting the free atom afterwards
+        m_file->truncate(endPosition);
     }
 }
 
