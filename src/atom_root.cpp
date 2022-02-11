@@ -82,8 +82,17 @@ void MP4RootAtom::FinishWrite(bool use64)
     }
 
     // finish writing last mdat atom
-    const uint32_t mdatIndex = GetLastMdatIndex();
-    m_pChildAtoms[mdatIndex]->FinishWrite( m_File.Use64Bits( "mdat" ));
+    uint32_t mdatIndex = GetLastMdatIndex();
+    MP4Atom* pLastMdat = m_pChildAtoms[mdatIndex];
+    pLastMdat->FinishWrite( m_File.Use64Bits( "mdat" ));
+
+    // remove mdat atom if empty
+    if (pLastMdat->GetSize() == 0) {
+        m_File.SetPosition(pLastMdat->GetStart());
+        DeleteChildAtom(pLastMdat);
+        delete pLastMdat;
+        mdatIndex--;
+    }
 
     // write all atoms after last mdat
     const uint32_t size = m_pChildAtoms.Size();
