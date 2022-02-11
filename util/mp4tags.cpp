@@ -184,10 +184,10 @@ extern "C" int
 
                 /* Help and version requests handled here. */
             case OPT_HELP:
-                fprintf( stderr, "usage %s %s\n", argv[0], help_text );
+                fprintf( stdout, "Usage: %s %s\n", "mp4tags", help_text );
                 return 0;
             case OPT_VERSION:
-                fprintf( stderr, "%s - %s\n", argv[0], MP4V2_PROJECT_name_formal );
+                fprintf( stdout, "%s - %s\n", "mp4tags", MP4V2_PROJECT_name_formal );
                 return 0;
 
                 /* Integer arguments: convert them using sscanf(). */
@@ -236,7 +236,7 @@ extern "C" int
         fprintf( stderr,
                  "%s: You must specify at least one MP4 file.\n",
                  argv[0] );
-        fprintf( stderr, "usage %s %s\n", argv[0], help_text );
+        fprintf( stderr, "Usage: %s %s\n", "mp4tags", help_text );
         return 3;
     }
 
@@ -247,7 +247,7 @@ extern "C" int
         fprintf( stderr,
                  "%s: You must specify at least one tag modification.\n",
                  argv[0] );
-        fprintf( stderr, "usage %s %s\n", argv[0], help_text );
+        fprintf( stderr, "Usage: %s %s\n", "mp4tags", help_text );
         return 4;
     }
 

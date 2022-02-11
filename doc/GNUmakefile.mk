@@ -95,7 +95,7 @@ DOC.m4.out = \
     doc/html/header.html       \
     doc/html/footer.html
 
-DOC.man.utils = mp4art mp4file mp4subtitle mp4track
+DOC.man.utils = mp4art mp4chaps mp4file mp4subtitle mp4tags mp4track
 DOC.man.out   = $(DOC.man.utils:%=$(DOC.out/)man/man1/%.1)
 
 DOC.texi.articles = $(wildcard $(DOC.in/)texi/*.texi)
