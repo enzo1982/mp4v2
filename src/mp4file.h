@@ -999,6 +999,8 @@ protected:
  private:
     MP4File ( const MP4File &src );
     MP4File &operator= ( const MP4File &src );
+
+    void MoveMoovAtomToFront();
 };
 
 template<> inline uint8_t MP4File::ReadUInt<uint8_t, 8> () { return ReadUInt8(); }

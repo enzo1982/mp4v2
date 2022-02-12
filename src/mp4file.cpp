@@ -543,55 +543,43 @@ void MP4File::BeginWrite()
 void MP4File::FinishWrite(uint32_t options)
 {
     // remove empty moov.udta.meta.ilst
-    {
-        MP4Atom* ilst = FindAtom( "moov.udta.meta.ilst" );
-        if( ilst ) {
-            if( ilst->GetNumberOfChildAtoms() == 0 ) {
-                ilst->GetParentAtom()->DeleteChildAtom( ilst );
-                delete ilst;
-            }
+    if( MP4Atom* ilst = FindAtom( "moov.udta.meta.ilst" ) ) {
+        if( ilst->GetNumberOfChildAtoms() == 0 ) {
+            ilst->GetParentAtom()->DeleteChildAtom( ilst );
+            delete ilst;
         }
     }
 
     // remove empty moov.udta.meta
-    {
-        MP4Atom* meta = FindAtom( "moov.udta.meta" );
-        if( meta ) {
-            if( meta->GetNumberOfChildAtoms() == 0 ) {
+    if( MP4Atom* meta = FindAtom( "moov.udta.meta" ) ) {
+        if( meta->GetNumberOfChildAtoms() == 0 ) {
+            meta->GetParentAtom()->DeleteChildAtom( meta );
+            delete meta;
+        }
+        else if( meta->GetNumberOfChildAtoms() == 1 ) {
+            if( ATOMID( meta->GetChildAtom( 0 )->GetType() ) == ATOMID( "hdlr" )) {
                 meta->GetParentAtom()->DeleteChildAtom( meta );
                 delete meta;
-            }
-            else if( meta->GetNumberOfChildAtoms() == 1 ) {
-                if( ATOMID( meta->GetChildAtom( 0 )->GetType() ) == ATOMID( "hdlr" )) {
-                    meta->GetParentAtom()->DeleteChildAtom( meta );
-                    delete meta;
-                }
             }
         }
     }
 
     // remove empty moov.udta.name
-    {
-        MP4Atom* name = FindAtom( "moov.udta.name" );
-        if( name ) {
-            unsigned char *val = NULL;
-            uint32_t valSize = 0;
-            GetBytesProperty("moov.udta.name.value", (uint8_t**)&val, &valSize);
-            if( valSize == 0 ) {
-                name->GetParentAtom()->DeleteChildAtom( name );
-                delete name;
-            }
+    if( MP4Atom* name = FindAtom( "moov.udta.name" ) ) {
+        unsigned char *val = NULL;
+        uint32_t valSize = 0;
+        GetBytesProperty("moov.udta.name.value", (uint8_t**)&val, &valSize);
+        if( valSize == 0 ) {
+            name->GetParentAtom()->DeleteChildAtom( name );
+            delete name;
         }
     }
 
     // remove empty moov.udta
-    {
-        MP4Atom* udta = FindAtom( "moov.udta" );
-        if( udta ) {
-            if( udta->GetNumberOfChildAtoms() == 0 ) {
-                udta->GetParentAtom()->DeleteChildAtom( udta );
-                delete udta;
-            }
+    if( MP4Atom* udta = FindAtom( "moov.udta" ) ) {
+        if( udta->GetNumberOfChildAtoms() == 0 ) {
+            udta->GetParentAtom()->DeleteChildAtom( udta );
+            delete udta;
         }
     }
 
@@ -603,6 +591,9 @@ void MP4File::FinishWrite(uint32_t options)
 
     // ask root atom to write
     m_pRootAtom->FinishWrite();
+
+    // check if we can move the moov atom to the front
+    MoveMoovAtomToFront();
 
     // finished all writes, if position < size then the file has
     // shrunk and we first mark the remaining bytes with a free
@@ -630,6 +621,72 @@ void MP4File::FinishWrite(uint32_t options)
         // fails it may leave the file inaccessible, preventing us from
         // inserting the free atom afterwards
         m_file->truncate(endPosition);
+    }
+}
+
+void MP4File::MoveMoovAtomToFront()
+{
+    // makes sense only if there is a moov atom and at least one mdat atom
+    MP4Atom* moov = FindAtom("moov");
+    if (!moov || !FindAtom("mdat"))
+        return;
+
+    uint32_t numAtoms = m_pRootAtom->GetNumberOfChildAtoms();
+    for (uint32_t i = 0; i < numAtoms; i++) {
+        MP4Atom* atom = m_pRootAtom->GetChildAtom(i);
+        const char* type = atom->GetType();
+
+        // abort upon reaching a moov or mdat atom
+        if (strequal(type, "moov") || strequal(type, "mdat"))
+            break;
+
+        // check if this is a free atom and it's not 64 bit (extremely unlikely, so we don't handle that case)
+        if (!strequal(type, "free") || atom->GetLargesizeMode() || atom->GetSize() > (0xFFFFFFFF - 8))
+            continue;
+
+        uint32_t moovSize = moov->GetSize();
+        uint32_t freeSize = atom->GetSize();
+        uint64_t freeStart = atom->GetStart();
+
+        if (freeSize == moovSize) {
+            m_pRootAtom->DeleteChildAtom(atom);
+            m_pRootAtom->DeleteChildAtom(moov);
+            m_pRootAtom->InsertChildAtom(moov, i);
+
+            delete atom;
+
+            m_file->seek(freeStart);
+
+            moov->Write();
+        }
+        else if (freeSize >= moovSize + 8) {
+            m_pRootAtom->DeleteChildAtom(moov);
+            m_pRootAtom->InsertChildAtom(moov, i);
+
+            atom->SetSize(freeSize - moovSize - 8);
+
+            m_file->seek(freeStart);
+
+            moov->Write();
+            atom->Write();
+        }
+        else
+            continue;
+
+        // position file pointer after last mdat atom
+        numAtoms = m_pRootAtom->GetNumberOfChildAtoms();
+        for (int j = numAtoms - 1; j >= 0; j--) {
+            MP4Atom* atom = m_pRootAtom->GetChildAtom(j);
+            if (!strequal(atom->GetType(), "mdat"))
+                continue;
+
+            m_file->seek(atom->GetEnd());
+            break;
+        }
+
+        // write atoms after last mdat again
+        m_pRootAtom->FinishWrite();
+        break;
     }
 }
 
