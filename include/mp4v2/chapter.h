@@ -166,8 +166,8 @@ MP4ChapterType MP4GetChapters(
  */
 MP4V2_EXPORT
 MP4ChapterType MP4SetChapters(
-    MP4FileHandle hFile,
-    MP4Chapter_t* chapterList,
+    MP4FileHandle  hFile,
+    MP4Chapter_t*  chapterList,
     uint32_t       chapterCount,
     MP4ChapterType chapterType DEFAULT(MP4ChapterTypeQt));
 

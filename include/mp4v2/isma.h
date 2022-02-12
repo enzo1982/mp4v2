@@ -20,11 +20,12 @@ typedef struct mp4v2_ismacryp_session_params {
 
 /*
  * API to initialize ismacryp properties to sensible defaults
- * if input param is null then mallocs a params struct
+ * if input param is null, a params struct is allocated
  */
 
 MP4V2_EXPORT
-mp4v2_ismacrypParams* MP4DefaultISMACrypParams( mp4v2_ismacrypParams* ptr );
+mp4v2_ismacrypParams* MP4DefaultISMACrypParams(
+    mp4v2_ismacrypParams* ptr );
 
 MP4V2_EXPORT
 MP4TrackId MP4AddEncAudioTrack(
@@ -75,6 +76,27 @@ MP4TrackId MP4EncAndCopyTrack(
     bool                  applyEdits DEFAULT(false),
     MP4TrackId            dstHintTrackReferenceTrack DEFAULT(MP4_INVALID_TRACK_ID) );
 
+/** Add ISMA compliant OD and Scene tracks.
+ *
+ *  MP4MakeIsmaCompliant modifies an mp4 file so that it complies with the
+ *  minimal MPEG-4 Systems requirements defined by the Internet Streaming Media
+ *  Alliance (ISMA).
+ *
+ *  This involves creating an OD and Scene track, and using them to describe a
+ *  simple scene of one audio, or one video, or one of each. Whether an SDP
+ *  version of this information is added to the mp4 file can be controlled with
+ *  the @p addIsmaComplianceSdp parameter.
+ *
+ *  Caveat: whether the file is truly ISMA compliant also depends on the
+ *  contents of the media and hint tracks. This function does not guarantee
+ *  that these tracks are compliant.
+ *
+ *  @param fileName specifies the path name of the file to be modified.
+ *  @param addIsmaComplianceSdp specifies whether an SDP declaring ISMA
+ *      compliance should be added to the file.
+ * 
+ *  @return Upon success, true (1). Upon an error, false (0).
+ */
 MP4V2_EXPORT
 bool MP4MakeIsmaCompliant(
     const char* fileName,
