@@ -71,18 +71,18 @@ int main( int argc, char** argv )
     provider.close = my_close;
 
     /* open file for read */
-    MP4FileHandle file = MP4ReadProvider( argv[1], 0, &provider );
+    MP4FileHandle file = MP4ReadProvider( argv[1], &provider );
     if( file == MP4_INVALID_FILE_HANDLE ) {
         printf( "MP4Read failed\n" );
         return 1;
     }
 
     /* dump file contents */
-    if( !MP4Dump( file, stdout, 0 ))
+    if( !MP4Dump( file, 0 ))
         printf( "MP4Dump failed\n" );
 
     /* cleanup and close */
-    MP4Close( file );
+    MP4Close( file, 0 );
 
     return 0;
 }

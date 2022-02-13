@@ -15,7 +15,7 @@ int main( int argc, char** argv )
     }
 
     /* open file for modification */
-    MP4FileHandle file = MP4Modify( argv[1], MP4_DETAILS_ERROR, 0 );
+    MP4FileHandle file = MP4Modify( argv[1], 0 );
     if( file == MP4_INVALID_FILE_HANDLE ) {
         printf( "MP4Modify failed\n" );
         return 1;
@@ -90,7 +90,7 @@ int main( int argc, char** argv )
     }
 
     /* free memory associated with structure and close */
-    MP4Close( file );
+    MP4Close( file, 0 );
 
     return 0;
 }
