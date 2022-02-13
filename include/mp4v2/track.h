@@ -411,7 +411,7 @@ uint16_t MP4FindTrackIndex(
  *  @param trackId id of track for operation.
  *  @param duration out value of duration in track timescale units.
  *
- *  return <b>true</b> on success, <b>false</b> on failure.
+ *  @return <b>true</b> on success, <b>false</b> on failure.
  */
 MP4V2_EXPORT
 bool MP4GetTrackDurationPerChunk(

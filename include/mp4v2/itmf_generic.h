@@ -169,7 +169,7 @@ MP4V2_EXPORT MP4ItmfItemList*
 MP4ItmfGetItemsByCode( MP4FileHandle hFile, const char* code );
 
 /** Get list of items by meaning from file.
- *  Implicitly only returns atoms of code @b{----}.
+ *  Implicitly only returns atoms of code <b>{----}</b>.
  *  @param hFile handle of file to operate on.
  *  @param meaning UTF-8 meaning. NULL-terminated.
  *  @param name may be NULL. UTF-8 name. NULL-terminated.

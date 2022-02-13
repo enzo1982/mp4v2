@@ -100,7 +100,7 @@ uint32_t MP4GetTrackTimeScale(
  *
  *  @param hFile handle of file for operation.
  *  @param trackId id of track for operation.
- *  @param timeScale desired time scale for the track.
+ *  @param value desired time scale for the track.
  *
  *  @return <b>true</b> on success, <b>false</b> on failure.
  */

@@ -90,7 +90,6 @@ DOXYGEN.cmd = $(DOXYGEN) $(1)
 DOC.m4.out = \
     doc/texi/base/project.texi \
     doc/doxygen/Doxyfile       \
-    doc/doxygen/header.html    \
     doc/doxygen/footer.html    \
     doc/html/header.html       \
     doc/html/footer.html
@@ -231,13 +230,10 @@ $(DOC.xml2wiki.out): $(DOC.out.articles/)wiki/%.wiki: $(DOC.out.articles/)xml/%.
 	$(call XML2WIKI.cmd,$<,$@)
 
 $(DOC.api.out): | $(dir $(DOC.api.out))
-$(DOC.api.out): $(DOC.in/)doxygen/banner.png
 $(DOC.api.out): $(DOC.in/)doxygen/project.css
-$(DOC.api.out): $(DOC.out/)doxygen/header.html
 $(DOC.api.out): $(DOC.out/)doxygen/footer.html
 $(DOC.api.out): $(DOC.out/)doxygen/Doxyfile
 	$(call DOXYGEN.cmd,$<)
-	$(INSTALL_DATA) $(DOC.in/)doxygen/banner.png $(DOC.out.api/)html/
 	touch $@
 
 ###############################################################################
