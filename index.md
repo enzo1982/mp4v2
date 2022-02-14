@@ -4,7 +4,17 @@ This is the *new* MP4v2 project, a fork of the [abandoned MP4v2 library](https:/
 
 The MP4v2 library provides an API to create and modify MP4 files as defined by ISO-IEC:14496-1:2001 MPEG-4 Systems. This file format is derived from Apple's QuickTime file format that has been used as a multimedia file format in a variety of platforms and applications. It is a very powerful and extensible format that can accommodate practically any type of media.
 
-### Motivation and goals
+### Table of contents
+
+1. [Motivation and goals](#motivation)
+2. [Roadmap](#roadmap)
+3. [License](#license)
+4. [Documentation](#documentation)
+5. [Download](#download)
+6. [Building](#building)
+7. [Support](#support)
+
+### Motivation and goals <a name="motivation"/>
 The MP4v2 library is used by various open source projects and commercial software products. Yet the project has been abandoned since 2015 with the last official release dating back even further to 2012.
 
 Being unmaintained for such an extended period, a number of pain points have developed over time. The build system needs an update, bugs and security issues need to be fixed and new formats and standards have been developed that are not supported by the existing code.
@@ -19,7 +29,7 @@ I would like this new project to become the place to go for anything related to 
 
 Ultimately, my goal for this project is for it to be recognized as the official source of a renewed MP4v2.
 
-### Roadmap
+### Roadmap <a name="roadmap"/>
 #### Short term - *MP4v2 v2.1.0*
 - Build systems
 	- Update/fix the Autotools build system and get ready to publish new releases ✔️
@@ -30,15 +40,15 @@ Ultimately, my goal for this project is for it to be recognized as the official 
 	- Fix compiler warnings and errors ✔️
 	- Fix issues found by Cppcheck ✔️
 	- Fix open CVEs:
-		- https://nvd.nist.gov/vuln/detail/CVE-2018-7339 ❓
+		- [https://nvd.nist.gov/vuln/detail/CVE-2018-7339](https://nvd.nist.gov/vuln/detail/CVE-2018-7339) ❓
 		(probably fixed by [d781fcf1](https://github.com/enzo1982/mp4v2/commit/d781fcf1) and [35c20e02](https://github.com/enzo1982/mp4v2/commit/35c20e02))
-		- https://nvd.nist.gov/vuln/detail/CVE-2018-17235 ✔️
-		- https://nvd.nist.gov/vuln/detail/CVE-2018-17236 ✔️
+		- [https://nvd.nist.gov/vuln/detail/CVE-2018-17235](https://nvd.nist.gov/vuln/detail/CVE-2018-17235) ✔️
+		- [https://nvd.nist.gov/vuln/detail/CVE-2018-17236](https://nvd.nist.gov/vuln/detail/CVE-2018-17236) ✔️
 - New features
-	- Add proper callback based I/O to replace MP4ReadProvider and MP4CreateProvider[Ex] ✔️
+	- Add proper callback based I/O to replace MP4ReadProvider and MP4CreateProvider[Ex] 👷️
 - Update documentation
-	- Update outdated API man pages and move their contents to Doxygen comments in header files 👷
-	- Regenerate Doxygen API documentation 👷
+	- Update outdated API man pages and move their contents to Doxygen comments in header files ✔️
+	- Regenerate Doxygen API documentation ✔️
 
 #### Near term - *MP4v2 v2.2.0*
 - Import improvements made in various MP4v2 forks since the abandonment of the original project:
@@ -58,13 +68,16 @@ Ultimately, my goal for this project is for it to be recognized as the official 
 #### Long term - *MP4v2 future releases*
 - Maintain the MP4v2 library by fixing issues, reviewing and integrating pull requests and adding new features as necessary
 
-### License
+### License <a name="license"/>
 MP4v2 is released under the terms of the Mozilla Public License (MPL) Version 1.1. Please refer to the [`COPYING`](https://raw.githubusercontent.com/enzo1982/mp4v2/main/COPYING) file in the Git repository for the full license text.
 
-### Download
+### Documentation <a name="documentation"/>
+The automatically generated documentation for the public MP4v2 API can be found at [mp4v2.org/api](https://mp4v2.org/api).
+
+### Download <a name="download"/>
 Release packages of the MP4v2 library sources are available in the *[Releases](https://github.com/enzo1982/mp4v2/releases)* area on GitHub.
 
-### Building
+### Building <a name="building"/>
 The MP4v2 library and utilities can be built using the following build systems:
 
  - **GNU Autotools**
@@ -83,7 +96,7 @@ The MP4v2 library and utilities can be built using the following build systems:
 
 MP4v2 has no special dependencies other than a working C++ compiler and build environment.
 
-### Support
+### Support <a name="support"/>
 Please use the *[Issues](https://github.com/enzo1982/mp4v2/issues)* area on GitHub to report bugs and other issues or make feature requests. For questions and general discussion, please use the *[Discussions](https://github.com/enzo1982/mp4v2/discussions)* area.
 
 If you need to contact the maintainer, please send an email to [support@mp4v2.org](mailto:support@mp4v2.org).
