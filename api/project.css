@@ -1,0 +1,51 @@
+body {
+    background-color: #D0D0D0;
+    min-width: 800px;
+    max-width: 1360px;
+    margin: 0 auto;
+    padding-top: 0.5em;
+    padding-bottom: 1em;
+}
+
+div.header {
+    background-image: none;
+    border-bottom: 0;
+}
+
+div#projectname {
+    margin-left: 3px;
+    font-weight: bold;
+}
+
+div#top, div.header, div.contents, address.footer {
+    margin-left: 40px;
+    margin-right: 40px;
+    background-color: #FFFFFF;
+    position: relative;
+    -webkit-box-shadow: 5px 5px 5px black;
+}
+
+div.contents {
+    margin-top: 12px;
+    padding-left: 16px;
+    padding-top: 16px;
+    padding-right: 16px;
+    padding-bottom: 2px;
+}
+
+div.title {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+table.markdownTable {
+    margin-left: 1em;
+}
+
+td.markdownTableBodyNone {
+    vertical-align: top;
+}
+
+address.footer {
+    margin-top: 12px;
+}
