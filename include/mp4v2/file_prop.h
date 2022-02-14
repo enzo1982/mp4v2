@@ -10,29 +10,93 @@
 
 /* generic props */
 
+/** Check for presence of an atom.
+ *
+ *  MP4HaveAtom checks for the presence of the atom passed in @p atomName. @p
+ *  atomName can specify an atom path to check for atoms that are not top level
+ *  atoms, e.g. "moov.udta.meta.ilst".
+ *
+ *  @param hFile handle of file for operation.
+ *  @param atomName name of the atom to check for.
+ *
+ *  @return true (1) if the atom is present, false (0) otherwise.
+ */
 MP4V2_EXPORT
 bool MP4HaveAtom(
     MP4FileHandle hFile,
     const char*   atomName );
 
+/** Get the value of an integer property.
+ *
+ *  MP4GetIntegerProperty determines the value of the integer property
+ *  identified by @p propName, e.g. "moov.iods.audioProfileLevelId". The value
+ *  is stored in the variable pointed to by @p retVal.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param propName path to the property to get.
+ *  @param retVal pointer to a variable to receive the return value.
+ *
+ *  @return true (1) on success, false (0) otherwise.
+ */
 MP4V2_EXPORT
 bool MP4GetIntegerProperty(
     MP4FileHandle hFile,
     const char*   propName,
-    uint64_t*     retval );
+    uint64_t*     retVal );
 
+/** Get the value of a float property.
+ *
+ *  MP4GetFloatProperty determines the value of the float property identified
+ *  by @p propName, e.g. "moov.mvhd.rate". The value is stored in the variable
+ *  pointed to by @p retVal.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param propName path to the property to get.
+ *  @param retVal pointer to a variable to receive the return value.
+ *
+ *  @return true (1) on success, false (0) otherwise.
+ */
 MP4V2_EXPORT
 bool MP4GetFloatProperty(
     MP4FileHandle hFile,
     const char*   propName,
-    float*        retvalue );
+    float*        retVal );
 
+/** Get the value of a string property.
+ *
+ *  MP4GetStringProperty determines the value of the string property identified
+ *  by @p propName, e.g. "ftyp.majorBrand". The value is stored in the variable
+ *  pointed to by @p retVal.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param propName path to the property to get.
+ *  @param retVal pointer to a variable to receive the return value.
+ *
+ *  @return true (1) on success, false (0) otherwise.
+ */
 MP4V2_EXPORT
 bool MP4GetStringProperty(
     MP4FileHandle hFile,
     const char*   propName,
-    const char**  retvalue );
+    const char**  retVal );
 
+/** Get the value of a bytes property.
+ *
+ *  MP4GetBytesProperty determines the value of the bytes property identified
+ *  by @p propName, e.g. "moov.udta.meta.metadata". The value is stored in a
+ *  newly allocated buffer the location of which is assigned to the variable
+ *  pointed to by ppValue. The caller is responsible for freeing the memory
+ *  with MP4Free().
+ *
+ *  @param hFile handle of file for operation.
+ *  @param propName path to the property to get.
+ *  @param ppValue pointer to a variable to receive the memory location
+ *      containing the property bytes.
+ *  @param pValueSize pointer to a variable to receive the length of the
+ *      property bytes value.
+ *
+ *  @return true (1) on success, false (0) otherwise.
+ */
 MP4V2_EXPORT
 bool MP4GetBytesProperty(
     MP4FileHandle hFile,
@@ -40,24 +104,69 @@ bool MP4GetBytesProperty(
     uint8_t**     ppValue,
     uint32_t*     pValueSize );
 
+/** Set the value of an integer property.
+ *
+ *  MP4SetIntegerProperty sets the value of the integer property identified by
+ *  @p propName, e.g. "moov.iods.audioProfileLevelId".
+ *
+ *  @param hFile handle of file for operation.
+ *  @param propName path to the property to set.
+ *  @param value the new value of the property.
+ *
+ *  @return true (1) on success, false (0) otherwise.
+ */
 MP4V2_EXPORT
 bool MP4SetIntegerProperty(
     MP4FileHandle hFile,
     const char*   propName,
     int64_t       value );
 
+/** Set the value of a float property.
+ *
+ *  MP4SetFloatProperty sets the value of the float property identified by @p
+ *  propName, e.g. "moov.mvhd.rate".
+ *
+ *  @param hFile handle of file for operation.
+ *  @param propName path to the property to set.
+ *  @param value the new value of the property.
+ *
+ *  @return true (1) on success, false (0) otherwise.
+ */
 MP4V2_EXPORT
 bool MP4SetFloatProperty(
     MP4FileHandle hFile,
     const char*   propName,
     float         value );
 
+/** Set the value of a string property.
+ *
+ *  MP4SetStringProperty sets the value of the string property identified by @p
+ *  propName, e.g. "ftyp.majorBrand".
+ *
+ *  @param hFile handle of file for operation.
+ *  @param propName path to the property to set.
+ *  @param value the new value of the property.
+ *
+ *  @return true (1) on success, false (0) otherwise.
+ */
 MP4V2_EXPORT
 bool MP4SetStringProperty(
     MP4FileHandle hFile,
     const char*   propName,
     const char*   value );
 
+/** Set the value of a bytes property.
+ *
+ *  MP4SetBytesProperty sets the value of the bytes property identified by @p
+ *  propName, e.g. "moov.udta.meta.metadata".
+ *
+ *  @param hFile handle of file for operation.
+ *  @param propName path to the property to set.
+ *  @param pValue pointer the bytes representing the new value of the property.
+ *  @param valueSize the size of the bytes value pointed to by <b>pValue</b>.
+ *
+ *  @return true (1) on success, false (0) otherwise.
+ */
 MP4V2_EXPORT
 bool MP4SetBytesProperty(
     MP4FileHandle  hFile,

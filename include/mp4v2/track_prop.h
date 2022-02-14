@@ -10,12 +10,6 @@
 
 /* specific track properties */
 
-MP4V2_EXPORT
-bool MP4HaveTrackAtom(
-    MP4FileHandle hFile,
-    MP4TrackId    trackId,
-    const char*   atomname );
-
 /** Get the track type.
  *
  *  MP4GetTrackType gets the type of the track with the specified track id.
@@ -49,16 +43,40 @@ const char* MP4GetTrackType(
     MP4FileHandle hFile,
     MP4TrackId    trackId );
 
+/** Get the name of the track's media data atom.
+ *
+ *  MP4GetTrackMediaDataName returns the four character name of the specified
+ *  track's media data atom, i.e. the child atom of the track's @b stsd atom.
+ *
+ *  @param hFile specifies the mp4 file to which the operation applies.
+ *  @param trackId specifies the track for which the media data atom name is
+ *      desired.
+ *
+ *  @return The name of the track's media data atom or NULL in case of an
+ *      error.
+ */
 MP4V2_EXPORT
 const char* MP4GetTrackMediaDataName(
     MP4FileHandle hFile,
     MP4TrackId    trackId );
 
-/*
- * MP4GetTrackMediaDataOriginalFormat is to be used to get the original
- * MediaDataName if a track has been encrypted.
+/** Get the name of an encrypted track's original media data atom.
+ *
+ *  MP4GetTrackMediaDataOriginalFormat is used to get the original media data
+ *  atom name if a track has been encrypted. The track identified by @p trackId
+ *  must be an encrypted track with @b encv as the media data name returned by
+ *  MP4GetTrackMediaDataName.
+ *
+ *  @param hFile specifies the mp4 file to which the operation applies.
+ *  @param trackId specifies the encoded track for which the original media
+ *      data atom name is desired.
+ *  @param originalFormat specifies a buffer to receive the original media data
+        atom name.
+ *  @param buflen specifies the size of the buffer pointed to by @p
+ *      originalFormat.
+ *
+ *  @return <b>true</b> on success, <b>false</b> on failure.
  */
-
 MP4V2_EXPORT
 bool MP4GetTrackMediaDataOriginalFormat(
     MP4FileHandle hFile,
@@ -518,11 +536,33 @@ double MP4GetTrackVideoFrameRate(
     MP4FileHandle hFile,
     MP4TrackId    trackId );
 
+/** Get the number of channels of the specified audio track.
+ *
+ *  MP4GetTrackAudioChannels returns the number of audio channels in the
+ *  specified track in the mp4 file.
+ *
+ *  @param hFile specifies the mp4 file to which the operation applies.
+ *  @param trackId specifies the track for which the number of audio channels
+ *      is desired.
+ *
+ *  @return Upon success, the number of audio channels of the track. Upon an
+ *      error, -1.
+ */
 MP4V2_EXPORT
 int MP4GetTrackAudioChannels(
     MP4FileHandle hFile,
     MP4TrackId    trackId );
 
+/** Check whether a track is ISMACrypt encrypted.
+ *
+ *  MP4IsIsmaCrypMediaTrack checks whether the specified track is encrypted
+ *  using ISMACrypt.
+ *
+ *  @param hFile specifies the mp4 file to which the operation applies.
+ *  @param trackId specifies the track for which the information is desired.
+ *
+ *  @return true (1) if the track is ISMACrypt encrypted, false (0) otherwise.
+ */
 MP4V2_EXPORT
 bool MP4IsIsmaCrypMediaTrack(
     MP4FileHandle hFile,
@@ -530,33 +570,103 @@ bool MP4IsIsmaCrypMediaTrack(
 
 /* generic track properties */
 
+/** Check for presence of a track atom.
+ *
+ *  MP4HaveTrackAtom checks for the presence of the track atom passed in @p
+ *  atomName. @p atomName can specify an atom path to check for atoms that are
+ *  not direct children of the @b trak atom, e.g. "mdia.minf.stbl".
+ *
+ *  @param hFile handle of file for operation.
+ *  @param trackId id of track for operation.
+ *  @param atomName name of the atom to check for.
+ *
+ *  @return true (1) if the atom is present, false (0) otherwise.
+ */
 MP4V2_EXPORT
 bool MP4HaveTrackAtom(
     MP4FileHandle hFile,
     MP4TrackId    trackId,
     const char*   atomName );
 
+/** Get the value of an integer property for a track.
+ *
+ *  MP4GetTrackIntegerProperty determines the value of the integer property
+ *  identified by @p propName, e.g. "tkhd.layer", for the track identified by
+ *  @p trackId. The value is stored in the variable pointed to by @p retVal.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param trackId id of track for operation.
+ *  @param propName path to the property to get.
+ *  @param retVal pointer to a variable to receive the return value.
+ *
+ *  @return true (1) on success, false (0) otherwise.
+ */
 MP4V2_EXPORT
 bool MP4GetTrackIntegerProperty(
     MP4FileHandle hFile,
     MP4TrackId    trackId,
     const char*   propName,
-    uint64_t*     retvalue );
+    uint64_t*     retVal );
 
+/** Get the value of a float property for a track.
+ *
+ *  MP4GetTrackFloatProperty determines the value of the float property
+ *  identified by @p propName, e.g. "tkhd.volume", for the track identified by
+ *  @p trackId. The value is stored in the variable pointed to by @p retVal.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param trackId id of track for operation.
+ *  @param propName path to the property to get.
+ *  @param retVal pointer to a variable to receive the return value.
+ *
+ *  @return true (1) on success, false (0) otherwise.
+ */
 MP4V2_EXPORT
 bool MP4GetTrackFloatProperty(
     MP4FileHandle hFile,
     MP4TrackId    trackId,
     const char*   propName,
-    float*        ret_value );
+    float*        retVal );
 
+/** Get the value of a string property for a track.
+ *
+ *  MP4GetTrackStringProperty determines the value of the string property
+ *  identified by @p propName, e.g. "udta.hnti.sdp .sdpText", for the track
+ *  identified by @p trackId. The value is stored in the variable pointed to by
+ *  @p retVal.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param trackId id of track for operation.
+ *  @param propName path to the property to get.
+ *  @param retVal pointer to a variable to receive the return value.
+ *
+ *  @return true (1) on success, false (0) otherwise.
+ */
 MP4V2_EXPORT
 bool MP4GetTrackStringProperty(
     MP4FileHandle hFile,
     MP4TrackId    trackId,
     const char*   propName,
-    const char**  retvalue );
+    const char**  retVal );
 
+/** Get the value of a bytes property for a track.
+ *
+ *  MP4GetTrackBytesProperty determines the value of the bytes property
+ *  identified by @p propName, e.g. "tkhd.matrix", for the track identified by
+ *  @p trackId. The value is stored in a newly allocated buffer the location of
+ *  which is assigned to the variable pointed to by ppValue. The caller is
+ *  responsible for freeing the memory with MP4Free().
+ *
+ *  @param hFile handle of file for operation.
+ *  @param trackId id of track for operation.
+ *  @param propName path to the property to get.
+ *  @param ppValue pointer to a variable to receive the memory location
+ *      containing the property bytes.
+ *  @param pValueSize pointer to a variable to receive the length of the
+ *      property bytes value.
+ *
+ *  @return true (1) on success, false (0) otherwise.
+ */
 MP4V2_EXPORT
 bool MP4GetTrackBytesProperty(
     MP4FileHandle hFile,
@@ -565,6 +675,19 @@ bool MP4GetTrackBytesProperty(
     uint8_t**     ppValue,
     uint32_t*     pValueSize );
 
+/** Set the value of an integer property for a track.
+ *
+ *  MP4SetTrackIntegerProperty sets the value of the integer property
+ *  identified by @p propName, e.g. "tkhd.layer", for the track identified by
+ *  @p trackId.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param trackId id of track for operation.
+ *  @param propName path to the property to set.
+ *  @param value the new value of the property.
+ *
+ *  @return true (1) on success, false (0) otherwise.
+ */
 MP4V2_EXPORT
 bool MP4SetTrackIntegerProperty(
     MP4FileHandle hFile,
@@ -572,6 +695,18 @@ bool MP4SetTrackIntegerProperty(
     const char*   propName,
     int64_t       value );
 
+/** Set the value of a float property for a track.
+ *
+ *  MP4SetTrackFloatProperty sets the value of the float property identified by
+ *  @p propName, e.g. "tkhd.volume", for the track identified by @p trackId.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param trackId id of track for operation.
+ *  @param propName path to the property to set.
+ *  @param value the new value of the property.
+ *
+ *  @return true (1) on success, false (0) otherwise.
+ */
 MP4V2_EXPORT
 bool MP4SetTrackFloatProperty(
     MP4FileHandle hFile,
@@ -579,6 +714,19 @@ bool MP4SetTrackFloatProperty(
     const char*   propName,
     float         value );
 
+/** Set the value of a string property for a track.
+ *
+ *  MP4SetTrackStringProperty sets the value of the string property identified
+ *  by @p propName, e.g. "udta.hnti.sdp .sdpText", for the track identified by
+ *  @p trackId.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param trackId id of track for operation.
+ *  @param propName path to the property to set.
+ *  @param value the new value of the property.
+ *
+ *  @return true (1) on success, false (0) otherwise.
+ */
 MP4V2_EXPORT
 bool MP4SetTrackStringProperty(
     MP4FileHandle hFile,
@@ -586,6 +734,19 @@ bool MP4SetTrackStringProperty(
     const char*   propName,
     const char*   value );
 
+/** Set the value of a bytes property for a track.
+ *
+ *  MP4SetTrackBytesProperty sets the value of the bytes property identified by
+ *  @p propName, e.g. "tkhd.matrix", for the track identified by @p trackId.
+ *
+ *  @param hFile handle of file for operation.
+ *  @param trackId id of track for operation.
+ *  @param propName path to the property to set.
+ *  @param pValue pointer the bytes representing the new value of the property.
+ *  @param valueSize the size of the bytes value pointed to by <b>pValue</b>.
+ *
+ *  @return true (1) on success, false (0) otherwise.
+ */
 MP4V2_EXPORT
 bool MP4SetTrackBytesProperty(
     MP4FileHandle  hFile,

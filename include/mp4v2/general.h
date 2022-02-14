@@ -884,39 +884,60 @@ char* MP4BinaryToBase64(
     const uint8_t* pData,
     uint32_t       dataSize );
 
+/** Free memory allocated by other library functions.
+ *
+ *  MP4Free frees a block of memory previously allocated by another library
+ *  function.
+ *
+ *  Generally, library functions that allocate memory specify in their
+ *  documentation whether MP4Free or another function must be used to free that
+ *  memory.
+ *
+ *  @param p specifies a pointer to the memory block to free.
+ */
 MP4V2_EXPORT
 void MP4Free(
     void* p );
 
-/** Set the function to call in place of default logging behavior
+/** Set the current log handler function.
+ * 
+ *  MP4SetLogCallback sets the function to call to output diagnostic
+ *  information in place of the default log handler. The signature of the
+ *  specified function must be compatible with the MP4LogCallback typedef.
  *
- * @param cb_func the function to call
+ *  @param cb_func specifies the new log handler function.
+ *
+ *  @see MP4LogCallback
  */
 MP4V2_EXPORT
 void MP4SetLogCallback(
     MP4LogCallback cb_func );
 
-/** @} ***********************************************************************/
-
-/**
- * Accessor for the maximum level for diagnostic information
+/** Get the current maximum log level.
  *
- * See MP4LogSetLevel() for further details.
+ *  MP4LogGetLevel returns the currently set maximum level of diagnostic
+ *  information passed to the log handler.
  *
- * @return the maximum level for diagnostic information
+ *  @return the current maximum level of diagnostic information.
  *
- * @see MP4LogSetLevel()
+ *  @see MP4LogSetLevel()
  */
 MP4V2_EXPORT
 MP4LogLevel MP4LogGetLevel( void );
 
-/**
- * Set the maximum level for diagnostic information
+/** Set the maximum log level.
  *
- * @param verbosity the level to set
+ *  MP4LogSetLevel sets the maximum level of diagnostic information passed to
+ *  the current log handler.
+ *
+ *  @param verbosity specifies the log level to set.
+ *
+ *  @see MP4LogGetLevel()
  */
 MP4V2_EXPORT
 void MP4LogSetLevel(
     MP4LogLevel verbosity );
+
+/** @} ***********************************************************************/
 
 #endif /* MP4V2_GENERAL_H */
