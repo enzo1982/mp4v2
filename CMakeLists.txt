@@ -279,7 +279,7 @@ if(BUILD_SHARED)
     target_compile_definitions(mp4v2 PRIVATE MP4V2_EXPORTS)
     set_target_properties(mp4v2 PROPERTIES VERSION ${PROJECT_version} SOVERSION ${PROJECT_version_major})
 else()
-    add_library(mp4v2 STATIC${MP4V2_PUBLIC_HEADERS} ${MP4V2_PRIVATE_HEADERS} ${MP4V2_SOURCE_FILES})
+    add_library(mp4v2 STATIC ${MP4V2_PUBLIC_HEADERS} ${MP4V2_PRIVATE_HEADERS} ${MP4V2_SOURCE_FILES})
 endif()
 
 #
