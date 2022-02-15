@@ -117,24 +117,24 @@ const char* MP4NameAfterFirst(const char *s)
 
 char* MP4ToBase16(const uint8_t* pData, uint32_t dataSize)
 {
-    if (dataSize) {
-        ASSERT(pData);
-    }
-    uint32_t size = 2 * dataSize + 1;
-    char* s = (char*)MP4Calloc(size);
+    if (pData == NULL && dataSize != 0) return NULL;
 
-    uint32_t i, j;
-    for (i = 0, j = 0; i < dataSize; i++) {
-        size -= snprintf(&s[j], size, "%02x", pData[i]);
-        j += 2;
+    uint32_t size = 2 * dataSize;
+    char* s = (char*)MP4Calloc(size + 1);
+
+    for (uint32_t i = 0; i < dataSize; i++) {
+        if (snprintf(&s[2 * i], size - 2 * i, "%02x", pData[i]) != 2) {
+            MP4Free(s);
+            return NULL;
+        }
     }
 
-    return s;   /* N.B. caller is responsible for free'ing s */
+    return s;   /* N.B. caller is responsible for freeing s */
 }
 
 char* MP4ToBase64(const uint8_t* pData, uint32_t dataSize)
 {
-    if (pData == NULL || dataSize == 0) return NULL;
+    if (pData == NULL && dataSize != 0) return NULL;
 
     static const char encoding[64] = {
         'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P',
@@ -169,7 +169,7 @@ char* MP4ToBase64(const uint8_t* pData, uint32_t dataSize)
         *dest++ = '=';
     }
     *dest = '\0';
-    return s;   /* N.B. caller is responsible for free'ing s */
+    return s;   /* N.B. caller is responsible for freeing s */
 }
 
 // log2 of value, rounded up
