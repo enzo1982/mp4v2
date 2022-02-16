@@ -24,6 +24,7 @@ m4
 GNUmakefile
 GNUmakefile.in
 Makefile
+mp4v2.pc
 include/mp4v2/project.h
 libplatform/config.h
 libplatform/config.h.in

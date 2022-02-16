@@ -63,6 +63,21 @@ configure_file(libplatform/config.h.cmake libplatform/config.h)
 configure_file(include/mp4v2/project.h.in include/mp4v2/project.h)
 
 #
+# Configure pkg-config file
+#
+function(configure_pkg_config_file pkg_config_file_in)
+    set(prefix ${CMAKE_INSTALL_PREFIX})
+    set(exec_prefix \${prefix})
+    set(libdir \${prefix}/${CMAKE_INSTALL_LIBDIR})
+    set(includedir \${prefix}/${CMAKE_INSTALL_INCLUDEDIR})
+    set(VERSION ${PROJECT_version})
+    string(REPLACE ".in" "" pkg_config_file ${pkg_config_file_in})
+    configure_file(${pkg_config_file_in} ${pkg_config_file} @ONLY)
+endfunction() 
+
+configure_pkg_config_file(mp4v2.pc.in)
+
+#
 # Define MP4v2 source files
 #
 set(MP4V2_PUBLIC_HEADERS
@@ -331,6 +346,8 @@ if(BUILD_SHARED)
 else()
     install(TARGETS mp4v2 ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 endif()
+
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/mp4v2.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 
 if(BUILD_UTILS)
     install(TARGETS mp4art

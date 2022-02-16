@@ -1,0 +1,13 @@
+# libmp4v2 pkg-config file
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: mp4v2
+Description: A library for manipulating MP4 container files
+Version: @VERSION@
+
+Libs: -L${libdir} -lmp4v2
+Cflags: -I${includedir}

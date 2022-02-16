@@ -68,6 +68,12 @@ AC_ARG_ENABLE([mingw_threads],
 LT_INIT([disable-static win32-dll])
 
 ###############################################################################
+# use pkg-config
+###############################################################################
+
+PKG_PROG_PKG_CONFIG
+
+###############################################################################
 # checks for programs
 ###############################################################################
 
@@ -375,8 +381,11 @@ AH_VERBATIM([MP4V2_EXPORTS],
 
 AC_CONFIG_HEADERS([libplatform/config.h])
 
-AC_CONFIG_FILES([GNUmakefile])
-AC_CONFIG_FILES([include/mp4v2/project.h])
-AC_CONFIG_FILES([project/project.m4])
+AC_CONFIG_FILES([
+    GNUmakefile
+    mp4v2.pc
+    project/project.m4
+    include/mp4v2/project.h
+])
 
 AC_OUTPUT
