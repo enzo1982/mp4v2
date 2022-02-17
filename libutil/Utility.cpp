@@ -507,6 +507,7 @@ Utility::process_impl()
                 break;
 
             case 'f':
+                _overwrite = true;
                 _force = true;
                 break;
 
