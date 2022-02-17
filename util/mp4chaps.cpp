@@ -989,11 +989,7 @@ ChapterUtility::parseChapterFile( const string& filename, vector<MP4Chapter_t>& 
 
             formatState = FMT_STATE_FINISH;
         }
-#if defined( _MSC_VER )
-        else if( 0 == strnicmp( pos, "CHAPTER", 7 ) )
-#else
         else if( 0 == strncasecmp( pos, "CHAPTER", 7 ) )
-#endif
         {
             // common format: CHAPTERxx=hh:mm:ss.sss\nCHAPTERxxNAME=<title>
 

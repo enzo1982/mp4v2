@@ -93,6 +93,10 @@ namespace mp4v2 { namespace platform {
 #   define strcasecmp(s1,s2) _stricmp(s1,s2)
 #endif
 
+#ifndef strncasecmp
+#   define strncasecmp(s1,s2,l) _strnicmp(s1,s2,l)
+#endif
+
 ///////////////////////////////////////////////////////////////////////////////
 
 // macro clashes with symbol
