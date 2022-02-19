@@ -48,6 +48,7 @@ private:
         LC_CHPT_ANY = _LC_MAX,
         LC_CHPT_QT,
         LC_CHPT_NERO,
+        LC_CHPT_NATIVE,
         LC_CHPT_COMMON,
         LC_CHP_LIST,
         LC_CHP_CONVERT,
@@ -134,6 +135,7 @@ ChapterUtility::ChapterUtility( int argc, char** argv )
     _parmGroup.add( 'A', false, "chapter-any",   false, LC_CHPT_ANY,    "act on any chapter type (default)" );
     _parmGroup.add( 'Q', false, "chapter-qt",    false, LC_CHPT_QT,     "act on QuickTime chapters" );
     _parmGroup.add( 'N', false, "chapter-nero",  false, LC_CHPT_NERO,   "act on Nero chapters" );
+    _parmGroup.add(  0 , false, "format-native", false, LC_CHPT_NATIVE, "export chapters in native format (default)" );
     _parmGroup.add( 'C', false, "format-common", false, LC_CHPT_COMMON, "export chapters in common format" );
     _groups.push_back( &_parmGroup );
 
@@ -646,6 +648,10 @@ ChapterUtility::utility_option( int code, bool& handled )
         case 'N':
         case LC_CHPT_NERO:
             _ChapterType = MP4ChapterTypeNero;
+            break;
+
+        case LC_CHPT_NATIVE:
+            _ChapterFormat = CHPT_FMT_NATIVE;
             break;
 
         case 'C':
