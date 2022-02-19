@@ -15,14 +15,17 @@
 //  The Initial Developer of the Original Code is Ullrich Pollaehne.
 //  Portions created by Kona Blend are Copyright (C) 2008.
 //  Portions created by David Byron are Copyright (C) 2010.
+//  Portions created by Robert Kausch are Copyright (C) 2022.
 //  All Rights Reserved.
 //
 //  Contributors:
 //      Kona Blend, kona8lend@@gmail.com
 //      Ullrich Pollaehne, u.pollaehne@@gmail.com
 //      David Byron, dbyron@dbyron.com
+//      Robert Kausch, robert.kausch@freac.org
 //
 ///////////////////////////////////////////////////////////////////////////////
+
 #include "util/impl.h"
 
 namespace mp4v2 { namespace util {
@@ -388,7 +391,7 @@ ChapterUtility::actionExport( JobContext& job )
         return FAILURE;
     }
 
-    // write the chapters
+    // set up format
 #if defined( _WIN32 )
     static const char* LINEND = "\r\n";
 #else
@@ -397,10 +400,48 @@ ChapterUtility::actionExport( JobContext& job )
     File::Size nout;
     bool failure = SUCCESS;
     int width = 2;
-    if( CHPT_FMT_COMMON == _ChapterFormat && (chapterCount / 100) >= 1 )
-    {
+    if( _ChapterFormat == CHPT_FMT_COMMON && (chapterCount / 100) >= 1 )
         width = 3;
+
+    // write additional information
+    if( _ChapterFormat == CHPT_FMT_NATIVE ) {
+        ostringstream oss;
+        // write metadata
+        const MP4Tags* tags = MP4TagsAlloc();
+        MP4TagsFetch( tags, job.fileHandle );
+
+        if( tags->albumArtist && (!tags->artist || !strequal(tags->albumArtist, tags->artist)) )
+            oss << "## album-artist: " << tags->albumArtist << LINEND;
+
+        if( tags->artist )
+            oss << "## artist: " << tags->artist << LINEND;
+
+        if( tags->album && (!tags->name || !strequal(tags->album, tags->name)) )
+            oss << "## album: " << tags->album << LINEND;
+
+        if( tags->name )
+            oss << "## title: " << tags->name << LINEND;
+
+        if( oss.tellp() > 0 )
+            oss << "##" << LINEND;
+
+        MP4TagsFree( tags );
+
+        // write total duration
+        Timecode movieDuration( MP4GetDuration( job.fileHandle ),
+                                MP4GetTimeScale( job.fileHandle ) );
+        movieDuration.setScale( CHAPTERTIMESCALE );
+        movieDuration.setFormat( Timecode::DECIMAL );
+
+        oss << "## total-duration: " << movieDuration.svalue << LINEND
+            << "##" << LINEND;
+
+        string str = oss.str();
+        if( out.write( str.c_str(), str.size(), nout ) )
+            failure = herrf( "write to %s failed: %s\n", outName.c_str(), sys::getLastErrorStr() );
     }
+
+    // write the chapters
     Timecode duration( 0, CHAPTERTIMESCALE );
     duration.setFormat( Timecode::DECIMAL );
     for( uint32_t i = 0; i < chapterCount; ++i )
