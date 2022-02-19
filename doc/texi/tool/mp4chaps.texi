@@ -1,0 +1,60 @@
+@chapter mp4chaps
+This tool is used to manage mp4 chapter information, which is used to embed named seekpoints into a file, for example to identify the start of individual songs in an album or chapters in an audiobook.
+
+@table @samp
+@item --chapter-any
+act on any chapter type (default).
+Specifies the scope of the action to operate on all, if applicable, chapter types.
+
+@item --chapter-qt
+act on QuickTime chapters.
+Specifies the scope of the action to operate on QuickTime chapters.
+
+@item --chapter-nero
+act on Nero chapters.
+Specifies the scope of the action to operate on Nero chapters.
+@end table
+
+@table @samp
+@item --list
+list available chapters.
+Example output:
+
+@example
+QuickTime Chapters of "Daft Punk - Human After All.m4a"
+	Chapter #001 - 00:00:00.000 - "Human After All"
+	Chapter #002 - 00:05:19.006 - "The Prime Time of Your Life"
+	Chapter #003 - 00:09:42.379 - "Robot Rock"
+	Chapter #004 - 00:14:30.139 - "Steam Machine"
+	Chapter #005 - 00:19:50.939 - "Make Love"
+	Chapter #006 - 00:24:40.939 - "The Brainwasher"
+	Chapter #007 - 00:28:49.179 - "On/Off"
+	Chapter #008 - 00:29:08.512 - "Television Rules The Nation"
+	Chapter #009 - 00:33:56.245 - "Technologic"
+	Chapter #010 - 00:38:40.605 - "Emotion"
+@end example
+
+@item --convert
+convert available chapters.
+
+@item --every NUM
+create chapters every NUM seconds.
+
+@item --export
+export chapters to mp4file.chapters.txt.
+
+@item --format-common
+export chapters in native format (default).
+See Appendix A for a description of the different chapter file formats.
+
+@item --format-common
+export chapters in common format.
+See Appendix A for a description of the different chapter file formats.
+
+@item --import
+import chapters from mp4file.chapters.txt.
+
+@item --remove
+remove all chapters.
+
+@end table

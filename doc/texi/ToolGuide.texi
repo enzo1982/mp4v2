@@ -22,6 +22,9 @@ Operates on individual tracks with actions such as colr-box and pasp-box manipul
 
 @item mp4art
 Operates on iTunes Metadata Cover-art Boxes with actions such as list, add, replace, remove and extraction of Cover-art images.
+
+@item mp4chaps
+Operates on chapter data (QuickTime and Nero) with actions such as list, convert, import, export and removal of chapter information.
 @end table
 
 @chapter Introduction
@@ -93,3 +96,6 @@ Extended version information used for SCM purposes is not listed in help, but is
 @include tool/mp4file.texi
 @include tool/mp4track.texi
 @include tool/mp4art.texi
+@include tool/mp4chaps.texi
+
+@include tool/mp4chaps.format.texi

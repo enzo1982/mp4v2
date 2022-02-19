@@ -1,0 +1,92 @@
+@appendix mp4chaps chapter file formats
+@section @emph{Native} @samp{CHPT_FMT_NATIVE} format
+A file in the @samp{CHPT_FMT_NATIVE} format contains chapter information and
+
+@itemize @minus
+@item
+  SHOULD be stored in the form of @samp{<audio-filename>.chapters.txt}, e.g. @samp{an-example.chapters.txt} for @samp{an-example.m4a}
+@item
+  MUST use the @emph{default time format} @samp{HH:MM:SS.fff} for time declarations (e.g. @samp{00:13:14.657}; to handle very long running media, the hours field can have more than two digits)
+@item
+  MUST contain at least one @emph{chapter item} (see below)
+@end itemize
+
+Lines in @samp{CHPT_FMT_NATIVE} can have three different purposes:
+
+@enumerate
+@item
+  chapter items (with start time and title)
+@item
+  metadata items (starting with @samp{## } - a special form of comments containing metadata)
+@item
+  comments (starting with @samp{#})
+@end enumerate
+
+@subsection Chapter items
+
+Chapter items MUST be specified in the following format:
+
+@example
+<start time> <title>
+@end example
+
+where
+
+@itemize @minus
+@item
+  @samp{<start time>} is the start time of a chapter specified in the @emph{default time format}
+@item
+  followed by ONE @samp{ } (space)
+@item
+  @samp{<title>} contains printable UTF-8 encoded characters without line breaks
+@end itemize
+
+@subsection Metadata items
+
+Metadata items are OPTIONAL, can be used to embed additional information and are specified in the following format:
+
+@example
+## <key>: <value>
+@end example
+
+Metadata items:
+
+@itemize @minus
+@item
+  MUST start with @samp{## }
+@item
+  @samp{<key>} SHOULD be one of the following values and MUST use the dasherized syntax (all lowercase, uses hyphens as word separators): 
+  @itemize @minus
+  @item
+    @samp{album-artist} - the album artist as string
+  @item
+    @samp{album} - the album name as string
+  @item
+    @samp{artist} - the artist as string
+  @item
+    @samp{title} - the work title as string
+  @item
+    @samp{total-duration} - the total duration of the file in the @emph{default time format}
+  @end itemize
+@item
+  followed by ONE @samp{:} (colon)
+@item
+  @samp{<value>} contains printable UTF-8 encoded characters without line breaks
+@end itemize
+
+@subsection Comments
+
+Comments are OPTIONAL, may contain any additional textual information to enrich the content and are specified in the following format:
+
+@example
+# <additional information>
+@end example
+
+Comments:
+
+@itemize @minus
+@item
+  MUST start with @samp{#}
+@item
+  SHOULD NOT start with @samp{## } to prevent being mixed up with @emph{metadata items}
+@end itemize
