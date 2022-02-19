@@ -15,7 +15,10 @@
 Project @value{PROJECT.name} consists of a C-library and various command-line utilities which permit creation and modification of MP4 files as defined by as defined by @cite{ISO base media file format}, document number @cite{ISO/IEC 14496-12:2005(E)}.
 
 @heading Official website
-The official @url{@value{PROJECT.url.website},website} makes various @url{@value{PROJECT.url.downloads},downloads} available and archives online browesable documentation for releases, including API Reference. Questions, bug-reports and general feedback may be submitted to the @url{@value{PROJECT.url.discussion},discussion} group.
+The official @url{@value{PROJECT.url.website},website} makes various @url{@value{PROJECT.url.downloads},downloads} available and archives online browesable documentation for releases, including API Reference.
+
+@heading Issues and discussions
+Bug reports and feature requests can be submitted to the @url{@value{PROJECT.url.bugreport},issue tracker}. Questions and general feedback may be posted to the @url{@value{PROJECT.url.discussion},discussion} board.
 
 @ifnothtml
 @unnumbered Articles

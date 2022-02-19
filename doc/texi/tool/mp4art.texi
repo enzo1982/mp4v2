@@ -14,6 +14,8 @@ Specifies the scope of the action to operate on single covr-box INDEX.
 @table @samp
 @item --list
 list all covr-boxes.
+Example output:
+
 @example
 IDX     BYTES  CRC32     TYPE       FILE
 ----------------------------------------------------------------------
