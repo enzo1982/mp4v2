@@ -69,6 +69,7 @@ enum Option {
     OPT_SORT_ALBUM        = 0x0105,
     OPT_SORT_COMPOSER     = 0x0106,
     OPT_SORT_TV_SHOW      = 0x0107,
+    OPT_PURCHASE_DATE     = 0x0108,
 
     MAX_OPT
 };
@@ -127,6 +128,7 @@ static const char* const help_text =
     "      -sorttvshow      STR  Set the sort tv show\n"
     "      -sortalbumartist STR  Set the sort album artist\n"
     "      -sortcomposer    STR  Set the sort composer\n"
+    "      -purchasedate    STR  Set the purchase date\n"
     "  -r, -remove          STR  Remove tags by code (e.g. \"-r comment,song\" or\n"
     "                            \"-r cs\" removes the comment and song tags)";
 
@@ -179,6 +181,7 @@ extern "C" int
         { "sorttvshow",      prog::Option::REQUIRED_ARG, 0, OPT_SORT_TV_SHOW      },
         { "sortalbumartist", prog::Option::REQUIRED_ARG, 0, OPT_SORT_ALBUM_ARTIST },
         { "sortcomposer",    prog::Option::REQUIRED_ARG, 0, OPT_SORT_COMPOSER     },
+        { "purchasedate",    prog::Option::REQUIRED_ARG, 0, OPT_PURCHASE_DATE     },
         { "remove",          prog::Option::REQUIRED_ARG, 0, OPT_REMOVE            },
         { NULL, prog::Option::NO_ARG, 0, 0 }
     };
@@ -431,6 +434,9 @@ extern "C" int
                     case OPT_SORT_TV_SHOW:
                         MP4TagsSetSortTVShow( mdata, NULL );
                         break;
+                    case OPT_PURCHASE_DATE:
+                        MP4TagsSetPurchaseDate( mdata, NULL );
+                        break;
                 }
             }
         }
@@ -653,6 +659,9 @@ extern "C" int
                         break;
                     case OPT_SORT_TV_SHOW:
                         MP4TagsSetSortTVShow( mdata, tags[i] );
+                        break;
+                    case OPT_PURCHASE_DATE:
+                        MP4TagsSetPurchaseDate( mdata, tags[i] );
                         break;
                 }
             }
