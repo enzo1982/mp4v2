@@ -22,46 +22,56 @@ using namespace mp4v2::util;
 
 /* One-letter options -- if you want to rearrange these, change them
    here, immediately below in OPT_STRING, and in the help text. */
-#define OPT_HELP         0x01ff
-#define OPT_VERSION      0x02ff
-#define OPT_REMOVE       'r'
-#define OPT_ALBUM        'A'
-#define OPT_ARTIST       'a'
-#define OPT_TEMPO        'b'
-#define OPT_COMMENT      'c'
-#define OPT_COPYRIGHT    'C'
-#define OPT_DISK         'd'
-#define OPT_DISKS        'D'
-#define OPT_ENCODEDBY    'e'
-#define OPT_TOOL         'E'
-#define OPT_GENRE        'g'
-#define OPT_GROUPING     'G'
-#define OPT_HD           'H'
-#define OPT_MEDIA_TYPE   'i'
-#define OPT_CONTENTID    'I'
-#define OPT_LONGDESC     'l'
-#define OPT_GENREID      'j'
-#define OPT_LYRICS       'L'
-#define OPT_DESCRIPTION  'm'
-#define OPT_TVEPISODE    'M'
-#define OPT_TVSEASON     'n'
-#define OPT_TVNETWORK    'N'
-#define OPT_TVEPISODEID  'o'
-#define OPT_CATEGORY     'O'
-#define OPT_PLAYLISTID   'p'
-#define OPT_PICTURE      'P'
-#define OPT_PODCAST      'B'
-#define OPT_ALBUM_ARTIST 'R'
-#define OPT_NAME         's'
-#define OPT_TVSHOW       'S'
-#define OPT_TRACK        't'
-#define OPT_TRACKS       'T'
-#define OPT_XID          'x'
-#define OPT_RATING       'X'
-#define OPT_COMPOSER     'w'
-#define OPT_RELEASEDATE  'y'
-#define OPT_ARTISTID     'z'
-#define OPT_COMPOSERID   'Z'
+enum Option {
+    OPT_HELP              = 0x0100,
+    OPT_VERSION           = 0x0101,
+    OPT_REMOVE            = 'r',
+    OPT_ALBUM             = 'A',
+    OPT_ARTIST            = 'a',
+    OPT_TEMPO             = 'b',
+    OPT_COMMENT           = 'c',
+    OPT_COPYRIGHT         = 'C',
+    OPT_DISK              = 'd',
+    OPT_DISKS             = 'D',
+    OPT_ENCODEDBY         = 'e',
+    OPT_TOOL              = 'E',
+    OPT_GENRE             = 'g',
+    OPT_GROUPING          = 'G',
+    OPT_HD                = 'H',
+    OPT_MEDIA_TYPE        = 'i',
+    OPT_CONTENTID         = 'I',
+    OPT_LONGDESC          = 'l',
+    OPT_GENREID           = 'j',
+    OPT_LYRICS            = 'L',
+    OPT_DESCRIPTION       = 'm',
+    OPT_TVEPISODE         = 'M',
+    OPT_TVSEASON          = 'n',
+    OPT_TVNETWORK         = 'N',
+    OPT_TVEPISODEID       = 'o',
+    OPT_CATEGORY          = 'O',
+    OPT_PLAYLISTID        = 'p',
+    OPT_PICTURE           = 'P',
+    OPT_PODCAST           = 'B',
+    OPT_ALBUM_ARTIST      = 'R',
+    OPT_NAME              = 's',
+    OPT_TVSHOW            = 'S',
+    OPT_TRACK             = 't',
+    OPT_TRACKS            = 'T',
+    OPT_XID               = 'x',
+    OPT_RATING            = 'X',
+    OPT_COMPOSER          = 'w',
+    OPT_RELEASEDATE       = 'y',
+    OPT_ARTISTID          = 'z',
+    OPT_COMPOSERID        = 'Z',
+    OPT_SORT_NAME         = 0x0102,
+    OPT_SORT_ARTIST       = 0x0103,
+    OPT_SORT_ALBUM_ARTIST = 0x0104,
+    OPT_SORT_ALBUM        = 0x0105,
+    OPT_SORT_COMPOSER     = 0x0106,
+    OPT_SORT_TV_SHOW      = 0x0107,
+
+    MAX_OPT
+};
 
 #define OPT_STRING  "r:A:a:b:c:C:d:D:e:E:g:G:H:i:I:j:l:L:m:M:n:N:o:O:p:P:B:R:s:S:t:T:x:X:w:y:z:Z:"
 
@@ -71,100 +81,113 @@ static const char* const help_text =
     "OPTION... FILE...\n"
     "Adds or modifies iTunes-compatible tags on MP4 files.\n"
     "\n"
-    "      -help            Display this help text and exit\n"
-    "      -version         Display version information and exit\n"
-    "  -A, -album       STR  Set the album title\n"
-    "  -a, -artist      STR  Set the artist information\n"
-    "  -b, -tempo       NUM  Set the tempo (beats per minute)\n"
-    "  -c, -comment     STR  Set a general comment\n"
-    "  -C, -copyright   STR  Set the copyright information\n"
-    "  -d, -disk        NUM  Set the disk number\n"
-    "  -D, -disks       NUM  Set the number of disks\n"
-    "  -e, -encodedby   STR  Set the name of the person or company who encoded the file\n"
-    "  -E, -tool        STR  Set the software used for encoding\n"
-    "  -g, -genre       STR  Set the genre name\n"
-    "  -G, -grouping    STR  Set the grouping name\n"
-    "  -H, -hdvideo     NUM  Set the HD flag (1\\0)\n"
-    "  -i, -type        STR  Set the Media Type(tvshow, movie, music, ...)\n"
-    "  -I, -contentid   NUM  Set the content ID\n"
-    "  -j, -genreid     NUM  Set the genre ID\n"
-    "  -l, -longdesc    STR  Set the long description\n"
-    "  -L, -lyrics      NUM  Set the lyrics\n"
-    "  -m, -description STR  Set the short description\n"
-    "  -M, -episode     NUM  Set the episode number\n"
-    "  -n, -season      NUM  Set the season number\n"
-    "  -N, -network     STR  Set the TV network\n"
-    "  -o, -episodeid   STR  Set the TV episode ID\n"
-	"  -O, -category    STR  Set the category\n"
-    "  -p, -playlistid  NUM  Set the playlist ID\n"
-    "  -P, -picture     PTH  Set the picture as a .png\n"
-    "  -B, -podcast     NUM  Set the podcast flag.\n"
-    "  -R, -albumartist STR  Set the album artist\n"
-    "  -s, -song        STR  Set the song title\n"
-    "  -S  -show        STR  Set the TV show\n"
-    "  -t, -track       NUM  Set the track number\n"
-    "  -T, -tracks      NUM  Set the number of tracks\n"
-    "  -x, -xid         STR  Set the globally-unique xid (vendor:scheme:id)\n"
-	"  -X, -rating      STR  Set the Rating(none, clean, explicit)\n"
-    "  -w, -writer      STR  Set the composer information\n"
-    "  -y, -year        NUM  Set the release date\n"
-    "  -z, -artistid    NUM  Set the artist ID\n"
-    "  -Z, -composerid  NUM  Set the composer ID\n"
-    "  -r, -remove      STR  Remove tags by code (e.g. \"-r cs\"\n"
-    "                        removes the comment and song tags)";
+    "      -help                 Display this help text and exit\n"
+    "      -version              Display version information and exit\n"
+    "  -A, -album           STR  Set the album title\n"
+    "  -a, -artist          STR  Set the artist information\n"
+    "  -b, -tempo           NUM  Set the tempo (beats per minute)\n"
+    "  -c, -comment         STR  Set a general comment\n"
+    "  -C, -copyright       STR  Set the copyright information\n"
+    "  -d, -disk            NUM  Set the disk number\n"
+    "  -D, -disks           NUM  Set the number of disks\n"
+    "  -e, -encodedby       STR  Set the name of the person or company who encoded\n"
+    "                            the file\n"
+    "  -E, -tool            STR  Set the software used for encoding\n"
+    "  -g, -genre           STR  Set the genre name\n"
+    "  -G, -grouping        STR  Set the grouping name\n"
+    "  -H, -hdvideo         NUM  Set the HD flag (0/1)\n"
+    "  -i, -type            STR  Set the Media Type(tvshow, movie, music, ...)\n"
+    "  -I, -contentid       NUM  Set the content ID\n"
+    "  -j, -genreid         NUM  Set the genre ID\n"
+    "  -l, -longdesc        STR  Set the long description\n"
+    "  -L, -lyrics          NUM  Set the lyrics\n"
+    "  -m, -description     STR  Set the short description\n"
+    "  -M, -episode         NUM  Set the episode number\n"
+    "  -n, -season          NUM  Set the season number\n"
+    "  -N, -network         STR  Set the TV network\n"
+    "  -o, -episodeid       STR  Set the TV episode ID\n"
+    "  -O, -category        STR  Set the category\n"
+    "  -p, -playlistid      NUM  Set the playlist ID\n"
+    "  -P, -picture         PTH  Set the picture as a .png\n"
+    "  -B, -podcast         NUM  Set the podcast flag.\n"
+    "  -R, -albumartist     STR  Set the album artist\n"
+    "  -s, -song            STR  Set the song title\n"
+    "  -S  -show            STR  Set the TV show\n"
+    "  -t, -track           NUM  Set the track number\n"
+    "  -T, -tracks          NUM  Set the number of tracks\n"
+    "  -x, -xid             STR  Set the globally-unique xid (vendor:scheme:id)\n"
+    "  -X, -rating          STR  Set the Rating(none, clean, explicit)\n"
+    "  -w, -writer          STR  Set the composer information\n"
+    "  -y, -year            NUM  Set the release date\n"
+    "  -z, -artistid        NUM  Set the artist ID\n"
+    "  -Z, -composerid      NUM  Set the composer ID\n"
+    "      -sortname        STR  Set the sort name\n"
+    "      -sortartist      STR  Set the sort artist\n"
+    "      -sortalbum       STR  Set the sort album\n"
+    "      -sorttvshow      STR  Set the sort tv show\n"
+    "      -sortalbumartist STR  Set the sort album artist\n"
+    "      -sortcomposer    STR  Set the sort composer\n"
+    "  -r, -remove          STR  Remove tags by code (e.g. \"-r comment,song\" or\n"
+    "                            \"-r cs\" removes the comment and song tags)";
 
 extern "C" int
     main( int argc, char** argv )
 {
     const prog::Option long_options[] = {
-        { "help",        prog::Option::NO_ARG,       0, OPT_HELP         },
-        { "version",     prog::Option::NO_ARG,       0, OPT_VERSION      },
-        { "album",       prog::Option::REQUIRED_ARG, 0, OPT_ALBUM        },
-        { "artist",      prog::Option::REQUIRED_ARG, 0, OPT_ARTIST       },
-        { "comment",     prog::Option::REQUIRED_ARG, 0, OPT_COMMENT      },
-        { "copyright",   prog::Option::REQUIRED_ARG, 0, OPT_COPYRIGHT    },
-        { "disk",        prog::Option::REQUIRED_ARG, 0, OPT_DISK         },
-        { "disks",       prog::Option::REQUIRED_ARG, 0, OPT_DISKS        },
-        { "encodedby",   prog::Option::REQUIRED_ARG, 0, OPT_ENCODEDBY    },
-        { "tool",        prog::Option::REQUIRED_ARG, 0, OPT_TOOL         },
-        { "genre",       prog::Option::REQUIRED_ARG, 0, OPT_GENRE        },
-        { "grouping",    prog::Option::REQUIRED_ARG, 0, OPT_GROUPING     },
-        { "hdvideo",     prog::Option::REQUIRED_ARG, 0, OPT_HD           },
-        { "type",        prog::Option::REQUIRED_ARG, 0, OPT_MEDIA_TYPE   },
-        { "contentid",   prog::Option::REQUIRED_ARG, 0, OPT_CONTENTID    },
-        { "longdesc",    prog::Option::REQUIRED_ARG, 0, OPT_LONGDESC     },
-        { "genreid",     prog::Option::REQUIRED_ARG, 0, OPT_GENREID      },
-        { "lyrics",      prog::Option::REQUIRED_ARG, 0, OPT_LYRICS       },
-        { "description", prog::Option::REQUIRED_ARG, 0, OPT_DESCRIPTION  },
-        { "episode",     prog::Option::REQUIRED_ARG, 0, OPT_TVEPISODE    },
-        { "season",      prog::Option::REQUIRED_ARG, 0, OPT_TVSEASON     },
-        { "network",     prog::Option::REQUIRED_ARG, 0, OPT_TVNETWORK    },
-        { "episodeid",   prog::Option::REQUIRED_ARG, 0, OPT_TVEPISODEID  },
-        { "playlistid",  prog::Option::REQUIRED_ARG, 0, OPT_PLAYLISTID   },
-        { "picture",     prog::Option::REQUIRED_ARG, 0, OPT_PICTURE      },
-        { "podcast",     prog::Option::REQUIRED_ARG, 0, OPT_PODCAST      },
-        { "song",        prog::Option::REQUIRED_ARG, 0, OPT_NAME         },
-        { "show",        prog::Option::REQUIRED_ARG, 0, OPT_TVSHOW       },
-        { "tempo",       prog::Option::REQUIRED_ARG, 0, OPT_TEMPO        },
-        { "track",       prog::Option::REQUIRED_ARG, 0, OPT_TRACK        },
-        { "tracks",      prog::Option::REQUIRED_ARG, 0, OPT_TRACKS       },
-        { "xid",         prog::Option::REQUIRED_ARG, 0, OPT_XID          },
-        { "writer",      prog::Option::REQUIRED_ARG, 0, OPT_COMPOSER     },
-        { "year",        prog::Option::REQUIRED_ARG, 0, OPT_RELEASEDATE  },
-        { "artistid",    prog::Option::REQUIRED_ARG, 0, OPT_ARTISTID     },
-        { "composerid",  prog::Option::REQUIRED_ARG, 0, OPT_COMPOSERID   },
-        { "remove",      prog::Option::REQUIRED_ARG, 0, OPT_REMOVE       },
-        { "albumartist", prog::Option::REQUIRED_ARG, 0, OPT_ALBUM_ARTIST },
-        { "category",    prog::Option::REQUIRED_ARG, 0, OPT_CATEGORY },
-        { "rating",      prog::Option::REQUIRED_ARG, 0, OPT_RATING },
+        { "help",            prog::Option::NO_ARG,       0, OPT_HELP              },
+        { "version",         prog::Option::NO_ARG,       0, OPT_VERSION           },
+        { "album",           prog::Option::REQUIRED_ARG, 0, OPT_ALBUM             },
+        { "artist",          prog::Option::REQUIRED_ARG, 0, OPT_ARTIST            },
+        { "comment",         prog::Option::REQUIRED_ARG, 0, OPT_COMMENT           },
+        { "copyright",       prog::Option::REQUIRED_ARG, 0, OPT_COPYRIGHT         },
+        { "disk",            prog::Option::REQUIRED_ARG, 0, OPT_DISK              },
+        { "disks",           prog::Option::REQUIRED_ARG, 0, OPT_DISKS             },
+        { "encodedby",       prog::Option::REQUIRED_ARG, 0, OPT_ENCODEDBY         },
+        { "tool",            prog::Option::REQUIRED_ARG, 0, OPT_TOOL              },
+        { "genre",           prog::Option::REQUIRED_ARG, 0, OPT_GENRE             },
+        { "grouping",        prog::Option::REQUIRED_ARG, 0, OPT_GROUPING          },
+        { "hdvideo",         prog::Option::REQUIRED_ARG, 0, OPT_HD                },
+        { "type",            prog::Option::REQUIRED_ARG, 0, OPT_MEDIA_TYPE        },
+        { "contentid",       prog::Option::REQUIRED_ARG, 0, OPT_CONTENTID         },
+        { "longdesc",        prog::Option::REQUIRED_ARG, 0, OPT_LONGDESC          },
+        { "genreid",         prog::Option::REQUIRED_ARG, 0, OPT_GENREID           },
+        { "lyrics",          prog::Option::REQUIRED_ARG, 0, OPT_LYRICS            },
+        { "description",     prog::Option::REQUIRED_ARG, 0, OPT_DESCRIPTION       },
+        { "episode",         prog::Option::REQUIRED_ARG, 0, OPT_TVEPISODE         },
+        { "season",          prog::Option::REQUIRED_ARG, 0, OPT_TVSEASON          },
+        { "network",         prog::Option::REQUIRED_ARG, 0, OPT_TVNETWORK         },
+        { "episodeid",       prog::Option::REQUIRED_ARG, 0, OPT_TVEPISODEID       },
+        { "playlistid",      prog::Option::REQUIRED_ARG, 0, OPT_PLAYLISTID        },
+        { "picture",         prog::Option::REQUIRED_ARG, 0, OPT_PICTURE           },
+        { "podcast",         prog::Option::REQUIRED_ARG, 0, OPT_PODCAST           },
+        { "song",            prog::Option::REQUIRED_ARG, 0, OPT_NAME              },
+        { "show",            prog::Option::REQUIRED_ARG, 0, OPT_TVSHOW            },
+        { "tempo",           prog::Option::REQUIRED_ARG, 0, OPT_TEMPO             },
+        { "track",           prog::Option::REQUIRED_ARG, 0, OPT_TRACK             },
+        { "tracks",          prog::Option::REQUIRED_ARG, 0, OPT_TRACKS            },
+        { "xid",             prog::Option::REQUIRED_ARG, 0, OPT_XID               },
+        { "writer",          prog::Option::REQUIRED_ARG, 0, OPT_COMPOSER          },
+        { "year",            prog::Option::REQUIRED_ARG, 0, OPT_RELEASEDATE       },
+        { "artistid",        prog::Option::REQUIRED_ARG, 0, OPT_ARTISTID          },
+        { "composerid",      prog::Option::REQUIRED_ARG, 0, OPT_COMPOSERID        },
+        { "albumartist",     prog::Option::REQUIRED_ARG, 0, OPT_ALBUM_ARTIST      },
+        { "category",        prog::Option::REQUIRED_ARG, 0, OPT_CATEGORY          },
+        { "rating",          prog::Option::REQUIRED_ARG, 0, OPT_RATING            },
+        { "sortname",        prog::Option::REQUIRED_ARG, 0, OPT_SORT_NAME         },
+        { "sortartist",      prog::Option::REQUIRED_ARG, 0, OPT_SORT_ARTIST       },
+        { "sortalbum",       prog::Option::REQUIRED_ARG, 0, OPT_SORT_ALBUM        },
+        { "sorttvshow",      prog::Option::REQUIRED_ARG, 0, OPT_SORT_TV_SHOW      },
+        { "sortalbumartist", prog::Option::REQUIRED_ARG, 0, OPT_SORT_ALBUM_ARTIST },
+        { "sortcomposer",    prog::Option::REQUIRED_ARG, 0, OPT_SORT_COMPOSER     },
+        { "remove",          prog::Option::REQUIRED_ARG, 0, OPT_REMOVE            },
         { NULL, prog::Option::NO_ARG, 0, 0 }
     };
 
     /* Sparse arrays of tag data: some space is wasted, but it's more
        convenient to say tags[OPT_SONG] than to enumerate all the
        metadata types (again) as a struct. */
-    const char *tags[UCHAR_MAX];
-    uint64_t nums[UCHAR_MAX];
+    const char *tags[MAX_OPT];
+    uint64_t nums[MAX_OPT];
 
     memset( tags, 0, sizeof( tags ) );
     memset( nums, 0, sizeof( nums ) );
@@ -268,7 +291,16 @@ extern "C" int
         /* Remove any tags */
         if ( ELEMENT_OF(tags,OPT_REMOVE) ) {
             for ( const char *p = ELEMENT_OF(tags,OPT_REMOVE); *p; p++ ) {
-                switch ( *p ) {
+                int index = *p;
+                for ( int i = 0; long_options[i].name != NULL; i++ ) {
+                    size_t len = strlen( long_options[i].name );
+                    if ( strnequal( p, long_options[i].name, len ) && ( p[len] == ',' || p[len] == 0 ) ) {
+                        p += len - 1;
+                        index = long_options[i].val;
+                        break;
+                    }
+                }
+                switch ( index ) {
                     case OPT_ALBUM:
                         MP4TagsSetAlbum( mdata, NULL );
                         break;
@@ -373,13 +405,31 @@ extern "C" int
                         MP4TagsSetComposerID( mdata, NULL );
                         break;
                     case OPT_PODCAST:
-                        MP4TagsSetPodcast(mdata, NULL);
+                        MP4TagsSetPodcast( mdata, NULL );
                         break;
                     case OPT_CATEGORY:
-                        MP4TagsSetCategory(mdata, NULL);
+                        MP4TagsSetCategory( mdata, NULL );
                         break;
                     case OPT_RATING:
-                        MP4TagsSetContentRating(mdata, NULL);
+                        MP4TagsSetContentRating( mdata, NULL );
+                        break;
+                    case OPT_SORT_NAME:
+                        MP4TagsSetSortName( mdata, NULL );
+                        break;
+                    case OPT_SORT_ARTIST:
+                        MP4TagsSetSortArtist( mdata, NULL );
+                        break;
+                    case OPT_SORT_ALBUM_ARTIST:
+                        MP4TagsSetSortAlbumArtist( mdata, NULL );
+                        break;
+                    case OPT_SORT_ALBUM:
+                        MP4TagsSetSortAlbum( mdata, NULL );
+                        break;
+                    case OPT_SORT_COMPOSER:
+                        MP4TagsSetSortComposer( mdata, NULL );
+                        break;
+                    case OPT_SORT_TV_SHOW:
+                        MP4TagsSetSortTVShow( mdata, NULL );
                         break;
                 }
             }
@@ -427,7 +477,7 @@ extern "C" int
         }
 
         /* Set the other relevant attributes */
-        for ( int i = 0;  i < UCHAR_MAX;  i++ ) {
+        for ( int i = 0;  i < MAX_OPT;  i++ ) {
             if ( tags[i] ) {
                 switch ( i ) {
                     case OPT_ALBUM:
@@ -574,20 +624,36 @@ extern "C" int
                     case OPT_PODCAST:
                     {
                         uint8_t value = static_cast<uint8_t>( nums[i] );
-                        MP4TagsSetPodcast(mdata, &value);
+                        MP4TagsSetPodcast( mdata, &value );
                         break;
                     }
                     case OPT_CATEGORY:
-                    {
-                        MP4TagsSetCategory(mdata, tags[i]);
+                        MP4TagsSetCategory( mdata, tags[i] );
                         break;
-                    }
                     case OPT_RATING:
                     {
                         uint8_t rating = static_cast<uint8_t>( itmf::enumContentRating.toType( tags[i] ) ) ;
-                        MP4TagsSetContentRating(mdata, &rating);
+                        MP4TagsSetContentRating( mdata, &rating );
                         break;
                     }
+                    case OPT_SORT_NAME:
+                        MP4TagsSetSortName( mdata, tags[i] );
+                        break;
+                    case OPT_SORT_ARTIST:
+                        MP4TagsSetSortArtist( mdata, tags[i] );
+                        break;
+                    case OPT_SORT_ALBUM_ARTIST:
+                        MP4TagsSetSortAlbumArtist( mdata, tags[i] );
+                        break;
+                    case OPT_SORT_ALBUM:
+                        MP4TagsSetSortAlbum( mdata, tags[i] );
+                        break;
+                    case OPT_SORT_COMPOSER:
+                        MP4TagsSetSortComposer( mdata, tags[i] );
+                        break;
+                    case OPT_SORT_TV_SHOW:
+                        MP4TagsSetSortTVShow( mdata, tags[i] );
+                        break;
                 }
             }
         }
