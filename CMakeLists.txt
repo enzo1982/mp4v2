@@ -292,12 +292,12 @@ endif()
 # Set include folders
 #
 target_include_directories(mp4v2 PUBLIC
-   ${CMAKE_BINARY_DIR}/include
-   ${CMAKE_SOURCE_DIR}/include)
+   ${CMAKE_CURRENT_BINARY_DIR}/include
+   ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 target_include_directories(mp4v2 PRIVATE
-   ${CMAKE_BINARY_DIR}
-   ${CMAKE_SOURCE_DIR})
+   ${CMAKE_CURRENT_BINARY_DIR}
+   ${CMAKE_CURRENT_SOURCE_DIR})
 
 #
 # Define utilities targets
