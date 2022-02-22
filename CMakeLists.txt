@@ -278,15 +278,6 @@ set(LIBUTIL_SOURCE_FILES
         libutil/Timecode.cpp)
 
 #
-# Set include folders
-#
-include_directories(
-   ${CMAKE_BINARY_DIR}
-   ${CMAKE_BINARY_DIR}/include
-   ${CMAKE_SOURCE_DIR}
-   ${CMAKE_SOURCE_DIR}/include)
-
-#
 # Define library targets
 #
 if(BUILD_SHARED)
@@ -296,6 +287,15 @@ if(BUILD_SHARED)
 else()
     add_library(mp4v2 STATIC ${MP4V2_PUBLIC_HEADERS} ${MP4V2_PRIVATE_HEADERS} ${MP4V2_SOURCE_FILES})
 endif()
+
+#
+# Set include folders
+#
+target_include_directories(mp4v2 PRIVATE
+   ${CMAKE_BINARY_DIR}
+   ${CMAKE_BINARY_DIR}/include
+   ${CMAKE_SOURCE_DIR}
+   ${CMAKE_SOURCE_DIR}/include)
 
 #
 # Define utilities targets
