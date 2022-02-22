@@ -293,9 +293,7 @@ endif()
 #
 target_include_directories(mp4v2 PUBLIC
    ${CMAKE_CURRENT_BINARY_DIR}/include
-   ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-target_include_directories(mp4v2 PRIVATE
+   ${CMAKE_CURRENT_SOURCE_DIR}/include
    ${CMAKE_CURRENT_BINARY_DIR}
    ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -307,6 +305,7 @@ if(BUILD_UTILS)
        util/impl.h)
 
     add_library(util STATIC ${LIBUTIL_HEADER_FILES} ${LIBUTIL_SOURCE_FILES})
+    target_link_libraries(util mp4v2)
 
     add_executable(mp4art ${UTILITY_HEADER_FILES} util/mp4art.cpp)
     target_link_libraries(mp4art mp4v2 util)
