@@ -278,15 +278,6 @@ set(LIBUTIL_SOURCE_FILES
         libutil/Timecode.cpp)
 
 #
-# Set include folders
-#
-include_directories(
-   ${CMAKE_BINARY_DIR}
-   ${CMAKE_BINARY_DIR}/include
-   ${CMAKE_SOURCE_DIR}
-   ${CMAKE_SOURCE_DIR}/include)
-
-#
 # Define library targets
 #
 if(BUILD_SHARED)
@@ -298,6 +289,15 @@ else()
 endif()
 
 #
+# Set include folders
+#
+target_include_directories(mp4v2 PUBLIC
+   ${CMAKE_CURRENT_BINARY_DIR}/include
+   ${CMAKE_CURRENT_SOURCE_DIR}/include
+   ${CMAKE_CURRENT_BINARY_DIR}
+   ${CMAKE_CURRENT_SOURCE_DIR})
+
+#
 # Define utilities targets
 #
 if(BUILD_UTILS)
@@ -305,6 +305,7 @@ if(BUILD_UTILS)
        util/impl.h)
 
     add_library(util STATIC ${LIBUTIL_HEADER_FILES} ${LIBUTIL_SOURCE_FILES})
+    target_link_libraries(util mp4v2)
 
     add_executable(mp4art ${UTILITY_HEADER_FILES} util/mp4art.cpp)
     target_link_libraries(mp4art mp4v2 util)
