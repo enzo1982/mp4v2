@@ -236,34 +236,64 @@ MP4FileHandle MP4CreateCallbacksEx (const MP4IOCallbacks* callbacks,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-    MP4FileHandle MP4Modify(const char* fileName,
-                            uint32_t flags)
-    {
-        if (!fileName)
-            return MP4_INVALID_FILE_HANDLE;
-
-        MP4File* pFile = ConstructMP4File();
-        if (!pFile)
-            return MP4_INVALID_FILE_HANDLE;
-
-        try {
-            ASSERT(pFile);
-            // LATER useExtensibleFormat, moov first, then mvex's
-            if (pFile->Modify(fileName))
-                return (MP4FileHandle)pFile;
-        }
-        catch( Exception* x ) {
-            mp4v2::impl::log.errorf(*x);
-            delete x;
-        }
-        catch( ... ) {
-            mp4v2::impl::log.errorf("%s: \"%s\": failed", __FUNCTION__,
-                                    fileName );
-        }
-
-        delete pFile;
+MP4FileHandle MP4Modify(const char* fileName,
+                        uint32_t flags)
+{
+    if (!fileName)
         return MP4_INVALID_FILE_HANDLE;
+
+    MP4File* pFile = ConstructMP4File();
+    if (!pFile)
+        return MP4_INVALID_FILE_HANDLE;
+
+    try {
+        ASSERT(pFile);
+        // LATER useExtensibleFormat, moov first, then mvex's
+        if (pFile->Modify(fileName, NULL, NULL))
+            return (MP4FileHandle)pFile;
     }
+    catch( Exception* x ) {
+        mp4v2::impl::log.errorf(*x);
+        delete x;
+    }
+    catch( ... ) {
+        mp4v2::impl::log.errorf("%s: \"%s\": failed", __FUNCTION__,
+                                fileName );
+    }
+
+    delete pFile;
+    return MP4_INVALID_FILE_HANDLE;
+}
+
+MP4FileHandle MP4ModifyCallbacks(const MP4IOCallbacks* callbacks,
+                                 void* handle,
+                                 uint32_t flags)
+{
+    if (!callbacks)
+        return MP4_INVALID_FILE_HANDLE;
+
+    MP4File* pFile = ConstructMP4File();
+    if (!pFile)
+        return MP4_INVALID_FILE_HANDLE;
+
+    try {
+        ASSERT(pFile);
+        // LATER useExtensibleFormat, moov first, then mvex's
+        if (pFile->Modify(NULL, callbacks,
+                          handle))
+            return (MP4FileHandle)pFile;
+    }
+    catch( Exception* x ) {
+        mp4v2::impl::log.errorf(*x);
+        delete x;
+    }
+    catch( ... ) {
+        mp4v2::impl::log.errorf("%s: failed", __FUNCTION__ );
+    }
+
+    delete pFile;
+    return MP4_INVALID_FILE_HANDLE;
+}
 
     bool MP4Optimize(const char* fileName,
                      const char* newFileName)
@@ -4014,7 +4044,7 @@ MP4FileHandle MP4CreateCallbacksEx (const MP4IOCallbacks* callbacks,
 
         try {
             ASSERT(pFile);
-            pFile->Modify(fileName);
+            pFile->Modify(fileName, NULL, NULL);
             pFile->Make3GPCompliant(fileName, majorBrand, minorVersion, supportedBrands, supportedBrandsCount, deleteIodsAtom);
             pFile->Close();
             delete pFile;
@@ -4047,7 +4077,7 @@ MP4FileHandle MP4CreateCallbacksEx (const MP4IOCallbacks* callbacks,
 
         try {
             ASSERT(pFile);
-            pFile->Modify(fileName);
+            pFile->Modify(fileName, NULL, NULL);
             pFile->MakeIsmaCompliant(addIsmaComplianceSdp);
             pFile->Close();
             delete pFile;

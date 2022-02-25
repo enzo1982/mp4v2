@@ -92,7 +92,10 @@ public:
                  char**                supportedBrands = NULL,
                  uint32_t              supportedBrandsCount = 0 );
 
-    bool Modify( const char* fileName );
+    bool Modify( const char*           fileName,
+                 const MP4IOCallbacks* callbacks,
+                 void*                 handle );
+
     void Optimize( const char* srcFileName, const char* dstFileName = NULL );
     bool CopyClose( const string& copyFileName );
     void Dump( bool dumpImplicits = false );

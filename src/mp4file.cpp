@@ -165,10 +165,11 @@ void MP4File::Check64BitStatus (const char *atomName)
     }
 }
 
-
-bool MP4File::Modify( const char* fileName )
+bool MP4File::Modify( const char*           fileName,
+                      const MP4IOCallbacks* callbacks,
+                      void*                 handle )
 {
-    Open( fileName, File::MODE_MODIFY );
+    Open( fileName, File::MODE_MODIFY, NULL, callbacks, handle );
     ReadFromFile();
 
     // find the moov atom

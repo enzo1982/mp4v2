@@ -247,6 +247,9 @@ CallbacksFileProvider::write( const void* buffer, Size size, Size& nout )
 bool
 CallbacksFileProvider::truncate( Size size )
 {
+    if( !_call.truncate )
+        return true;
+
     return _call.truncate( _handle, size );
 }
 

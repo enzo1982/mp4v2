@@ -51,6 +51,10 @@ typedef struct MP4FileProvider_s
  *  Except for <b>size</b>, all the functions must return 0 upon success
  *  or a non-zero value to indicate failure. The size function must return
  *  the size of the file/buffer or -1 in case of failure.
+ *
+ *  @see MP4CreateCallbacks()
+ *  @see MP4ModifyCallbacks()
+ *  @see MP4ReadCallbacks()
  */
 typedef struct MP4IOCallbacks_s
 {
@@ -78,11 +82,11 @@ void MP4Close(
 
 /** Create a new mp4 file.
  *
- *  MP4Create is the first call that should be used when you want to create
- *  a new, empty mp4 file. It is equivalent to opening a file for writing,
- *  but also involved with creation of necessary mp4 framework structures.
- *  I.e. invoking MP4Create() followed by MP4Close() will result in a file
- *  with a non-zero size.
+ *  MP4Create is the first call that should be used when you want to create a
+ *  new, empty mp4 file. It is equivalent to opening a file for writing, but is
+ *  also involved with the creation of necessary mp4 framework structures. I.e.
+ *  invoking MP4Create() followed by MP4Close() will result in a file with a
+ *  non-zero size.
  *
  *  @param fileName pathname of the file to be created.
  *      On Windows, this should be a UTF-8 encoded string.
@@ -96,6 +100,8 @@ void MP4Close(
  *
  *  @return On success a handle of the newly created file for use in subsequent
  *      calls to the library. On error, #MP4_INVALID_FILE_HANDLE.
+ *
+ *  @see MP4CreateEx()
  */
 MP4V2_EXPORT
 MP4FileHandle MP4Create(
@@ -126,6 +132,8 @@ MP4FileHandle MP4Create(
  *
  *  @return On success a handle of the newly created file for use in subsequent
  *      calls to the library. On error, #MP4_INVALID_FILE_HANDLE.
+ *
+ *  @see MP4Create()
  */
 MP4V2_EXPORT
 MP4FileHandle MP4CreateEx(
@@ -138,13 +146,16 @@ MP4FileHandle MP4CreateEx(
     char**      compatibleBrands DEFAULT(0),
     uint32_t    compatibleBrandsCount DEFAULT(0) );
 
-/** Create a new mp4 file.
+/** Create a new mp4 file using an I/O callbacks structure.
  *
  *  MP4CreateCallbacks is the first call that should be used when you want to
- *  create a new, empty mp4 file. It is equivalent to opening a file for
- *  writing, but also involved with creation of necessary mp4 framework
- *  structures. I.e. invoking MP4CreateCallbacks() followed by MP4Close() will
- *  result in a file with a non-zero size.
+ *  create a new, empty mp4 file using custom I/O functions provided in an
+ *  MP4IOCallbacks structure.
+ *
+ *  Using MP4CreateCallbacks is equivalent to opening a file for writing, but
+ *  is also involved with the creation of necessary mp4 framework structures.
+ *  I.e. invoking MP4CreateCallbacks() followed by MP4Close() will result in a
+ *  file with a non-zero size.
  *
  *  @param callbacks custom implementation of I/O operations.
  *      The size, seek and write callbacks must be implemented.
@@ -160,6 +171,8 @@ MP4FileHandle MP4CreateEx(
  *
  *  @return On success a handle of the newly created file for use in subsequent
  *      calls to the library. On error, #MP4_INVALID_FILE_HANDLE.
+ *
+ *  @see MP4CreateCallbacksEx()
  */
 MP4V2_EXPORT
 MP4FileHandle MP4CreateCallbacks(
@@ -167,7 +180,8 @@ MP4FileHandle MP4CreateCallbacks(
     void*                 handle DEFAULT(NULL),
     uint32_t              flags DEFAULT(0));
 
-/** Create a new mp4 file with extended options.
+/** Create a new mp4 file with extended options using an I/O callbacks
+ *  structure.
  *
  *  MP4CreateCallbacksEx is an extended version of MP4CreateCallbacks().
  *
@@ -193,6 +207,8 @@ MP4FileHandle MP4CreateCallbacks(
  *
  *  @return On success a handle of the newly created file for use in subsequent
  *      calls to the library. On error, #MP4_INVALID_FILE_HANDLE.
+ *
+ *  @see MP4CreateCallbacks()
  */
 MP4V2_EXPORT
 MP4FileHandle MP4CreateCallbacksEx(
@@ -328,7 +344,7 @@ char* MP4Info(
  *  read/write mode.
  *
  *  Since modifications to an existing mp4 file can result in a sub-optimal
- *  file layout, you may want to use MP4Optimize() after you have  modified
+ *  file layout, you may want to use MP4Optimize() after you have modified
  *  and closed the mp4 file.
  *
  *  @param fileName pathname of the file to be modified.
@@ -345,6 +361,39 @@ MP4V2_EXPORT
 MP4FileHandle MP4Modify(
     const char* fileName,
     uint32_t    flags DEFAULT(0) );
+
+/** Modify an existing mp4 file using an I/O callbacks structure.
+ *
+ *  MP4ModifyCallbacks is the first call that should be used when you want to
+ *  modify an existing mp4 file using custom I/O functions provided in an
+ *  MP4IOCallbacks structure.
+
+ *  Using MP4ModifyCallbacks is roughly equivalent to opening a file in
+ *  read/write mode.
+ *
+ *  Since modifications to an existing mp4 file can result in a sub-optimal
+ *  file layout, you may want to use MP4Optimize() after you have modified and
+ *  closed the mp4 file.
+ *
+ *  @param callbacks custom implementation of I/O operations. The size, seek,
+ *      read and write callbacks must be implemented. Implementing the truncate
+ *      callback is optional, but strongly recommended. If the truncate
+ *      callback is not implemented, it must be set to NULL. The callbacks
+ *      structure is immediately copied internally.
+ *  @param handle a custom handle that will be passed as the first argument to
+ *      any callback function call. This can be used to pass a handle to an
+ *      application specific I/O object or an application defined struct
+ *      containing a pointer to a buffer.
+ *  @param flags currently ignored.
+ *
+ *  @return On success a handle of the target file for use in subsequent calls
+ *      to the library. On error, #MP4_INVALID_FILE_HANDLE.
+ */
+MP4V2_EXPORT
+MP4FileHandle MP4ModifyCallbacks(
+    const MP4IOCallbacks* callbacks,
+    void*                 handle DEFAULT(NULL),
+    uint32_t              flags DEFAULT(0) );
 
 /** Optimize the layout of an mp4 file.
  *
@@ -419,10 +468,10 @@ MP4FileHandle MP4Read(
  *      use MP4ReadCallbacks() instead.
  *
  *  MP4ReadProvider is the first call that should be used when you want to just
- *  read an existing mp4 file. It is equivalent to opening a file for
- *  reading, but in addition the mp4 file is parsed and the control
- *  information is loaded into memory. Note that actual track samples are not
- *  read into memory until MP4ReadSample() is called.
+ *  read an existing mp4 file. It is equivalent to opening a file for reading,
+ *  but in addition the mp4 file is parsed and the control information is
+ *  loaded into memory. Note that actual track samples are not read into memory
+ *  until MP4ReadSample() is called.
  *
  *  @param fileName pathname of the file to be read.
  *      On Windows, this should be a UTF-8 encoded string.
@@ -443,13 +492,16 @@ MP4FileHandle MP4ReadProvider(
     const char*            fileName,
     const MP4FileProvider* fileProvider DEFAULT(NULL) );
 
-/** Read an existing mp4 file.
+/** Read an existing mp4 file using an I/O callbacks structure.
  *
  *  MP4ReadCallbacks is the first call that should be used when you want to
- *  just read an existing mp4 file. It is equivalent to opening a file for
- *  reading, but in addition the mp4 file is parsed and the control
- *  information is loaded into memory. Note that actual track samples are not
- *  read into memory until MP4ReadSample() is called.
+ *  read an existing mp4 file using custom I/O functions provided in an
+ *  MP4IOCallbacks structure.
+ *
+ *  Using MP4ReadCallbacks is equivalent to opening a file for reading, but in
+ *  addition the mp4 file is parsed and the control information is loaded into
+ *  memory. Note that actual track samples are not read into memory until
+ *  MP4ReadSample() is called.
  *
  *  @param callbacks custom implementation of I/O operations.
  *      The size, seek and read callbacks must be implemented.
