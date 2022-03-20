@@ -43,7 +43,7 @@ void MP4FreeAtom::Write()
 
     static uint8_t freebuf[1024];
     for (uint64_t ix = 0; ix < GetSize(); ix += sizeof(freebuf)) {
-        m_File.WriteBytes(freebuf, min(GetSize() - ix, sizeof(freebuf)));
+        m_File.WriteBytes(freebuf, min(GetSize() - ix, (uint64_t)sizeof(freebuf)));
     }
 
     FinishWrite(use64);
