@@ -1,0 +1,120 @@
+@enumerate
+@item
+  API changes:
+
+  @itemize @minus
+  @item
+    Added public API functions MP4ReadCallbacks, MP4CreateCallbacks[Ex] and MP4ModifyCallbacks[Ex] to allow working with custom I/O routines and memory buffers.
+
+  @item
+    Added public API function MP4FreeH264SeqPictHeaders to free memory allocated by MP4GetTrackH264SeqPictHeaders.
+  @end itemize
+
+@item
+  General improvements:
+
+  @itemize @minus
+  @item
+    I/O system:
+
+    @itemize @minus
+    @item
+      Switched to ANSI C file I/O on Windows for improved performance with large files.
+
+    @item
+      Handle extended paths (prefixed with \\?\ or \\?\UNC\) on Windows.
+    @end itemize
+
+  @item
+    MP4Modify behavior:
+
+    @itemize @minus
+    @item
+      Attempt to truncate files if when modify reduces their size instead of filling space with a free atom.
+
+    @item
+      Attempt to keep moov atom at the start of the file if it does not increase in size.
+
+    @item
+      Do not leave empty mdat atoms behind after modify.
+    @end itemize
+  @end itemize
+
+@item
+  Tools improvements:
+
+  @itemize @minus
+  @item
+    Write total length and additonal metadata to .chapters.txt files when exporting chapters with mp4chaps.
+
+  @item
+    Added options for modifying sort tags (sortartist, sortname etc.) to mp4tags.
+  @end itemize
+
+@item
+  Documentation improvements:
+
+  @itemize @minus
+  @item
+    Converted old API documentation man pages to Doxygen comments in the public header files.
+  @end itemize
+
+@item
+  Build system improvements:
+
+  @itemize @minus
+  @item
+    Updated the Autotools build system:
+
+    @itemize @minus
+    @item
+      Fixed building as a shared library on Windows.
+
+    @item
+      Added support for pkg-config.
+    @end itemize
+
+  @item
+    Added support for building with CMake.
+
+  @item
+    Upgraded Visual Studio solution and projects for Visual Studio 2022.
+
+  @item
+    Added Xcode project files.
+  @end itemize
+
+@item
+  Bug fixes:
+
+  @itemize @minus
+  @item
+    Fixed issues handling files with sample times exceeding 2^32.
+
+  @item
+    Fixed compile errors and warnings with newer versions of GCC/Clang.
+  @end itemize
+
+@item
+  Vulnerability fixes:
+
+  @itemize @minus
+  @item
+    https://nvd.nist.gov/vuln/detail/CVE-2018-14054
+  @item
+    https://nvd.nist.gov/vuln/detail/CVE-2018-14325
+  @item
+    https://nvd.nist.gov/vuln/detail/CVE-2018-14326
+  @item
+    https://nvd.nist.gov/vuln/detail/CVE-2018-14379
+  @item
+    https://nvd.nist.gov/vuln/detail/CVE-2018-14403
+  @item
+    https://nvd.nist.gov/vuln/detail/CVE-2018-14446
+  @item
+    https://nvd.nist.gov/vuln/detail/CVE-2018-17235
+  @item
+    https://nvd.nist.gov/vuln/detail/CVE-2018-17236
+  @end itemize
+
+@end enumerate
