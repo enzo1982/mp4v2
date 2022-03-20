@@ -740,7 +740,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <p>MP4ReadSample reads the specified sample from the specified track. Typically this sample is then decoded in a codec dependent fashion and rendered in an appropriate fashion.</p>
 <p>The argument <b>ppBytes</b> allows for two possible approaches for buffering:</p>
 <p>If the calling application wishes to handle its own buffering it can set *ppBytes to the buffer it wishes to use. The calling application is responsible for ensuring that the buffer is large enough to hold the sample. This can be done by using either <a class="el" href="group__mp4__sample.html#ga09a60dc0c9532581e888fe31251096fa" title="Get size of a track sample.">MP4GetSampleSize()</a> or <a class="el" href="group__mp4__sample.html#ga10dbc113e94a614b4b99a5f107c99fad" title="Get the maximum sample size of a track.">MP4GetTrackMaxSampleSize()</a> to determine beforehand how large the receiving buffer must be.</p>
-<p>If the value of *ppBytes is NULL, then an appropriately sized buffer is automatically allocated for the sample data and *ppBytes set to this pointer. The calling application is responsible for freeing this memory with MP4Free().</p>
+<p>If the value of *ppBytes is NULL, then an appropriately sized buffer is automatically allocated for the sample data and *ppBytes set to this pointer. The calling application is responsible for freeing this memory with <a class="el" href="group__mp4__general.html#gae8e637de6de5b4663ee36b6eb576a827" title="Free memory allocated by other library functions.">MP4Free()</a>.</p>
 <p>The last four arguments are pointers to variables that can receive optional sample information.</p>
 <p>Typically for audio none of these are needed. MPEG audio such as MP3 or AAC has a fixed sample duration and every sample can be accessed at random.</p>
 <p>For video, all of these optional values could be needed. MPEG video can be encoded at a variable frame rate, with only occasional random access points, and with "B frames" which cause the rendering (display) order of the video frames to differ from the storage/decoding order.</p>
@@ -838,7 +838,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <p>MP4ReadSampleFromTime is similar to <a class="el" href="group__mp4__sample.html#ga8d62988a2bc1563546b4b420d782377b" title="Read a track sample.">MP4ReadSample()</a> except the sample is specified by using a timestamp instead of sampleId. Typically this sample is then decoded in a codec dependent fashion and rendered in an appropriate fashion.</p>
 <p>The argument <b>ppBytes</b> allows for two possible approaches for buffering:</p>
 <p>If the calling application wishes to handle its own buffering it can set *ppBytes to the buffer it wishes to use. The calling application is responsible for ensuring that the buffer is large enough to hold the sample. This can be done by using either <a class="el" href="group__mp4__sample.html#ga09a60dc0c9532581e888fe31251096fa" title="Get size of a track sample.">MP4GetSampleSize()</a> or <a class="el" href="group__mp4__sample.html#ga10dbc113e94a614b4b99a5f107c99fad" title="Get the maximum sample size of a track.">MP4GetTrackMaxSampleSize()</a> to determine beforehand how large the receiving buffer must be.</p>
-<p>If the value of *ppBytes is NULL, then an appropriately sized buffer is automatically allocated for the sample data and *ppBytes set to this pointer. The calling application is responsible for freeing this memory with MP4Free().</p>
+<p>If the value of *ppBytes is NULL, then an appropriately sized buffer is automatically allocated for the sample data and *ppBytes set to this pointer. The calling application is responsible for freeing this memory with <a class="el" href="group__mp4__general.html#gae8e637de6de5b4663ee36b6eb576a827" title="Free memory allocated by other library functions.">MP4Free()</a>.</p>
 <p>The last four arguments are pointers to variables that can receive optional sample information.</p>
 <p>Typically for audio none of these are needed. MPEG audio such as MP3 or AAC has a fixed sample duration and every sample can be accessed at random.</p>
 <p>For video, all of these optional values could be needed. MPEG video can be encoded at a variable frame rate, with only occasional random access points, and with "B frames" which cause the rendering (display) order of the video frames to differ from the storage/decoding order.</p>
@@ -1093,7 +1093,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 </div><!-- contents -->
 <address class="footer">
     <small>
-        generated on Mon Feb 14 2022 21:13:01 for <b>MP4v2 2.1.0</b>
+        generated on Sun Mar 20 2022 20:28:41 for <b>MP4v2 2.1.0</b>
         by <a href="https://www.doxygen.org/index.html">Doxygen</a> 1.8.17
     </small>
 </address>

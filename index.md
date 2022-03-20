@@ -36,7 +36,7 @@ Ultimately, my goal for this project is for it to be recognized as the official 
 	- Add support for building with CMake ✔️
 	- Update/add Visual Studio and Xcode projects ✔️
 - Update code
-	- Import fixes made in various MP4v2 forks since the abandonment of the original project 👷
+	- Import fixes made in various MP4v2 forks since the abandonment of the original project ✔️
 	- Fix compiler warnings and errors ✔️
 	- Fix issues found by Cppcheck ✔️
 	- Fix open CVEs:
@@ -45,7 +45,7 @@ Ultimately, my goal for this project is for it to be recognized as the official 
 		- [https://nvd.nist.gov/vuln/detail/CVE-2018-17235](https://nvd.nist.gov/vuln/detail/CVE-2018-17235) ✔️
 		- [https://nvd.nist.gov/vuln/detail/CVE-2018-17236](https://nvd.nist.gov/vuln/detail/CVE-2018-17236) ✔️
 - New features
-	- Add proper callback based I/O to replace MP4ReadProvider and MP4CreateProvider[Ex] 👷️
+	- Add proper callback based I/O to replace MP4ReadProvider and MP4CreateProvider[Ex] ✔️
 - Update documentation
 	- Update outdated API man pages and move their contents to Doxygen comments in header files ✔️
 	- Regenerate Doxygen API documentation ✔️
@@ -56,6 +56,7 @@ Ultimately, my goal for this project is for it to be recognized as the official 
 	- Support for HEVC and AV1 video tracks
 	- Improved tagging support
 	- [to be defined after analyzing changes in MP4v2 forks]
+- Add support for automatically switching to 64 bit mode when file size exceeds 4 GB
 
 #### Mid term - *MP4v2 v3.0.0*
 - Add API functions for defining custom atoms

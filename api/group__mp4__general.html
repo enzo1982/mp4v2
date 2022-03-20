@@ -647,12 +647,18 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>MP4Make3GPCompliant</
 <tr class="memitem:ga81083f11ae76990c46656d3f9271eefa"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__mp4__general.html#ga81083f11ae76990c46656d3f9271eefa">MP4BinaryToBase64</a> (const uint8_t *pData, uint32_t dataSize)</td></tr>
 <tr class="memdesc:ga81083f11ae76990c46656d3f9271eefa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert binary data to a base 64 string.  <a href="group__mp4__general.html#ga81083f11ae76990c46656d3f9271eefa">More...</a><br /></td></tr>
 <tr class="separator:ga81083f11ae76990c46656d3f9271eefa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae8e637de6de5b4663ee36b6eb576a827"><td class="memItemLeft" align="right" valign="top"><a id="gae8e637de6de5b4663ee36b6eb576a827"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>MP4Free</b> (void *p)</td></tr>
+<tr class="memitem:gae8e637de6de5b4663ee36b6eb576a827"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__mp4__general.html#gae8e637de6de5b4663ee36b6eb576a827">MP4Free</a> (void *p)</td></tr>
+<tr class="memdesc:gae8e637de6de5b4663ee36b6eb576a827"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free memory allocated by other library functions.  <a href="group__mp4__general.html#gae8e637de6de5b4663ee36b6eb576a827">More...</a><br /></td></tr>
 <tr class="separator:gae8e637de6de5b4663ee36b6eb576a827"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga95fb48c8d31d2ad10a0e95bfc64d99e4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__mp4__general.html#ga95fb48c8d31d2ad10a0e95bfc64d99e4">MP4SetLogCallback</a> (MP4LogCallback cb_func)</td></tr>
-<tr class="memdesc:ga95fb48c8d31d2ad10a0e95bfc64d99e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the function to call in place of default logging behavior.  <a href="group__mp4__general.html#ga95fb48c8d31d2ad10a0e95bfc64d99e4">More...</a><br /></td></tr>
+<tr class="memdesc:ga95fb48c8d31d2ad10a0e95bfc64d99e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the current log handler function.  <a href="group__mp4__general.html#ga95fb48c8d31d2ad10a0e95bfc64d99e4">More...</a><br /></td></tr>
 <tr class="separator:ga95fb48c8d31d2ad10a0e95bfc64d99e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac50d49b962932e906c5260bbbd1d09c8"><td class="memItemLeft" align="right" valign="top">MP4LogLevel&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__mp4__general.html#gac50d49b962932e906c5260bbbd1d09c8">MP4LogGetLevel</a> (void)</td></tr>
+<tr class="memdesc:gac50d49b962932e906c5260bbbd1d09c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current maximum log level.  <a href="group__mp4__general.html#gac50d49b962932e906c5260bbbd1d09c8">More...</a><br /></td></tr>
+<tr class="separator:gac50d49b962932e906c5260bbbd1d09c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga45c9e00f98d03b3b1062bdbf8b6eb0cf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__mp4__general.html#ga45c9e00f98d03b3b1062bdbf8b6eb0cf">MP4LogSetLevel</a> (MP4LogLevel verbosity)</td></tr>
+<tr class="memdesc:ga45c9e00f98d03b3b1062bdbf8b6eb0cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the maximum log level.  <a href="group__mp4__general.html#ga45c9e00f98d03b3b1062bdbf8b6eb0cf">More...</a><br /></td></tr>
+<tr class="separator:ga45c9e00f98d03b3b1062bdbf8b6eb0cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Macro Definition Documentation</h2>
@@ -892,7 +898,7 @@ MP4EncAndCopyTrack() </dd></dl>
 </div><div class="memdoc">
 
 <p>Convert binary data to a base 16 string. </p>
-<p>MP4BinaryToBase16 converts binary data to a base 16 string. This encoding maps groups of 4 bits into the character set [0-9a-f]. The string is in newly allocated memory, so the caller is responsible for freeing the memory with MP4Free().</p>
+<p>MP4BinaryToBase16 converts binary data to a base 16 string. This encoding maps groups of 4 bits into the character set [0-9a-f]. The string is in newly allocated memory, so the caller is responsible for freeing the memory with <a class="el" href="group__mp4__general.html#gae8e637de6de5b4663ee36b6eb576a827" title="Free memory allocated by other library functions.">MP4Free()</a>.</p>
 <p>This utility is useful for generating the SDP descriptions for some RTP payloads.</p>
 <p>Example: </p><div class="fragment"><div class="line">0x12, 0xAB -&gt; <span class="stringliteral">&quot;12ab&quot;</span></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
@@ -933,7 +939,7 @@ MP4EncAndCopyTrack() </dd></dl>
 </div><div class="memdoc">
 
 <p>Convert binary data to a base 64 string. </p>
-<p>MP4BinaryToBase64 converts binary data to a base 64 string. This encoding maps groups of 6 bits into the character set [A-Za-z0-9+/=]. The string is in newly allocated memory, so the caller is responsible for freeing the memory with MP4Free().</p>
+<p>MP4BinaryToBase64 converts binary data to a base 64 string. This encoding maps groups of 6 bits into the character set [A-Za-z0-9+/=]. The string is in newly allocated memory, so the caller is responsible for freeing the memory with <a class="el" href="group__mp4__general.html#gae8e637de6de5b4663ee36b6eb576a827" title="Free memory allocated by other library functions.">MP4Free()</a>.</p>
 <p>This utility is useful for generating the SDP descriptions for some RTP payloads.</p>
 <p>Example: </p><div class="fragment"><div class="line">0x12, 0xAB -&gt; <span class="stringliteral">&quot;Eqs=&quot;</span></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
@@ -1257,6 +1263,34 @@ MP4EncAndCopyTrack() </dd></dl>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Upon success, true (1). Upon an error, false (0).</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="group__mp4__general.html#ga674e8110b8c4b7606969d252e8465a76" title="Add an edit segment to a track.">MP4AddTrackEdit()</a> </dd></dl>
+
+</div>
+</div>
+<a id="gae8e637de6de5b4663ee36b6eb576a827"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae8e637de6de5b4663ee36b6eb576a827">&#9670;&nbsp;</a></span>MP4Free()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MP4Free </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>p</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Free memory allocated by other library functions. </p>
+<p>MP4Free frees a block of memory previously allocated by another library function.</p>
+<p>Generally, library functions that allocate memory specify in their documentation whether MP4Free or another function must be used to free that memory.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">p</td><td>specifies a pointer to the memory block to free. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -1632,6 +1666,57 @@ MP4EncAndCopyTrack() </dd></dl>
 
 </div>
 </div>
+<a id="gac50d49b962932e906c5260bbbd1d09c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac50d49b962932e906c5260bbbd1d09c8">&#9670;&nbsp;</a></span>MP4LogGetLevel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MP4LogLevel MP4LogGetLevel </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the current maximum log level. </p>
+<p>MP4LogGetLevel returns the currently set maximum level of diagnostic information passed to the log handler.</p>
+<dl class="section return"><dt>Returns</dt><dd>the current maximum level of diagnostic information.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__mp4__general.html#ga45c9e00f98d03b3b1062bdbf8b6eb0cf" title="Set the maximum log level.">MP4LogSetLevel()</a> </dd></dl>
+
+</div>
+</div>
+<a id="ga45c9e00f98d03b3b1062bdbf8b6eb0cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga45c9e00f98d03b3b1062bdbf8b6eb0cf">&#9670;&nbsp;</a></span>MP4LogSetLevel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MP4LogSetLevel </td>
+          <td>(</td>
+          <td class="paramtype">MP4LogLevel&#160;</td>
+          <td class="paramname"><em>verbosity</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the maximum log level. </p>
+<p>MP4LogSetLevel sets the maximum level of diagnostic information passed to the current log handler.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">verbosity</td><td>specifies the log level to set.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__mp4__general.html#gac50d49b962932e906c5260bbbd1d09c8" title="Get the current maximum log level.">MP4LogGetLevel()</a> </dd></dl>
+
+</div>
+</div>
 <a id="ga83709b1cf21b92dd0f35f21f16f4acde"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga83709b1cf21b92dd0f35f21f16f4acde">&#9670;&nbsp;</a></span>MP4ReadSampleFromEditTime()</h2>
 
@@ -1707,7 +1792,7 @@ MP4EncAndCopyTrack() </dd></dl>
 <li>If the calling application wishes to handle its own buffering it can set <b>*ppBytes</b> to the buffer it wishes to use. The calling application is responsible for ensuring that the buffer is large enough to hold the sample. This can be done by using either <a class="el" href="group__mp4__sample.html#ga09a60dc0c9532581e888fe31251096fa" title="Get size of a track sample.">MP4GetSampleSize()</a> or <a class="el" href="group__mp4__sample.html#ga10dbc113e94a614b4b99a5f107c99fad" title="Get the maximum sample size of a track.">MP4GetTrackMaxSampleSize()</a> to determine beforehand how large the receiving buffer must be.</li>
 </ul>
 <ul>
-<li>If the value of <b>*ppBytes</b> is NULL, then an appropriately sized buffer is automatically allocated for the sample data and <b>*ppBytes</b> set to this pointer. The calling application is responsible for freeing this memory with MP4Free().</li>
+<li>If the value of <b>*ppBytes</b> is NULL, then an appropriately sized buffer is automatically allocated for the sample data and <b>*ppBytes</b> set to this pointer. The calling application is responsible for freeing this memory with <a class="el" href="group__mp4__general.html#gae8e637de6de5b4663ee36b6eb576a827" title="Free memory allocated by other library functions.">MP4Free()</a>.</li>
 </ul>
 <p>The last four arguments are pointers to variables that can receive optional sample information.</p>
 <p>Typically for audio none of these are needed. MPEG audio such as MP3 or AAC has a fixed sample duration and every sample can be accessed at random.</p>
@@ -1752,13 +1837,15 @@ MP4EncAndCopyTrack() </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p>Set the function to call in place of default logging behavior. </p>
+<p>Set the current log handler function. </p>
+<p>MP4SetLogCallback sets the function to call to output diagnostic information in place of the default log handler. The signature of the specified function must be compatible with the MP4LogCallback typedef.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">cb_func</td><td>the function to call </td></tr>
+    <tr><td class="paramname">cb_func</td><td>specifies the new log handler function.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section see"><dt>See also</dt><dd>MP4LogCallback </dd></dl>
 
 </div>
 </div>
@@ -1944,7 +2031,7 @@ MP4EncAndCopyTrack() </dd></dl>
 <div class="ttc" id="agroup__mp4__general_html_gaf491d913c31bd5db7f2be180984bd045"><div class="ttname"><a href="group__mp4__general.html#gaf491d913c31bd5db7f2be180984bd045">MP4_CLOCK_TRACK_TYPE</a></div><div class="ttdeci">#define MP4_CLOCK_TRACK_TYPE</div><div class="ttdoc">Constant: clock track.</div><div class="ttdef"><b>Definition:</b> general.h:82</div></div>
 <address class="footer">
     <small>
-        generated on Mon Feb 14 2022 21:13:01 for <b>MP4v2 2.1.0</b>
+        generated on Sun Mar 20 2022 20:28:40 for <b>MP4v2 2.1.0</b>
         by <a href="https://www.doxygen.org/index.html">Doxygen</a> 1.8.17
     </small>
 </address>

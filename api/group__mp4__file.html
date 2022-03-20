@@ -110,13 +110,13 @@ Functions</h2></td></tr>
 <tr class="memdesc:gaf2af31d01ce33096ba5cd0304b23b584"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new mp4 file with extended options.  <a href="group__mp4__file.html#gaf2af31d01ce33096ba5cd0304b23b584">More...</a><br /></td></tr>
 <tr class="separator:gaf2af31d01ce33096ba5cd0304b23b584"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae961aa94d0b0747bfcd54f72d1b24c22"><td class="memItemLeft" align="right" valign="top">MP4FileHandle&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__mp4__file.html#gae961aa94d0b0747bfcd54f72d1b24c22">MP4CreateCallbacks</a> (const <a class="el" href="group__mp4__file.html#ga725e5bf294b29d5d4c105f402d109afb">MP4IOCallbacks</a> *callbacks, void *handle=NULL, uint32_t flags=0)</td></tr>
-<tr class="memdesc:gae961aa94d0b0747bfcd54f72d1b24c22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new mp4 file.  <a href="group__mp4__file.html#gae961aa94d0b0747bfcd54f72d1b24c22">More...</a><br /></td></tr>
+<tr class="memdesc:gae961aa94d0b0747bfcd54f72d1b24c22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new mp4 file using an I/O callbacks structure.  <a href="group__mp4__file.html#gae961aa94d0b0747bfcd54f72d1b24c22">More...</a><br /></td></tr>
 <tr class="separator:gae961aa94d0b0747bfcd54f72d1b24c22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3dff1533f7dcb2a3432e1b92b78a44f3"><td class="memItemLeft" align="right" valign="top">MP4FileHandle&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__mp4__file.html#ga3dff1533f7dcb2a3432e1b92b78a44f3">MP4CreateCallbacksEx</a> (const <a class="el" href="group__mp4__file.html#ga725e5bf294b29d5d4c105f402d109afb">MP4IOCallbacks</a> *callbacks, void *handle=NULL, uint32_t flags=0, int add_ftyp=1, int add_iods=1, char *majorBrand=0, uint32_t minorVersion=0, char **compatibleBrands=0, uint32_t compatibleBrandsCount=0)</td></tr>
-<tr class="memdesc:ga3dff1533f7dcb2a3432e1b92b78a44f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new mp4 file with extended options.  <a href="group__mp4__file.html#ga3dff1533f7dcb2a3432e1b92b78a44f3">More...</a><br /></td></tr>
+<tr class="memdesc:ga3dff1533f7dcb2a3432e1b92b78a44f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new mp4 file with extended options using an I/O callbacks structure.  <a href="group__mp4__file.html#ga3dff1533f7dcb2a3432e1b92b78a44f3">More...</a><br /></td></tr>
 <tr class="separator:ga3dff1533f7dcb2a3432e1b92b78a44f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga37be2b29448d5d453f3e7b0857f7cb3d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__mp4__file.html#ga37be2b29448d5d453f3e7b0857f7cb3d">MP4Dump</a> (MP4FileHandle hFile, bool dumpImplicits=0)</td></tr>
-<tr class="memdesc:ga37be2b29448d5d453f3e7b0857f7cb3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dump mp4 file contents as ASCII either to stdout or the log callback (see <a class="el" href="group__mp4__general.html#ga95fb48c8d31d2ad10a0e95bfc64d99e4" title="Set the function to call in place of default logging behavior.">MP4SetLogCallback()</a>)  <a href="group__mp4__file.html#ga37be2b29448d5d453f3e7b0857f7cb3d">More...</a><br /></td></tr>
+<tr class="memdesc:ga37be2b29448d5d453f3e7b0857f7cb3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dump mp4 file contents as ASCII either to stdout or the log callback (see <a class="el" href="group__mp4__general.html#ga95fb48c8d31d2ad10a0e95bfc64d99e4" title="Set the current log handler function.">MP4SetLogCallback()</a>)  <a href="group__mp4__file.html#ga37be2b29448d5d453f3e7b0857f7cb3d">More...</a><br /></td></tr>
 <tr class="separator:ga37be2b29448d5d453f3e7b0857f7cb3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5a77cfc76a54fbd45d4cecec0f7ff373"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__mp4__file.html#ga5a77cfc76a54fbd45d4cecec0f7ff373">MP4FileInfo</a> (const char *fileName, MP4TrackId trackId=<a class="el" href="group__mp4__general.html#ga20022a4a97dd9c2031ae2a1ef6db7241">MP4_INVALID_TRACK_ID</a>)</td></tr>
 <tr class="memdesc:ga5a77cfc76a54fbd45d4cecec0f7ff373"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a textual summary of an mp4 file.  <a href="group__mp4__file.html#ga5a77cfc76a54fbd45d4cecec0f7ff373">More...</a><br /></td></tr>
@@ -130,6 +130,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga3fc8331224485351cfbaec4d0194b623"><td class="memItemLeft" align="right" valign="top">MP4FileHandle&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__mp4__file.html#ga3fc8331224485351cfbaec4d0194b623">MP4Modify</a> (const char *fileName, uint32_t flags=0)</td></tr>
 <tr class="memdesc:ga3fc8331224485351cfbaec4d0194b623"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modify an existing mp4 file.  <a href="group__mp4__file.html#ga3fc8331224485351cfbaec4d0194b623">More...</a><br /></td></tr>
 <tr class="separator:ga3fc8331224485351cfbaec4d0194b623"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga99b7a99a4855316fba1c1dba3365ae07"><td class="memItemLeft" align="right" valign="top">MP4FileHandle&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__mp4__file.html#ga99b7a99a4855316fba1c1dba3365ae07">MP4ModifyCallbacks</a> (const <a class="el" href="group__mp4__file.html#ga725e5bf294b29d5d4c105f402d109afb">MP4IOCallbacks</a> *callbacks, void *handle=NULL, uint32_t flags=0)</td></tr>
+<tr class="memdesc:ga99b7a99a4855316fba1c1dba3365ae07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modify an existing mp4 file using an I/O callbacks structure.  <a href="group__mp4__file.html#ga99b7a99a4855316fba1c1dba3365ae07">More...</a><br /></td></tr>
+<tr class="separator:ga99b7a99a4855316fba1c1dba3365ae07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga92ec3d4bc643cc9fc9eb5731ea60443a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__mp4__file.html#ga92ec3d4bc643cc9fc9eb5731ea60443a">MP4Optimize</a> (const char *fileName, const char *newFileName=NULL)</td></tr>
 <tr class="memdesc:ga92ec3d4bc643cc9fc9eb5731ea60443a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optimize the layout of an mp4 file.  <a href="group__mp4__file.html#ga92ec3d4bc643cc9fc9eb5731ea60443a">More...</a><br /></td></tr>
 <tr class="separator:ga92ec3d4bc643cc9fc9eb5731ea60443a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -140,7 +143,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:gad244931e122a46370c0c33842fef9b71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an existing mp4 file.  <a href="group__mp4__file.html#gad244931e122a46370c0c33842fef9b71">More...</a><br /></td></tr>
 <tr class="separator:gad244931e122a46370c0c33842fef9b71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae03164071fc6eb30b2d8270b080ecf24"><td class="memItemLeft" align="right" valign="top">MP4FileHandle&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__mp4__file.html#gae03164071fc6eb30b2d8270b080ecf24">MP4ReadCallbacks</a> (const <a class="el" href="group__mp4__file.html#ga725e5bf294b29d5d4c105f402d109afb">MP4IOCallbacks</a> *callbacks, void *handle=NULL)</td></tr>
-<tr class="memdesc:gae03164071fc6eb30b2d8270b080ecf24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an existing mp4 file.  <a href="group__mp4__file.html#gae03164071fc6eb30b2d8270b080ecf24">More...</a><br /></td></tr>
+<tr class="memdesc:gae03164071fc6eb30b2d8270b080ecf24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an existing mp4 file using an I/O callbacks structure.  <a href="group__mp4__file.html#gae03164071fc6eb30b2d8270b080ecf24">More...</a><br /></td></tr>
 <tr class="separator:gae03164071fc6eb30b2d8270b080ecf24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -213,7 +216,12 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Structure of functions implementing custom I/O callbacks. </p>
-<p>Except for <b>size</b>, all the functions must return 0 upon success or a non-zero value to indicate failure. The size function must return the size of the file/buffer or -1 in case of failure. </p>
+<p>Except for <b>size</b>, all the functions must return 0 upon success or a non-zero value to indicate failure. The size function must return the size of the file/buffer or -1 in case of failure.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__mp4__file.html#gae961aa94d0b0747bfcd54f72d1b24c22" title="Create a new mp4 file using an I/O callbacks structure.">MP4CreateCallbacks()</a> </dd>
+<dd>
+<a class="el" href="group__mp4__file.html#ga99b7a99a4855316fba1c1dba3365ae07" title="Modify an existing mp4 file using an I/O callbacks structure.">MP4ModifyCallbacks()</a> </dd>
+<dd>
+<a class="el" href="group__mp4__file.html#gae03164071fc6eb30b2d8270b080ecf24" title="Read an existing mp4 file using an I/O callbacks structure.">MP4ReadCallbacks()</a> </dd></dl>
 
 </div>
 </div>
@@ -283,7 +291,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="example_2itmf_2generic_8c-example.html#a22">example/itmf/generic.c</a>, <a class="el" href="example_2itmf_2tags_8c-example.html#a66">example/itmf/tags.c</a>, and <a class="el" href="example_2provider_2provider_8c-example.html#a13">example/provider/provider.c</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="example_2callbacks_2callbacks_8c-example.html#a7">example/callbacks/callbacks.c</a>, <a class="el" href="example_2itmf_2generic_8c-example.html#a22">example/itmf/generic.c</a>, and <a class="el" href="example_2itmf_2tags_8c-example.html#a66">example/itmf/tags.c</a>.</dd>
 </dl>
 
 </div>
@@ -315,7 +323,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Create a new mp4 file. </p>
-<p>MP4Create is the first call that should be used when you want to create a new, empty mp4 file. It is equivalent to opening a file for writing, but also involved with creation of necessary mp4 framework structures. I.e. invoking <a class="el" href="group__mp4__file.html#gaefe87ffbb7f24afe1cd0272b811fe360" title="Create a new mp4 file.">MP4Create()</a> followed by <a class="el" href="group__mp4__file.html#ga484d26d892b561ab0a95f9ce79036dfa" title="Close an mp4 file.">MP4Close()</a> will result in a file with a non-zero size.</p>
+<p>MP4Create is the first call that should be used when you want to create a new, empty mp4 file. It is equivalent to opening a file for writing, but is also involved with the creation of necessary mp4 framework structures. I.e. invoking <a class="el" href="group__mp4__file.html#gaefe87ffbb7f24afe1cd0272b811fe360" title="Create a new mp4 file.">MP4Create()</a> followed by <a class="el" href="group__mp4__file.html#ga484d26d892b561ab0a95f9ce79036dfa" title="Close an mp4 file.">MP4Close()</a> will result in a file with a non-zero size.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fileName</td><td>pathname of the file to be created. On Windows, this should be a UTF-8 encoded string. On other platforms, it should be an 8-bit encoding that is appropriate for the platform, locale, file system, etc. (prefer to use UTF-8 when possible). </td></tr>
@@ -327,7 +335,8 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>On success a handle of the newly created file for use in subsequent calls to the library. On error, <a class="el" href="group__mp4__general.html#gafa387d447016a2c4fb1bb7e70b6e3b32" title="Constant: invalid MP4FileHandle.">MP4_INVALID_FILE_HANDLE</a>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>On success a handle of the newly created file for use in subsequent calls to the library. On error, <a class="el" href="group__mp4__general.html#gafa387d447016a2c4fb1bb7e70b6e3b32" title="Constant: invalid MP4FileHandle.">MP4_INVALID_FILE_HANDLE</a>.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__mp4__file.html#gaf2af31d01ce33096ba5cd0304b23b584" title="Create a new mp4 file with extended options.">MP4CreateEx()</a> </dd></dl>
 
 </div>
 </div>
@@ -363,8 +372,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a new mp4 file. </p>
-<p>MP4CreateCallbacks is the first call that should be used when you want to create a new, empty mp4 file. It is equivalent to opening a file for writing, but also involved with creation of necessary mp4 framework structures. I.e. invoking <a class="el" href="group__mp4__file.html#gae961aa94d0b0747bfcd54f72d1b24c22" title="Create a new mp4 file.">MP4CreateCallbacks()</a> followed by <a class="el" href="group__mp4__file.html#ga484d26d892b561ab0a95f9ce79036dfa" title="Close an mp4 file.">MP4Close()</a> will result in a file with a non-zero size.</p>
+<p>Create a new mp4 file using an I/O callbacks structure. </p>
+<p>MP4CreateCallbacks is the first call that should be used when you want to create a new, empty mp4 file using custom I/O functions provided in an MP4IOCallbacks structure.</p>
+<p>Using MP4CreateCallbacks is equivalent to opening a file for writing, but is also involved with the creation of necessary mp4 framework structures. I.e. invoking <a class="el" href="group__mp4__file.html#gae961aa94d0b0747bfcd54f72d1b24c22" title="Create a new mp4 file using an I/O callbacks structure.">MP4CreateCallbacks()</a> followed by <a class="el" href="group__mp4__file.html#ga484d26d892b561ab0a95f9ce79036dfa" title="Close an mp4 file.">MP4Close()</a> will result in a file with a non-zero size.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">callbacks</td><td>custom implementation of I/O operations. The size, seek and write callbacks must be implemented. The callbacks structure is immediately copied internally. </td></tr>
@@ -377,7 +387,8 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>On success a handle of the newly created file for use in subsequent calls to the library. On error, <a class="el" href="group__mp4__general.html#gafa387d447016a2c4fb1bb7e70b6e3b32" title="Constant: invalid MP4FileHandle.">MP4_INVALID_FILE_HANDLE</a>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>On success a handle of the newly created file for use in subsequent calls to the library. On error, <a class="el" href="group__mp4__general.html#gafa387d447016a2c4fb1bb7e70b6e3b32" title="Constant: invalid MP4FileHandle.">MP4_INVALID_FILE_HANDLE</a>.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__mp4__file.html#ga3dff1533f7dcb2a3432e1b92b78a44f3" title="Create a new mp4 file with extended options using an I/O callbacks structure.">MP4CreateCallbacksEx()</a> </dd></dl>
 
 </div>
 </div>
@@ -449,8 +460,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a new mp4 file with extended options. </p>
-<p>MP4CreateCallbacksEx is an extended version of <a class="el" href="group__mp4__file.html#gae961aa94d0b0747bfcd54f72d1b24c22" title="Create a new mp4 file.">MP4CreateCallbacks()</a>.</p>
+<p>Create a new mp4 file with extended options using an I/O callbacks structure. </p>
+<p>MP4CreateCallbacksEx is an extended version of <a class="el" href="group__mp4__file.html#gae961aa94d0b0747bfcd54f72d1b24c22" title="Create a new mp4 file using an I/O callbacks structure.">MP4CreateCallbacks()</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">callbacks</td><td>custom implementation of I/O operations. The size, seek and write callbacks must be implemented. The callbacks structure is immediately copied internally. </td></tr>
@@ -469,7 +480,8 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>On success a handle of the newly created file for use in subsequent calls to the library. On error, <a class="el" href="group__mp4__general.html#gafa387d447016a2c4fb1bb7e70b6e3b32" title="Constant: invalid MP4FileHandle.">MP4_INVALID_FILE_HANDLE</a>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>On success a handle of the newly created file for use in subsequent calls to the library. On error, <a class="el" href="group__mp4__general.html#gafa387d447016a2c4fb1bb7e70b6e3b32" title="Constant: invalid MP4FileHandle.">MP4_INVALID_FILE_HANDLE</a>.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__mp4__file.html#gae961aa94d0b0747bfcd54f72d1b24c22" title="Create a new mp4 file using an I/O callbacks structure.">MP4CreateCallbacks()</a> </dd></dl>
 
 </div>
 </div>
@@ -554,7 +566,8 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>On success a handle of the newly created file for use in subsequent calls to the library. On error, <a class="el" href="group__mp4__general.html#gafa387d447016a2c4fb1bb7e70b6e3b32" title="Constant: invalid MP4FileHandle.">MP4_INVALID_FILE_HANDLE</a>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>On success a handle of the newly created file for use in subsequent calls to the library. On error, <a class="el" href="group__mp4__general.html#gafa387d447016a2c4fb1bb7e70b6e3b32" title="Constant: invalid MP4FileHandle.">MP4_INVALID_FILE_HANDLE</a>.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__mp4__file.html#gaefe87ffbb7f24afe1cd0272b811fe360" title="Create a new mp4 file.">MP4Create()</a> </dd></dl>
 
 </div>
 </div>
@@ -584,9 +597,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Dump mp4 file contents as ASCII either to stdout or the log callback (see <a class="el" href="group__mp4__general.html#ga95fb48c8d31d2ad10a0e95bfc64d99e4" title="Set the function to call in place of default logging behavior.">MP4SetLogCallback()</a>) </p>
+<p>Dump mp4 file contents as ASCII either to stdout or the log callback (see <a class="el" href="group__mp4__general.html#ga95fb48c8d31d2ad10a0e95bfc64d99e4" title="Set the current log handler function.">MP4SetLogCallback()</a>) </p>
 <p>Dump is an invaluable debugging tool in that in can reveal all the details of the mp4 control structures. However, the output will not make much sense until you familiarize yourself with the mp4 specification (or the Quicktime File Format specification).</p>
-<p>Note that <a class="el" href="group__mp4__file.html#ga37be2b29448d5d453f3e7b0857f7cb3d" title="Dump mp4 file contents as ASCII either to stdout or the log callback (see MP4SetLogCallback())">MP4Dump()</a> will not print the individual values of control tables, such as the size of each sample, unless the current log level is at least <b>MP4_LOG_VERBOSE2</b>. See MP4LogSetLevel() for how to set this.</p>
+<p>Note that <a class="el" href="group__mp4__file.html#ga37be2b29448d5d453f3e7b0857f7cb3d" title="Dump mp4 file contents as ASCII either to stdout or the log callback (see MP4SetLogCallback())">MP4Dump()</a> will not print the individual values of control tables, such as the size of each sample, unless the current log level is at least <b>MP4_LOG_VERBOSE2</b>. See <a class="el" href="group__mp4__general.html#ga45c9e00f98d03b3b1062bdbf8b6eb0cf" title="Set the maximum log level.">MP4LogSetLevel()</a> for how to set this.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">hFile</td><td>handle of file to dump. </td></tr>
@@ -595,7 +608,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><b>true</b> on success, <b>false</b> on failure. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="example_2provider_2provider_8c-example.html#a12">example/provider/provider.c</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="example_2callbacks_2callbacks_8c-example.html#a6">example/callbacks/callbacks.c</a>.</dd>
 </dl>
 
 </div>
@@ -628,7 +641,7 @@ Functions</h2></td></tr>
 
 <p>Return a textual summary of an mp4 file. </p>
 <p>MP4FileInfo provides a string that contains a textual summary of the contents of an mp4 file. This includes the track id's, the track type, and track specific information. For example, for a video track, media encoding, image size, frame rate, and bitrate are summarized.</p>
-<p>Note that the returned string is allocated by the library, so it is the caller's responsibility to release the string with MP4Free(). Also note that the returned string contains newlines and tabs which may or may not be desirable.</p>
+<p>Note that the returned string is allocated by the library, so it is the caller's responsibility to release the string with <a class="el" href="group__mp4__general.html#gae8e637de6de5b4663ee36b6eb576a827" title="Free memory allocated by other library functions.">MP4Free()</a>. Also note that the returned string contains newlines and tabs which may or may not be desirable.</p>
 <p>The following is an example of the output of <a class="el" href="group__mp4__file.html#ga3aba729fc3d51e7cfbd50c077f95add3" title="Return a textual summary of an mp4 file.">MP4Info()</a>: </p><pre class="fragment">Track  Type   Info
 1      video  MPEG-4 Simple @ L3, 119.625 secs, 1008 kbps, 352x288 @ 24.00 fps
 2      audio  MPEG-4, 119.327 secs, 128 kbps, 44100 Hz
@@ -703,7 +716,7 @@ Functions</h2></td></tr>
 
 <p>Return a textual summary of an mp4 file. </p>
 <p>MP4FileInfo provides a string that contains a textual summary of the contents of an mp4 file. This includes the track id's, the track type, and track specific information. For example, for a video track, media encoding, image size, frame rate, and bitrate are summarized.</p>
-<p>Note that the returned string is allocated by the library, so it is the caller's responsibility to release the string with MP4Free(). Also note that the returned string contains newlines and tabs which may or may not be desirable.</p>
+<p>Note that the returned string is allocated by the library, so it is the caller's responsibility to release the string with <a class="el" href="group__mp4__general.html#gae8e637de6de5b4663ee36b6eb576a827" title="Free memory allocated by other library functions.">MP4Free()</a>. Also note that the returned string contains newlines and tabs which may or may not be desirable.</p>
 <p>The following is an example of the output of <a class="el" href="group__mp4__file.html#ga3aba729fc3d51e7cfbd50c077f95add3" title="Return a textual summary of an mp4 file.">MP4Info()</a>: </p><pre class="fragment">Track  Type   Info
 1      video  MPEG-4 Simple @ L3, 119.625 secs, 1008 kbps, 352x288 @ 24.00 fps
 2      audio  MPEG-4, 119.327 secs, 128 kbps, 44100 Hz
@@ -762,6 +775,54 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>On success a handle of the target file for use in subsequent calls to the library. On error, <a class="el" href="group__mp4__general.html#gafa387d447016a2c4fb1bb7e70b6e3b32" title="Constant: invalid MP4FileHandle.">MP4_INVALID_FILE_HANDLE</a>. </dd></dl>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="example_2itmf_2generic_8c-example.html#a0">example/itmf/generic.c</a>, and <a class="el" href="example_2itmf_2tags_8c-example.html#a0">example/itmf/tags.c</a>.</dd>
 </dl>
+
+</div>
+</div>
+<a id="ga99b7a99a4855316fba1c1dba3365ae07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga99b7a99a4855316fba1c1dba3365ae07">&#9670;&nbsp;</a></span>MP4ModifyCallbacks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MP4FileHandle MP4ModifyCallbacks </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="group__mp4__file.html#ga725e5bf294b29d5d4c105f402d109afb">MP4IOCallbacks</a> *&#160;</td>
+          <td class="paramname"><em>callbacks</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>handle</em> = <code>NULL</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>flags</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Modify an existing mp4 file using an I/O callbacks structure. </p>
+<p>MP4ModifyCallbacks is the first call that should be used when you want to modify an existing mp4 file using custom I/O functions provided in an MP4IOCallbacks structure.</p>
+<p>Using MP4ModifyCallbacks is roughly equivalent to opening a file in read/write mode.</p>
+<p>Since modifications to an existing mp4 file can result in a sub-optimal file layout, you may want to use <a class="el" href="group__mp4__file.html#ga92ec3d4bc643cc9fc9eb5731ea60443a" title="Optimize the layout of an mp4 file.">MP4Optimize()</a> after you have modified and closed the mp4 file.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">callbacks</td><td>custom implementation of I/O operations. The size, seek, read and write callbacks must be implemented. Implementing the truncate callback is optional, but strongly recommended. If the truncate callback is not implemented, it must be set to NULL. The callbacks structure is immediately copied internally. </td></tr>
+    <tr><td class="paramname">handle</td><td>a custom handle that will be passed as the first argument to any callback function call. This can be used to pass a handle to an application specific I/O object or an application defined struct containing a pointer to a buffer. </td></tr>
+    <tr><td class="paramname">flags</td><td>currently ignored.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>On success a handle of the target file for use in subsequent calls to the library. On error, <a class="el" href="group__mp4__general.html#gafa387d447016a2c4fb1bb7e70b6e3b32" title="Constant: invalid MP4FileHandle.">MP4_INVALID_FILE_HANDLE</a>. </dd></dl>
 
 </div>
 </div>
@@ -863,8 +924,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Read an existing mp4 file. </p>
-<p>MP4ReadCallbacks is the first call that should be used when you want to just read an existing mp4 file. It is equivalent to opening a file for reading, but in addition the mp4 file is parsed and the control information is loaded into memory. Note that actual track samples are not read into memory until <a class="el" href="group__mp4__sample.html#ga8d62988a2bc1563546b4b420d782377b" title="Read a track sample.">MP4ReadSample()</a> is called.</p>
+<p>Read an existing mp4 file using an I/O callbacks structure. </p>
+<p>MP4ReadCallbacks is the first call that should be used when you want to read an existing mp4 file using custom I/O functions provided in an MP4IOCallbacks structure.</p>
+<p>Using MP4ReadCallbacks is equivalent to opening a file for reading, but in addition the mp4 file is parsed and the control information is loaded into memory. Note that actual track samples are not read into memory until <a class="el" href="group__mp4__sample.html#ga8d62988a2bc1563546b4b420d782377b" title="Read a track sample.">MP4ReadSample()</a> is called.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">callbacks</td><td>custom implementation of I/O operations. The size, seek and read callbacks must be implemented. The callbacks structure is immediately copied internally. </td></tr>
@@ -873,6 +935,8 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>On success a handle of the file for use in subsequent calls to the library. On error, <a class="el" href="group__mp4__general.html#gafa387d447016a2c4fb1bb7e70b6e3b32" title="Constant: invalid MP4FileHandle.">MP4_INVALID_FILE_HANDLE</a>. </dd></dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="example_2callbacks_2callbacks_8c-example.html#a4">example/callbacks/callbacks.c</a>.</dd>
+</dl>
 
 </div>
 </div>
@@ -903,7 +967,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Read an existing mp4 file. </p>
-<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000002">Deprecated:</a></b></dt><dd>The file provider API is deprecated since MP4v2 2.1.0. Please use <a class="el" href="group__mp4__file.html#gae03164071fc6eb30b2d8270b080ecf24" title="Read an existing mp4 file.">MP4ReadCallbacks()</a> instead.</dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000002">Deprecated:</a></b></dt><dd>The file provider API is deprecated since MP4v2 2.1.0. Please use <a class="el" href="group__mp4__file.html#gae03164071fc6eb30b2d8270b080ecf24" title="Read an existing mp4 file using an I/O callbacks structure.">MP4ReadCallbacks()</a> instead.</dd></dl>
 <p>MP4ReadProvider is the first call that should be used when you want to just read an existing mp4 file. It is equivalent to opening a file for reading, but in addition the mp4 file is parsed and the control information is loaded into memory. Note that actual track samples are not read into memory until <a class="el" href="group__mp4__sample.html#ga8d62988a2bc1563546b4b420d782377b" title="Read a track sample.">MP4ReadSample()</a> is called.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -913,16 +977,14 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>On success a handle of the file for use in subsequent calls to the library. On error, <a class="el" href="group__mp4__general.html#gafa387d447016a2c4fb1bb7e70b6e3b32" title="Constant: invalid MP4FileHandle.">MP4_INVALID_FILE_HANDLE</a>.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__mp4__file.html#gae03164071fc6eb30b2d8270b080ecf24" title="Read an existing mp4 file.">MP4ReadCallbacks()</a> </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="example_2provider_2provider_8c-example.html#a10">example/provider/provider.c</a>.</dd>
-</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__mp4__file.html#gae03164071fc6eb30b2d8270b080ecf24" title="Read an existing mp4 file using an I/O callbacks structure.">MP4ReadCallbacks()</a> </dd></dl>
 
 </div>
 </div>
 </div><!-- contents -->
 <address class="footer">
     <small>
-        generated on Mon Feb 14 2022 21:13:01 for <b>MP4v2 2.1.0</b>
+        generated on Sun Mar 20 2022 20:28:40 for <b>MP4v2 2.1.0</b>
         by <a href="https://www.doxygen.org/index.html">Doxygen</a> 1.8.17
     </small>
 </address>

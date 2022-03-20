@@ -1034,7 +1034,7 @@ Functions</h2></td></tr>
 <li>If the calling application wishes to handle its own buffering it can set *ppBytes to the buffer it wishes to use. The calling application is responsible for ensuring that the buffer is large enough to hold the packet. This can be done by using MP4GetRtpPayload() to retrieve the maximum packet payload size and hence how large the receiving buffer must be. Caveat: the value returned by MP4GetRtpPayload() is the maximum payload size, if the RTP packet header is going to be included by the library this value should be incremented by 12.</li>
 </ul>
 <ul>
-<li>If the value of *ppBytes is NULL, then an appropriately sized buffer is automatically allocated for the sample data and *ppBytes set to this pointer. The calling application is responsible for freeing this memory with MP4Free().</li>
+<li>If the value of *ppBytes is NULL, then an appropriately sized buffer is automatically allocated for the sample data and *ppBytes set to this pointer. The calling application is responsible for freeing this memory with <a class="el" href="group__mp4__general.html#gae8e637de6de5b4663ee36b6eb576a827" title="Free memory allocated by other library functions.">MP4Free()</a>.</li>
 </ul>
 <p>The application is expected to provide the value of the RTP SSRC identifier which uniquely identifies the originator of the media stream. For most applications, a single random value can be provided. The value should be the same for all packets for the duration of the RTP transmission. If the parameter <code>includeHeader</code> is false, then this value has no effect.</p>
 <p>By default the library constructs the standard 12 byte RTP header from the information in the hint sample, and the specified SSRC. It then concatenates the RTP header with the packet payload, that is the RTP payload specific header and the media data for the packet. The <code>includeHeader</code> and <code>includePayload</code> parameters allow control over these steps, so that either just the packet payloads or just the RTP headers can be returned. A potential use of this feature is if the calling application wishes to construct an extended RTP header with non-standard options.</p>
@@ -1339,7 +1339,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <address class="footer">
     <small>
-        generated on Mon Feb 14 2022 21:13:01 for <b>MP4v2 2.1.0</b>
+        generated on Sun Mar 20 2022 20:28:41 for <b>MP4v2 2.1.0</b>
         by <a href="https://www.doxygen.org/index.html">Doxygen</a> 1.8.17
     </small>
 </address>
