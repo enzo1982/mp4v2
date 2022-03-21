@@ -13,7 +13,7 @@
 @contents
 
 @chapter What's New?
-This is the first release by the new MP4v2 project - see https://mp4v2.org for reference.
+Version 2.1.1 fixes a type mismatch preventing MP4v2 from compiling on 32 bit systems.
 
 Version 2.1 updates the existing build systems and adds support for building with CMake and Xcode. It also fixes compilation
 with newer compilers and integrates smaller improvements and bug fixes from various MP4v2 forks.
