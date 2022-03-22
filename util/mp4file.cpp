@@ -189,7 +189,7 @@ FileUtility::utility_option( int code, bool& handled )
 {
     handled = true;
 
-    switch( code ) {
+    switch( static_cast<unsigned int>( code ) ) {
         case LC_LIST:
             _action = &FileUtility::actionList;
             break;

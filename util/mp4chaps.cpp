@@ -675,7 +675,7 @@ ChapterUtility::utility_option( int code, bool& handled )
 {
     handled = true;
 
-    switch( code ) {
+    switch( static_cast<unsigned int> ( code ) ) {
         case 'A':
         case LC_CHPT_ANY:
             _ChapterType = MP4ChapterTypeAny;

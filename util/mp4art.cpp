@@ -376,7 +376,7 @@ ArtUtility::utility_option( int code, bool& handled )
 {
     handled = true;
 
-    switch( code ) {
+    switch( static_cast<unsigned int> ( code ) ) {
         case LC_ART_ANY:
             _artFilter = numeric_limits<uint32_t>::max();
             break;
