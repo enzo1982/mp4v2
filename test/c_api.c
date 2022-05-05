@@ -20,7 +20,6 @@
  */
 
 #include <mp4v2/mp4v2.h>
-#include <memory.h>
 #include <string.h>
 
 int main(int argc, char** argv)

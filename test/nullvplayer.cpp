@@ -20,7 +20,7 @@
  */
 
 #include <mp4v2/mp4v2.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 main(int argc, char** argv)
 {

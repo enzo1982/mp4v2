@@ -20,8 +20,6 @@
  */
 
 #include <mp4v2/mp4v2.h>
-#include <malloc.h>
-#include <memory.h>
 #include <string.h>
 #include <stdlib.h>
 
