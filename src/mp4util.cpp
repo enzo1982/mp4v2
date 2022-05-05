@@ -211,7 +211,7 @@ uint64_t MP4ConvertTime(uint64_t t,
 
 const char* MP4NormalizeTrackType (const char* type)
 {
-    if (!strcasecmp(type, "vide")
+    if (!strcasecmp(type, MP4_VIDEO_TRACK_TYPE)
             || !strcasecmp(type, "video")
             || !strcasecmp(type, "mp4v")
             || !strcasecmp(type, "avc1")
@@ -220,28 +220,45 @@ const char* MP4NormalizeTrackType (const char* type)
         return MP4_VIDEO_TRACK_TYPE;
     }
 
-    if (!strcasecmp(type, "soun")
+    if (!strcasecmp(type, MP4_AUDIO_TRACK_TYPE)
             || !strcasecmp(type, "sound")
             || !strcasecmp(type, "audio")
-            || !strcasecmp(type, "enca")
+            || !strcasecmp(type, "mp4a")
+            || !strcasecmp(type, "ipcm")
+            || !strcasecmp(type, "lpcm")
+            || !strcasecmp(type, "alaw")
+            || !strcasecmp(type, "ulaw")
             || !strcasecmp(type, "samr")  // 3GPP AMR
             || !strcasecmp(type, "sawb")  // 3GPP AMR/WB
-            || !strcasecmp(type, "mp4a")) {
+            || !strcasecmp(type, "ac-3")
+            || !strcasecmp(type, "alac")
+            || !strcasecmp(type, "enca")) {
         return MP4_AUDIO_TRACK_TYPE;
     }
 
-    if (!strcasecmp(type, "sdsm")
+    if (!strcasecmp(type, MP4_SCENE_TRACK_TYPE)
             || !strcasecmp(type, "scene")
             || !strcasecmp(type, "bifs")) {
         return MP4_SCENE_TRACK_TYPE;
     }
 
-    if (!strcasecmp(type, "odsm")
+    if (!strcasecmp(type, MP4_OD_TRACK_TYPE)
             || !strcasecmp(type, "od")) {
         return MP4_OD_TRACK_TYPE;
     }
-    if (strcasecmp(type, "cntl") == 0) {
+
+    if (!strcasecmp(type, MP4_HINT_TRACK_TYPE)
+            || !strcasecmp(type, "rtp ")) {
+        return MP4_HINT_TRACK_TYPE;
+    }
+
+    if (!strcasecmp(type, MP4_CNTL_TRACK_TYPE)) {
         return MP4_CNTL_TRACK_TYPE;
+    }
+
+    if (!strcasecmp(type, MP4_SUBTITLE_TRACK_TYPE)
+            || !strcasecmp(type, "tx3g")) {
+        return MP4_SUBTITLE_TRACK_TYPE;
     }
 
     log.verbose1f("Attempt to normalize %s did not match",type);
