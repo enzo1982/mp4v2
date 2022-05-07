@@ -348,7 +348,7 @@ public:
         if (m_readOnly) {
             ostringstream msg;
             msg << "property is read-only: " << m_name;
-            throw new PlatformException(msg.str().c_str(), EACCES, __FILE__, __LINE__, __FUNCTION__);
+            throw new PLATFORM_EXCEPTION(msg.str().c_str(), EACCES);
         }
         m_values[index] = value;
     }
