@@ -36,21 +36,22 @@ static char* PrintAudioInfo(
     MP4TrackId trackId)
 {
     static const char* mpeg4AudioNames[] = {
-        "MPEG-4 AAC main",
+        "MPEG-4 AAC Main",
         "MPEG-4 AAC LC",
         "MPEG-4 AAC SSR",
         "MPEG-4 AAC LTP",
-        "MPEG-4 AAC HE",
+        "MPEG-4 SBR",
         "MPEG-4 AAC Scalable",
         "MPEG-4 TwinVQ",
         "MPEG-4 CELP",
         "MPEG-4 HVXC",
-        NULL, NULL,
+        NULL,
+        NULL,
         "MPEG-4 TTSI",
         "MPEG-4 Main Synthetic",
-        "MPEG-4 Wavetable Syn",
+        "MPEG-4 Wavetable Synth",
         "MPEG-4 General MIDI",
-        "MPEG-4 Algo Syn and Audio FX",
+        "MPEG-4 Algo Synth and Audio FX",
         "MPEG-4 ER AAC LC",
         NULL,
         "MPEG-4 ER AAC LTP",
@@ -73,6 +74,12 @@ static char* PrintAudioInfo(
         "MPEG-4 Audio Lossless",
         "MPEG-4 SLS",
         "MPEG-4 SLS non-core",
+        "MPEG-4 ER AAC ELD",
+        "MPEG-4 SMR Simple",
+        "MPEG-4 SMR Main",
+        "MPEG-4 USAC",
+        "MPEG-4 SAOC",
+        "MPEG-4 MPEG Surround LD",
     };
 
     static const uint8_t mpegAudioTypes[] = {

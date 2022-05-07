@@ -92,7 +92,7 @@ typedef uint32_t (*encryptFunc_t)( uint32_t, uint32_t, uint8_t*, uint32_t*, uint
     (!strcasecmp(type, MP4_AUDIO_TRACK_TYPE))
 
 #define MP4_IS_CNTL_TRACK_TYPE(type) \
-        (!strcasecmp(type, MP4_CNTL_TRACK_TYPE))
+    (!strcasecmp(type, MP4_CNTL_TRACK_TYPE))
 
 #define MP4_IS_OD_TRACK_TYPE(type) \
     (!strcasecmp(type, MP4_OD_TRACK_TYPE))
@@ -104,69 +104,100 @@ typedef uint32_t (*encryptFunc_t)( uint32_t, uint32_t, uint8_t*, uint32_t*, uint
     (!strcasecmp(type, MP4_HINT_TRACK_TYPE))
 
 #define MP4_IS_SYSTEMS_TRACK_TYPE(type) \
-    (!strcasecmp(type, MP4_CLOCK_TRACK_TYPE) \
-    || !strcasecmp(type, MP4_MPEG7_TRACK_TYPE) \
-    || !strcasecmp(type, MP4_OCI_TRACK_TYPE) \
-    || !strcasecmp(type, MP4_IPMP_TRACK_TYPE) \
-    || !strcasecmp(type, MP4_MPEGJ_TRACK_TYPE))
+    (!strcasecmp(type, MP4_CLOCK_TRACK_TYPE) || \
+     !strcasecmp(type, MP4_MPEG7_TRACK_TYPE) || \
+     !strcasecmp(type, MP4_OCI_TRACK_TYPE)   || \
+     !strcasecmp(type, MP4_IPMP_TRACK_TYPE)  || \
+     !strcasecmp(type, MP4_MPEGJ_TRACK_TYPE))
 
 /* MP4 Audio track types - see MP4AddAudioTrack()*/
-#define MP4_INVALID_AUDIO_TYPE          0x00
-#define MP4_MPEG1_AUDIO_TYPE            0x6B
-#define MP4_MPEG2_AUDIO_TYPE            0x69
-#define MP4_MP3_AUDIO_TYPE              MP4_MPEG2_AUDIO_TYPE
-#define MP4_MPEG2_AAC_MAIN_AUDIO_TYPE   0x66
-#define MP4_MPEG2_AAC_LC_AUDIO_TYPE     0x67
-#define MP4_MPEG2_AAC_SSR_AUDIO_TYPE    0x68
-#define MP4_MPEG2_AAC_AUDIO_TYPE        MP4_MPEG2_AAC_MAIN_AUDIO_TYPE
-#define MP4_MPEG4_AUDIO_TYPE            0x40
-#define MP4_PRIVATE_AUDIO_TYPE          0xC0
-#define MP4_PCM16_LITTLE_ENDIAN_AUDIO_TYPE  0xE0 /* a private definition */
-#define MP4_VORBIS_AUDIO_TYPE           0xE1 /* a private definition */
-#define MP4_AC3_AUDIO_TYPE              0xE2 /* a private definition */
-#define MP4_ALAW_AUDIO_TYPE             0xE3 /* a private definition */
-#define MP4_ULAW_AUDIO_TYPE             0xE4 /* a private definition */
-#define MP4_G723_AUDIO_TYPE             0xE5 /* a private definition */
-#define MP4_PCM16_BIG_ENDIAN_AUDIO_TYPE 0xE6 /* a private definition */
+#define MP4_INVALID_AUDIO_TYPE             0x00
+#define MP4_MPEG1_AUDIO_TYPE               0x6B
+#define MP4_MPEG2_AUDIO_TYPE               0x69
+#define MP4_MP3_AUDIO_TYPE                 MP4_MPEG2_AUDIO_TYPE
+#define MP4_MPEG2_AAC_MAIN_AUDIO_TYPE      0x66
+#define MP4_MPEG2_AAC_LC_AUDIO_TYPE        0x67
+#define MP4_MPEG2_AAC_SSR_AUDIO_TYPE       0x68
+#define MP4_MPEG2_AAC_AUDIO_TYPE           MP4_MPEG2_AAC_MAIN_AUDIO_TYPE
+#define MP4_MPEG4_AUDIO_TYPE               0x40
+#define MP4_PRIVATE_AUDIO_TYPE             0xC0
+#define MP4_PCM16_LITTLE_ENDIAN_AUDIO_TYPE 0xE0 /* a private definition */
+#define MP4_VORBIS_AUDIO_TYPE              0xE1 /* a private definition */
+#define MP4_AC3_AUDIO_TYPE                 0xE2 /* a private definition */
+#define MP4_ALAW_AUDIO_TYPE                0xE3 /* a private definition */
+#define MP4_ULAW_AUDIO_TYPE                0xE4 /* a private definition */
+#define MP4_G723_AUDIO_TYPE                0xE5 /* a private definition */
+#define MP4_PCM16_BIG_ENDIAN_AUDIO_TYPE    0xE6 /* a private definition */
 
 /* MP4 MPEG-4 Audio types from 14496-3 Table 1.5.1 */
-#define MP4_MPEG4_INVALID_AUDIO_TYPE        0
-#define MP4_MPEG4_AAC_MAIN_AUDIO_TYPE       1
-#define MP4_MPEG4_AAC_LC_AUDIO_TYPE         2
-#define MP4_MPEG4_AAC_SSR_AUDIO_TYPE        3
-#define MP4_MPEG4_AAC_LTP_AUDIO_TYPE        4
-#define MP4_MPEG4_AAC_HE_AUDIO_TYPE         5
-#define MP4_MPEG4_AAC_SCALABLE_AUDIO_TYPE   6
-#define MP4_MPEG4_CELP_AUDIO_TYPE           8
-#define MP4_MPEG4_HVXC_AUDIO_TYPE           9
-#define MP4_MPEG4_TTSI_AUDIO_TYPE           12
-#define MP4_MPEG4_MAIN_SYNTHETIC_AUDIO_TYPE 13
-#define MP4_MPEG4_WAVETABLE_AUDIO_TYPE      14
-#define MP4_MPEG4_MIDI_AUDIO_TYPE           15
-#define MP4_MPEG4_ALGORITHMIC_FX_AUDIO_TYPE 16
-#define MP4_MPEG4_ALS_AUDIO_TYPE            31
-#define MP4_MPEG4_LAYER1_AUDIO_TYPE         32
-#define MP4_MPEG4_LAYER2_AUDIO_TYPE         33
-#define MP4_MPEG4_LAYER3_AUDIO_TYPE         34
-#define MP4_MPEG4_SLS_AUDIO_TYPE            35
+#define MP4_MPEG4_INVALID_AUDIO_TYPE         0
+#define MP4_MPEG4_AAC_MAIN_AUDIO_TYPE        1
+#define MP4_MPEG4_AAC_LC_AUDIO_TYPE          2
+#define MP4_MPEG4_AAC_SSR_AUDIO_TYPE         3
+#define MP4_MPEG4_AAC_LTP_AUDIO_TYPE         4
+#define MP4_MPEG4_SBR_AUDIO_TYPE             5
+#define MP4_MPEG4_AAC_SCALABLE_AUDIO_TYPE    6
+#define MP4_MPEG4_TWINVQ_AUDIO_TYPE          7
+#define MP4_MPEG4_CELP_AUDIO_TYPE            8
+#define MP4_MPEG4_HVXC_AUDIO_TYPE            9
+#define MP4_MPEG4_TTSI_AUDIO_TYPE            12
+#define MP4_MPEG4_MAIN_SYNTHETIC_AUDIO_TYPE  13
+#define MP4_MPEG4_WAVETABLE_AUDIO_TYPE       14
+#define MP4_MPEG4_MIDI_AUDIO_TYPE            15
+#define MP4_MPEG4_ALGORITHMIC_FX_AUDIO_TYPE  16
+#define MP4_MPEG4_ER_AAC_LC_AUDIO_TYPE       17
+#define MP4_MPEG4_ER_AAC_LTP_AUDIO_TYPE      19
+#define MP4_MPEG4_ER_AAC_SCALABLE_AUDIO_TYPE 20
+#define MP4_MPEG4_ER_TWINVQ_AUDIO_TYPE       21
+#define MP4_MPEG4_ER_BSAC_AUDIO_TYPE         22
+#define MP4_MPEG4_ER_AAC_LD_AUDIO_TYPE       23
+#define MP4_MPEG4_ER_CELP_AUDIO_TYPE         24
+#define MP4_MPEG4_ER_HXVC_AUDIO_TYPE         25
+#define MP4_MPEG4_ER_HILN_AUDIO_TYPE         26
+#define MP4_MPEG4_ER_PARAMETRIC_AUDIO_TYPE   27
+#define MP4_MPEG4_SSC_AUDIO_TYPE             28
+#define MP4_MPEG4_PS_AUDIO_TYPE              29
+#define MP4_MPEG4_MPEG_S_AUDIO_TYPE          30
+#define MP4_MPEG4_LAYER1_AUDIO_TYPE          32
+#define MP4_MPEG4_LAYER2_AUDIO_TYPE          33
+#define MP4_MPEG4_LAYER3_AUDIO_TYPE          34
+#define MP4_MPEG4_DST_AUDIO_TYPE             35
+#define MP4_MPEG4_ALS_AUDIO_TYPE             36
+#define MP4_MPEG4_SLS_AUDIO_TYPE             37
+#define MP4_MPEG4_SLS_NON_CORE_AUDIO_TYPE    38
+#define MP4_MPEG4_ER_AAC_ELD_AUDIO_TYPE      39
+#define MP4_MPEG4_SMR_SIMPLE_AUDIO_TYPE      40
+#define MP4_MPEG4_SMR_MAIN_AUDIO_TYPE        41
+#define MP4_MPEG4_USAC_AUDIO_TYPE            42
+#define MP4_MPEG4_SAOC_AUDIO_TYPE            43
+#define MP4_MPEG4_MPEG_S_LD_AUDIO_TYPE       44
+
+#define MP4_MPEG4_AAC_HE_AUDIO_TYPE          MP4_MPEG4_SBR_AUDIO_TYPE
+#define MP4_MPEG4_AAC_HEV2_AUDIO_TYPE        MP4_MPEG4_PS_AUDIO_TYPE
+#define MP4_MPEG4_AAC_XHE_AUDIO_TYPE         MP4_MPEG4_USAC_AUDIO_TYPE
 
 /* MP4 Audio type utilities following common usage */
 #define MP4_IS_MP3_AUDIO_TYPE(type) \
-    ((type) == MP4_MPEG1_AUDIO_TYPE || (type) == MP4_MPEG2_AUDIO_TYPE)
+    ((type) == MP4_MPEG1_AUDIO_TYPE || \
+     (type) == MP4_MPEG2_AUDIO_TYPE)
 
 #define MP4_IS_MPEG2_AAC_AUDIO_TYPE(type) \
-    (((type) >= MP4_MPEG2_AAC_MAIN_AUDIO_TYPE \
-        && (type) <= MP4_MPEG2_AAC_SSR_AUDIO_TYPE))
+    ((type) >= MP4_MPEG2_AAC_MAIN_AUDIO_TYPE && \
+     (type) <= MP4_MPEG2_AAC_SSR_AUDIO_TYPE)
 
 #define MP4_IS_MPEG4_AAC_AUDIO_TYPE(mpeg4Type) \
-    (((mpeg4Type) >= MP4_MPEG4_AAC_MAIN_AUDIO_TYPE \
-        && (mpeg4Type) <= MP4_MPEG4_AAC_HE_AUDIO_TYPE) \
-      || (mpeg4Type) == MP4_MPEG4_AAC_SCALABLE_AUDIO_TYPE \
-          || (mpeg4Type) == 17)
+    (((mpeg4Type) >= MP4_MPEG4_AAC_MAIN_AUDIO_TYPE  && \
+      (mpeg4Type) <= MP4_MPEG4_AAC_SCALABLE_AUDIO_TYPE)    || \
+      (mpeg4Type) == MP4_MPEG4_AAC_HEV2_AUDIO_TYPE         || \
+      (mpeg4Type) == MP4_MPEG4_AAC_XHE_AUDIO_TYPE          || \
+     ((mpeg4Type) >= MP4_MPEG4_ER_AAC_LC_AUDIO_TYPE && \
+      (mpeg4Type) <= MP4_MPEG4_ER_AAC_SCALABLE_AUDIO_TYPE) || \
+      (mpeg4Type) == MP4_MPEG4_ER_AAC_LD_AUDIO_TYPE        || \
+      (mpeg4Type) == MP4_MPEG4_ER_AAC_ELD_AUDIO_TYPE)
 
 #define MP4_IS_AAC_AUDIO_TYPE(type) \
-    (MP4_IS_MPEG2_AAC_AUDIO_TYPE(type) \
-    || (type) == MP4_MPEG4_AUDIO_TYPE)
+    (MP4_IS_MPEG2_AAC_AUDIO_TYPE(type) || \
+     (type) == MP4_MPEG4_AUDIO_TYPE)
 
 /* MP4 Video track types - see MP4AddVideoTrack() */
 #define MP4_INVALID_VIDEO_TYPE          0x00
@@ -190,9 +221,9 @@ typedef uint32_t (*encryptFunc_t)( uint32_t, uint32_t, uint8_t*, uint32_t*, uint
     ((type) == MP4_MPEG1_VIDEO_TYPE)
 
 #define MP4_IS_MPEG2_VIDEO_TYPE(type) \
-    (((type) >= MP4_MPEG2_SIMPLE_VIDEO_TYPE \
-        && (type) <= MP4_MPEG2_442_VIDEO_TYPE) \
-      || MP4_IS_MPEG1_VIDEO_TYPE(type))
+    (MP4_IS_MPEG1_VIDEO_TYPE(type) || \
+     ((type) >= MP4_MPEG2_SIMPLE_VIDEO_TYPE && \
+      (type) <= MP4_MPEG2_442_VIDEO_TYPE))
 
 #define MP4_IS_MPEG4_VIDEO_TYPE(type) \
     ((type) == MP4_MPEG4_VIDEO_TYPE)
