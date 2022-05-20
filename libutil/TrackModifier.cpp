@@ -122,6 +122,7 @@ TrackModifier::fetch()
         uint32_t size;
         _props.userDataName->GetValue( &buffer, &size );
         _userDataName = string( reinterpret_cast<char*>(buffer), size );
+        _userDataName.resize( strlen( _userDataName.c_str() ) );
     }
     else {
         _userDataName.clear();
