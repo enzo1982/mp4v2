@@ -52,18 +52,28 @@ Ultimately, my goal for this project is for it to be recognized as the official 
 
 #### Near term - *MP4v2 v2.2.0*
 - Import improvements made in various MP4v2 forks since the abandonment of the original project:
-	- Support for ALAC, E-AC-3 and LPCM audio tracks
+	- Support for ALAC, Enhanced AC-3 and LPCM audio tracks
 	- Support for HEVC and AV1 video tracks
-	- Improved tagging support
-	- [to be defined after analyzing changes in MP4v2 forks]
+	- Support for Dolby Vision metadata
+	- Support for Closed Captions tracks
+	- Support for WebVTT tracks
+	- Support for managing track references
+	- Improve tagging support
 - Add support for automatically switching to 64 bit mode when file size exceeds 4 GB
 
-#### Mid term - *MP4v2 v3.0.0*
+#### Mid term - *MP4v2 v2.3.0*
 - Add API functions for defining custom atoms
-- Add a public C++ API
-- Add support for new standards not available in public MP4v2 forks yet:
+- Add support for additional media formats:
+	- Support for FLAC and Opus audio tracks
+	- Support for VVC and VPx video tracks
+- Add/improve support for MP4 related standards:
 	- Support for [DASH](https://en.wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP) files
-	- [to be defined]
+	- Improve support for QuickTime (QTFF) files
+	- Improve support for 3GPP files
+
+#### Mid/long term - *MP4v2 v3.0.0*
+- Revise public API for improved usability and consistency
+- Add a public C++ API
 - Use fuzzing to harden the library against errors and possible vulnerabilities
 
 #### Long term - *MP4v2 future releases*
