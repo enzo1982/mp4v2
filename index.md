@@ -29,8 +29,8 @@ I would like this new project to become the place to go for anything related to 
 
 Ultimately, my goal for this project is for it to be recognized as the official source of a renewed MP4v2.
 
-### Roadmap <a name="roadmap"/>
-#### Short term - *MP4v2 v2.1.0*
+### Past milestones
+#### *MP4v2 v2.1.0*
 - Build systems
 	- Update/fix the Autotools build system and get ready to publish new releases ✔️
 	- Add support for building with CMake ✔️
@@ -50,7 +50,8 @@ Ultimately, my goal for this project is for it to be recognized as the official 
 	- Update outdated API man pages and move their contents to Doxygen comments in header files ✔️
 	- Regenerate Doxygen API documentation ✔️
 
-#### Near term - *MP4v2 v2.2.0*
+### Roadmap <a name="roadmap"/>
+#### Short term - *MP4v2 v2.2.0*
 - Import improvements made in various MP4v2 forks since the abandonment of the original project:
 	- Support for ALAC, Enhanced AC-3 and LPCM audio tracks
 	- Support for HEVC and AV1 video tracks
@@ -61,7 +62,7 @@ Ultimately, my goal for this project is for it to be recognized as the official 
 	- Improve tagging support
 - Add support for automatically switching to 64 bit mode when file size exceeds 4 GB
 
-#### Mid term - *MP4v2 v2.3.0*
+#### Near term - *MP4v2 v2.3.0*
 - Add API functions for defining custom atoms
 - Add support for additional media formats:
 	- Support for FLAC and Opus audio tracks
@@ -71,7 +72,7 @@ Ultimately, my goal for this project is for it to be recognized as the official 
 	- Improve support for QuickTime (QTFF) files
 	- Improve support for 3GPP files
 
-#### Mid/long term - *MP4v2 v3.0.0*
+#### Mid term - *MP4v2 v3.0.0*
 - Revise public API for improved usability and consistency
 - Add a public C++ API
 - Use fuzzing to harden the library against errors and possible vulnerabilities
