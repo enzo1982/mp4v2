@@ -100,9 +100,8 @@ StandardFileProvider::seek( Size pos )
     return _fseeki64( _file, pos, SEEK_SET );
 #else
     // cause a cache flush before using _fileno routines
-    fpos_t fpos;
-    if ( fgetpos( _file, &fpos ) || fsetpos( _file, &fpos ) )
-        return true;
+    rewind( _file );
+
     return _lseeki64( _fileno( _file ), pos, SEEK_SET ) == -1;
 #endif
 }
