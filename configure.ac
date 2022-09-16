@@ -126,7 +126,8 @@ PROJECT_version_major="PRJ_version_major"
 PROJECT_version_minor="PRJ_version_minor"
 PROJECT_version_point="PRJ_version_point"
 PROJECT_repo_url="PRJ_repo_url"
-PROJECT_build="`date`"
+SOURCE_DATE_EPOCH="${SOURCE_DATE_EPOCH:-$(date +%s)}"
+PROJECT_build=$(date -u -d "@$SOURCE_DATE_EPOCH" 2>/dev/null || date -u -r "$SOURCE_DATE_EPOCH" 2>/dev/null || date -u)
 
 test -z "$PROJECT_version_hex"   && PROJECT_version_hex="0x0000000000000000LL"
 test -z "$PROJECT_version_major" && PROJECT_version_major="0"
