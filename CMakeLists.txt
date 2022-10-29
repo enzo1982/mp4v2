@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.0)
+
 project(MP4v2 VERSION 2.1.1)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -55,7 +56,26 @@ set(PROJECT_version        "${PROJECT_version_major}.${PROJECT_version_minor}.${
 set(PROJECT_name_formal    "${PROJECT_name} ${PROJECT_version}")
 set(PROJECT_support        "<${PROJECT_email}>")
 
-math(EXPR PROJECT_version_hex "${PROJECT_version_major} << 16 | ${PROJECT_version_minor} << 8 | ${PROJECT_version_point}" OUTPUT_FORMAT HEXADECIMAL)
+function(number_to_hex number output)
+    set(chars "0123456789abcdef")
+    set(hex "")
+
+    foreach(i RANGE 7)
+        math(EXPR nibble "${number} & 15")
+        string(SUBSTRING "${chars}" "${nibble}" 1 nibble_hex)
+        string(CONCAT hex "${nibble_hex}" "${hex}")
+
+        math(EXPR number "${number} >> 4")
+        if(${number} EQUAL 0)
+            break()
+        endif()
+    endforeach()
+
+    set("${output}" "0x${hex}" PARENT_SCOPE)
+endfunction()
+
+math(EXPR PROJECT_version_dec "${PROJECT_version_major} << 16 | ${PROJECT_version_minor} << 8 | ${PROJECT_version_point}")
+number_to_hex("${PROJECT_version_dec}" PROJECT_version_hex)
 
 string(TIMESTAMP PROJECT_build "%Y-%m-%d %H:%M:%S UTC" UTC)
 
