@@ -101,6 +101,7 @@ configure_pkg_config_file(mp4v2.pc.in)
 # Define MP4v2 source files
 #
 set(MP4V2_PUBLIC_HEADERS
+        ${CMAKE_BINARY_DIR}/include/mp4v2/project.h
         include/mp4v2/chapter.h
         include/mp4v2/file.h
         include/mp4v2/file_prop.h
@@ -110,20 +111,19 @@ set(MP4V2_PUBLIC_HEADERS
         include/mp4v2/itmf_tags.h
         include/mp4v2/mp4v2.h
         include/mp4v2/platform.h
-        include/mp4v2/project.h
         include/mp4v2/sample.h
         include/mp4v2/streaming.h
         include/mp4v2/track.h
         include/mp4v2/track_prop.h)
 
 set(MP4V2_PRIVATE_HEADERS
+        ${CMAKE_BINARY_DIR}/libplatform/config.h
         libplatform/io/File.h
         libplatform/io/FileSystem.h
         libplatform/number/random.h
         libplatform/prog/option.h
         libplatform/sys/error.h
         libplatform/time/time.h
-        libplatform/config.h
         libplatform/endian.h
         libplatform/impl.h
         libplatform/platform.h
