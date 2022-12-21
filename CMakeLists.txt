@@ -115,7 +115,6 @@ set(MP4V2_PUBLIC_HEADERS
         include/mp4v2/track_prop.h)
 
 set(MP4V2_PRIVATE_HEADERS
-        libplatform/io/File.cpp
         libplatform/io/File.h
         libplatform/io/FileSystem.h
         libplatform/number/random.h
@@ -190,6 +189,7 @@ endif()
 
 set(MP4V2_SOURCE_FILES
         ${MP4V2_OSSPEC_SRC}
+        libplatform/io/File.cpp
         libplatform/io/FileSystem.cpp
         libplatform/prog/option.cpp
         libplatform/sys/error.cpp
