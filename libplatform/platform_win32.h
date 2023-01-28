@@ -16,12 +16,23 @@
 #endif
 
 // set minimum win32 API requirement to Windows 2000 or higher
-#ifndef _WIN32_WINNT
-#   define _WIN32_WINNT 0x0500
-#endif 
 #ifndef WINVER
-#   define WINVER 0x0500
-#endif 
+#   ifndef _MSC_VER
+#       define WINVER 0x0500
+#   elif _MSC_VER >= 1930 // toolset versions >= 17.0 support Windows 7 or later
+#       define WINVER 0x0601
+#   elif _MSC_VER >= 1910 // toolset versions >= 15.0 support Windows Vista or later
+#       define WINVER 0x0600
+#   elif _MSC_VER >= 1600 // toolset versions >= 10.0 support Windows XP or later
+#       define WINVER 0x0501
+#   else
+#       define WINVER 0x0500
+#   endif
+#endif
+
+#ifndef _WIN32_WINNT
+#   define _WIN32_WINNT WINVER
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 
