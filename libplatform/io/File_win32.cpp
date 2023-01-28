@@ -3,6 +3,37 @@
 
 #if _WIN32_WINNT < 0x0600
 #   include <io.h> // for _lseeki64 in pre Windows Vista code
+
+#   ifndef GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT
+#       define GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT 0x2
+#       define GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS       0x4
+#   endif
+
+    typedef int (*_fseeki64_type)(FILE*, __int64, int);
+
+    static _fseeki64_type GetFileSeekFunction()
+    {
+        // find the module containing file IO functions and check if it has _fseeki64
+        HMODULE crtdll = NULL;
+
+#   if _WIN32_WINNT >= 0x0501
+        GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCSTR) &_wfopen, &crtdll);
+#   else
+        HMODULE kernel32 = GetModuleHandleA("kernel32.dll");
+
+        typedef BOOL (WINAPI *GetModuleHandleExA_type)(DWORD, LPCSTR, HMODULE*);
+
+        if (GetModuleHandleExA_type GetModuleHandleExA_func = (GetModuleHandleExA_type) GetProcAddress(kernel32, "GetModuleHandleExA"))
+            GetModuleHandleExA_func(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCSTR) &_wfopen, &crtdll);
+#   endif
+
+        if (crtdll)
+            return (_fseeki64_type) GetProcAddress(crtdll, "_fseeki64");
+
+        return NULL;
+    }
+
+    static _fseeki64_type _fseeki64_func = GetFileSeekFunction();
 #endif
 
 namespace mp4v2 { namespace platform { namespace io {
@@ -99,7 +130,11 @@ StandardFileProvider::seek( Size pos )
 #if _WIN32_WINNT >= 0x0600 // Windows Vista or later
     return _fseeki64( _file, pos, SEEK_SET );
 #else
-    // cause a cache flush before using _fileno routines
+    if (_fseeki64_func)
+        return _fseeki64_func( _file, pos, SEEK_SET );
+
+    // if _fseeki64 is not available, cause a cache flush
+    // before calling _lseeki64 on the underlying fileno
     rewind( _file );
 
     return _lseeki64( _fileno( _file ), pos, SEEK_SET ) == -1;
