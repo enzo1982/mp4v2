@@ -96,6 +96,13 @@ endfunction()
 configure_pkg_config_file(mp4v2.pc.in)
 
 #
+# Set compile flags
+#
+if(MSVC)
+    add_compile_options(/EHsc)
+endif()
+
+#
 # Define MP4v2 source files
 #
 set(MP4V2_PUBLIC_HEADERS
