@@ -997,7 +997,7 @@ protected:
     uint8_t m_bufWriteBits;
 
     char m_trakName[1024];
-    char *m_editName;
+    char m_editName[1024];
 
  private:
     MP4File ( const MP4File &src );

@@ -69,8 +69,9 @@ void MP4File::Init()
     m_bufReadBits = 0;
     m_numWriteBits = 0;
     m_bufWriteBits = 0;
-    m_editName = NULL;
-    m_trakName[0] = '\0';
+
+    m_editName[0] = 0;
+    m_trakName[0] = 0;
 }
 
 MP4File::~MP4File()
@@ -79,7 +80,6 @@ MP4File::~MP4File()
     for( uint32_t i = 0; i < m_pTracks.Size(); i++ )
         delete m_pTracks[i];
     MP4Free( m_memoryBuffer ); // just in case
-    CHECK_AND_FREE( m_editName );
     delete m_file;
 }
 
@@ -3156,12 +3156,13 @@ char* MP4File::MakeTrackName(MP4TrackId trackId, const char* name)
 {
     uint16_t trakIndex = FindTrakAtomIndex(trackId);
 
-    if (name == NULL || name[0] == '\0') {
+    if (name == NULL || name[0] == 0) {
         snprintf(m_trakName, sizeof(m_trakName),
                  "moov.trak[%u]", trakIndex);
     } else {
-        snprintf(m_trakName, sizeof(m_trakName),
-                 "moov.trak[%u].%s", trakIndex, name);
+        if (snprintf(m_trakName, sizeof(m_trakName),
+                     "moov.trak[%u].%s", trakIndex, name) >= (int) sizeof(m_trakName))
+            return NULL;
     }
     return m_trakName;
 }
@@ -4152,13 +4153,11 @@ char* MP4File::MakeTrackEditName(
 {
     char* trakName = MakeTrackName(trackId, NULL);
 
-    if (m_editName == NULL) {
-        m_editName = (char *)malloc(1024);
-        if (m_editName == NULL) return NULL;
-    }
-    snprintf(m_editName, 1024,
-             "%s.edts.elst.entries[%u].%s",
-             trakName, editId - 1, name);
+    if (snprintf(m_editName, sizeof(m_editName),
+                 "%s.edts.elst.entries[%u].%s",
+                 trakName, editId - 1, name) >= (int) sizeof(m_editName))
+        return NULL;
+
     return m_editName;
 }
 
