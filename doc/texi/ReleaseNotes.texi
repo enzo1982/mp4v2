@@ -13,6 +13,10 @@
 @contents
 
 @chapter What's New?
+Version 2.1.2 fixes build system issues, mainly in the CMake build system support. This release also fixes a file seeking
+issue observed on Windows when compiled with _WIN32_WINNT < 0x600 and linked against modern CRT DLLs. In addition, two minor
+issues related to data handling are fixed.
+
 Version 2.1.1 fixes a type mismatch preventing MP4v2 from compiling on 32 bit systems.
 
 Version 2.1 updates the existing build systems and adds support for building with CMake and Xcode. It also fixes compilation
