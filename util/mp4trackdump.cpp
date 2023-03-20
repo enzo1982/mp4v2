@@ -38,7 +38,7 @@ static void DumpTrack ( MP4FileHandle mp4file, MP4TrackId tid )
     MP4SampleId sid;
     MP4Duration time;
     uint32_t timescale;
-    uint64_t msectime;
+    uint64_t msectime = 0;
 
     uint64_t sectime, mintime, hrtime;
 
@@ -49,9 +49,12 @@ static void DumpTrack ( MP4FileHandle mp4file, MP4TrackId tid )
 
     for ( sid = 1; sid <= numSamples; sid++ ) {
         time = MP4GetSampleTime( mp4file, tid, sid );
-        msectime = time;
-        msectime *= UINT64_C( 1000 );
-        msectime /= timescale;
+        if ( timescale > 0 ) {
+            msectime = time;
+            msectime *= UINT64_C( 1000 );
+            msectime /= timescale;
+        }
+
         if ( msectime == 0 ) {
             hrtime = mintime = sectime = UINT64_C( 0 );
         }
