@@ -67,6 +67,10 @@ MP4Track::MP4Track(MP4File& file, MP4Atom& trakAtom)
     m_cachedSttsSid = MP4_INVALID_SAMPLE_ID;
     m_cachedCttsSid = MP4_INVALID_SAMPLE_ID;
 
+    m_cachedSfoChunkId = MP4_INVALID_CHUNK_ID;
+    m_cachedSfoSampleId = MP4_INVALID_SAMPLE_ID;
+    m_cachedSfoSampleOffset = 0;
+
     bool success = true;
 
     MP4Integer32Property* pTrackIdProperty;
@@ -999,10 +1003,21 @@ uint64_t MP4Track::GetSampleFileOffset(MP4SampleId sampleId)
         sampleId - ((sampleId - firstSample) % samplesPerChunk);
 
     // need cumulative samples sizes from firstSample to sampleId - 1
+    MP4SampleId startSample = firstSampleInChunk;
     uint32_t sampleOffset = 0;
-    for (MP4SampleId i = firstSampleInChunk; i < sampleId; i++) {
+
+    if (chunkId == m_cachedSfoChunkId && sampleId >= m_cachedSfoSampleId) {
+        startSample = m_cachedSfoSampleId;
+        sampleOffset = m_cachedSfoSampleOffset;
+    }
+
+    for (MP4SampleId i = startSample; i < sampleId; i++) {
         sampleOffset += GetSampleSize(i);
     }
+
+    m_cachedSfoChunkId = chunkId;
+    m_cachedSfoSampleId = sampleId;
+    m_cachedSfoSampleOffset = sampleOffset;
 
     return chunkOffset + sampleOffset;
 }
