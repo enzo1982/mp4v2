@@ -991,6 +991,9 @@ uint64_t MP4Track::GetSampleFileOffset(MP4SampleId sampleId)
     uint32_t samplesPerChunk =
         m_pStscSamplesPerChunkProperty->GetValue(stscIndex);
 
+    if (samplesPerChunk == 0)
+        throw new EXCEPTION("Invalid number of samples in stsc entry");
+
     // chunkId tells which is the absolute chunk number that this sample
     // is stored in.
     MP4ChunkId chunkId = firstChunk +
@@ -1517,8 +1520,11 @@ void MP4Track::UpdateDurations(MP4Duration duration)
 
 MP4Duration MP4Track::ToMovieDuration(MP4Duration trackDuration)
 {
-    return (trackDuration * m_File.GetTimeScale())
-           / m_pTimeScaleProperty->GetValue();
+    uint32_t timeScale = m_pTimeScaleProperty->GetValue();
+    if (timeScale == 0)
+        throw new EXCEPTION("Invalid time scale");
+
+    return (trackDuration * m_File.GetTimeScale()) / timeScale;
 }
 
 void MP4Track::UpdateModificationTimes()
