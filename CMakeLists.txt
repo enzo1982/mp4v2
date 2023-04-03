@@ -4,8 +4,8 @@ project(MP4v2 VERSION 2.1.2)
 
 set(CMAKE_CXX_STANDARD 11)
 
-option(BUILD_SHARED "Build libmp4v2 as a shared library" ON)
-option(BUILD_UTILS "Build MP4v2 auxiliary tools" ON)
+option(MP4V2_BUILD_SHARED "Build libmp4v2 as a shared library" ON)
+option(MP4V2_BUILD_UTILS  "Build MP4v2 auxiliary tools" ON)
 
 #
 # Generate include/mp4v2/project.h and libplatform/config.h
@@ -305,7 +305,7 @@ set(LIBUTIL_SOURCE_FILES
 #
 # Define library targets
 #
-if(BUILD_SHARED)
+if(MP4V2_BUILD_SHARED)
     add_library(mp4v2 SHARED ${MP4V2_SOURCE_FILES})
     target_compile_definitions(mp4v2 PRIVATE MP4V2_EXPORTS)
     set_target_properties(mp4v2 PROPERTIES VERSION ${PROJECT_version} SOVERSION ${PROJECT_version_major})
@@ -326,7 +326,7 @@ target_include_directories(mp4v2 PUBLIC
 #
 # Define utilities targets
 #
-if(BUILD_UTILS)
+if(MP4V2_BUILD_UTILS)
     set(UTILITY_HEADER_FILES
        util/impl.h)
 
@@ -368,7 +368,7 @@ include(GNUInstallDirs)
 
 install(FILES ${MP4V2_PUBLIC_HEADERS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/mp4v2")
 
-if(BUILD_SHARED)
+if(MP4V2_BUILD_SHARED)
     if(WIN32)
         install(TARGETS mp4v2 RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
     else()
@@ -380,7 +380,7 @@ endif()
 
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/mp4v2.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 
-if(BUILD_UTILS)
+if(MP4V2_BUILD_UTILS)
     install(TARGETS mp4art
                     mp4chaps
                     mp4extract
@@ -391,4 +391,3 @@ if(BUILD_UTILS)
                     mp4track
                     mp4trackdump RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
 endif()
-
