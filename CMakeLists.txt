@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(MP4v2 VERSION 2.1.2)
+project(MP4v2 VERSION 2.1.3)
 
 set(CMAKE_CXX_STANDARD 11)
 
