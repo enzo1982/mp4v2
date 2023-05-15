@@ -330,14 +330,14 @@ if(BUILD_UTILS)
     set(UTILITY_HEADER_FILES
        util/impl.h)
 
-    add_library(util STATIC ${LIBUTIL_HEADER_FILES} ${LIBUTIL_SOURCE_FILES})
-    target_link_libraries(util mp4v2)
+    add_library(mp4v2util STATIC ${LIBUTIL_HEADER_FILES} ${LIBUTIL_SOURCE_FILES})
+    target_link_libraries(mp4v2util mp4v2)
 
     add_executable(mp4art ${UTILITY_HEADER_FILES} util/mp4art.cpp)
-    target_link_libraries(mp4art mp4v2 util)
+    target_link_libraries(mp4art mp4v2 mp4v2util)
 
     add_executable(mp4chaps ${UTILITY_HEADER_FILES} util/mp4chaps.cpp)
-    target_link_libraries(mp4chaps mp4v2 util)
+    target_link_libraries(mp4chaps mp4v2 mp4v2util)
 
     add_executable(mp4extract ${UTILITY_HEADER_FILES} util/mp4extract.cpp)
     target_link_libraries(mp4extract mp4v2)
