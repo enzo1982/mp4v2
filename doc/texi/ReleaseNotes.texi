@@ -13,11 +13,34 @@
 @contents
 
 @chapter What's New?
+
+@unnumberedsec MP4v2 v2.1.3
+
+Version 2.1.3 fixes several stability issues, including the following CVEs:
+
+  @itemize @minus
+  @item
+    https://nvd.nist.gov/vuln/detail/CVE-2023-29584
+  @item
+    https://nvd.nist.gov/vuln/detail/CVE-2023-1451
+  @item
+    https://nvd.nist.gov/vuln/detail/CVE-2023-1450
+  @end itemize
+
+The 2.1.3 update also fixes a performance issue when operating on files with unusually large chunks (containing thousands or
+even millions of samples instead of the usual few dozen).
+
+@unnumberedsec MP4v2 v2.1.2
+
 Version 2.1.2 fixes build system issues, mainly in the CMake build system support. This release also fixes a file seeking
 issue observed on Windows when compiled with _WIN32_WINNT < 0x600 and linked against modern CRT DLLs. In addition, two minor
 issues related to data handling are fixed.
 
+@unnumberedsec MP4v2 v2.1.1
+
 Version 2.1.1 fixes a type mismatch preventing MP4v2 from compiling on 32 bit systems.
+
+@unnumberedsec MP4v2 v2.1
 
 Version 2.1 updates the existing build systems and adds support for building with CMake and Xcode. It also fixes compilation
 with newer compilers and integrates smaller improvements and bug fixes from various MP4v2 forks.
