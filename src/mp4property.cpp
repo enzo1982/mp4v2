@@ -343,6 +343,10 @@ void MP4StringProperty::SetCount(uint32_t count)
 {
     uint32_t oldCount = m_values.Size();
 
+    for (uint32_t i = count; i < oldCount; i++) {
+        MP4Free(m_values[i]);
+    }
+
     m_values.Resize(count);
 
     for (uint32_t i = oldCount; i < count; i++) {
@@ -509,6 +513,10 @@ MP4BytesProperty::~MP4BytesProperty()
 void MP4BytesProperty::SetCount(uint32_t count)
 {
     uint32_t oldCount = m_values.Size();
+
+    for (uint32_t i = count; i < oldCount; i++) {
+        MP4Free(m_values[i]);
+    }
 
     m_values.Resize(count);
     m_valueSizes.Resize(count);
