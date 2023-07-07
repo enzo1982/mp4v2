@@ -2609,6 +2609,19 @@ MP4ChapterType MP4File::DeleteChapters(MP4ChapterType chapterType, MP4TrackId ch
 
             // remove the chapter track
             DeleteTrack(chapterTrackId);
+            // look for next free track id
+            for (chapterTrackId = 1; chapterTrackId <= 0xFFFF; chapterTrackId++) {
+                try {
+                    (void)FindTrackIndex(chapterTrackId);
+                    // KEEP LOOKING, this trackId is in use
+                }
+                catch (Exception* x) {
+                    // OK, this trackId is not in use, proceed
+                    delete x;
+                    SetIntegerProperty("moov.mvhd.nextTrackId", chapterTrackId);
+                    break;
+                }
+            }
             deletedType = MP4ChapterTypeNone == deletedType ? MP4ChapterTypeQt : MP4ChapterTypeAny;
         }
     }
