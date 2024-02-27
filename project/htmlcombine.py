@@ -32,7 +32,7 @@ title = 'Unknown'
 
 # parse majorheading
 with open( options.body, 'r' ) as f:
-    rx = re.compile( '^.*class="majorheading".*>([^>]+)</.+>' )
+    rx = re.compile( r'^.*class="majorheading".*>([^>]+)</.+>' )
     for line in f:
         m = rx.match( line )
         if not m:
@@ -40,9 +40,9 @@ with open( options.body, 'r' ) as f:
         title = m.group( 1 )
         break
 
-m = re.compile( '(\S+)\s+(\S+)\s+(.+)' ).match( title )
+m = re.compile( r'(\S+)\s+(\S+)\s+(.+)' ).match( title )
 if m:
-    shortTitle = m.group(3)
+    shortTitle = m.group( 3 )
 else:
     shortTitle = title
 
