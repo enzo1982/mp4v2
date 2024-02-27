@@ -50,6 +50,8 @@ AC_ARG_ENABLE([largefile],
     [AS_HELP_STRING([--disable-largefile],[disable LFS (large file support)])])
 AC_ARG_ENABLE([util],
     [AS_HELP_STRING([--disable-util],[disable build of command-line utilities])])
+AC_ARG_ENABLE([extra-util],
+    [AS_HELP_STRING([--enable-extra-util],[enable build of utilities with unimplemented functionality])])
 AC_ARG_ENABLE([gch],
     [AS_HELP_STRING([--enable-gch],[enable use of precompiled headers])])
 AC_ARG_ENABLE([bi],
@@ -355,6 +357,7 @@ AM_CONDITIONAL([ADD_PLATFORM_POSIX],[test "$X_PLATFORM" = "posix"])
 AM_CONDITIONAL([ADD_PLATFORM_WIN32],[test "$X_PLATFORM" = "win32"])
 
 AM_CONDITIONAL([ADD_UTIL],[test "$enable_util" != "no"])
+AM_CONDITIONAL([ADD_EXTRA_UTIL],[test "$enable_extra_util" = "yes"])
 AM_CONDITIONAL([ADD_MANS],[test "$X_PLATFORM" != "win32"])
 
 ###############################################################################
