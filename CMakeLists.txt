@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 option(BUILD_SHARED "Build libmp4v2 as a shared library" ON)
 option(BUILD_UTILS "Build MP4v2 auxiliary tools" ON)
+option(BUILD_EXTRA_UTILS "Build MP4v2 tools with unimplemented functionality" OFF)
 
 #
 # Generate include/mp4v2/project.h and libplatform/config.h
@@ -91,7 +92,7 @@ function(configure_pkg_config_file pkg_config_file_in)
     set(VERSION ${PROJECT_version})
     string(REPLACE ".in" "" pkg_config_file ${pkg_config_file_in})
     configure_file(${pkg_config_file_in} ${pkg_config_file} @ONLY)
-endfunction() 
+endfunction()
 
 configure_pkg_config_file(mp4v2.pc.in)
 
@@ -348,9 +349,6 @@ if(BUILD_UTILS)
     add_executable(mp4info ${UTILITY_HEADER_FILES} util/mp4info.cpp)
     target_link_libraries(mp4info mp4v2)
 
-    add_executable(mp4subtitle ${UTILITY_HEADER_FILES} util/mp4subtitle.cpp)
-    target_link_libraries(mp4subtitle mp4v2)
-
     add_executable(mp4tags ${UTILITY_HEADER_FILES} util/mp4tags.cpp)
     target_link_libraries(mp4tags mp4v2)
 
@@ -359,6 +357,12 @@ if(BUILD_UTILS)
 
     add_executable(mp4trackdump ${UTILITY_HEADER_FILES} util/mp4trackdump.cpp)
     target_link_libraries(mp4trackdump mp4v2)
+
+    if (BUILD_EXTRA_UTILS)
+        add_executable(mp4subtitle ${UTILITY_HEADER_FILES} util/mp4subtitle.cpp)
+        target_link_libraries(mp4subtitle mp4v2)
+    endif()
+
 endif()
 
 #
@@ -381,14 +385,21 @@ endif()
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/mp4v2.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 
 if(BUILD_UTILS)
-    install(TARGETS mp4art
-                    mp4chaps
-                    mp4extract
-                    mp4file
-                    mp4info
-                    mp4subtitle
-                    mp4tags
-                    mp4track
-                    mp4trackdump RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+    set(_util_targets
+        mp4art
+        mp4chaps
+        mp4extract
+        mp4file
+        mp4info
+        mp4tags
+        mp4track
+        mp4trackdump
+    )
+    if(BUILD_EXTRA_UTILS)
+        list(APPEND _util_targets
+            mp4subtitle
+        )
+    endif()
+    install(TARGETS ${_util_targets}
+        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
 endif()
-
